@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    default: ${APPLICATION_PROFILE}
+  application:
+    title: Cakk
+    version: 1.0.0
+  banner:
+    location: classpath:/app-banner.dat
+  config:
+    import:
+      - db-${spring.profiles.default}.yml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB

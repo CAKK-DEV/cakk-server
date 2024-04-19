@@ -1,0 +1,18 @@
+description = "api module"
+
+dependencies {
+    implementation(project(':cakk-common'))
+    implementation(project(':cakk-domain'))
+
+    implementation('org.springframework.boot:spring-boot-starter-web')
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named("bootJar") {
+    enabled = true
+}
+
+tasks.named("jar") {
+    enabled = false
+}
