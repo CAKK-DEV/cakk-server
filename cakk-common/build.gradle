@@ -1,0 +1,8 @@
+description = "common module"
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
