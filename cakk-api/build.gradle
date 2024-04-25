@@ -4,9 +4,17 @@ dependencies {
     implementation(project(':cakk-common'))
     implementation(project(':cakk-domain'))
 
+	// basic
     implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
+	// test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'com.tngtech.archunit:archunit-junit5:1.1.0'
+
+	// slack 설정
+	implementation 'net.gpedro.integrations.slack:slack-webhook:1.4.0'
 }
 
 tasks.named("bootJar") {

@@ -8,7 +8,7 @@ dependencies {
     implementation(project(':cakk-common'))
 
     // jpa
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'io.hypersistence:hypersistence-utils-hibernate-5:3.5.2'
 
     // querydsl
@@ -20,26 +20,11 @@ dependencies {
     // database
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
-}
 
-//def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
-//
-//querydsl {
-//    jpa = true
-//    querydslSourcesDir = querydslDir
-//}
-//sourceSets {
-//    main.java.srcDir querydslDir
-//}
-//compileQuerydsl {
-//    options.annotationProcessorPath = configurations.querydsl
-//}
-//configurations {
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
-//    querydsl.extendsFrom compileClasspath
-//}
+	// flyway
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+}
 
 bootJar {
     enabled = false
