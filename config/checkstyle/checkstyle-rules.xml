@@ -286,9 +286,9 @@ The following rules in the Naver coding convention cannot be checked by this con
         <module name="ImportOrder">
             <property name="groups"
                       value="java., javax., jakarta., org., net., /(?!com.cakk.)/,
-			                /(?!java\.|javax\.|com\.|org\.|net\.)/, io., lombok., com.cakk."/>
+                      /(?!java\.|javax\.|com\.|org\.|net\.)/, io., lombok., com.cakk."/>
             <property name="ordered" value="true"/>
-            <property name="separated" value="false"/>
+            <property name="separated" value="true"/>
             <property name="option" value="top"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
             <message key="import.groups.separated.internally"

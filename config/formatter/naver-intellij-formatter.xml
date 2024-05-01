@@ -10,11 +10,17 @@
             <emptyLine/>
             <package name="javax" withSubpackages="true" static="false"/>
             <emptyLine/>
+            <package name="jakarta" withSubpackages="true" static="false" />
+            <emptyLine/>
             <package name="org" withSubpackages="true" static="false"/>
             <emptyLine/>
             <package name="net" withSubpackages="true" static="false"/>
             <emptyLine/>
             <package name="com" withSubpackages="true" static="false"/>
+            <emptyLine/>
+            <package name="io" withSubpackages="true" static="false" />
+            <emptyLine/>
+            <package name="lombok" withSubpackages="true" static="false" />
             <emptyLine/>
             <package name="" withSubpackages="true" static="false"/>
             <emptyLine/>

@@ -1,6 +1,7 @@
 package com.cakk.common.exception;
 
 import lombok.Getter;
+
 import com.cakk.common.enums.ReturnCode;
 
 @Getter

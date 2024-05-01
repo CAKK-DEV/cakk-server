@@ -1,13 +1,16 @@
 package com.cakk.domain.config;
 
-import static java.util.Arrays.stream;
-import com.p6spy.engine.logging.Category;
-import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
+import static java.util.Arrays.*;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.function.Predicate;
+
 import org.hibernate.engine.jdbc.internal.FormatStyle;
+
+import com.p6spy.engine.logging.Category;
+import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 
 public class P6spySqlFormatterConfig implements MessageFormattingStrategy {
 
@@ -20,12 +23,12 @@ public class P6spySqlFormatterConfig implements MessageFormattingStrategy {
 
 	@Override
 	public String formatMessage(final int connectionId,
-								final String now,
-								final long elapsed,
-								final String category,
-								final String prepared,
-								final String sql,
-								final String url) {
+		final String now,
+		final long elapsed,
+		final String category,
+		final String prepared,
+		final String sql,
+		final String url) {
 		return sqlFormatToUpper(sql, category, getMessage(connectionId, elapsed, getStackBuilder()));
 	}
 
@@ -79,7 +82,7 @@ public class P6spySqlFormatterConfig implements MessageFormattingStrategy {
 			.append("\t").append(String.format("Call Stack (number 1 is entry point): %s", callStackBuilder))
 			.append(NEW_LINE)
 			.append(NEW_LINE)
-			.append("----------------------------------------------------------------------------------------------------")
+			.append("------------------------------------------------------------------------------------------------")
 			.toString();
 	}
 
