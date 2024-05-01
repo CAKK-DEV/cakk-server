@@ -1,8 +1,8 @@
 description = "api module"
 
 dependencies {
-    implementation(project(':cakk-common'))
-    implementation(project(':cakk-domain'))
+	implementation project(':cakk-common')
+    implementation project(':cakk-domain')
 
 	// basic
     implementation('org.springframework.boot:spring-boot-starter-web')
