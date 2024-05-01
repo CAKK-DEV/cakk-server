@@ -7,15 +7,24 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         show_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 storage:
   datasource:
     core:
       jdbc-url: jdbc:mysql://localhost:3306/cakk
-      username: cakk
-      password: Cakkproject1!
-      driver-class-name: org.mysql.Driver
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
       data-source-properties:
         rewriteBatchedStatements: true
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
