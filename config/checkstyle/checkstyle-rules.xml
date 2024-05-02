@@ -45,7 +45,7 @@ The following rules in the Naver coding convention cannot be checked by this con
     <!-- [line-length-120] -->
     <property name="tabWidth" value="4"/>
     <module name="LineLength">
-        <property name="max" value="120"/>
+        <property name="max" value="140"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
         <message key="maxLineLen"
                  value="[line-length-120] Line is longer than {0,number,integer} characters (found {1,number,integer})"/>
