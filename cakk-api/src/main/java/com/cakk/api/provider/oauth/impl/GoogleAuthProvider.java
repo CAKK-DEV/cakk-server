@@ -17,7 +17,7 @@ import com.cakk.common.exception.CakkException;
 
 @Component
 @RequiredArgsConstructor
-public class GoogleAuthProvider extends OidcProvider {
+public class GoogleAuthProvider implements OidcProvider {
 
 	private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
