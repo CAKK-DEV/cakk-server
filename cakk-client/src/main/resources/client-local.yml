@@ -1,0 +1,7 @@
+oauth:
+  kakao:
+    public-key-info: https://kauth.kakao.com/.well-known/jwks.json
+  apple:
+    public-key-url: https://appleid.apple.com/auth/keys
+  google:
+      client-id: ${GOOGLE_CLIENT_ID}

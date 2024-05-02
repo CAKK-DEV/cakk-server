@@ -1,7 +1,7 @@
 description = "domain module"
 
 dependencies {
-    implementation(project(':cakk-common'))
+	implementation project(':cakk-common')
 
     // jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

@@ -45,7 +45,10 @@ public class User extends AuditEntity {
 	@Column(name = "nickname", length = 20, nullable = false)
 	private String nickname;
 
-	@Column(name = "email", length = 20, nullable = false)
+	@Column(name = "profile_image_url", length = 200)
+	private String profileImageUrl;
+
+	@Column(name = "email", length = 50, nullable = false)
 	private String email;
 
 	@Enumerated(value = EnumType.STRING)
@@ -68,6 +71,7 @@ public class User extends AuditEntity {
 		Provider provider,
 		String providerId,
 		String nickname,
+		String profileImageUrl,
 		String email,
 		Gender gender,
 		LocalDate birthday,
@@ -76,6 +80,7 @@ public class User extends AuditEntity {
 		this.provider = provider;
 		this.providerId = providerId;
 		this.nickname = nickname;
+		this.profileImageUrl = profileImageUrl;
 		this.email = email;
 		this.gender = gender;
 		this.birthday = birthday;

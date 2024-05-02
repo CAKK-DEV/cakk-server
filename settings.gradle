@@ -1,7 +1,8 @@
 rootProject.name = 'cakk'
 
 include(
-        'cakk-api',
-        'cakk-domain',
-        'cakk-common'
+	'cakk-api',
+	'cakk-client',
+	'cakk-domain',
+	'cakk-common'
 )
