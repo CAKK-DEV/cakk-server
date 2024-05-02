@@ -2,7 +2,7 @@ package com.cakk.client.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,18 +12,15 @@ import com.cakk.client.vo.OidcPublicKeyList;
 @RequiredArgsConstructor
 public class AppleAuthClient {
 
-	private final WebClient webClient;
+	private final RestClient restClient;
 
 	@Value("${oauth.apple.public-key-url}")
 	private final String publicKeyUrl;
 
 	public OidcPublicKeyList getPublicKeys() {
-		return webClient.mutate()
-			.baseUrl(publicKeyUrl)
-			.build()
-			.get()
+		return restClient.get()
+			.uri(publicKeyUrl)
 			.retrieve()
-			.bodyToMono(OidcPublicKeyList.class)
-			.block();
+			.body(OidcPublicKeyList.class);
 	}
 }
