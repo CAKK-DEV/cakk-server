@@ -1,4 +1,4 @@
-package com.cakk.client.web;
+package com.cakk.api.config;
 
 import java.util.Collections;
 
@@ -10,11 +10,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
-@RequiredArgsConstructor
-public class GoogleAuthConfiguration {
+public class GoogleConfiguration {
 
 	@Value("${oauth.google.client-id}")
 	private String googleClientId;
