@@ -1,6 +1,5 @@
 package com.cakk.api.provider.oauth.impl;
 
-import java.io.IOException;
 import java.security.PublicKey;
 
 import org.springframework.stereotype.Component;

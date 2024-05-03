@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -32,7 +34,7 @@ public class JwtProvider {
 
 	@Value("${jwt.expiration.access-token}")
 	private Long accessTokenExpiredSecond;
-	@Value("${jwt.expiration.access-token}")
+	@Value("${jwt.expiration.refresh-token}")
 	private Long refreshTokenExpiredSecond;
 	@Value("${jwt.grant-type}")
 	private String grantType;
@@ -40,6 +42,10 @@ public class JwtProvider {
 	private String userKey;
 
 	public JsonWebToken generateToken(final User user) {
+		if (isNull(user)) {
+			throw new CakkException(EMPTY_USER);
+		}
+
 		final String accessToken = Jwts.builder()
 			.claim(userKey, user)
 			.setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredSecond))
@@ -58,14 +64,15 @@ public class JwtProvider {
 			.build();
 	}
 
-	public Authentication getAuthentication(String token) {
-		final Claims claims = parseClaims(token);
+	public Authentication getAuthentication(String accessToken) {
+		final Claims claims = parseClaims(accessToken);
 
-		if (isNull(claims.get(userKey)) || !(claims.get(userKey) instanceof User)) {
+		if (isNull(claims.get(userKey))) {
 			throw new CakkException(EMPTY_AUTH_JWT);
 		}
 
-		OAuthUserDetails userDetails = new OAuthUserDetails((User) claims.get(userKey));
+		final User user = new ObjectMapper().convertValue(claims.get(userKey), User.class);
+		OAuthUserDetails userDetails = new OAuthUserDetails(user);
 
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
