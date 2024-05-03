@@ -25,7 +25,7 @@ public class SlackService {
 
 	public SlackService(
 		SlackApi slackApi,
-		@Value("${spring.profiles.default}")
+		@Value("${spring.profiles.active}")
 		String profile,
 		@Value("${slack.webhook.is-enable}")
 		boolean isEnable

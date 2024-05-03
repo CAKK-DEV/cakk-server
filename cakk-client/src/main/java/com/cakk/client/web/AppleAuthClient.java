@@ -4,18 +4,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import lombok.RequiredArgsConstructor;
-
 import com.cakk.client.vo.OidcPublicKeyList;
 
 @Component
-@RequiredArgsConstructor
 public class AppleAuthClient {
 
 	private final RestClient restClient;
 
-	@Value("${oauth.apple.public-key-url}")
 	private final String publicKeyUrl;
+
+	public AppleAuthClient(
+		RestClient restClient,
+		@Value("${oauth.apple.public-key-url}") String publicKeyUrl
+	) {
+		this.restClient = restClient;
+		this.publicKeyUrl = publicKeyUrl;
+	}
 
 	public OidcPublicKeyList getPublicKeys() {
 		return restClient.get()
