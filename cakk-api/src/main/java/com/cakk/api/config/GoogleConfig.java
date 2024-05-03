@@ -13,8 +13,11 @@ import com.google.api.client.json.gson.GsonFactory;
 @Configuration
 public class GoogleConfig {
 
-	@Value("${oauth.google.client-id}")
-	private String googleClientId;
+	private final String googleClientId;
+
+	public GoogleConfig(@Value("${oauth.google.client-id}") String googleClientId) {
+		this.googleClientId = googleClientId;
+	}
 
 	@Bean
 	public GoogleIdTokenVerifier googleIdTokenVerifier() {
