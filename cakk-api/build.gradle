@@ -25,6 +25,11 @@ dependencies {
 	testImplementation('com.tngtech.archunit:archunit-junit5:1.1.0')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('org.springframework.security:spring-security-test')
+	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.16")
+
+	// test container
+	testImplementation "org.testcontainers:junit-jupiter:1.19.7"
+	testImplementation "org.testcontainers:mysql:1.19.7"
 
 	// slack 설정
 	implementation 'net.gpedro.integrations.slack:slack-webhook:1.4.0'
