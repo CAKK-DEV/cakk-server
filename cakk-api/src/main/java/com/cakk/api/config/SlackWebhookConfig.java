@@ -9,8 +9,11 @@ import net.gpedro.integrations.slack.SlackApi;
 @Configuration
 public class SlackWebhookConfig {
 
-	@Value("${slack.webhook.url}")
-	private String slackWebhookUrl;
+	private final String slackWebhookUrl;
+
+	public SlackWebhookConfig(@Value("${slack.webhook.url}") String slackWebhookUrl) {
+		this.slackWebhookUrl = slackWebhookUrl;
+	}
 
 	@Bean
 	public SlackApi slackApi() {

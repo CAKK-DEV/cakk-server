@@ -12,8 +12,11 @@ import io.jsonwebtoken.security.Keys;
 @Configuration
 public class JwtConfig {
 
-	@Value("${jwt.secret}")
-	private String secretKey;
+	private final String secretKey;
+
+	public JwtConfig(@Value("${jwt.secret}") String secretKey) {
+		this.secretKey = secretKey;
+	}
 
 	@Bean
 	public Key key() {

@@ -19,27 +19,38 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import lombok.RequiredArgsConstructor;
-
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.api.vo.OAuthUserDetails;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.entity.user.User;
 
 @Component
-@RequiredArgsConstructor
 public class JwtProvider {
 
 	private final Key key;
 
-	@Value("${jwt.expiration.access-token}")
-	private Long accessTokenExpiredSecond;
-	@Value("${jwt.expiration.refresh-token}")
-	private Long refreshTokenExpiredSecond;
-	@Value("${jwt.grant-type}")
-	private String grantType;
-	@Value("${jwt.user-key}")
-	private String userKey;
+	private final Long accessTokenExpiredSecond;
+	private final Long refreshTokenExpiredSecond;
+	private final String grantType;
+	private final String userKey;
+
+	public JwtProvider(
+		Key key,
+		@Value("${jwt.expiration.access-token}")
+		Long accessTokenExpiredSecond,
+		@Value("${jwt.expiration.refresh-token}")
+		Long refreshTokenExpiredSecond,
+		@Value("${jwt.grant-type}")
+		String grantType,
+		@Value("${jwt.user-key}")
+		String userKey
+	) {
+		this.key = key;
+		this.accessTokenExpiredSecond = accessTokenExpiredSecond;
+		this.refreshTokenExpiredSecond = refreshTokenExpiredSecond;
+		this.grantType = grantType;
+		this.userKey = userKey;
+	}
 
 	public JsonWebToken generateToken(final User user) {
 		if (isNull(user)) {

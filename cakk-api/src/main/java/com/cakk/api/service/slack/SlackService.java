@@ -8,7 +8,6 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import net.gpedro.integrations.slack.SlackApi;
@@ -16,17 +15,25 @@ import net.gpedro.integrations.slack.SlackAttachment;
 import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class SlackService {
 
 	private final SlackApi slackApi;
-	private final Environment environment;
 
-	@Value("${slack.webhook.is-enable}")
-	private boolean isEnable;
+	private final String profile;
+	private final boolean isEnable;
+
+	public SlackService(
+		SlackApi slackApi,
+		@Value("${spring.profiles.default}")
+		String profile,
+		@Value("${slack.webhook.is-enable}")
+		boolean isEnable
+	) {
+		this.slackApi = slackApi;
+		this.profile = profile;
+		this.isEnable = isEnable;
+	}
 
 	public void sendSlackForError(Exception exception, HttpServletRequest request) {
 		if (!isEnable) {
@@ -50,7 +57,6 @@ public class SlackService {
 			)
 		);
 
-		String profile = environment.getProperty("spring.profiles.default");
 		SlackMessage slackMessage = new SlackMessage();
 
 		slackMessage.setAttachments(List.of(slackAttachment));
