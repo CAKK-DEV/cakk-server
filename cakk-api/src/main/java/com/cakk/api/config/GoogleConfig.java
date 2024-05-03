@@ -11,7 +11,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 
 @Configuration
-public class GoogleConfiguration {
+public class GoogleConfig {
 
 	@Value("${oauth.google.client-id}")
 	private String googleClientId;
