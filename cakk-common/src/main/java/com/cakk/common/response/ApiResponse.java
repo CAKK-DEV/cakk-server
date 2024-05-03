@@ -21,6 +21,16 @@ public class ApiResponse<T> {
 		return response;
 	}
 
+	public static <T> ApiResponse<T> fail(ReturnCode returnCode) {
+		ApiResponse<T> response = new ApiResponse<>();
+
+		response.returnCode = returnCode.getCode();
+		response.returnMessage = returnCode.getMessage();
+		response.data = null;
+
+		return response;
+	}
+
 	public static <T> ApiResponse<T> fail(ReturnCode returnCode, T data) {
 		ApiResponse<T> response = new ApiResponse<>();
 
