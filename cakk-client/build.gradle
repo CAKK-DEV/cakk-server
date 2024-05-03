@@ -4,8 +4,6 @@ dependencies {
 	implementation project(':cakk-common')
 
 	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('com.google.api-client:google-api-client-jackson2:2.2.0')
-	implementation('com.google.api-client:google-api-client:2.2.0')
 }
 
 bootJar {

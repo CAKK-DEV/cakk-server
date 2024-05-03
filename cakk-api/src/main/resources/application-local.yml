@@ -1,0 +1,10 @@
+jwt:
+  secret: localocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocalocal
+  expiration:
+    access-token: 1814400000
+    refresh-token: 2592000000
+
+slack:
+  webhook:
+    is-enable: false
+    url: url

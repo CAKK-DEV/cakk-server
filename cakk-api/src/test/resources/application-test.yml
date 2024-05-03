@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8.0:///cakk
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+storage:
+  datasource:
+    core:
+      jdbc-url: jdbc:tc:mysql:8.0:///cakk
+      username: username
+      password: password
+      driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+      data-source-properties:
+        rewriteBatchedStatements: true
+
+jwt:
+  secret: testestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestest
+  expiration:
+    access-token: 1814400000
+    refresh-token: 2592000000
