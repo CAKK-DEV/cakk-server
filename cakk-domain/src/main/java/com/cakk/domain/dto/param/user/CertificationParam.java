@@ -1,7 +1,8 @@
 package com.cakk.domain.dto.param.user;
 
-import com.cakk.domain.entity.user.User;
 import lombok.Builder;
+
+import com.cakk.domain.entity.user.User;
 
 @Builder
 public record CertificationParam(

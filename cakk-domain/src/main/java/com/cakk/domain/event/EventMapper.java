@@ -1,11 +1,11 @@
 package com.cakk.domain.event;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.event.shop.CertificationEvent;
-
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {

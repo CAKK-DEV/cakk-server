@@ -2,14 +2,6 @@ package com.cakk.domain.entity.user;
 
 import java.time.LocalTime;
 
-import org.springframework.context.ApplicationEventPublisher;
-
-import com.cakk.domain.dto.param.user.CertificationParam;
-import com.cakk.domain.entity.audit.AuditEntity;
-import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.event.EventMapper;
-import com.cakk.domain.event.shop.CertificationEvent;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,10 +11,19 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import org.springframework.context.ApplicationEventPublisher;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import com.cakk.domain.dto.param.user.CertificationParam;
+import com.cakk.domain.entity.audit.AuditEntity;
+import com.cakk.domain.entity.shop.CakeShop;
+import com.cakk.domain.event.EventMapper;
+import com.cakk.domain.event.shop.CertificationEvent;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -89,6 +90,6 @@ public class BusinessInformation extends AuditEntity {
 	}
 
 	private boolean isExistMyCakeShop() {
-		return cakeShop != null;
+		return cakeShop != null && user == null;
 	}
 }

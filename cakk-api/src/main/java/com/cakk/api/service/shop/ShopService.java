@@ -4,6 +4,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.mapper.ShopMapper;
@@ -14,8 +16,6 @@ import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.reader.CakeShopReader;
 import com.cakk.domain.repository.reader.UserReader;
 import com.cakk.domain.repository.writer.CakeShopWriter;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

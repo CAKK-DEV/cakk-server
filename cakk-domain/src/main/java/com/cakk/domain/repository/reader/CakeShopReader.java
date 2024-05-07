@@ -1,5 +1,7 @@
 package com.cakk.domain.repository.reader;
 
+import lombok.RequiredArgsConstructor;
+
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.annotation.Reader;
@@ -7,8 +9,6 @@ import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 import com.cakk.domain.repository.jpa.BusinessInformationJpaRepository;
 import com.cakk.domain.repository.jpa.CakeShopJpaRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @Reader
 @RequiredArgsConstructor

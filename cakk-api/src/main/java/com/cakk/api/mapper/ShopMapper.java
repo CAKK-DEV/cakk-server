@@ -1,11 +1,11 @@
 package com.cakk.api.mapper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
-
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ShopMapper {
