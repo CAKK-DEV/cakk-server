@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -44,6 +45,14 @@ public class S3Service {
 			String presignedUrl = generatePresignedUrlRequest(generatePresignedUrlRequest);
 			return new PresignedUrl(imagePath, imageUrl, presignedUrl);
 		} catch (SdkClientException e) {
+			throw new CakkException(ReturnCode.EXTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public void deleteObject(String imagePath) {
+		try {
+			amazonS3.deleteObject(bucket, imagePath);
+		} catch (AmazonServiceException e) {
 			throw new CakkException(ReturnCode.EXTERNAL_SERVER_ERROR);
 		}
 	}
