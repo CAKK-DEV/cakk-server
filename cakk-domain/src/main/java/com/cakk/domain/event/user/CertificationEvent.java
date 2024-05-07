@@ -8,6 +8,7 @@ public record CertificationEvent(
 	String idCardImageUrl,
 	String emergencyContact,
 	String message,
+	Long userId,
 	String userEmail,
 	String shopName,
 	Double shopLatitude,

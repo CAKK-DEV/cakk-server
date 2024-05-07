@@ -3,10 +3,18 @@ package com.cakk.domain.entity.user;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.context.ApplicationEventPublisher;
+
+import com.cakk.common.enums.Gender;
+import com.cakk.common.enums.Provider;
+import com.cakk.common.enums.Role;
 import com.cakk.domain.dto.param.user.CertificationParam;
+import com.cakk.domain.entity.audit.AuditEntity;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.event.user.CertificationEvent;
 import com.cakk.domain.mapper.UserMapper;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,19 +23,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.cakk.common.enums.Gender;
-import com.cakk.common.enums.Provider;
-import com.cakk.common.enums.Role;
-import com.cakk.domain.entity.audit.AuditEntity;
-import org.springframework.context.ApplicationEventPublisher;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -96,8 +95,8 @@ public class User extends AuditEntity {
 		CertificationParam param,
 		CakeShop cakeShop,
 		ApplicationEventPublisher publisher) {
-
 		CertificationEvent certificationEvent;
+
 		if (isExistCakeShop(cakeShop)) {
 			certificationEvent = UserMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
 		} else {
