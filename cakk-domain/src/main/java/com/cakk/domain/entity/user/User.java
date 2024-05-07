@@ -3,6 +3,10 @@ package com.cakk.domain.entity.user;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.cakk.domain.dto.param.user.CertificationParam;
+import com.cakk.domain.entity.shop.CakeShop;
+import com.cakk.domain.event.user.CertificationEvent;
+import com.cakk.domain.mapper.UserMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,6 +27,7 @@ import com.cakk.common.enums.Gender;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.Role;
 import com.cakk.domain.entity.audit.AuditEntity;
+import org.springframework.context.ApplicationEventPublisher;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -85,5 +90,24 @@ public class User extends AuditEntity {
 		this.gender = gender;
 		this.birthday = birthday;
 		this.role = role;
+	}
+
+	public void requestCertificationToApp(
+		CertificationParam param,
+		CakeShop cakeShop,
+		ApplicationEventPublisher publisher) {
+
+		CertificationEvent certificationEvent;
+		if (isExistCakeShop(cakeShop)) {
+			certificationEvent = UserMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
+		} else {
+			certificationEvent = UserMapper.supplyCertificationInfo(param);
+		}
+
+		publisher.publishEvent(certificationEvent);
+	}
+
+	private boolean isExistCakeShop(CakeShop cakeShop) {
+		return cakeShop != null;
 	}
 }
