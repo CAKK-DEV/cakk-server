@@ -14,6 +14,7 @@ public class S3Config {
 	private final String accessKey;
 	private final String secretKey;
 	private final String region;
+
 	public S3Config(
 		@Value("${cloud.aws.credentials.access-key}")
 		String accessKey,
