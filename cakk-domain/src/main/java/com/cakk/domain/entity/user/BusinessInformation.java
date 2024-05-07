@@ -2,6 +2,9 @@ package com.cakk.domain.entity.user;
 
 import java.time.LocalTime;
 
+import com.cakk.domain.entity.audit.AuditEntity;
+import com.cakk.domain.entity.shop.CakeShop;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,14 +14,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.cakk.domain.entity.audit.AuditEntity;
-import com.cakk.domain.entity.shop.CakeShop;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,4 +68,7 @@ public class BusinessInformation extends AuditEntity {
 		this.user = user;
 	}
 
+	public void promotedByShopKeeper(User shopKeeper) {
+		user = shopKeeper;
+	}
 }
