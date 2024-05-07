@@ -4,6 +4,10 @@ import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.event.user.CertificationEvent;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
 
 	public static CertificationEvent supplyCertificationInfoWithCakeShopInfo(CertificationParam param, CakeShop cakeShop) {
@@ -12,6 +16,7 @@ public class UserMapper {
 			.businessRegistrationImageUrl(param.businessRegistrationImageUrl())
 			.emergencyContact(param.emergencyContact())
 			.message(param.message())
+			.userId(param.user().getId())
 			.userEmail(param.user().getEmail())
 			.shopName(cakeShop.getShopName())
 			.shopLatitude(cakeShop.getLatitude())
@@ -25,6 +30,7 @@ public class UserMapper {
 			.businessRegistrationImageUrl(param.businessRegistrationImageUrl())
 			.emergencyContact(param.emergencyContact())
 			.message(param.message())
+			.userId(param.user().getId())
 			.userEmail(param.user().getEmail())
 			.build();
 	}

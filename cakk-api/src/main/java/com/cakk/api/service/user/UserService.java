@@ -8,15 +8,12 @@ import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.reader.CakeShopReader;
-import com.cakk.domain.repository.reader.UserReader;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-	private final UserReader userReader;
 	private final CakeShopReader cakeShopReader;
 	private final ApplicationEventPublisher publisher;
 

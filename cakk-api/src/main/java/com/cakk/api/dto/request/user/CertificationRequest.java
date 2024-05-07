@@ -1,7 +1,8 @@
-package com.cakk.domain.dto.request.user;
+package com.cakk.api.dto.request.user;
 
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.user.User;
+
 import jakarta.validation.constraints.NotBlank;
 
 public record CertificationRequest(
