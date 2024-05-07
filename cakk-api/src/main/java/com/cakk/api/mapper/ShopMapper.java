@@ -1,5 +1,6 @@
-package com.cakk.domain.mapper;
+package com.cakk.api.mapper;
 
+import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 
@@ -26,6 +27,11 @@ public class ShopMapper {
 			.operationDay(request.operationDay())
 			.startTime(request.startTime())
 			.endTime(request.endTime())
+			.build();
+	}
+
+	public static BusinessInformation supplyBusinessInformationBy() {
+		return BusinessInformation.builder()
 			.build();
 	}
 }

@@ -2,8 +2,13 @@ package com.cakk.domain.entity.user;
 
 import java.time.LocalTime;
 
+import org.springframework.context.ApplicationEventPublisher;
+
+import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.audit.AuditEntity;
 import com.cakk.domain.entity.shop.CakeShop;
+import com.cakk.domain.event.EventMapper;
+import com.cakk.domain.event.user.CertificationEvent;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,7 +73,22 @@ public class BusinessInformation extends AuditEntity {
 		this.user = user;
 	}
 
+	public void requestCertificationToApp(CertificationParam param, ApplicationEventPublisher publisher) {
+		CertificationEvent certificationEvent;
+
+		if (isExistMyCakeShop()) {
+			certificationEvent = EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
+		} else {
+			certificationEvent = EventMapper.supplyCertificationInfo(param);
+		}
+		publisher.publishEvent(certificationEvent);
+	}
+
 	public void promotedByShopKeeper(User shopKeeper) {
 		user = shopKeeper;
+	}
+
+	private boolean isExistMyCakeShop() {
+		return cakeShop != null;
 	}
 }

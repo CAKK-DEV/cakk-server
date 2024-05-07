@@ -1,4 +1,4 @@
-package com.cakk.domain.mapper;
+package com.cakk.domain.event;
 
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
@@ -8,8 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserMapper {
-
+public class EventMapper {
 	public static CertificationEvent supplyCertificationInfoWithCakeShopInfo(CertificationParam param, CakeShop cakeShop) {
 		return CertificationEvent.builder()
 			.idCardImageUrl(param.idCardImageUrl())
