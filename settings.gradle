@@ -4,5 +4,7 @@ include(
 	'cakk-api',
 	'cakk-client',
 	'cakk-domain',
-	'cakk-common'
+	'cakk-common',
+	'cakk-external'
 )
+

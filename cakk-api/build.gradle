@@ -4,6 +4,7 @@ dependencies {
 	implementation project(':cakk-common')
     implementation project(':cakk-domain')
 	implementation project(':cakk-client')
+	implementation project(':cakk-external')
 
 	// basic
     implementation('org.springframework.boot:spring-boot-starter-web')
