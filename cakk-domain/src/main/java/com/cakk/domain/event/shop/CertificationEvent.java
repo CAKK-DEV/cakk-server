@@ -1,4 +1,4 @@
-package com.cakk.domain.event.user;
+package com.cakk.domain.event.shop;
 
 import lombok.Builder;
 

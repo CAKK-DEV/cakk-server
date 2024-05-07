@@ -8,7 +8,7 @@ import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.audit.AuditEntity;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.event.EventMapper;
-import com.cakk.domain.event.user.CertificationEvent;
+import com.cakk.domain.event.shop.CertificationEvent;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

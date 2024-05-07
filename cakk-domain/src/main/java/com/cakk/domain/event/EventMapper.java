@@ -2,7 +2,7 @@ package com.cakk.domain.event;
 
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.event.user.CertificationEvent;
+import com.cakk.domain.event.shop.CertificationEvent;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
