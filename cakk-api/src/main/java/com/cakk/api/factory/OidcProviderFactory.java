@@ -21,7 +21,11 @@ public class OidcProviderFactory {
 	private final KakaoAuthProvider kakaoAuthProvider;
 	private final GoogleAuthProvider googleAuthProvider;
 
-	public OidcProviderFactory(AppleAuthProvider appleAuthProvider, KakaoAuthProvider kakaoAuthProvider, GoogleAuthProvider googleAuthProvider) {
+	public OidcProviderFactory(
+		AppleAuthProvider appleAuthProvider,
+		KakaoAuthProvider kakaoAuthProvider,
+		GoogleAuthProvider googleAuthProvider
+	) {
 		authProviderMap = new EnumMap<>(Provider.class);
 
 		this.appleAuthProvider = appleAuthProvider;
