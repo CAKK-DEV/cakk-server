@@ -85,11 +85,13 @@ public class BusinessInformation extends AuditEntity {
 		publisher.publishEvent(certificationEvent);
 	}
 
-	public void promotedByShopKeeper(User shopKeeper) {
+	public void promotedByBusinessOwner(User shopKeeper) {
 		user = shopKeeper;
+		cakeShop.ownedByUser();
 	}
 
 	private boolean isExistMyCakeShop() {
 		return cakeShop != null && user == null;
 	}
+
 }

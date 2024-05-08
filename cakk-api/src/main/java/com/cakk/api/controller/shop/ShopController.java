@@ -25,7 +25,8 @@ public class ShopController {
 	public ApiResponse<Void> requestCertification(
 		User user,
 		@Valid @RequestBody CertificationRequest certificationRequest) {
-		shopService.requestCertificationShopKeeper(certificationRequest.from(user));
+		shopService.requestCertificationBusinessOwner(certificationRequest.from(user));
 		return ApiResponse.success(null);
 	}
+
 }

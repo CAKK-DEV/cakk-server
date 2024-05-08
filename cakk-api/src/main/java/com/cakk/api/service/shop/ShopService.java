@@ -35,16 +35,15 @@ public class ShopService {
 	}
 
 	@Transactional
-	public void promoteUserToShopKeeper(PromotionRequest request) {
+	public void promoteUserToBusinessOwner(PromotionRequest request) {
 		User user = userReader.findByUserId(request.userId());
 		BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByShopId(request.cakeShopId());
 
-		businessInformation.promotedByShopKeeper(user);
+		businessInformation.promotedByBusinessOwner(user);
 	}
 
-
 	@Transactional(readOnly = true)
-	public void requestCertificationShopKeeper(CertificationParam param) {
+	public void requestCertificationBusinessOwner(CertificationParam param) {
 		BusinessInformation businessInformation;
 
 		if (param.cakeShopId() != null) {
@@ -55,4 +54,5 @@ public class ShopService {
 
 		businessInformation.requestCertificationToApp(param, publisher);
 	}
+
 }
