@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {
 	"com.cakk.client",
 	"com.cakk.domain",
+	"com.cakk.external",
 	"com.cakk.api"
 })
 public class ComponentScanConfig {

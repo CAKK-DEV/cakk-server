@@ -11,10 +11,20 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
+
+import com.cakk.api.filter.JwtAuthenticationFilter;
+import com.cakk.api.filter.JwtExceptionFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtExceptionFilter jwtExceptionFilter;
 
 	@Bean
 	public SecurityFilterChain oauth2SecurityFilterChain(HttpSecurity http) throws Exception {
@@ -25,6 +35,8 @@ public class SecurityConfig {
 			.headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 			.sessionManagement(setSessionManagement())
 			.authorizeHttpRequests(setAuthorizePath())
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
 			.build();
 	}
 
