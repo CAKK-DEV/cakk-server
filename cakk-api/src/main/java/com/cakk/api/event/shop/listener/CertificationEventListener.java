@@ -18,5 +18,6 @@ public class CertificationEventListener {
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void sendMessageToSlack(CertificationEvent certificationEvent) {
+		slackService.sendSlackForCertification(certificationEvent);
 	}
 }
