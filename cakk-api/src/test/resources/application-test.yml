@@ -1,17 +1,25 @@
-spring:
-  datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8.0:///cakk
+#spring:
+#  datasource:
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+#    url: jdbc:tc:mysql:8.0:///cakk
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
+oauth:
+  kakao:
+    public-key-info: https://kauth.kakao.com/.well-known/jwks.json
+  apple:
+    public-key-url: https://appleid.apple.com/auth/keys
+  google:
+    client-id: clientId
 
 storage:
   datasource:
     core:
-      jdbc-url: jdbc:tc:mysql:8.0:///cakk
+      jdbc-url: jdbc:tc:mysql:8.0://cakk
       username: username
       password: password
       driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
