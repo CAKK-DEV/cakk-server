@@ -1,7 +1,8 @@
 package com.cakk.domain.entity.user;
 
 import static org.assertj.core.api.Assertions.*;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import net.jqwik.api.Arbitraries;
 
@@ -13,10 +14,10 @@ import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
-public class BusinessInformationTest {
+class BusinessInformationTest {
 
 	@Test
-	public void 케이크샵이_존재한다면_가게_정보와_함께_서비스에_인증요청을_한다() {
+	void 케이크샵이_존재한다면_가게_정보와_함께_서비스에_인증요청을_한다() {
 		//given
 		CakeShop cakeShop = getReflectionMonkey().giveMeBuilder(CakeShop.class)
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
@@ -39,7 +40,7 @@ public class BusinessInformationTest {
 	}
 
 	@Test
-	public void 케이크샵이_존재하지_않는다면_가게_정보_없이_서비스에_인증요청을_한다() {
+	void 케이크샵이_존재하지_않는다면_가게_정보_없이_서비스에_인증요청을_한다() {
 		//given
 		BusinessInformation businessInformation = getReflectionMonkey().giveMeBuilder(BusinessInformation.class).sample();
 		User user = getReflectionMonkey().giveMeBuilder(User.class)
@@ -57,7 +58,7 @@ public class BusinessInformationTest {
 	}
 
 	@Test
-	public void 사용자는_케이크샵의_주인으로_승격된다() {
+	void 사용자는_케이크샵의_주인으로_승격된다() {
 		//given
 		CakeShop cakeShop = getReflectionMonkey().giveMeOne(CakeShop.class);
 		BusinessInformation businessInformation = getReflectionMonkey().giveMeBuilder(BusinessInformation.class)
@@ -73,13 +74,13 @@ public class BusinessInformationTest {
 		assertThat(businessInformation.getCakeShop().getLinkedFlag()).isTrue();
 	}
 
-	public FixtureMonkey getReflectionMonkey() {
+	private FixtureMonkey getReflectionMonkey() {
 		return FixtureMonkey.builder()
 			.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 			.build();
 	}
 
-	public FixtureMonkey getBuilderMonkey() {
+	private FixtureMonkey getBuilderMonkey() {
 		return FixtureMonkey.builder()
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
 			.build();
