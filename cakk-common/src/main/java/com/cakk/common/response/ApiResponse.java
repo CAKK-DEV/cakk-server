@@ -11,6 +11,16 @@ public class ApiResponse<T> {
 	private String returnMessage;
 	private T data;
 
+	public static <T> ApiResponse<T> success() {
+		ApiResponse<T> response = new ApiResponse<>();
+
+		response.returnCode = ReturnCode.SUCCESS.getCode();
+		response.returnMessage = ReturnCode.SUCCESS.getMessage();
+		response.data = null;
+
+		return response;
+	}
+
 	public static <T> ApiResponse<T> success(T data) {
 		ApiResponse<T> response = new ApiResponse<>();
 

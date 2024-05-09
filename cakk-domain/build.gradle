@@ -7,6 +7,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.4'
 
+	// test
+	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.16")
+	testImplementation('org.assertj:assertj-core')
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
