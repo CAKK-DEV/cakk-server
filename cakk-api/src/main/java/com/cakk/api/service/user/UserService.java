@@ -3,6 +3,8 @@ package com.cakk.api.service.user;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
@@ -12,7 +14,6 @@ import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.reader.UserReader;
 import com.cakk.domain.repository.writer.UserWriter;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

@@ -1,9 +1,10 @@
 package com.cakk.domain.repository.writer;
 
+import lombok.RequiredArgsConstructor;
+
 import com.cakk.domain.annotation.Writer;
 import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.jpa.UserJpaRepository;
-import lombok.RequiredArgsConstructor;
 
 @Writer
 @RequiredArgsConstructor
