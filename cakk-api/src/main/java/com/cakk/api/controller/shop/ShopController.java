@@ -30,7 +30,7 @@ public class ShopController {
 		@SignInUser User user,
 		@Valid @RequestBody CertificationRequest certificationRequest) {
 		shopService.requestCertificationBusinessOwner(certificationRequest.from(user));
-		return ApiResponse.success(null);
+		return ApiResponse.success();
 	}
 
 	@PostMapping("/admin/create")
@@ -38,7 +38,7 @@ public class ShopController {
 		@Valid @RequestBody CreateShopRequest createShopRequest
 	) {
 		shopService.createCakeShopByCertification(createShopRequest);
-		return ApiResponse.success(null);
+		return ApiResponse.success();
 	}
 
 	@PatchMapping("/admin/promote")
@@ -46,7 +46,7 @@ public class ShopController {
 		@Valid @RequestBody PromotionRequest promotionRequest
 	) {
 		shopService.promoteUserToBusinessOwner(promotionRequest);
-		return ApiResponse.success(null);
+		return ApiResponse.success();
 	}
 
 }

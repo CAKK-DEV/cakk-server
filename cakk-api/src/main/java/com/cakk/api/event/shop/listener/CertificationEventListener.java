@@ -13,6 +13,7 @@ import com.cakk.domain.event.shop.CertificationEvent;
 @RequiredArgsConstructor
 @Component
 public class CertificationEventListener {
+
 	private final SlackService slackService;
 
 	@Async
