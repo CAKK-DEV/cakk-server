@@ -12,8 +12,6 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import org.springframework.context.ApplicationEventPublisher;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,19 +72,16 @@ public class BusinessInformation extends AuditEntity {
 		this.user = user;
 	}
 
-	public void requestCertificationToApp(CertificationParam param, ApplicationEventPublisher publisher) {
-		CertificationEvent certificationEvent;
-
+	public CertificationEvent getRequestCertificationMessage(CertificationParam param) {
 		if (isExistMyCakeShop()) {
-			certificationEvent = EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
-		} else {
-			certificationEvent = EventMapper.supplyCertificationInfo(param);
+			return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
 		}
-		publisher.publishEvent(certificationEvent);
+		return EventMapper.supplyCertificationInfo(param);
+
 	}
 
-	public void promotedByBusinessOwner(User shopKeeper) {
-		user = shopKeeper;
+	public void promotedByBusinessOwner(User businessOwner) {
+		user = businessOwner;
 		cakeShop.ownedByUser();
 	}
 

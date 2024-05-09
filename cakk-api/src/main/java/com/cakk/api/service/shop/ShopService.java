@@ -13,6 +13,7 @@ import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 import com.cakk.domain.entity.user.User;
+import com.cakk.domain.event.shop.CertificationEvent;
 import com.cakk.domain.repository.reader.CakeShopReader;
 import com.cakk.domain.repository.reader.UserReader;
 import com.cakk.domain.repository.writer.CakeShopWriter;
@@ -52,7 +53,8 @@ public class ShopService {
 			businessInformation = ShopMapper.supplyBusinessInformationBy();
 		}
 
-		businessInformation.requestCertificationToApp(param, publisher);
+		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
+		publisher.publishEvent(certificationEvent);
 	}
 
 }
