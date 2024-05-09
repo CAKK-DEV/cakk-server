@@ -8,3 +8,19 @@ slack:
   webhook:
     is-enable: false
     url: url
+
+cloud:
+  aws:
+    credentials:
+      access-key: test
+      secret-key: test
+    s3:
+      bucket: test-bucket
+      expire-in: 180000
+      object-key: key
+    region:
+      static:
+        ap-northeast-2
+    stack:
+      auto:
+        false

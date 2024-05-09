@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
@@ -18,7 +20,7 @@ import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntr
 
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(properties = "spring.profiles.active: test")
 public abstract class ControllerTest {
 
 	@Autowired
@@ -51,5 +53,9 @@ public abstract class ControllerTest {
 		return FixtureMonkey.builder()
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
 			.build();
+	}
+
+	protected String toJson(Object request) throws JsonProcessingException {
+		return objectMapper.writeValueAsString(request);
 	}
 }

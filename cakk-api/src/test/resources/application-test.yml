@@ -1,12 +1,14 @@
-#spring:
-#  datasource:
-#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-#    url: jdbc:tc:mysql:8.0:///cakk
-#
-#  jpa:
-#    hibernate:
-#      ddl-auto: create
-#    show-sql: true
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8.0:///cakk
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  flyway:
+    enabled: false
 
 oauth:
   kakao:
@@ -26,8 +28,29 @@ storage:
       data-source-properties:
         rewriteBatchedStatements: true
 
+slack:
+  webhook:
+    is-enable: false
+    url: url
+
 jwt:
   secret: testestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestest
   expiration:
     access-token: 1814400000
     refresh-token: 2592000000
+
+cloud:
+  aws:
+    credentials:
+      access-key: test
+      secret-key: test
+    s3:
+      bucket: test-bucket
+      expire-in: 180000
+      object-key: key
+    region:
+      static:
+        ap-northeast-2
+    stack:
+      auto:
+        false
