@@ -15,6 +15,10 @@ public class UserReader {
 	private final UserJpaRepository userJpaRepository;
 
 	public User findByUserId(Long userId) {
-		return userJpaRepository.findById(userId).orElseThrow(() -> new CakkException(ReturnCode.WRONG_PARAMETER));
+		return userJpaRepository.findById(userId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_USER));
+	}
+
+	public User findByProviderId(String providerId) {
+		return userJpaRepository.findByProviderId(providerId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_USER));
 	}
 }
