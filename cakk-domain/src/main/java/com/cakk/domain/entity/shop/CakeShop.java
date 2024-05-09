@@ -64,4 +64,9 @@ public class CakeShop extends AuditEntity {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
+
+	public void ownedByUser() {
+		linkedFlag = true;
+	}
+
 }

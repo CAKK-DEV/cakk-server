@@ -25,7 +25,10 @@ public enum ReturnCode {
 
 	// 서버 에러 (9998, 9999)
 	INTERNAL_SERVER_ERROR("9998", "내부 서버 에러 입니다."),
-	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다.");
+	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다."),
+
+	// 케이크 샵 에러(1200 ~ 1210)
+	NOT_EXIST_CAKE_SHOP("1200", "존재하지 않는 케이크 샵입니다");
 
 	private final String code;
 	private final String message;
