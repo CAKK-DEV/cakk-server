@@ -58,6 +58,12 @@ public class User extends AuditEntity {
 	@Column(name = "birthday")
 	private LocalDate birthday;
 
+	@Column(name = "device_os", length = 8)
+	private String deviceOs;
+
+	@Column(name = "device_token", length = 170)
+	private String deviceToken;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "role", length = 15, nullable = false)
 	private Role role;
@@ -75,6 +81,8 @@ public class User extends AuditEntity {
 		String email,
 		Gender gender,
 		LocalDate birthday,
+		String deviceOs,
+		String deviceToken,
 		Role role
 	) {
 		this.provider = provider;
@@ -84,6 +92,8 @@ public class User extends AuditEntity {
 		this.email = email;
 		this.gender = gender;
 		this.birthday = birthday;
+		this.deviceOs = deviceOs;
+		this.deviceToken = deviceToken;
 		this.role = role;
 	}
 }

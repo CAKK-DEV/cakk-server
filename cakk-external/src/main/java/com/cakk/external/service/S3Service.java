@@ -27,7 +27,7 @@ public class S3Service {
 	public S3Service(
 		@Value("${cloud.aws.s3.bucket}") String bucket,
 		@Value("${cloud.aws.s3.expire-in}") String expiredIn,
-		@Value("${cloud.aws.s3.objectKey}") String objectKey,
+		@Value("${cloud.aws.s3.object-key}") String objectKey,
 		AmazonS3 amazonS3
 	) {
 		this.bucket = bucket;
