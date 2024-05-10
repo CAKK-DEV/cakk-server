@@ -1,0 +1,3 @@
+[submodule "server-secret"]
+	path = server-secret
+	url = https://github.com/CAKK-DEV/cakk-server-secret
