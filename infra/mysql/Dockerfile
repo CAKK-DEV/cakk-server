@@ -1,0 +1,8 @@
+FROM mysql:8.0.35
+
+ENV MYSQL_ROOT_PASSWORD=root_password
+ENV MYSQL_DATABASE=databasename
+ENV MYSQL_USER=username
+ENV MYSQL_PASSWORD=password
+
+EXPOSE 3306
