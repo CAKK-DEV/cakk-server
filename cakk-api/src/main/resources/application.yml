@@ -1,13 +1,13 @@
+server:
+  servlet:
+    context-path: /api/v1
+
 spring:
   application:
     title: Cakk
     version: 1.0.0
   banner:
     location: classpath:/app-banner.dat
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
   jpa:
     open-in-view: false
     hibernate:

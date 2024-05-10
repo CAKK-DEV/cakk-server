@@ -1,8 +1,9 @@
 package com.cakk.api.controller.user;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -15,18 +16,21 @@ import com.cakk.common.response.ApiResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 public class SignController {
 
 	private final UserService userService;
 
 	@PostMapping("/sign-up")
-	public ApiResponse<JwtResponse> signUp(@RequestBody UserSignUpRequest request) {
+	public ApiResponse<JwtResponse> signUp(
+		@Valid @RequestBody UserSignUpRequest request
+	) {
 		return ApiResponse.success(userService.signUp(request));
 	}
 
 	@PostMapping("/sign-in")
-	public ApiResponse<JwtResponse> signIn(@RequestBody UserSignInRequest request) {
+	public ApiResponse<JwtResponse> signIn(
+		@Valid @RequestBody UserSignInRequest request
+	) {
 		return ApiResponse.success(userService.signIn(request));
 	}
 }
