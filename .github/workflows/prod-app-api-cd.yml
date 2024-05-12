@@ -12,6 +12,8 @@ on:
 #      - cakk-domain/**
 #      - cakk-common/**
 
+permissions: write-all
+
 env:
   SERVER_NAME: prod-app-api
   APPLICATION_YML: ./server-secret/application-prod.yml
