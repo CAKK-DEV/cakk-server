@@ -51,9 +51,7 @@ jobs:
           distribution: corretto
 
       - name: Copy application.yml
-        run: |
-          ls
-          cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application.yml
+        run: cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application.yml
 
       - name: Gradle Caching
         uses: actions/cache@v3
@@ -75,7 +73,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() }}
         with:
-          files: build/test-results/**/*.xml
+          files: ./cakk-api/build/test-results/**/*.xml
 
       # 배포
       - name: Make zip file
