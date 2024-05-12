@@ -1,0 +1,98 @@
+name: prod-app-api-cd
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - cakk-api/**
+      - cakk-domain/**
+      - cakk-common/**
+
+env:
+  SERVER_NAME: prod-app-api
+  APPLICATION_YML: ./server-secret/application-prod.yml
+  RESOURCE_PATH: ./cakk-api/src/main/resources
+  AWS_S3_REGION: ${{ secrets.AWS_S3_REGION }}
+  DEPLOY_S3_BUCKET_NAME: ${{ secrets.DEPLOY_S3_BUCKET_NAME }}
+  PROD_APP_CODEDEPLOY_APPLICATION_NAME: ${{ secrets.PROD_APP_CODEDEPLOY_APPLICATION_NAME }}
+  PROD_APP_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: ${{ secrets.PROD_APP_CODEDEPLOY_DEPLOYMENT_GROUP_NAME }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: Cakk-App-CD
+
+    steps:
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH:mm:ss
+          timezone: 'Asia/Seoul'
+      - name: Print Current Time
+        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: corretto
+
+      - name: Copy application.yml
+        run: cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application.yml
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Permission
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: SPRING_PROFILES_ACTIVE=[test] ./gradlew clean build
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: ${{ always() }}
+        with:
+          files: build/test-results/**/*.xml
+
+      # 배포
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOY_IAM_KEY }}
+          aws-secret-access-key: ${{ secrets.DEPLOY_IAM_SECRET }}
+          aws-region: ${{ env.AWS_S3_REGION }}
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp \
+          --region ${{ env.AWS_S3_REGION }} \
+          ./$GITHUB_SHA.zip s3://$DEPLOY_S3_BUCKET_NAME/$SERVER_NAME/$GITHUB_SHA.zip
+
+      - name: Deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name $PROD_APP_CODEDEPLOY_APPLICATION_NAME \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name $PROD_APP_CODEDEPLOY_DEPLOYMENT_GROUP_NAME \
+          --file-exists-behavior OVERWRITE \
+          —s3-location bucket=$DEPLOY_S3_BUCKET_NAME,bundleType=zip,key=$SERVER_NAME/$GITHUB_SHA.zip \
+          —region $AWS_S3_REGION \
