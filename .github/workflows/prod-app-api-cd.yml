@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - master
-    paths:
-      - cakk-api/**
-      - cakk-domain/**
-      - cakk-common/**
+  pull_request:
+      - master
+#    paths:
+#      - cakk-api/**
+#      - cakk-domain/**
+#      - cakk-common/**
 
 env:
   SERVER_NAME: prod-app-api
