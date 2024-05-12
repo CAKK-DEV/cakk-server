@@ -102,5 +102,5 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name $PROD_APP_CODEDEPLOY_DEPLOYMENT_GROUP_NAME \
           --file-exists-behavior OVERWRITE \
-          —s3-location bucket=$DEPLOY_S3_BUCKET_NAME,bundleType=zip,key=$SERVER_NAME/$GITHUB_SHA.zip \
-          —region $AWS_S3_REGION \
+          -s3-location bucket=$DEPLOY_S3_BUCKET_NAME,bundleType=zip,key=$SERVER_NAME/$GITHUB_SHA.zip \
+          -region $AWS_S3_REGION \
