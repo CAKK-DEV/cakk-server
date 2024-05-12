@@ -40,6 +40,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: true
+          token: ${{ secrets.ACTION_KEY }}
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -48,7 +51,9 @@ jobs:
           distribution: corretto
 
       - name: Copy application.yml
-        run: cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application.yml
+        run: |
+          ls
+          cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application.yml
 
       - name: Gradle Caching
         uses: actions/cache@v3
