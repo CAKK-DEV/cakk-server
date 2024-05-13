@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PREFIX=/home/ubuntu
-PROJECT_NAME=cakk-server
+PROJECT_NAME=prod-app-api
 DEPLOY_LOG_PATH="$PREFIX/$PROJECT_NAME/deploy.log"
 
 TIME_NOW=$(date +%c)
