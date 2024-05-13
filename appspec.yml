@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source:  /
-    destination: /home/ubuntu/deploy
+    destination: /home/ubuntu/deploy/
     overwrite: yes
 
 permissions:
