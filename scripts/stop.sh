@@ -6,6 +6,7 @@ DEPLOY_LOG_PATH="$PREFIX/$PROJECT_NAME/deploy.log"
 
 TIME_NOW=$(date +%c)
 
+chmod +x "$DEPLOY_LOG_PATH"
 echo "$TIME_NOW> 현재 실행 중인 서버 pid 확인" >> DEPLOY_LOG_PATH
 CURRENT_PID=$(pgrep -fl cakk | grep jar | awk '{print $1}')
 
