@@ -2,7 +2,7 @@
 
 PREFIX=/home/ubuntu
 REPOSITORY=~/deploy
-BUILD_DIR=/cakk-api/build/libs
+BUILD_DIR=cakk-api/build/libs
 PROJECT_NAME=prod-app-api
 DEPLOY_PATH="$REPOSITORY/$BUILD_DIR"
 DEPLOY_LOG_PATH="$PREFIX/$PROJECT_NAME/deploy.log"
