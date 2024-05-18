@@ -36,7 +36,7 @@ public class SecurityConfig {
 			.sessionManagement(setSessionManagement())
 			.authorizeHttpRequests(setAuthorizePath())
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
+			.addFilterAfter(jwtExceptionFilter, JwtAuthenticationFilter.class)
 			.build();
 	}
 
@@ -46,7 +46,7 @@ public class SecurityConfig {
 
 	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> setAuthorizePath() {
 		return authorizeHttpRequests -> authorizeHttpRequests
-			.requestMatchers("/api/v1/**").permitAll()
+			.requestMatchers("/**").permitAll()
 			// .requestMatchers("/api/v1/**").hasAnyRole("USER", "MERCHANT", "ADMIN")
 			.anyRequest().authenticated();
 	}

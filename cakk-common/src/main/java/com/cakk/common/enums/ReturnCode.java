@@ -19,6 +19,7 @@ public enum ReturnCode {
 	// 공통 유저 관련 (1200 ~ 1250)
 	WRONG_PROVIDER("1200", "잘못된 인증 제공자 입니다."),
 	NOT_EXIST_USER("1201", "존재하지 않는 유저 입니다."),
+	ALREADY_EXIST_USER("1202", "이미 가입한 유저 입니다."),
 
 	// 클라이언트 에러
 	WRONG_PARAMETER("9000", "잘못된 파라미터 입니다."),
