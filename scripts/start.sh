@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PREFIX=/home/ubuntu
-REPOSITORY=~/deploy
+REPOSITORY="$PREFIX/deploy"
 BUILD_DIR=cakk-api/build/libs
 PROJECT_NAME=prod-app-api
 DEPLOY_PATH="$REPOSITORY/$BUILD_DIR"
