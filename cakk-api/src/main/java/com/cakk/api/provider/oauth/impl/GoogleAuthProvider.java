@@ -1,6 +1,7 @@
 package com.cakk.api.provider.oauth.impl;
 
 import static com.cakk.common.enums.ReturnCode.*;
+import static java.util.Objects.*;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,7 +29,13 @@ public class GoogleAuthProvider implements OidcProvider {
 
 	private GoogleIdToken getGoogleIdToken(String idToken) {
 		try {
-			return googleIdTokenVerifier.verify(idToken);
+			GoogleIdToken googleIdToken = googleIdTokenVerifier.verify(idToken);
+
+			if (isNull(googleIdToken)) {
+				throw new CakkException(EXTERNAL_SERVER_ERROR);
+			}
+
+			return googleIdToken;
 		} catch (GeneralSecurityException | IOException e) {
 			throw new CakkException(EXTERNAL_SERVER_ERROR);
 		}
