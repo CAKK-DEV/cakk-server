@@ -2,11 +2,11 @@ package com.cakk.domain.converter;
 
 import java.util.stream.Stream;
 
+import jakarta.persistence.AttributeConverter;
+
 import com.cakk.common.enums.DayOfWeek;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
-
-import jakarta.persistence.AttributeConverter;
 
 public class DayOfWeekConverter implements AttributeConverter<DayOfWeek, Integer> {
 

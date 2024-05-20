@@ -42,7 +42,8 @@ public class ShopMapper {
 		CakeShop cakeShop,
 		List<DayOfWeek> operationsDays,
 		List<LocalTime> startTimes,
-		List<LocalTime> endTimes) {
+		List<LocalTime> endTimes
+	) {
 		List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
 
 		for (int i = 0; i < operationsDays.size(); i++) {

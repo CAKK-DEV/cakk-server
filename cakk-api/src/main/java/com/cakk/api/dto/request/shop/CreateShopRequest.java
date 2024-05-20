@@ -3,11 +3,11 @@ package com.cakk.api.dto.request.shop;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.cakk.common.enums.DayOfWeek;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import com.cakk.common.enums.DayOfWeek;
 
 public record CreateShopRequest(
 
