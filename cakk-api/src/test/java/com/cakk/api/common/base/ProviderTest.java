@@ -5,9 +5,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.cakk.domain.config.JpaConfig;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
+
+import com.cakk.domain.config.JpaConfig;
 
 @Import(JpaConfig.class)
 @ActiveProfiles("test")

@@ -34,7 +34,8 @@ public class ShopService {
 	public void createCakeShopByCertification(CreateShopRequest request) {
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
-		List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, request.startTimes(), request.endTimes());
+		List<CakeShopOperation> cakeShopOperations = ShopMapper
+			.supplyCakeShopOperationsBy(cakeShop, request.startTimes(), request.endTimes());
 
 		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
 	}
