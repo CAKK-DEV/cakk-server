@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import com.cakk.common.enums.DayOfWeek;
+import com.cakk.common.enums.Days;
 
 public record CreateShopRequest(
 
@@ -15,7 +15,7 @@ public record CreateShopRequest(
 	String businessNumber,
 	@NotNull
 	@Size(min = 1, max = 7)
-	List<DayOfWeek> operationsDays,
+	List<Days> operationsDays,
 	@NotNull
 	@Size(min = 1, max = 7)
 	List<LocalTime> startTimes,

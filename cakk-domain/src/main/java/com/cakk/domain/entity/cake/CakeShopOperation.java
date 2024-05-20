@@ -18,7 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.cakk.common.enums.DayOfWeek;
+import com.cakk.common.enums.Days;
 import com.cakk.domain.converter.DayOfWeekConverter;
 import com.cakk.domain.entity.audit.AuditEntity;
 import com.cakk.domain.entity.shop.CakeShop;
@@ -36,7 +36,7 @@ public class CakeShopOperation extends AuditEntity {
 
 	@Column(name = "operation_day", nullable = false)
 	@Convert(converter = DayOfWeekConverter.class)
-	private DayOfWeek operationDay;
+	private Days operationDay;
 
 	@Column(name = "start_time", nullable = false)
 	private LocalTime operationStartTime;
@@ -49,7 +49,7 @@ public class CakeShopOperation extends AuditEntity {
 	private CakeShop cakeShop;
 
 	@Builder
-	public CakeShopOperation(DayOfWeek operationDay, LocalTime operationStartTime, LocalTime operationEndTime, CakeShop cakeShop) {
+	public CakeShopOperation(Days operationDay, LocalTime operationStartTime, LocalTime operationEndTime, CakeShop cakeShop) {
 		this.operationDay = operationDay;
 		this.operationStartTime = operationStartTime;
 		this.operationEndTime = operationEndTime;

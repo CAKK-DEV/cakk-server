@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.common.enums.DayOfWeek;
+import com.cakk.common.enums.Days;
 import com.cakk.domain.entity.cake.CakeShopOperation;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
@@ -40,7 +40,7 @@ public class ShopMapper {
 
 	public static List<CakeShopOperation> supplyCakeShopOperationsBy(
 		CakeShop cakeShop,
-		List<DayOfWeek> operationsDays,
+		List<Days> operationsDays,
 		List<LocalTime> startTimes,
 		List<LocalTime> endTimes
 	) {
