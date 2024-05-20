@@ -2,9 +2,6 @@ package com.cakk.domain.entity.cake;
 
 import java.time.LocalTime;
 
-import com.cakk.domain.entity.audit.AuditEntity;
-import com.cakk.domain.entity.shop.CakeShop;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,10 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import com.cakk.domain.entity.audit.AuditEntity;
+import com.cakk.domain.entity.shop.CakeShop;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
