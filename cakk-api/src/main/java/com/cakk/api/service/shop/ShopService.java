@@ -1,5 +1,7 @@
 package com.cakk.api.service.shop;
 
+import java.util.List;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.dto.param.user.CertificationParam;
+import com.cakk.domain.entity.cake.CakeShopOperation;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 import com.cakk.domain.entity.user.User;
@@ -31,8 +34,10 @@ public class ShopService {
 	public void createCakeShopByCertification(CreateShopRequest request) {
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
+		List<CakeShopOperation> cakeShopOperations = ShopMapper
+			.supplyCakeShopOperationsBy(cakeShop, request.operationsDays(), request.startTimes(), request.endTimes());
 
-		cakeShopWriter.createCakeShop(cakeShop, businessInformation);
+		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
 	}
 
 	@Transactional

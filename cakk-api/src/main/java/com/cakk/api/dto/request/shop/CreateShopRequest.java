@@ -1,20 +1,27 @@
 package com.cakk.api.dto.request.shop;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import com.cakk.common.enums.Days;
 
 public record CreateShopRequest(
 
 	@NotBlank
 	String businessNumber,
-	@NotBlank
-	String operationDay,
 	@NotNull
-	LocalTime startTime,
+	@Size(min = 1, max = 7)
+	List<Days> operationsDays,
 	@NotNull
-	LocalTime endTime,
+	@Size(min = 1, max = 7)
+	List<LocalTime> startTimes,
+	@NotNull
+	@Size(min = 1, max = 7)
+	List<LocalTime> endTimes,
 	@NotBlank
 	String shopName,
 	String shopBio,

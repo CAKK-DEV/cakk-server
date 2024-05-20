@@ -1,7 +1,5 @@
 package com.cakk.domain.entity.user;
 
-import java.time.LocalTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,15 +31,6 @@ public class BusinessInformation extends AuditEntity {
 	@Column(name = "shop_id")
 	private Long id;
 
-	@Column(name = "operation_day", nullable = false, length = 7)
-	private String operationDay;
-
-	@Column(name = "start_time", nullable = false)
-	private LocalTime startTime;
-
-	@Column(name = "end_time", nullable = false)
-	private LocalTime endTime;
-
 	@Column(name = "business_number", length = 20)
 	private String businessNumber;
 
@@ -57,17 +46,11 @@ public class BusinessInformation extends AuditEntity {
 	@Builder
 	public BusinessInformation(
 		CakeShop cakeShop,
-		String operationDay,
-		LocalTime startTime,
-		LocalTime endTime,
 		String businessNumber,
 		User user
 	) {
 		this.id = cakeShop.getId();
 		this.cakeShop = cakeShop;
-		this.operationDay = operationDay;
-		this.startTime = startTime;
-		this.endTime = endTime;
 		this.businessNumber = businessNumber;
 		this.user = user;
 	}
