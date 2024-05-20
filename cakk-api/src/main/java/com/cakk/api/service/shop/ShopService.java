@@ -35,7 +35,7 @@ public class ShopService {
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
 		List<CakeShopOperation> cakeShopOperations = ShopMapper
-			.supplyCakeShopOperationsBy(cakeShop, request.startTimes(), request.endTimes());
+			.supplyCakeShopOperationsBy(cakeShop, request.operationsDays(), request.startTimes(), request.endTimes());
 
 		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
 	}
