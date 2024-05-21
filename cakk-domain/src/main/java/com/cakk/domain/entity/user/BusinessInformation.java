@@ -65,6 +65,7 @@ public class BusinessInformation extends AuditEntity {
 
 	public void promotedByBusinessOwner(User businessOwner) {
 		user = businessOwner;
+		user.upgradedRoleToBusinessOwner();
 		cakeShop.ownedByUser();
 	}
 

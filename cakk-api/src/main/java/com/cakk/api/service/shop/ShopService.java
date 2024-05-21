@@ -43,7 +43,8 @@ public class ShopService {
 	@Transactional
 	public void promoteUserToBusinessOwner(PromotionRequest request) {
 		User user = userReader.findByUserId(request.userId());
-		BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByShopId(request.cakeShopId());
+		BusinessInformation businessInformation = cakeShopReader
+			.findBusinessInformationWithShop(request.cakeShopId());
 
 		businessInformation.promotedByBusinessOwner(user);
 	}
@@ -53,7 +54,7 @@ public class ShopService {
 		BusinessInformation businessInformation;
 
 		if (param.cakeShopId() != null) {
-			businessInformation = cakeShopReader.findBusinessInformationByShopId(param.cakeShopId());
+			businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
 		} else {
 			businessInformation = ShopMapper.supplyBusinessInformationBy();
 		}
