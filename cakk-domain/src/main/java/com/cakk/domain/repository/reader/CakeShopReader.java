@@ -21,9 +21,15 @@ public class CakeShopReader {
 		return cakeShopJpaRepository.findById(cakeShopId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
-	public BusinessInformation findBusinessInformationByShopId(Long cakeShopId) {
+	public BusinessInformation findBusinessInformationWithShop(Long cakeShopId) {
 		return businessInformationJpaRepository
-			.findBusinessInformationByCakeShopId(cakeShopId)
+			.findBusinessInformationWithCakeShop(cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
+
+	public BusinessInformation findBusinessInformationByCakeShopId(Long cakeShopId) {
+		return businessInformationJpaRepository.findBusinessInformationByCakeShopId(cakeShopId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
+	}
+
 }
