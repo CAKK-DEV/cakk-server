@@ -97,7 +97,7 @@ public class User extends AuditEntity {
 		this.role = role;
 	}
 
-	public void upgradedRoleToMerchant() {
-		role = Role.MERCHANT;
+	public void upgradedRoleToBusinessOwner() {
+		role = Role.BUSINESS_OWNER;
 	}
 }
