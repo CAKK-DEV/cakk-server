@@ -29,6 +29,9 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "shop_id", nullable = false)
 	private Long id;
 
+	@Column(name = "thumbnail_url", length = 200)
+	private String thumbnailUrl;
+
 	@Column(name = "shop_name", length = 30, nullable = false)
 	private String shopName;
 
@@ -57,8 +60,16 @@ public class CakeShop extends AuditEntity {
 	private LocalDateTime deletedAt;
 
 	@Builder
-	public CakeShop(String shopName, String shopBio, String shopDescription, Double latitude, Double longitude) {
+	public CakeShop(
+		String shopName,
+		String thumbnailUrl,
+		String shopBio,
+		String shopDescription,
+		Double latitude,
+		Double longitude
+	) {
 		this.shopName = shopName;
+		this.thumbnailUrl = thumbnailUrl;
 		this.shopBio = shopBio;
 		this.shopDescription = shopDescription;
 		this.latitude = latitude;
