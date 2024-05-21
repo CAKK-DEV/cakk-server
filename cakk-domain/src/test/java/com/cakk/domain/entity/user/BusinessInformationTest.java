@@ -6,6 +6,7 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import net.jqwik.api.Arbitraries;
 
+import com.cakk.common.enums.Role;
 import com.cakk.domain.base.DomainTest;
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
@@ -88,5 +89,6 @@ class BusinessInformationTest extends DomainTest {
 		//then
 		assertThat(businessInformation.getUser()).isNotNull();
 		assertThat(businessInformation.getCakeShop().getLinkedFlag()).isTrue();
+		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.BUSINESS_OWNER);
 	}
 }
