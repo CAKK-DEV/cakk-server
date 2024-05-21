@@ -96,4 +96,8 @@ public class User extends AuditEntity {
 		this.deviceToken = deviceToken;
 		this.role = role;
 	}
+
+	public void upgradedRoleToMerchant() {
+		role = Role.MERCHANT;
+	}
 }
