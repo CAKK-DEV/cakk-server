@@ -5,8 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.domain.annotation.Writer;
-import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.entity.shop.CakeShop;
+import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.entity.user.BusinessInformation;
 import com.cakk.domain.repository.jpa.BusinessInformationJpaRepository;
 import com.cakk.domain.repository.jpa.CakeShopJpaRepository;
