@@ -12,7 +12,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.dto.param.user.CertificationParam;
-import com.cakk.domain.entity.cake.CakeShopOperation;
+import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 import com.cakk.domain.entity.user.User;

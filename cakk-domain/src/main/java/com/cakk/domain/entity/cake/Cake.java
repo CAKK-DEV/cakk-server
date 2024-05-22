@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +33,9 @@ public class Cake extends AuditEntity {
 	@Column(name = "cake_id", nullable = false)
 	private Long id;
 
+	@Column(name = "cake_name", nullable = false, length = 50)
+	private String cakeName;
+
 	@Column(name = "cake_image_url", nullable = false, length = 200)
 	private String cakeImageUrl;
 
@@ -46,7 +50,9 @@ public class Cake extends AuditEntity {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
-	public Cake(String cakeImageUrl, CakeShop cakeShop) {
+	@Builder
+	public Cake(String cakeName, String cakeImageUrl, CakeShop cakeShop) {
+		this.cakeName = cakeName;
 		this.cakeImageUrl = cakeImageUrl;
 		this.cakeShop = cakeShop;
 		this.likeCount = 0;

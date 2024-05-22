@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.common.enums.Days;
-import com.cakk.domain.entity.cake.CakeShopOperation;
+import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
 
