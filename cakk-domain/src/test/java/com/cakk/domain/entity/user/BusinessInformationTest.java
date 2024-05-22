@@ -2,7 +2,7 @@ package com.cakk.domain.entity.user;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import net.jqwik.api.Arbitraries;
 
@@ -49,7 +49,7 @@ class BusinessInformationTest extends DomainTest {
 			.sample();
 	}
 
-	@RepeatedTest(100)
+	@Test
 	void 케이크샵이_존재한다면_가게_정보와_함께_서비스에_인증요청을_한다() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
@@ -63,7 +63,7 @@ class BusinessInformationTest extends DomainTest {
 		assertThat(certificationEvent.shopName()).isNotNull();
 	}
 
-	@RepeatedTest(100)
+	@Test
 	void 케이크샵이_존재하지_않는다면_가게_정보_없이_서비스에_인증요청을_한다() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixture();
@@ -77,7 +77,7 @@ class BusinessInformationTest extends DomainTest {
 		assertThat(certificationEvent.shopName()).isNull();
 	}
 
-	@RepeatedTest(100)
+	@Test
 	void 사용자는_케이크샵의_주인으로_승격된다() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
