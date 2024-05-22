@@ -32,8 +32,10 @@ public class CakeQueryRepository {
 				cake.id,
 				cake.cakeImageUrl))
 			.from(cake)
-			.innerJoin(cake.cakeShop, cakeShop)
-			.innerJoin(cakeCategory.cake, cake)
+			.innerJoin(cakeShop)
+			.on(cake.cakeShop.eq(cakeShop))
+			.innerJoin(cakeCategory)
+			.on(cakeCategory.cake.eq(cake))
 			.where(
 				ltCakeId(cakeId),
 				eqCategory(category))
