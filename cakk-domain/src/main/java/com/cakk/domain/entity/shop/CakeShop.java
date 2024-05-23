@@ -52,7 +52,7 @@ public class CakeShop extends AuditEntity {
 	private Integer likeCount;
 
 	@ColumnDefault("false")
-	@Column(name = "linkedFlag", nullable = false, columnDefinition = "TINYINT(1)")
+	@Column(name = "linked_flag", nullable = false, columnDefinition = "TINYINT(1)")
 	private Boolean linkedFlag;
 
 	@ColumnDefault("null")

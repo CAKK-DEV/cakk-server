@@ -1,4 +1,4 @@
-package com.cakk.domain.entity.cake;
+package com.cakk.domain.entity.shop;
 
 import java.time.LocalTime;
 
