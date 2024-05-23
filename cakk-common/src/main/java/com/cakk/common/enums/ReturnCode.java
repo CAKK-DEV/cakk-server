@@ -21,16 +21,20 @@ public enum ReturnCode {
 	NOT_EXIST_USER("1201", "존재하지 않는 유저 입니다."),
 	ALREADY_EXIST_USER("1202", "이미 가입한 유저 입니다."),
 
+	// 케이크 샵 에러 (1300 ~ 1350)
+	NOT_EXIST_CAKE_SHOP("1200", "존재하지 않는 케이크 샵 입니다"),
+
+	// 케이크 에러 (1350 ~ 1400)
+	NOT_EXIST_CAKE("1350", "존재하지 않는 케이크 입니다"),
+	NOT_EXIST_CAKE_CATEGORY("1301", "존재하지 않는 케이크 카테고리 입니다"),
+
 	// 클라이언트 에러
 	WRONG_PARAMETER("9000", "잘못된 파라미터 입니다."),
 	METHOD_NOT_ALLOWED("9001", "허용되지 않은 메소드 입니다."),
 
 	// 서버 에러 (9998, 9999)
 	INTERNAL_SERVER_ERROR("9998", "내부 서버 에러 입니다."),
-	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다."),
-
-	// 케이크 샵 에러(1200 ~ 1210)
-	NOT_EXIST_CAKE_SHOP("1200", "존재하지 않는 케이크 샵입니다");
+	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다.");
 
 	private final String code;
 	private final String message;
