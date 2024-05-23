@@ -25,7 +25,7 @@ public class CakeQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<CakeImageResponseParam> findCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
 		return queryFactory
 			.select(Projections.constructor(CakeImageResponseParam.class,
 				cakeShop.id,

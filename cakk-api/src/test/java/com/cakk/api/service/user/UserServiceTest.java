@@ -3,19 +3,18 @@ package com.cakk.api.service.user;
 import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import net.jqwik.api.Arbitraries;
 
+import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
 import com.cakk.api.factory.OidcProviderFactory;
 import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.api.service.user.UserService;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
@@ -41,8 +40,8 @@ class UserServiceTest extends ServiceTest {
 	@Mock
 	private UserWriter userWriter;
 
-	@Test
-	void 회원가입에_성공한다() {
+	@TestWithDisplayName("회원가입에 성공한다")
+	void signUp1() {
 		// given
 		UserSignUpRequest dto = getConstructorMonkey().giveMeOne(UserSignUpRequest.class);
 		User user = getReflectionMonkey().giveMeBuilder(User.class)
@@ -73,8 +72,8 @@ class UserServiceTest extends ServiceTest {
 		verify(jwtProvider, times(1)).generateToken(user);
 	}
 
-	@Test
-	void 만료된_id_token이라면_회원가입_시_에러를_던진다() {
+	@TestWithDisplayName("만료된 id token이라면 회원가입 시 에러를 던진다")
+	void signUp2() {
 		// given
 		UserSignUpRequest dto = getConstructorMonkey().giveMeOne(UserSignUpRequest.class);
 		User user = getReflectionMonkey().giveMeBuilder(User.class)
@@ -96,8 +95,8 @@ class UserServiceTest extends ServiceTest {
 		verify(jwtProvider, times(0)).generateToken(user);
 	}
 
-	@Test
-	void 로그인에_성공한다() {
+	@TestWithDisplayName("로그인에 성공한다.")
+	void signIn() {
 		// given
 		UserSignInRequest dto = getConstructorMonkey().giveMeOne(UserSignInRequest.class);
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
@@ -129,8 +128,8 @@ class UserServiceTest extends ServiceTest {
 		verify(jwtProvider, times(1)).generateToken(user);
 	}
 
-	@Test
-	void 제공자_id에_해당하는_유저가_없다면_로그인_시_에러를_던진다() {
+	@TestWithDisplayName("제공자 id에 해당하는 유저가 없다면 로그인 시 에러를 던진다")
+	void signIn2() {
 		// given
 		UserSignInRequest dto = getConstructorMonkey().giveMeOne(UserSignInRequest.class);
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();

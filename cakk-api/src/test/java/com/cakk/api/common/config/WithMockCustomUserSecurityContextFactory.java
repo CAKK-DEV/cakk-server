@@ -1,4 +1,4 @@
-package com.cakk.api.config;
+package com.cakk.api.common.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
 
+import com.cakk.api.common.annotation.MockCustomUser;
 import com.cakk.api.vo.OAuthUserDetails;
 import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.reader.UserReader;

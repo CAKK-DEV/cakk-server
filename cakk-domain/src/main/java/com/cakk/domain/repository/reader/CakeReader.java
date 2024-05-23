@@ -24,7 +24,7 @@ public class CakeReader {
 		return cakeJpaRepository.findById(cakeId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE));
 	}
 
-	public List<CakeImageResponseParam> findCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
-		return cakeQueryRepository.findCakeImagesByCursorAndCategory(cakeId, category, pageSize);
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
+		return cakeQueryRepository.searchCakeImagesByCursorAndCategory(cakeId, category, pageSize);
 	}
 }
