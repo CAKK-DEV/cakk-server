@@ -15,6 +15,6 @@ public class CakeService {
 	private final CakeReader cakeReader;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
-		return CakeImageListResponse.from(cakeReader.findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize()));
+		return CakeImageListResponse.from(cakeReader.searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize()));
 	}
 }

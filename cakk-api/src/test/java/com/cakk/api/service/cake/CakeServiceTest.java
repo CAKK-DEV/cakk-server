@@ -33,7 +33,7 @@ class CakeServiceTest extends ServiceTest {
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 3);
 
-		doReturn(cakeImages).when(cakeReader).findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCategory(dto);
@@ -42,7 +42,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNotNull(result.lastCakeId());
 
-		verify(cakeReader).findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		verify(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 	}
 
 	@TestWithDisplayName("카테고리에 해당하는 케이크가 없을 시 빈 배열을 리턴한다.")
@@ -51,7 +51,7 @@ class CakeServiceTest extends ServiceTest {
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 0);
 
-		doReturn(cakeImages).when(cakeReader).findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCategory(dto);
@@ -60,6 +60,6 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeId());
 
-		verify(cakeReader).findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		verify(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 	}
 }
