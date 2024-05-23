@@ -1,9 +1,10 @@
 package com.cakk.api.integration.cake;
 
+import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -16,6 +17,9 @@ import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.entity.cake.CakeCategory;
+import com.cakk.domain.repository.reader.CakeCategoryReader;
 
 @SqlGroup({
 	@Sql(scripts = {
@@ -27,6 +31,9 @@ import com.cakk.common.response.ApiResponse;
 class CakeIntegrationTest extends IntegrationTest {
 
 	private static final String API_URL = "/api/v1/cakes";
+
+	@Autowired
+	private CakeCategoryReader cakeCategoryReader;
 
 	@Test
 	void 카테고리로_케이크_이미지_조회에_성공한다() {
@@ -45,12 +52,17 @@ class CakeIntegrationTest extends IntegrationTest {
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
 
-		Assertions.assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		Assertions.assertEquals(5, data.cakeImages().size());
-		Assertions.assertEquals(6L, data.lastCakeId());
-		Assertions.assertEquals(5, data.size());
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
+		assertEquals(lastCakeId, data.lastCakeId());
+		assertEquals(5, data.size());
+		data.cakeImages().forEach(cakeImage -> {
+			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
+		});
 	}
 
 	@Test
@@ -71,12 +83,17 @@ class CakeIntegrationTest extends IntegrationTest {
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
 
-		Assertions.assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		Assertions.assertEquals(5, data.cakeImages().size());
-		Assertions.assertEquals(1L, data.lastCakeId());
-		Assertions.assertEquals(5, data.size());
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
+		assertEquals(lastCakeId, data.lastCakeId());
+		assertEquals(5, data.size());
+		data.cakeImages().forEach(cakeImage -> {
+			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
+		});
 	}
 
 	@Test
@@ -97,11 +114,12 @@ class CakeIntegrationTest extends IntegrationTest {
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
 
-		Assertions.assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		Assertions.assertEquals(0, data.cakeImages().size());
-		Assertions.assertNull(data.lastCakeId());
-		Assertions.assertEquals(0, data.size());
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(0, data.cakeImages().size());
+		assertNull(data.lastCakeId());
+		assertEquals(0, data.size());
 	}
 }
