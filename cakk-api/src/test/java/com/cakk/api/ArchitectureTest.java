@@ -5,8 +5,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
+import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -24,8 +24,7 @@ class ArchitectureTest {
 			.importPackages("com.cakk");
 	}
 
-	@DisplayName("response 패키지 안에 있는 클래스들은 Response로 끝나야 한다.")
-	@Test
+	@TestWithDisplayName("response 패키지 안에 있는 클래스들은 Response로 끝나야 한다.")
 	void response() {
 		ArchRule rule = classes()
 			.that().resideInAPackage("..response")
@@ -36,8 +35,7 @@ class ArchitectureTest {
 	}
 
 	@Disabled
-	@DisplayName("Provider 클래스는 Service, Filter, Provider 클래스에만 의존해야 한다.")
-	@Test
+	@TestWithDisplayName("Provider 클래스는 Service, Filter, Provider 클래스에만 의존해야 한다.")
 	void providerDependency() {
 		ArchRule rule = classes()
 			.that().haveNameMatching(".*Provider")
@@ -49,8 +47,7 @@ class ArchitectureTest {
 		rule.check(javaClasses);
 	}
 
-	@DisplayName("Entity는 아무것도 의존하지 않는다.")
-	@Test
+	@TestWithDisplayName("Entity는 아무것도 의존하지 않는다.")
 	void entityNotDependency() {
 		ArchRule rule = classes()
 			.that()

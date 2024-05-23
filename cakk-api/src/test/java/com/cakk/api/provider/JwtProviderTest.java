@@ -9,7 +9,6 @@ import java.security.Key;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ProviderTest;
 import com.cakk.api.config.JwtConfig;
 import com.cakk.api.provider.jwt.JwtProvider;
@@ -50,8 +50,7 @@ class JwtProviderTest extends ProviderTest {
 		ReflectionTestUtils.setField(jwtProvider, "key", Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)));
 	}
 
-	@DisplayName("토큰 생성에 성공한다.")
-	@Test
+	@TestWithDisplayName("토큰 생성에 성공한다.")
 	void generateToken1() {
 		// given
 		User user = fixtureMonkey.giveMeOne(User.class);
@@ -65,8 +64,7 @@ class JwtProviderTest extends ProviderTest {
 		Assertions.assertNotNull(jwt.grantType());
 	}
 
-	@DisplayName("User가 null인 경우, 토큰 생성에 실패한다.")
-	@Test
+	@TestWithDisplayName("User가 null인 경우, 토큰 생성에 실패한다.")
 	void generateToken2() {
 		// given
 		User user = null;
@@ -78,8 +76,7 @@ class JwtProviderTest extends ProviderTest {
 			EMPTY_USER.getCode());
 	}
 
-	@DisplayName("액세스 토큰으로부터 인증 정보를 가져온다.")
-	@Test
+	@TestWithDisplayName("액세스 토큰으로부터 인증 정보를 가져온다.")
 	void getAuthentication() {
 		// given
 		User user = fixtureMonkey.giveMeOne(User.class);
@@ -95,8 +92,7 @@ class JwtProviderTest extends ProviderTest {
 		Assertions.assertEquals(authentication.getAuthorities().toString(), "[%s]".formatted(USER.getSecurityRole()));
 	}
 
-	@DisplayName("토큰으로부터 Claim 정보를 가져온다.")
-	@Test
+	@TestWithDisplayName("토큰으로부터 Claim 정보를 가져온다.")
 	void parseClaims() {
 		// given
 		User user = fixtureMonkey.giveMeOne(User.class);

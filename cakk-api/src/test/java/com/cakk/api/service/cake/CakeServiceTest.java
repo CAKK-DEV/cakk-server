@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
@@ -27,8 +27,8 @@ class CakeServiceTest extends ServiceTest {
 	@Mock
 	private CakeReader cakeReader;
 
-	@Test
-	void 카테고리에_해당하는_케이크_목록을_조회한다() {
+	@TestWithDisplayName("카테고리에 해당하는 케이크 목록을 조회한다")
+	void findCakeImagesByCursorAndCategory1() {
 		// given
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 3);
@@ -45,8 +45,8 @@ class CakeServiceTest extends ServiceTest {
 		verify(cakeReader).findCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 	}
 
-	@Test
-	void 카테고리에_해당하는_케이크가_없을_시_빈_배열을_리턴한다() {
+	@TestWithDisplayName("카테고리에 해당하는 케이크가 없을 시 빈 배열을 리턴한다.")
+	void findCakeImagesByCursorAndCategory2() {
 		// given
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 0);

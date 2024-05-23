@@ -3,7 +3,6 @@ package com.cakk.api.integration.cake;
 import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cakk.api.common.base.IntegrationTest;
+import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
@@ -35,8 +35,8 @@ class CakeIntegrationTest extends IntegrationTest {
 	@Autowired
 	private CakeCategoryReader cakeCategoryReader;
 
-	@Test
-	void 카테고리로_케이크_이미지_조회에_성공한다() {
+	@TestWithDisplayName("카테고리로 첫 페이지 케이크 이미지 조회에 성공한다")
+	void searchByCategory1() {
 		// given
 		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -65,8 +65,8 @@ class CakeIntegrationTest extends IntegrationTest {
 		});
 	}
 
-	@Test
-	void 카테고리로_다음_페이지_케이크_이미지_조회에_성공한다() {
+	@TestWithDisplayName("카테고리로 첫 페이지가 아닌 케이크 이미지 조회에 성공한다")
+	void searchByCategory2() {
 		// given
 		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -96,8 +96,8 @@ class CakeIntegrationTest extends IntegrationTest {
 		});
 	}
 
-	@Test
-	void 카테고리로_케이크_이미지_조회_시_데이터가_없으면_빈_배열을_반환한다() {
+	@TestWithDisplayName("카테고리로 케이크 이미지 조회 시 데이터가 없으면 빈 배열을 반환한다")
+	void searchByCategory3() {
 		// given
 		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
