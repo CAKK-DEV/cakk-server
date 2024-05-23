@@ -1,12 +1,16 @@
 package com.cakk.domain.repository.query;
 
 import static com.cakk.domain.entity.shop.QCakeShop.*;
+
 import org.springframework.stereotype.Repository;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
+
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
+
+import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
 
 @Repository
 @RequiredArgsConstructor
