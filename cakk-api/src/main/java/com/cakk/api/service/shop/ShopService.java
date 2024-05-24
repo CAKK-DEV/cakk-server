@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
+import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
@@ -68,5 +70,12 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public CakeShopSimpleResponse searchSimpleById(final Long cakeShopId) {
 		return cakeShopReader.searchSimpleById(cakeShopId);
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopDetailResponse searchDetailById(final Long cakeShopId) {
+		final CakeShopDetailParam cakeShop = cakeShopReader.searchDetailById(cakeShopId);
+
+		return CakeShopDetailResponse.from(cakeShop);
 	}
 }
