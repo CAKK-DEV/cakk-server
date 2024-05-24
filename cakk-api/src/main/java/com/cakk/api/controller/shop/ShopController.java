@@ -2,7 +2,9 @@ package com.cakk.api.controller.shop;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
 import com.cakk.domain.entity.user.User;
 
 @RestController
@@ -47,6 +50,14 @@ public class ShopController {
 	) {
 		shopService.promoteUserToBusinessOwner(promotionRequest);
 		return ApiResponse.success();
+	}
+
+	@GetMapping("/{cakeShopId}/simple")
+	public ApiResponse<CakeShopSimpleResponse> simple(
+		@PathVariable Long cakeShopId
+	) {
+		final CakeShopSimpleResponse response = shopService.searchSimpleById(cakeShopId);
+		return ApiResponse.success(response);
 	}
 
 }
