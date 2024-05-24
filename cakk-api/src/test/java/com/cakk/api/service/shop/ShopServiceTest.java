@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
@@ -91,8 +91,8 @@ public class ShopServiceTest extends ServiceTest {
 			.set("thumbnailUrl", Arbitraries.strings().alpha().ofMinLength(100).ofMaxLength(200))
 			.set("shopBio", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(500))
-			.set("operationDays", List.of())
-			.set("links", List.of())
+			.set("operationDays", Set.of())
+			.set("links", Set.of())
 			.sample();
 
 		doReturn(param).when(cakeShopReader).searchDetailById(cakeShopId);

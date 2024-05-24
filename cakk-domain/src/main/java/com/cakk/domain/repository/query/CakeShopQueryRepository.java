@@ -15,7 +15,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.common.enums.Days;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
@@ -41,10 +40,8 @@ public class CakeShopQueryRepository {
 					cakeShop.thumbnailUrl,
 					cakeShop.shopBio,
 					cakeShop.shopDescription,
-					list(Projections.constructor(Days.class,
-						cakeShopOperation.operationDay)
-					),
-					list(Projections.constructor(CakeShopLinkParam.class,
+					set(cakeShopOperation.operationDay),
+					set(Projections.constructor(CakeShopLinkParam.class,
 						cakeShopLink.linkKind,
 						cakeShopLink.linkPath)
 					)

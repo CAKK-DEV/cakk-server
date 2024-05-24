@@ -2,6 +2,8 @@ package com.cakk.domain.entity.shop;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,10 +31,11 @@ public class CakeShopLink extends AuditEntity {
 	@Column(name = "link_id", nullable = false)
 	private Long id;
 
+	@Enumerated(value = EnumType.STRING)
 	@Column(name = "link_kind", nullable = false, length = 20)
 	private LinkKind linkKind;
 
-	@Column(name = "link_path", nullable = false, length = 20)
+	@Column(name = "link_path", nullable = false, length = 200)
 	private String linkPath;
 
 	@ManyToOne(fetch = FetchType.LAZY)
