@@ -200,4 +200,35 @@ public class ShopServiceTest extends ServiceTest {
 		verify(userReader, times(1)).findByUserId(request.userId());
 		verify(cakeShopReader, times(1)).findBusinessInformationWithShop(request.cakeShopId());
 	}
+
+	@TestWithDisplayName("cakeShopId가 존재한다면, 정보를 찾아서 이벤트를 발행한다")
+	void requestCertificationEventWithInfo() {
+		//given
+		CertificationParam param = getCertificationParamFixture(false);
+		doReturn(getReflectionMonkey().giveMeBuilder(BusinessInformation.class)
+			.setNotNull("cakeShop")
+			.setNull("user")
+			.sample())
+			.when(cakeShopReader).findBusinessInformationByCakeShopId(param.cakeShopId());
+
+		//when
+		shopService.requestCertificationBusinessOwner(param);
+
+		//verify
+		verify(cakeShopReader, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId());
+		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
+	}
+
+	@TestWithDisplayName("cakeShopId가 존재하지 않는다면, 요청 정보로만 이벤트를 발행한다")
+	void requestCertificationEventWithParam() {
+		//given
+		CertificationParam param = getCertificationParamFixture(true);
+
+		//when
+		shopService.requestCertificationBusinessOwner(param);
+
+		//verify
+		verify(cakeShopReader, times(0)).findBusinessInformationByCakeShopId(any());
+		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
+	}
 }
