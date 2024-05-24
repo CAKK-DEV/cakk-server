@@ -1,10 +1,12 @@
 package com.cakk.api.dto.response.shop;
 
 import java.util.List;
+
+import lombok.Builder;
+
 import com.cakk.common.enums.Days;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
-import lombok.Builder;
 
 @Builder
 public record CakeShopDetailResponse(
