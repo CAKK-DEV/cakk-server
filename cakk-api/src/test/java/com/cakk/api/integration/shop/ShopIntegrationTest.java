@@ -15,7 +15,7 @@ import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
+import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.repository.reader.CakeShopReader;
 
@@ -44,7 +44,7 @@ public class ShopIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopSimpleResponse data = objectMapper.convertValue(response.getData(), CakeShopSimpleResponse.class);
+		final CakeShopSimpleParam data = objectMapper.convertValue(response.getData(), CakeShopSimpleParam.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
@@ -71,7 +71,7 @@ public class ShopIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopSimpleResponse data = objectMapper.convertValue(response.getData(), CakeShopSimpleResponse.class);
+		final CakeShopSimpleParam data = objectMapper.convertValue(response.getData(), CakeShopSimpleParam.class);
 
 		assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getCode(), response.getReturnCode());

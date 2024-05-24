@@ -5,20 +5,22 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationEventPublisher;
 
 import net.jqwik.api.Arbitraries;
+
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
-import com.cakk.common.enums.Days;
+import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
+import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.repository.reader.CakeShopReader;
 import com.cakk.domain.repository.reader.UserReader;
 import com.cakk.domain.repository.writer.CakeShopWriter;
@@ -45,7 +47,7 @@ public class ShopServiceTest extends ServiceTest {
 	void searchSimpleById1() {
 		// given
 		Long cakeShopId = 1L;
-		CakeShopSimpleResponse response = getConstructorMonkey().giveMeBuilder(CakeShopSimpleResponse.class)
+		CakeShopSimpleParam response = getConstructorMonkey().giveMeBuilder(CakeShopSimpleParam.class)
 			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(10))
 			.set("thumbnailUrl", Arbitraries.strings().alpha().ofMinLength(100).ofMaxLength(200))
 			.set("cakeShopName", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(30))
@@ -58,7 +60,7 @@ public class ShopServiceTest extends ServiceTest {
 		CakeShopSimpleResponse result = shopService.searchSimpleById(cakeShopId);
 
 		// then
-		assertEquals(response, result);
+		assertEquals(CakeShopSimpleResponse.from(response), result);
 
 		verify(cakeShopReader, times(1)).searchSimpleById(cakeShopId);
 	}

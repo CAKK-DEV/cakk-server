@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.common.enums.Days;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleResponse;
+import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 
 @Repository
 @RequiredArgsConstructor
@@ -53,8 +53,8 @@ public class CakeShopQueryRepository {
 		return results.isEmpty() ? null : results.get(0);
 	}
 
-	public CakeShopSimpleResponse searchSimpleById(Long cakeShopId) {
-		return queryFactory.select(Projections.constructor(CakeShopSimpleResponse.class,
+	public CakeShopSimpleParam searchSimpleById(Long cakeShopId) {
+		return queryFactory.select(Projections.constructor(CakeShopSimpleParam.class,
 				cakeShop.id,
 				cakeShop.thumbnailUrl,
 				cakeShop.shopName,
