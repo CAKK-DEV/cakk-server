@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - master
-#    paths:
-#      - cakk-api/**
-#      - cakk-domain/**
-#      - cakk-common/**
+    paths:
+      - cakk-api/**
+      - cakk-domain/**
+      - cakk-common/**
 
 permissions: write-all
 
