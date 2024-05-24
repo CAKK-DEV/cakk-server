@@ -16,6 +16,7 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.request.shop.OperationDay;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.ShopMapper;
@@ -47,15 +48,27 @@ public class ShopServiceTest extends ServiceTest {
 	@Mock
 	private ApplicationEventPublisher publisher;
 
+	private OperationDay getOperationDayFixture() {
+		return getConstructorMonkey().giveMeBuilder(OperationDay.class)
+			.set("days", Arbitraries.of(Days.class).list().ofSize(7))
+			.set("startTimes",
+				Arbitraries.of(LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
+					.list()
+					.ofSize(7))
+			.set("endTimes",
+				Arbitraries.of(LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
+					.list()
+					.ofSize(7))
+			.sample();
+	}
+
 	private CreateShopRequest getCreateShopRequestFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
+			.set("operationDays", getOperationDayFixture())
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
-			.set("startTimes", Arbitraries.of(LocalTime.now()).list().ofSize(3))
-			.set("endTimes", Arbitraries.of(LocalTime.now()).list().ofSize(3))
-			.set("operationsDays", Arbitraries.of(Days.class).list().ofSize(3))
 			.sample();
 	}
 
@@ -142,7 +155,6 @@ public class ShopServiceTest extends ServiceTest {
 	void createCakeShop() {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
-		System.out.println(request);
 
 		//when
 		shopService.createCakeShopByCertification(request);
