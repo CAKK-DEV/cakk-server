@@ -39,6 +39,7 @@ public class ShopMapper {
 
 	public static BusinessInformation supplyBusinessInformationBy() {
 		return BusinessInformation.builder()
+			.cakeShop(CakeShop.builder().build())
 			.build();
 	}
 
