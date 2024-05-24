@@ -1,9 +1,8 @@
 package com.cakk.domain.entity.shop;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.cakk.common.enums.LinkKind;
+import com.cakk.domain.converter.LinkKindConverter;
 import com.cakk.domain.entity.audit.AuditEntity;
 
 @Getter
@@ -31,7 +31,7 @@ public class CakeShopLink extends AuditEntity {
 	@Column(name = "link_id", nullable = false)
 	private Long id;
 
-	@Enumerated(value = EnumType.STRING)
+	@Convert(converter = LinkKindConverter.class)
 	@Column(name = "link_kind", nullable = false, length = 20)
 	private LinkKind linkKind;
 

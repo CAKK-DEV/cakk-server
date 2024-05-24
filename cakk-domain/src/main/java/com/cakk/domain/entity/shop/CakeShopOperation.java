@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import com.cakk.common.enums.Days;
 import com.cakk.domain.converter.DayOfWeekConverter;
 import com.cakk.domain.entity.audit.AuditEntity;
-import com.cakk.domain.entity.shop.CakeShop;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
