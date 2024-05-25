@@ -1,6 +1,6 @@
 package com.cakk.domain.dto.param.shop;
 
-import java.util.List;
+import java.util.Set;
 
 import com.cakk.common.enums.Days;
 
@@ -10,7 +10,7 @@ public record CakeShopDetailParam(
 	String thumbnailUrl,
 	String shopBio,
 	String shopDescription,
-	List<Days> operationDay,
-	List<CakeShopLinkParam> links
+	Set<Days> operationDays,
+	Set<CakeShopLinkParam> links
 ) {
 }
