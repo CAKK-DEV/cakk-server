@@ -8,7 +8,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
+import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
+import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.entity.user.BusinessInformation;
@@ -58,4 +62,24 @@ public class ShopMapper {
 		return cakeShopOperations;
 	}
 
+	public static CakeShopSimpleResponse cakeShopSimpleResponseFromParam(CakeShopSimpleParam param) {
+		return CakeShopSimpleResponse.builder()
+			.cakeShopId(param.cakeShopId())
+			.thumbnailUrl(param.thumbnailUrl())
+			.cakeShopName(param.cakeShopName())
+			.cakeShopBio(param.cakeShopBio())
+			.build();
+	}
+
+	public static CakeShopDetailResponse cakeShopDetailResponseFromParam(CakeShopDetailParam param) {
+		return CakeShopDetailResponse.builder()
+			.cakeShopId(param.cakeShopId())
+			.cakeShopName(param.shopName())
+			.thumbnailUrl(param.thumbnailUrl())
+			.cakeShopBio(param.shopBio())
+			.cakeShopDescription(param.shopDescription())
+			.operationDays(param.operationDays())
+			.links(param.links())
+			.build();
+	}
 }

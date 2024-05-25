@@ -17,6 +17,7 @@ import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
@@ -60,7 +61,7 @@ public class ShopServiceTest extends ServiceTest {
 		CakeShopSimpleResponse result = shopService.searchSimpleById(cakeShopId);
 
 		// then
-		assertEquals(CakeShopSimpleResponse.from(response), result);
+		assertEquals(ShopMapper.cakeShopSimpleResponseFromParam(response), result);
 
 		verify(cakeShopReader, times(1)).searchSimpleById(cakeShopId);
 	}
@@ -101,7 +102,7 @@ public class ShopServiceTest extends ServiceTest {
 		CakeShopDetailResponse result = shopService.searchDetailById(cakeShopId);
 
 		// then
-		assertEquals(CakeShopDetailResponse.from(param), result);
+		assertEquals(ShopMapper.cakeShopDetailResponseFromParam(param), result);
 
 		verify(cakeShopReader, times(1)).searchDetailById(cakeShopId);
 	}

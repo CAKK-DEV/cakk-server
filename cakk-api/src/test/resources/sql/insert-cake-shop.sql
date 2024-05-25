@@ -17,10 +17,10 @@ values (1, 1, 0, '10:00:00', '22:00:00', now(), now()),
        (10, 3, 6, '7:00:00', '19:00:00', now(), now());
 
 insert into cake_shop_link (link_id, shop_id, link_kind, link_path, created_at, updated_at)
-values (1, 1, 'WEB', 'https://www.cake-shop1.com', now(), now()),
-       (2, 1, 'INSTAGRAM', 'https://www.instagram.com/cake-shop1', now(), now()),
-       (3, 1, 'KAKAOTALK', 'https://www.kakaotalk.com/cake-shop1', now(), now()),
-       (4, 2, 'WEB', 'https://www.cake-shop2.com', now(), now()),
-       (5, 2, 'INSTAGRAM', 'https://www.instagram.com/cake-shop2', now(), now()),
-       (6, 3, 'WEB', 'https://www.cake-shop3.com', now(), now()),
-       (7, 3, 'KAKAOTALK', 'https://www.kakaotalk.com/cake-shop3', now(), now());
+values (1, 1, 'web', 'https://www.cake-shop1.com', now(), now()),
+       (2, 1, 'instagram', 'https://www.instagram.com/cake-shop1', now(), now()),
+       (3, 1, 'kakaotalk', 'https://www.kakaotalk.com/cake-shop1', now(), now()),
+       (4, 2, 'web', 'https://www.cake-shop2.com', now(), now()),
+       (5, 2, 'instagram', 'https://www.instagram.com/cake-shop2', now(), now()),
+       (6, 3, 'web', 'https://www.cake-shop3.com', now(), now()),
+       (7, 3, 'kakaotalk', 'https://www.kakaotalk.com/cake-shop3', now(), now());

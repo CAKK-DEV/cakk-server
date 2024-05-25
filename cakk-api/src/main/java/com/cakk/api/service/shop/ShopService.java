@@ -72,13 +72,13 @@ public class ShopService {
 	public CakeShopSimpleResponse searchSimpleById(final Long cakeShopId) {
 		final CakeShopSimpleParam cakeShop = cakeShopReader.searchSimpleById(cakeShopId);
 
-		return CakeShopSimpleResponse.from(cakeShop);
+		return ShopMapper.cakeShopSimpleResponseFromParam(cakeShop);
 	}
 
 	@Transactional(readOnly = true)
 	public CakeShopDetailResponse searchDetailById(final Long cakeShopId) {
 		final CakeShopDetailParam cakeShop = cakeShopReader.searchDetailById(cakeShopId);
 
-		return CakeShopDetailResponse.from(cakeShop);
+		return ShopMapper.cakeShopDetailResponseFromParam(cakeShop);
 	}
 }

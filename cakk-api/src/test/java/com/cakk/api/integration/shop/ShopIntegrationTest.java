@@ -3,7 +3,6 @@ package com.cakk.api.integration.shop;
 import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.entity.shop.CakeShopLink;
 import com.cakk.domain.entity.shop.CakeShopOperation;
 import com.cakk.domain.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.repository.reader.CakeShopOperationReader;
