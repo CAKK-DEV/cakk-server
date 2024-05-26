@@ -44,12 +44,35 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
+		return queryFactory
+			.select(Projections.constructor(CakeImageResponseParam.class,
+				cakeShop.id,
+				cake.id,
+				cake.cakeImageUrl))
+			.from(cake)
+			.innerJoin(cakeShop)
+			.on(cake.cakeShop.eq(cakeShop))
+			.innerJoin(cakeCategory)
+			.on(cakeCategory.cake.eq(cake))
+			.where(
+				ltCakeId(cakeId),
+				eqCakeShopId(cakeShopId))
+			.limit(pageSize)
+			.orderBy(cakeIdDesc())
+			.fetch();
+	}
+
 	private BooleanExpression ltCakeId(Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
 		}
 
 		return cake.id.lt(cakeId);
+	}
+
+	private BooleanExpression eqCakeShopId(Long cakeShopId) {
+		return cakeShop.id.eq(cakeShopId);
 	}
 
 	private BooleanExpression eqCategory(CakeDesignCategory category) {

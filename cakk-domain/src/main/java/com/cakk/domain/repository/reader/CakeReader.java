@@ -27,4 +27,8 @@ public class CakeReader {
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCategory(cakeId, category, pageSize);
 	}
+
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
+		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize);
+	}
 }
