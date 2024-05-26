@@ -122,4 +122,90 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertNull(data.lastCakeId());
 		assertEquals(0, data.size());
 	}
+
+	@TestWithDisplayName("케이크 샵으로 첫 페이지 케이크 이미지 조회에 성공한다")
+	void searchByShopId1() {
+		// given
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeShopId", 1L)
+			.queryParam("pageSize", 4)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
+		assertEquals(lastCakeId, data.lastCakeId());
+		assertEquals(4, data.size());
+		data.cakeImages().forEach(cakeImage -> {
+			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId());
+		});
+	}
+
+	@TestWithDisplayName("케이크 샵으로 첫 페이지가 아닌 케이크 이미지 조회에 성공한다")
+	void searchByShopId2() {
+		// given
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeId", 5)
+			.queryParam("cakeShopId", 1L)
+			.queryParam("pageSize", 4)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
+		assertEquals(lastCakeId, data.lastCakeId());
+		assertEquals(3, data.size());
+		data.cakeImages().forEach(cakeImage ->
+			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId())
+		);
+	}
+
+	@TestWithDisplayName("케이크 샵으로 케이크 이미지 조회 시 데이터가 없으면 빈 배열을 반환한다")
+	void searchByShopId3() {
+		// given
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeId", 1)
+			.queryParam("cakeShopId", 1L)
+			.queryParam("pageSize", 4)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(0, data.cakeImages().size());
+		assertNull(data.lastCakeId());
+		assertEquals(0, data.size());
+	}
 }

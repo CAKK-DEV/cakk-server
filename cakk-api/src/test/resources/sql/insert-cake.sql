@@ -1,16 +1,17 @@
 insert into cake_shop (shop_id, thumbnail_url, shop_name, shop_bio, shop_description, latitude, longitude, like_count, linked_flag,
                        created_at, updated_at)
-values (1, 'thumbnail_url', '케이크 맛집', '케이크 맛집입니다.', '케이크 맛집입니다.', 37.123456, 127.123456, 0, false, now(), now());
+values (1, 'thumbnail_url', '케이크 맛집', '케이크 맛집입니다.', '케이크 맛집입니다.', 37.123456, 127.123456, 0, false, now(), now()),
+       (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '케이크 맛집입니다.', 38.123456, 128.123456, 0, false, now(), now());
 
 insert into cake (cake_id, shop_id, cake_image_url, like_count, created_at, updated_at)
 values (1, 1, 'cake_image_url1', 0, now(), now()),
        (2, 1, 'cake_image_url2', 0, now(), now()),
-       (3, 1, 'cake_image_url3', 0, now(), now()),
+       (3, 2, 'cake_image_url3', 0, now(), now()),
        (4, 1, 'cake_image_url4', 0, now(), now()),
        (5, 1, 'cake_image_url5', 0, now(), now()),
        (6, 1, 'cake_image_url6', 0, now(), now()),
-       (7, 1, 'cake_image_url7', 0, now(), now()),
-       (8, 1, 'cake_image_url8', 0, now(), now()),
+       (7, 2, 'cake_image_url7', 0, now(), now()),
+       (8, 2, 'cake_image_url8', 0, now(), now()),
        (9, 1, 'cake_image_url9', 0, now(), now()),
        (10, 1, 'cake_image_url10', 0, now(), now());
 
