@@ -24,3 +24,8 @@ values (1, 1, 'web', 'https://www.cake-shop1.com', now(), now()),
        (5, 2, 'instagram', 'https://www.instagram.com/cake-shop2', now(), now()),
        (6, 3, 'web', 'https://www.cake-shop3.com', now(), now()),
        (7, 3, 'kakaotalk', 'https://www.kakaotalk.com/cake-shop3', now(), now());
+
+insert into business_information(business_number, shop_id, user_id)
+values ('010-3375-5555', 1, 1),
+       ('010-3375-5555', 2, 2),
+       ('010-3375-5555', 3, 3)
