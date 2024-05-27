@@ -8,6 +8,8 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -32,13 +34,14 @@ import com.cakk.common.response.ApiResponse;
 public class GlobalControllerAdvice {
 
 	private final SlackService slackService;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ExceptionHandler(CakkException.class)
 	public ResponseEntity<ApiResponse<Void>> handleCakkException(CakkException exception, HttpServletRequest request) {
 		if (exception.getReturnCode().equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
 			slackService.sendSlackForError(exception, request);
 		}
-
+		logger.debug(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(exception.getReturnCode()));
 	}
 
@@ -48,16 +51,19 @@ public class GlobalControllerAdvice {
 		MethodArgumentTypeMismatchException.class
 	})
 	public ResponseEntity<ApiResponse<Void>> handleRequestException(Exception exception) {
+		logger.debug(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.WRONG_PARAMETER));
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+		logger.debug(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.METHOD_NOT_ALLOWED));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiResponse<List<FieldError>>> badRequestExHandler(BindingResult bindingResult) {
+		logger.debug(bindingResult.getFieldErrors().get(0).toString());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.WRONG_PARAMETER, bindingResult.getFieldErrors()));
 	}
 
@@ -67,6 +73,7 @@ public class GlobalControllerAdvice {
 	})
 	public ResponseEntity<ApiResponse<String>> handleServerException(SQLException exception, HttpServletRequest request) {
 		slackService.sendSlackForError(exception, request);
+		logger.debug(exception.getMessage());
 		return getResponseEntity(INTERNAL_SERVER_ERROR, ApiResponse.error(ReturnCode.INTERNAL_SERVER_ERROR, exception.getMessage()));
 	}
 
