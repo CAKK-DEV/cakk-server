@@ -6,6 +6,8 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -13,21 +15,29 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import net.jqwik.api.Arbitraries;
+
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
+import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.provider.jwt.JwtProvider;
+import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.shop.CakeShopOperation;
+import com.cakk.domain.entity.user.User;
 import com.cakk.domain.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.repository.reader.CakeShopReader;
+import com.cakk.domain.repository.reader.UserReader;
 
 @SqlGroup({
+	@Sql(scripts = "/sql/insert-test-user.sql", executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/insert-cake-shop.sql", executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
@@ -43,6 +53,12 @@ public class ShopIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private CakeShopLinkReader cakeShopLinkReader;
+
+	@Autowired
+	private JwtProvider jwtProvider;
+
+	@Autowired
+	private UserReader userReader;
 
 	@TestWithDisplayName("케이크 샵을 간단 조회에 성공한다.")
 	void simple1() {
@@ -149,4 +165,59 @@ public class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage(), response.getReturnMessage());
 	}
 
+	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하지 않은 상태에서 사장님 인증을 요청한다")
+	void request1() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/certification")
+			.build();
+		User user = userReader.findByUserId(1L);
+
+		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
+		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
+			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.setNull("cakeShopId")
+			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11))
+			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
+		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, httpHeaders);
+
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하지 않은 상태에서 사장님 인증을 요청한다")
+	void request2() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/certification")
+			.build();
+		User user = userReader.findByUserId(1L);
+
+		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
+		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
+			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1).lessOrEqual(3))
+			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11))
+			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
+		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, httpHeaders);
+
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
 }

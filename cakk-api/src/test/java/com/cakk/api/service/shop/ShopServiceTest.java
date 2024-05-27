@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalTime;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
@@ -58,7 +60,8 @@ public class ShopServiceTest extends ServiceTest {
 		return getConstructorMonkey().giveMeBuilder(OperationDay.class)
 			.set("days", Arbitraries.of(Days.class).list().ofSize(7))
 			.set("startTimes",
-				Arbitraries.of(LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
+				Arbitraries.of(
+						LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
 					.list()
 					.ofSize(7))
 			.set("endTimes",

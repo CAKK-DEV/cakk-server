@@ -5,9 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.cakk.api.annotation.validator.OperationValidator;
-
 import jakarta.validation.Constraint;
+
+import com.cakk.api.annotation.validator.OperationValidator;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
