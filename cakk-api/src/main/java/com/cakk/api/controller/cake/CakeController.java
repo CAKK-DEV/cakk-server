@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
+import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.service.cake.CakeService;
 import com.cakk.common.response.ApiResponse;
@@ -26,6 +27,15 @@ public class CakeController {
 		@Valid @ModelAttribute CakeSearchByCategoryRequest request
 	) {
 		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndCategory(request);
+
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/search/shops")
+	public ApiResponse<CakeImageListResponse> listByShop(
+		@Valid @ModelAttribute CakeSearchByShopRequest request
+	) {
+		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndCakeShopId(request);
 
 		return ApiResponse.success(response);
 	}

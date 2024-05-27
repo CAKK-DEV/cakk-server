@@ -10,9 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import net.jqwik.api.Arbitraries;
+
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
+import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
@@ -31,7 +34,11 @@ class CakeServiceTest extends ServiceTest {
 	void findCakeImagesByCursorAndCategory1() {
 		// given
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
-		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 3);
+		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMeBuilder(CakeImageResponseParam.class)
+			.set("cakeId", Arbitraries.longs().greaterOrEqual(1))
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
+			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
+			.sampleList(3);
 
 		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
@@ -61,5 +68,45 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertNull(result.lastCakeId());
 
 		verify(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+	}
+
+	@TestWithDisplayName("케이크 샵에 속한 케이크 목록을 조회한다")
+	void findCakeImagesByCursorAndShop1() {
+		// given
+		CakeSearchByShopRequest dto = new CakeSearchByShopRequest(null, 1L, 3);
+		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMeBuilder(CakeImageResponseParam.class)
+			.set("cakeId", 1L)
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
+			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
+			.sampleList(3);
+
+		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+
+		// when
+		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCakeShopId(dto);
+
+		// then
+		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
+		Assertions.assertNotNull(result.lastCakeId());
+
+		verify(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+	}
+
+	@TestWithDisplayName("케이크 샵에 속한 케이크가 없을 시 빈 배열을 리턴한다.")
+	void findCakeImagesByCursorAndShop2() {
+		// given
+		CakeSearchByShopRequest dto = new CakeSearchByShopRequest(null, 1L, 3);
+		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 0);
+
+		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+
+		// when
+		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCakeShopId(dto);
+
+		// then
+		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
+		Assertions.assertNull(result.lastCakeId());
+
+		verify(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 	}
 }
