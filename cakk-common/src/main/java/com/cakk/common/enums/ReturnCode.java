@@ -15,6 +15,7 @@ public enum ReturnCode {
 	EXPIRED_JWT_TOKEN("1102", "만료된 jwt 토큰입니다."),
 	EMPTY_AUTH_JWT("1103", "인증 정보가 비어있는 jwt 토큰입니다."),
 	EMPTY_USER("1104", "비어있는 유저 정보로 jwt 토큰을 생성할 수 없습니다."),
+	INVALID_KEY("1105", "잘못된 key 입니다"),
 
 	// 공통 유저 관련 (1200 ~ 1250)
 	WRONG_PROVIDER("1200", "잘못된 인증 제공자 입니다."),
