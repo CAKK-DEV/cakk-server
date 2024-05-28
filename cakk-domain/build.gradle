@@ -23,6 +23,10 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
     runtimeOnly 'com.h2database:h2'
 
+	//serialize
+	implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+	implementation('com.fasterxml.jackson.core:jackson-databind')
+
 	// log
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 

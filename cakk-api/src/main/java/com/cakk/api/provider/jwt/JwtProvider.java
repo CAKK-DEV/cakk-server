@@ -18,6 +18,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.InvalidKeyException;
 
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.api.vo.OAuthUserDetails;
@@ -57,22 +58,25 @@ public class JwtProvider {
 			throw new CakkException(EMPTY_USER);
 		}
 
-		final String accessToken = Jwts.builder()
-			.claim(userKey, user)
-			.setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredSecond))
-			.signWith(key, SignatureAlgorithm.HS512)
-			.compact();
+		try {
+			final String accessToken = Jwts.builder()
+				.claim(userKey, user)
+				.setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredSecond))
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
+			final String refreshToken = Jwts.builder()
+				.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
 
-		final String refreshToken = Jwts.builder()
-			.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
-			.signWith(key, SignatureAlgorithm.HS512)
-			.compact();
-
-		return JsonWebToken.builder()
-			.grantType(grantType)
-			.accessToken(accessToken)
-			.refreshToken(refreshToken)
-			.build();
+			return JsonWebToken.builder()
+				.grantType(grantType)
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.build();
+		} catch (InvalidKeyException e) {
+			throw new CakkException(INVALID_KEY);
+		}
 	}
 
 	public Authentication getAuthentication(String accessToken) {
