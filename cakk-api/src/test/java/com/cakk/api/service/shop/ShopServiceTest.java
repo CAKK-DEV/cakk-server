@@ -74,7 +74,7 @@ public class ShopServiceTest extends ServiceTest {
 	private CreateShopRequest getCreateShopRequestFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
-			.set("operationDays", getOperationDayFixture())
+			.set("operationDayRequest", getOperationDayFixture())
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
