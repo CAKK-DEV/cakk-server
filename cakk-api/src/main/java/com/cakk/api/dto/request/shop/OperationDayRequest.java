@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import com.cakk.common.enums.Days;
 
-public record OperationDay(
+public record OperationDayRequest(
 
 	@NotNull
 	List<Days> days,

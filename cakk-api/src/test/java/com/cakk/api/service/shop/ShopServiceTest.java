@@ -17,7 +17,7 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.OperationDay;
+import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -56,8 +56,8 @@ public class ShopServiceTest extends ServiceTest {
 	@Mock
 	private ApplicationEventPublisher publisher;
 
-	private OperationDay getOperationDayFixture() {
-		return getConstructorMonkey().giveMeBuilder(OperationDay.class)
+	private OperationDayRequest getOperationDayFixture() {
+		return getConstructorMonkey().giveMeBuilder(OperationDayRequest.class)
 			.set("days", Arbitraries.of(Days.class).list().ofSize(7))
 			.set("startTimes",
 				Arbitraries.of(

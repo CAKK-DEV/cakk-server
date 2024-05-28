@@ -10,7 +10,7 @@ public record CreateShopRequest(
 	@NotBlank
 	String businessNumber,
 	@OperationDays
-	OperationDay operationDays,
+	OperationDayRequest operationDayRequest,
 	@NotBlank
 	String shopName,
 	String shopBio,
