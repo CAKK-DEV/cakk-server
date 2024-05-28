@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -37,14 +38,15 @@ public class ShopService {
 
 	@Transactional
 	public void createCakeShopByCertification(CreateShopRequest request) {
+		final OperationDayRequest operationDayRequest = request.operationDayRequest();
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
 		List<CakeShopOperation> cakeShopOperations = ShopMapper
 			.supplyCakeShopOperationsBy(
 				cakeShop,
-				request.operationDays().days(),
-				request.operationDays().startTimes(),
-				request.operationDays().endTimes()
+				operationDayRequest.days(),
+				operationDayRequest.startTimes(),
+				operationDayRequest.endTimes()
 			);
 
 		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
