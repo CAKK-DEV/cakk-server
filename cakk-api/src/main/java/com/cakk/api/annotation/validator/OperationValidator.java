@@ -17,5 +17,5 @@ public class OperationValidator implements ConstraintValidator<OperationDays, Op
 		}
 		return true;
 	}
-
 }
+
