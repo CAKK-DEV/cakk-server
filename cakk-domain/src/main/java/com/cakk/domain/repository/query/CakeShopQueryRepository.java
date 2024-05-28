@@ -16,7 +16,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
+import com.cakk.domain.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 
 @Repository
@@ -60,6 +62,27 @@ public class CakeShopQueryRepository {
 			.from(cakeShop)
 			.where(eqCakeShopId(cakeShopId))
 			.fetchOne();
+	}
+
+	public CakeShopInfoParam searchInfoById(Long cakeShopId) {
+		List<CakeShopInfoParam> results = queryFactory
+			.selectFrom(cakeShop)
+			.innerJoin(cakeShopOperation)
+			.on(cakeShop.eq(cakeShopOperation.cakeShop))
+			.where(eqCakeShopId(cakeShopId))
+			.transform(groupBy(cakeShop.id)
+				.list(Projections.constructor(CakeShopInfoParam.class,
+					cakeShop.shopAddress,
+					cakeShop.latitude,
+					cakeShop.longitude,
+					list(Projections.constructor(CakeShopOperationParam.class,
+						cakeShopOperation.operationDay,
+						cakeShopOperation.operationStartTime,
+						cakeShopOperation.operationEndTime)
+					)
+				)));
+
+		return results.isEmpty() ? null : results.get(0);
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {

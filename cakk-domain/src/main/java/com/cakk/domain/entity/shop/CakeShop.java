@@ -35,6 +35,9 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "shop_name", length = 30, nullable = false)
 	private String shopName;
 
+	@Column(name = "shop_address", length = 50)
+	private String shopAddress;
+
 	@Column(name = "shop_bio", length = 40)
 	private String shopBio;
 
@@ -63,6 +66,7 @@ public class CakeShop extends AuditEntity {
 	public CakeShop(
 		String shopName,
 		String thumbnailUrl,
+		String shopAddress,
 		String shopBio,
 		String shopDescription,
 		Double latitude,
@@ -70,6 +74,7 @@ public class CakeShop extends AuditEntity {
 	) {
 		this.shopName = shopName;
 		this.thumbnailUrl = thumbnailUrl;
+		this.shopAddress = shopAddress;
 		this.shopBio = shopBio;
 		this.shopDescription = shopDescription;
 		this.latitude = latitude;

@@ -12,9 +12,11 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
+import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
@@ -87,5 +89,12 @@ public class ShopService {
 		final CakeShopDetailParam cakeShop = cakeShopReader.searchDetailById(cakeShopId);
 
 		return ShopMapper.cakeShopDetailResponseFromParam(cakeShop);
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopInfoResponse searchInfoById(final Long cakeShopId) {
+		final CakeShopInfoParam cakeShopInfo = cakeShopReader.searchInfoById(cakeShopId);
+
+		return ShopMapper.supplyCakeShopInfoResponseBy(cakeShopInfo);
 	}
 }

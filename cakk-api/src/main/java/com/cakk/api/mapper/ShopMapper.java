@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
+import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.shop.CakeShopOperation;
@@ -82,5 +84,14 @@ public class ShopMapper {
 			.operationDays(param.operationDays())
 			.links(param.links())
 			.build();
+	}
+
+	public static CakeShopInfoResponse supplyCakeShopInfoResponseBy(CakeShopInfoParam param) {
+		return new CakeShopInfoResponse(
+			param.shopAddress(),
+			param.latitude(),
+			param.longitude(),
+			param.shopOperationDays()
+		);
 	}
 }

@@ -8,6 +8,7 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.annotation.Reader;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
@@ -39,6 +40,16 @@ public class CakeShopReader {
 
 	public CakeShopDetailParam searchDetailById(final Long cakeShopId) {
 		final CakeShopDetailParam response = cakeShopQueryRepository.searchDetailById(cakeShopId);
+
+		if (isNull(response)) {
+			throw new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP);
+		}
+
+		return response;
+	}
+
+	public CakeShopInfoParam searchInfoById(final Long cakeShopId) {
+		final CakeShopInfoParam response = cakeShopQueryRepository.searchInfoById(cakeShopId);
 
 		if (isNull(response)) {
 			throw new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP);

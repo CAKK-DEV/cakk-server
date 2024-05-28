@@ -17,6 +17,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
+import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
@@ -66,6 +67,14 @@ public class ShopController {
 		@PathVariable Long cakeShopId
 	) {
 		final CakeShopDetailResponse response = shopService.searchDetailById(cakeShopId);
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/{cakeShopId}/info")
+	public ApiResponse<CakeShopInfoResponse> detailInfo(
+		@PathVariable Long cakeShopId
+	) {
+		final CakeShopInfoResponse response = shopService.searchInfoById(cakeShopId);
 		return ApiResponse.success(response);
 	}
 }
