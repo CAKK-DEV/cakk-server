@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,12 +21,14 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
+import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.dto.param.user.CertificationParam;
 import com.cakk.domain.entity.shop.CakeShop;
 import com.cakk.domain.entity.user.BusinessInformation;
@@ -233,5 +236,43 @@ public class ShopServiceTest extends ServiceTest {
 		//verify
 		verify(cakeShopReader, times(0)).findBusinessInformationByCakeShopId(any());
 		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
+	}
+
+	@TestWithDisplayName("id로 케이크 샵을 상세정보를 조회한다.")
+	void searchInfoById1() {
+		// given
+		Long cakeShopId = 1L;
+		CakeShopInfoParam param = getConstructorMonkey().giveMeBuilder(CakeShopInfoParam.class)
+			.set("shopAddress", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(30))
+			.set("latitude", Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100))
+			.set("longitude", Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100))
+			.set("operationDays", List.of())
+			.sample();
+
+		doReturn(param).when(cakeShopReader).searchInfoById(cakeShopId);
+
+		// when
+		CakeShopInfoResponse result = shopService.searchInfoById(cakeShopId);
+
+		// then
+		assertEquals(ShopMapper.supplyCakeShopInfoResponseBy(param), result);
+
+		verify(cakeShopReader, times(1)).searchInfoById(cakeShopId);
+	}
+
+	@TestWithDisplayName("id에 해당하는 케이크 샵이 없으면 상세조회 시, 에러를 반환한다.")
+	void searchInfoById2() {
+		// given
+		Long cakeShopId = 1L;
+
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReader).searchInfoById(cakeShopId);
+
+		// then
+		assertThatThrownBy(
+			() -> shopService.searchInfoById(cakeShopId))
+			.isInstanceOf(CakkException.class)
+			.hasMessageContaining(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
+
+		verify(cakeShopReader, times(1)).searchInfoById(cakeShopId);
 	}
 }
