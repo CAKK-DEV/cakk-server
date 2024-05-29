@@ -1,5 +1,9 @@
 description = "redis module"
 
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-data-redis')
+}
+
 bootJar {
     enabled = false
 }
