@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.Builder;
 
-import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 
 @Builder
 public record CakeImageListResponse(

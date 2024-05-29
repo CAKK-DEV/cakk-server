@@ -18,9 +18,9 @@ import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
-import com.cakk.domain.entity.user.User;
-import com.cakk.domain.repository.reader.UserReader;
-import com.cakk.domain.repository.writer.UserWriter;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.UserReader;
+import com.cakk.domain.mysql.repository.writer.UserWriter;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
 class UserServiceTest extends ServiceTest {

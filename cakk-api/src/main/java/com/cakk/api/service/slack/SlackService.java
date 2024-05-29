@@ -15,7 +15,7 @@ import net.gpedro.integrations.slack.SlackAttachment;
 import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
 
-import com.cakk.domain.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
 @Service
 public class SlackService {

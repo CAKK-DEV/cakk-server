@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.Builder;
 
 import com.cakk.common.enums.Days;
-import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 
 @Builder
 public record CakeShopDetailResponse(

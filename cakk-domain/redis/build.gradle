@@ -1,0 +1,9 @@
+description = "redis module"
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

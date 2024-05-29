@@ -17,9 +17,9 @@ import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.entity.cake.CakeCategory;
-import com.cakk.domain.repository.reader.CakeCategoryReader;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.entity.cake.CakeCategory;
+import com.cakk.domain.mysql.repository.reader.CakeCategoryReader;
 
 @SqlGroup({
 	@Sql(scripts = {

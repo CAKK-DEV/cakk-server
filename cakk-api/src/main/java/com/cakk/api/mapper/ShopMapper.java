@@ -12,12 +12,12 @@ import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
-import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
-import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
-import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.entity.shop.CakeShopOperation;
-import com.cakk.domain.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
+import com.cakk.domain.mysql.entity.user.BusinessInformation;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ShopMapper {

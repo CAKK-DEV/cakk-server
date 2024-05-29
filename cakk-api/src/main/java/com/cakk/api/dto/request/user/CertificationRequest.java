@@ -2,8 +2,8 @@ package com.cakk.api.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 
-import com.cakk.domain.dto.param.user.CertificationParam;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.dto.param.user.CertificationParam;
+import com.cakk.domain.mysql.entity.user.User;
 
 public record CertificationRequest(
 	@NotBlank

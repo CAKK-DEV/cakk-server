@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import com.cakk.api.common.annotation.MockCustomUser;
 import com.cakk.api.vo.OAuthUserDetails;
-import com.cakk.domain.entity.user.User;
-import com.cakk.domain.repository.reader.UserReader;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @Component
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<MockCustomUser> {

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.common.enums.Role;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
