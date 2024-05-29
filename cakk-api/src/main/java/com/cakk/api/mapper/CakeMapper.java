@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
-import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CakeMapper {

@@ -10,7 +10,7 @@ import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
-import com.cakk.domain.config.JpaConfig;
+import com.cakk.domain.mysql.config.JpaConfig;
 
 @Import(JpaConfig.class)
 @ActiveProfiles("test")

@@ -11,9 +11,9 @@ import com.cakk.api.dto.response.user.JwtResponse;
 import com.cakk.api.factory.OidcProviderFactory;
 import com.cakk.api.mapper.UserMapper;
 import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.domain.entity.user.User;
-import com.cakk.domain.repository.reader.UserReader;
-import com.cakk.domain.repository.writer.UserWriter;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.UserReader;
+import com.cakk.domain.mysql.repository.writer.UserWriter;
 
 @Service
 @RequiredArgsConstructor

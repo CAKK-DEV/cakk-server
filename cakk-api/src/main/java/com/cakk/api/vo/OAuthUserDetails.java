@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import lombok.Getter;
 
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Getter
 public class OAuthUserDetails implements UserDetails, OidcUser, OAuth2User {

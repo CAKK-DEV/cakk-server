@@ -23,7 +23,7 @@ import io.jsonwebtoken.security.InvalidKeyException;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.api.vo.OAuthUserDetails;
 import com.cakk.common.exception.CakkException;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Component
 public class JwtProvider {

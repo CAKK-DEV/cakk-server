@@ -2,7 +2,7 @@ package com.cakk.api.dto.response.shop;
 
 import java.util.List;
 
-import com.cakk.domain.dto.param.shop.CakeShopOperationParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 
 public record CakeShopInfoResponse(
 	String shopAddress,

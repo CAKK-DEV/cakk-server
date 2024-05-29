@@ -29,16 +29,15 @@ import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.dto.param.shop.CakeShopLinkParam;
-import com.cakk.domain.dto.param.shop.CakeShopOperationParam;
-import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.entity.shop.CakeShopOperation;
-import com.cakk.domain.entity.user.User;
-import com.cakk.domain.repository.reader.CakeShopLinkReader;
-import com.cakk.domain.repository.reader.CakeShopOperationReader;
-import com.cakk.domain.repository.reader.CakeShopReader;
-import com.cakk.domain.repository.reader.UserReader;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
+import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
+import com.cakk.domain.mysql.repository.reader.CakeShopReader;
+import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @SqlGroup({
 	@Sql(scripts = "/sql/insert-test-user.sql", executionPhase = BEFORE_TEST_METHOD),

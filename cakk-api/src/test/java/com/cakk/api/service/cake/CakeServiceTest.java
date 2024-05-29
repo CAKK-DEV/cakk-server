@@ -18,8 +18,8 @@ import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
-import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.repository.reader.CakeReader;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.repository.reader.CakeReader;
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
 class CakeServiceTest extends ServiceTest {

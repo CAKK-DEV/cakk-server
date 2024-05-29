@@ -21,7 +21,7 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 @RestController
 @RequiredArgsConstructor

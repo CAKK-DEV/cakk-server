@@ -10,8 +10,8 @@ import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
-import com.cakk.domain.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.repository.reader.CakeReader;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.repository.reader.CakeReader;
 
 @Service
 @RequiredArgsConstructor

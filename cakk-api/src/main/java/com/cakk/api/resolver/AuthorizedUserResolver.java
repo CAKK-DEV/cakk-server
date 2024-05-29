@@ -11,7 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.vo.OAuthUserDetails;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
 	@Override

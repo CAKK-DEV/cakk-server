@@ -15,18 +15,18 @@ import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.domain.dto.param.shop.CakeShopDetailParam;
-import com.cakk.domain.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.dto.param.shop.CakeShopSimpleParam;
-import com.cakk.domain.dto.param.user.CertificationParam;
-import com.cakk.domain.entity.shop.CakeShop;
-import com.cakk.domain.entity.shop.CakeShopOperation;
-import com.cakk.domain.entity.user.BusinessInformation;
-import com.cakk.domain.entity.user.User;
-import com.cakk.domain.event.shop.CertificationEvent;
-import com.cakk.domain.repository.reader.CakeShopReader;
-import com.cakk.domain.repository.reader.UserReader;
-import com.cakk.domain.repository.writer.CakeShopWriter;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.dto.param.user.CertificationParam;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
+import com.cakk.domain.mysql.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.repository.reader.CakeShopReader;
+import com.cakk.domain.mysql.repository.reader.UserReader;
+import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
 
 @Service
 @RequiredArgsConstructor

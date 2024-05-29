@@ -26,7 +26,7 @@ import com.cakk.api.config.JwtConfig;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.exception.CakkException;
-import com.cakk.domain.entity.user.User;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Import(JwtConfig.class)
 @DisplayName("Jwt Provider 테스트")
