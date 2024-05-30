@@ -1,6 +1,9 @@
 package com.cakk.api.service.user;
 
 import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
@@ -21,6 +24,7 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.UserWriter;
+import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
 class UserServiceTest extends ServiceTest {
@@ -39,6 +43,9 @@ class UserServiceTest extends ServiceTest {
 
 	@Mock
 	private UserWriter userWriter;
+
+	@Mock
+	private TokenRedisRepository tokenRedisRepository;
 
 	@TestWithDisplayName("회원가입에 성공한다")
 	void signUp1() {
@@ -151,5 +158,76 @@ class UserServiceTest extends ServiceTest {
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
 		verify(userReader, times(1)).findByProviderId(providerId);
 		verify(jwtProvider, times(0)).generateToken(user);
+	}
+
+	@TestWithDisplayName("토큰 재발급에 성공한다")
+	void recreateToken() {
+		// given
+		final String refreshToken = "refresh token";
+		final User user = getReflectionMonkey().giveMeBuilder(User.class)
+			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("providerId", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
+			.set("createdAt", LocalDateTime.now())
+			.set("updatedAt", LocalDateTime.now())
+			.sample();
+		JsonWebToken jwt = getConstructorMonkey().giveMeBuilder(JsonWebToken.class)
+			.setNotNull("accessToken")
+			.setNotNull("refreshToken")
+			.setNotNull("grantType")
+			.sample();
+
+		doReturn(false).when(tokenRedisRepository).isBlackListToken(refreshToken);
+		doNothing().when(tokenRedisRepository).registerBlackList(refreshToken, anyLong());
+		doReturn(11111L).when(jwtProvider).getRefreshTokenExpiredSecond();
+		doReturn(user).when(jwtProvider).getUser(refreshToken);
+		doReturn(jwt).when(jwtProvider).generateToken(user);
+
+		// when
+		JwtResponse result = userService.recreateToken(refreshToken);
+
+		// then
+		Assertions.assertNotNull(result.accessToken());
+		Assertions.assertNotNull(result.refreshToken());
+		Assertions.assertNotNull(result.grantType());
+
+		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken);
+		verify(jwtProvider, times(1)).getUser(refreshToken);
+		verify(jwtProvider, times(1)).generateToken(user);
+	}
+
+	@TestWithDisplayName("리프레시 토큰이 만료된 경우, 토큰 재발급에 실패한다")
+	void recreateToken2() {
+		// given
+		final String refreshToken = "refresh token";
+
+		doReturn(false).when(tokenRedisRepository).isBlackListToken(refreshToken);
+		doThrow(new CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).when(jwtProvider).getUser(refreshToken);
+
+		// then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> userService.recreateToken(refreshToken),
+			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
+
+		verify(jwtProvider, times(1)).getUser(refreshToken);
+		verify(jwtProvider, times(0)).generateToken(any());
+	}
+
+	@TestWithDisplayName("리프레시 토큰에 null인 유저가 담겨있는 경우, 토큰 재발급에 실패한다")
+	void recreateToken3() {
+		// given
+		final String refreshToken = "refresh token";
+
+		doReturn(false).when(tokenRedisRepository).isBlackListToken(refreshToken);
+		doThrow(new CakkException(ReturnCode.EMPTY_USER)).when(jwtProvider).getUser(refreshToken);
+
+		// then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> userService.recreateToken(refreshToken),
+			ReturnCode.EMPTY_USER.getMessage());
+
+		verify(jwtProvider, times(1)).getUser(refreshToken);
+		verify(jwtProvider, times(0)).generateToken(any());
 	}
 }
