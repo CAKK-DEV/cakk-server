@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.RefreshToken;
 import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
@@ -32,5 +33,14 @@ public class SignController {
 		@Valid @RequestBody UserSignInRequest request
 	) {
 		return ApiResponse.success(userService.signIn(request));
+	}
+
+	@PostMapping("/recreate-token")
+	public ApiResponse<JwtResponse> recreate(
+		@RefreshToken String refreshToken
+	) {
+		final JwtResponse response = userService.recreateToken(refreshToken);
+
+		return ApiResponse.success(response);
 	}
 }
