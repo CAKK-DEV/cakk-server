@@ -1,4 +1,9 @@
 spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:mysql:8.0:///cakk
