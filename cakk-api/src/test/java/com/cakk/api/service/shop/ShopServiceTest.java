@@ -23,6 +23,7 @@ import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
@@ -97,6 +98,22 @@ public class ShopServiceTest extends ServiceTest {
 			return builder.setNull("cakeShopId").setNotNull("user").sample();
 		}
 		return builder.setNotNull("cakeShopId").setNotNull("user").sample();
+	}
+
+	private CakeShop getCakeShopFixture() {
+		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
+			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
+			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
+			.sample();
+	}
+
+	private BusinessInformation getBusinessInformationFixture() {
+		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
+			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
+			.set("cakeShop", getCakeShopFixture())
+			.sample();
 	}
 
 	@TestWithDisplayName("id로 케이크 샵을 간단조회 한다.")
@@ -195,9 +212,11 @@ public class ShopServiceTest extends ServiceTest {
 	void promoteUser() {
 		//given
 		PromotionRequest request = getPromotionRequestFixture();
-		doReturn(getReflectionMonkey().giveMeOne(User.class)).when(userReader).findByUserId(request.userId());
-		doReturn(getReflectionMonkey().giveMeBuilder(BusinessInformation.class).setNotNull("cakeShop").sample())
-			.when(cakeShopReader).findBusinessInformationWithShop(request.cakeShopId());
+		BusinessInformation businessInformation = getBusinessInformationFixture();
+
+
+		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReader).findByUserId(request.userId());
+		doReturn(businessInformation).when(cakeShopReader).findBusinessInformationWithShop(request.cakeShopId());
 
 		//when,then
 		shopService.promoteUserToBusinessOwner(request);
@@ -211,10 +230,7 @@ public class ShopServiceTest extends ServiceTest {
 	void requestCertificationEventWithInfo() {
 		//given
 		CertificationParam param = getCertificationParamFixture(false);
-		doReturn(getReflectionMonkey().giveMeBuilder(BusinessInformation.class)
-			.setNotNull("cakeShop")
-			.setNull("user")
-			.sample())
+		doReturn(getBusinessInformationFixture())
 			.when(cakeShopReader).findBusinessInformationByCakeShopId(param.cakeShopId());
 
 		//when
@@ -244,8 +260,12 @@ public class ShopServiceTest extends ServiceTest {
 		Long cakeShopId = 1L;
 		CakeShopInfoParam param = getConstructorMonkey().giveMeBuilder(CakeShopInfoParam.class)
 			.set("shopAddress", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(30))
-			.set("latitude", Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100))
-			.set("longitude", Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100))
+			.set("point",
+				PointMapper.supplyPointBy(
+					Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100).sample(),
+					Arbitraries.doubles().greaterOrEqual(0).lessOrEqual(100).sample()
+				)
+			)
 			.set("operationDays", List.of())
 			.sample();
 

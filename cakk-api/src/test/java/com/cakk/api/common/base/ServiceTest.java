@@ -1,6 +1,10 @@
 package com.cakk.api.common.base;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,6 +21,13 @@ import com.cakk.domain.mysql.config.JpaConfig;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public abstract class ServiceTest {
+
+	private static final int SPATIAL_REFERENCE_IDENTIFIER_NUMBER = 4326;
+
+	private static final GeometryFactory geometryFactory = new GeometryFactory(
+		new PrecisionModel(),
+		SPATIAL_REFERENCE_IDENTIFIER_NUMBER
+	);
 
 	protected final FixtureMonkey getConstructorMonkey() {
 		return FixtureMonkey.builder()
@@ -37,5 +48,9 @@ public abstract class ServiceTest {
 			.plugin(new JakartaValidationPlugin())
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
 			.build();
+	}
+
+	public static Point supplyPointBy(Double latitude, Double longitude) {
+		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }
