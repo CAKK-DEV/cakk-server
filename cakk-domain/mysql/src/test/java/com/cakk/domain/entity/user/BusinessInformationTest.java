@@ -53,16 +53,6 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	void test() {
-		CakeShop cakeShop = getCakeShopFixture();
-
-		System.out.println(cakeShop.getShopName());
-		System.out.println(cakeShop.getShopAddress());
-		System.out.println(cakeShop.getShopBio());
-		System.out.println(cakeShop.getLocation());
-	}
-
-	@Test
 	void 케이크샵이_존재한다면_가게_정보와_함께_서비스에_인증요청을_한다() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
