@@ -1,9 +1,9 @@
-package com.cakk.api.annotation.validator;
+package com.cakk.api.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import com.cakk.api.annotation.OperationDays;
+import com.cakk.api.validator.OperationDays;
 import com.cakk.api.dto.request.shop.OperationDayRequest;
 
 public class OperationValidator implements ConstraintValidator<OperationDays, OperationDayRequest> {
