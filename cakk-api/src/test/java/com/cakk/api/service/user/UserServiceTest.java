@@ -177,7 +177,6 @@ class UserServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(false).when(tokenRedisRepository).isBlackListToken(refreshToken);
-		doNothing().when(tokenRedisRepository).registerBlackList(refreshToken, anyLong());
 		doReturn(11111L).when(jwtProvider).getRefreshTokenExpiredSecond();
 		doReturn(user).when(jwtProvider).getUser(refreshToken);
 		doReturn(jwt).when(jwtProvider).generateToken(user);
@@ -229,5 +228,22 @@ class UserServiceTest extends ServiceTest {
 
 		verify(jwtProvider, times(1)).getUser(refreshToken);
 		verify(jwtProvider, times(0)).generateToken(any());
+	}
+
+	@TestWithDisplayName("리프레시 토큰이 블랙리스트에 있는 경우, 토큰 재발급에 실패한다")
+	void recreateToken4() {
+		// given
+		final String refreshToken = "refresh token";
+
+		doReturn(true).when(tokenRedisRepository).isBlackListToken(refreshToken);
+
+		// then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> userService.recreateToken(refreshToken),
+			ReturnCode.BLACK_LIST_TOKEN.getMessage());
+
+		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken);
+		verify(jwtProvider, times(0)).getUser(refreshToken);
 	}
 }
