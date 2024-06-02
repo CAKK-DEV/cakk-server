@@ -17,13 +17,14 @@ import com.cakk.domain.mysql.event.shop.CertificationEvent;
 class BusinessInformationTest extends DomainTest {
 
 	private CakeShop getCakeShopFixture() {
-		return getReflectionMonkey().giveMeBuilder(CakeShop.class)
+		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
 			.sample();
 	}
 
 	private BusinessInformation getBusinessInformationFixture() {
-		return getReflectionMonkey().giveMeBuilder(BusinessInformation.class)
+		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.setNull("cakeShop")
 			.setNull("user")
@@ -31,7 +32,7 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	private BusinessInformation getBusinessInformationFixtureWithCakeShop() {
-		return getReflectionMonkey().giveMeBuilder(BusinessInformation.class)
+		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("cakeShop", getCakeShopFixture())
 			.setNull("user")

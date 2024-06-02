@@ -87,8 +87,8 @@ public class SlackService {
 			new SlackField().setTitle("요청자 사업자등록증 이미지").setValue(certificationEvent.businessRegistrationImageUrl()),
 			new SlackField().setTitle("요청 사항").setValue(certificationEvent.message()),
 			new SlackField().setTitle("가게 이름").setValue(certificationEvent.shopName()),
-			new SlackField().setTitle("가게 위치 위도").setValue(String.valueOf(certificationEvent.shopLatitude())),
-			new SlackField().setTitle("가게 위치 경도").setValue(String.valueOf(certificationEvent.shopLongitude()))
+			new SlackField().setTitle("가게 위치 위도").setValue(String.valueOf(certificationEvent.location().getY())),
+			new SlackField().setTitle("가게 위치 경도").setValue(String.valueOf(certificationEvent.location().getX()))
 		));
 
 		SlackMessage slackMessage = new SlackMessage();

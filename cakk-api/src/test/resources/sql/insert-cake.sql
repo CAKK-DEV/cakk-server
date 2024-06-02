@@ -1,7 +1,10 @@
-insert into cake_shop (shop_id, thumbnail_url, shop_name, shop_bio, shop_description, latitude, longitude, like_count, linked_flag,
+SET @g1 = 'Point(37.197734 127.098190)';
+SET @g2 = 'Point(37.201623 127.091568)';
+
+insert into cake_shop (shop_id, thumbnail_url, shop_name, shop_bio, shop_description, location, like_count, linked_flag,
                        created_at, updated_at)
-values (1, 'thumbnail_url', '케이크 맛집', '케이크 맛집입니다.', '케이크 맛집입니다.', 37.123456, 127.123456, 0, false, now(), now()),
-       (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '케이크 맛집입니다.', 38.123456, 128.123456, 0, false, now(), now());
+values (1, 'thumbnail_url', '케이크 맛집', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, false, now(), now()),
+       (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, false, now(), now());
 
 insert into cake (cake_id, shop_id, cake_image_url, like_count, created_at, updated_at)
 values (1, 1, 'cake_image_url1', 0, now(), now()),

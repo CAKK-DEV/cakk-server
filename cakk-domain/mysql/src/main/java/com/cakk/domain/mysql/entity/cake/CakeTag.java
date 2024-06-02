@@ -33,11 +33,11 @@ public class CakeTag extends AuditCreatedEntity {
 	private Cake cake;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-	private User user;
+	@JoinColumn(name = "tag_id", referencedColumnName = "tag_id", nullable = false)
+	private Tag tag;
 
-	public CakeTag(Cake cake, User user) {
+	public CakeTag(Cake cake, Tag tag) {
 		this.cake = cake;
-		this.user = user;
+		this.tag = tag;
 	}
 }
