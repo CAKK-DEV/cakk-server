@@ -3,7 +3,7 @@ package com.cakk.api.dto.request.shop;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.cakk.api.validator.OperationDays;
+import com.cakk.api.annotation.OperationDays;
 
 public record CreateShopRequest(
 
