@@ -10,8 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.locationtech.jts.geom.Point;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "cake_shop")
@@ -44,11 +47,8 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "shop_description", length = 500)
 	private String shopDescription;
 
-	@Column(name = "latitude", nullable = false, columnDefinition = "DECIMAL(18,10)")
-	private Double latitude;
-
-	@Column(name = "longitude", nullable = false, columnDefinition = "DECIMAL(18,10)")
-	private Double longitude;
+	@Column(name = "location", nullable = false, columnDefinition = "POINT SRID 4326")
+	private Point location;
 
 	@ColumnDefault("0")
 	@Column(name = "like_count", nullable = false, columnDefinition = "MEDIUMINT")
@@ -69,16 +69,14 @@ public class CakeShop extends AuditEntity {
 		String shopAddress,
 		String shopBio,
 		String shopDescription,
-		Double latitude,
-		Double longitude
+		Point location
 	) {
 		this.shopName = shopName;
 		this.thumbnailUrl = thumbnailUrl;
 		this.shopAddress = shopAddress;
 		this.shopBio = shopBio;
 		this.shopDescription = shopDescription;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.location = location;
 		this.likeCount = 0;
 		this.linkedFlag = false;
 	}

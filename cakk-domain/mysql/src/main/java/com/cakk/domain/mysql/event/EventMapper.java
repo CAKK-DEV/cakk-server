@@ -18,8 +18,7 @@ public class EventMapper {
 			.userId(param.user().getId())
 			.userEmail(param.user().getEmail())
 			.shopName(cakeShop.getShopName())
-			.shopLatitude(cakeShop.getLatitude())
-			.shopLongitude(cakeShop.getLongitude())
+			.location(cakeShop.getLocation())
 			.build();
 	}
 

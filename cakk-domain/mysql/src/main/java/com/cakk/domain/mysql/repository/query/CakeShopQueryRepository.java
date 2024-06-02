@@ -73,8 +73,7 @@ public class CakeShopQueryRepository {
 			.transform(groupBy(cakeShop.id)
 				.list(Projections.constructor(CakeShopInfoParam.class,
 					cakeShop.shopAddress,
-					cakeShop.latitude,
-					cakeShop.longitude,
+					cakeShop.location,
 					list(Projections.constructor(CakeShopOperationParam.class,
 						cakeShopOperation.operationDay,
 						cakeShopOperation.operationStartTime,

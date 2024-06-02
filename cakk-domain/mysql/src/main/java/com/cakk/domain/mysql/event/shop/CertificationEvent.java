@@ -1,5 +1,7 @@
 package com.cakk.domain.mysql.event.shop;
 
+import org.locationtech.jts.geom.Point;
+
 import lombok.Builder;
 
 @Builder
@@ -11,7 +13,6 @@ public record CertificationEvent(
 	Long userId,
 	String userEmail,
 	String shopName,
-	Double shopLatitude,
-	Double shopLongitude
+	Point location
 ) {
 }

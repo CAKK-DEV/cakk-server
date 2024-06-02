@@ -23,12 +23,12 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 public class ShopMapper {
 
 	public static CakeShop supplyCakeShopBy(CreateShopRequest request) {
+
 		return CakeShop.builder()
 			.shopName(request.shopName())
 			.shopBio(request.shopBio())
 			.shopDescription(request.shopDescription())
-			.latitude(request.latitude())
-			.longitude(request.longitude())
+			.location(PointMapper.supplyPointBy(request.latitude(), request.longitude()))
 			.build();
 	}
 
@@ -87,10 +87,13 @@ public class ShopMapper {
 	}
 
 	public static CakeShopInfoResponse supplyCakeShopInfoResponseBy(CakeShopInfoParam param) {
+		Double longitude = param.point().getX();
+		Double latitude = param.point().getY();
+
 		return new CakeShopInfoResponse(
 			param.shopAddress(),
-			param.latitude(),
-			param.longitude(),
+			latitude,
+			longitude,
 			param.shopOperationDays()
 		);
 	}

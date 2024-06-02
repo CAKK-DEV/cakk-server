@@ -245,9 +245,12 @@ public class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
 		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		Double longitude = cakeShop.getLocation().getX();
+		Double latitude = cakeShop.getLocation().getY();
+
 		assertEquals(cakeShop.getShopAddress(), data.shopAddress());
-		assertEquals(cakeShop.getLatitude(), data.latitude());
-		assertEquals(cakeShop.getLongitude(), data.longitude());
+		assertEquals(latitude, data.latitude());
+		assertEquals(longitude, data.longitude());
 
 		List<CakeShopOperationParam> cakeShopOperations = cakeShopOperationReader.findAllByCakeShopId(cakeShopId).stream()
 			.map((it) -> new CakeShopOperationParam(it.getOperationDay(), it.getOperationStartTime(), it.getOperationEndTime()))
