@@ -1,7 +1,5 @@
 package com.cakk.api.service.user;
 
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +56,7 @@ public class UserService {
 		final User user = jwtProvider.getUser(refreshToken);
 		final long expiredSecond = jwtProvider.getRefreshTokenExpiredSecond();
 
-		tokenRedisRepository.save(refreshToken, "refresh", expiredSecond, TimeUnit.MILLISECONDS);
+		tokenRedisRepository.registerBlackList(refreshToken, expiredSecond);
 
 		return JwtResponse.from(jwtProvider.generateToken(user));
 	}
