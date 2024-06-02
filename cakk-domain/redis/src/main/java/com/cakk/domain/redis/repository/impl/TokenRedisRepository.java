@@ -26,6 +26,14 @@ public class TokenRedisRepository implements RedisValueRepository<String> {
 		valueOperations = redisTemplate.opsForValue();
 	}
 
+	public void registerBlackList(String token, long timeout) {
+		save(token, "token", timeout, TimeUnit.MILLISECONDS);
+	}
+
+	public Boolean isBlackListToken(String token) {
+		return existByKey(token);
+	}
+
 	@Override
 	public void save(String key, String value, long timeout, TimeUnit unit) {
 		valueOperations.set(key, value, timeout, unit);

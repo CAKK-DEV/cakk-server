@@ -65,6 +65,7 @@ public class JwtProvider {
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 			final String refreshToken = Jwts.builder()
+				.claim(userKey, user)
 				.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
@@ -79,17 +80,25 @@ public class JwtProvider {
 		}
 	}
 
-	public Authentication getAuthentication(String accessToken) {
-		final Claims claims = parseClaims(accessToken);
+	public Authentication getAuthentication(String token) {
+		final User user = getUser(token);
+		final OAuthUserDetails userDetails = new OAuthUserDetails(user);
+
+		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+	}
+
+	public User getUser(String token) {
+		final Claims claims = parseClaims(token);
 
 		if (isNull(claims.get(userKey))) {
 			throw new CakkException(EMPTY_AUTH_JWT);
 		}
 
-		final User user = new ObjectMapper().convertValue(claims.get(userKey), User.class);
-		OAuthUserDetails userDetails = new OAuthUserDetails(user);
+		return new ObjectMapper().convertValue(claims.get(userKey), User.class);
+	}
 
-		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+	public long getRefreshTokenExpiredSecond() {
+		return this.refreshTokenExpiredSecond;
 	}
 
 	public Claims parseClaims(String token) {
