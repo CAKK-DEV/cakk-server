@@ -49,7 +49,9 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public JwtResponse recreateToken(final String refreshToken) {
-		if (tokenRedisRepository.isBlackListToken(refreshToken)) {
+		final boolean isBlackList = tokenRedisRepository.isBlackListToken(refreshToken);
+
+		if (isBlackList) {
 			throw new CakkException(ReturnCode.BLACK_LIST_TOKEN);
 		}
 

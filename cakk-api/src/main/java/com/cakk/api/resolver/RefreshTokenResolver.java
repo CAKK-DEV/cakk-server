@@ -29,7 +29,7 @@ public class RefreshTokenResolver implements HandlerMethodArgumentResolver {
 	) {
 		String refreshToken = webRequest.getHeader("Refresh");
 
-		if (hasLength(refreshToken)) {
+		if (!hasLength(refreshToken)) {
 			throw new CakkException(ReturnCode.EMPTY_REFRESH);
 		}
 

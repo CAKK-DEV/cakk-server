@@ -65,6 +65,7 @@ public class JwtProvider {
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 			final String refreshToken = Jwts.builder()
+				.claim(userKey, user)
 				.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
