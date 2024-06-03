@@ -26,7 +26,7 @@ import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.UserWriter;
 import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
 
-@DisplayName("유저 관련 비즈니스 로직 테스트")
+@DisplayName("Sign 관련 비즈니스 로직 테스트")
 class SignServiceTest extends ServiceTest {
 
 	@InjectMocks
