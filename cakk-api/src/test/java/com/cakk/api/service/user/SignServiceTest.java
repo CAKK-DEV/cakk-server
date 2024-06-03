@@ -27,10 +27,10 @@ import com.cakk.domain.mysql.repository.writer.UserWriter;
 import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
-class UserServiceTest extends ServiceTest {
+class SignServiceTest extends ServiceTest {
 
 	@InjectMocks
-	private UserService userService;
+	private SignService signService;
 
 	@Mock
 	private OidcProviderFactory oidcProviderFactory;
@@ -67,7 +67,7 @@ class UserServiceTest extends ServiceTest {
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
-		JwtResponse result = userService.signUp(dto);
+		JwtResponse result = signService.signUp(dto);
 
 		// then
 		Assertions.assertNotNull(result.accessToken());
@@ -94,7 +94,7 @@ class UserServiceTest extends ServiceTest {
 		// then
 		Assertions.assertThrows(
 			CakkException.class,
-			() -> userService.signUp(dto),
+			() -> signService.signUp(dto),
 			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
@@ -123,7 +123,7 @@ class UserServiceTest extends ServiceTest {
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
-		JwtResponse result = userService.signIn(dto);
+		JwtResponse result = signService.signIn(dto);
 
 		// then
 		Assertions.assertNotNull(result.accessToken());
@@ -152,7 +152,7 @@ class UserServiceTest extends ServiceTest {
 		// when
 		Assertions.assertThrows(
 			CakkException.class,
-			() -> userService.signIn(dto),
+			() -> signService.signIn(dto),
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
@@ -182,7 +182,7 @@ class UserServiceTest extends ServiceTest {
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
-		JwtResponse result = userService.recreateToken(refreshToken);
+		JwtResponse result = signService.recreateToken(refreshToken);
 
 		// then
 		Assertions.assertNotNull(result.accessToken());
@@ -205,7 +205,7 @@ class UserServiceTest extends ServiceTest {
 		// then
 		Assertions.assertThrows(
 			CakkException.class,
-			() -> userService.recreateToken(refreshToken),
+			() -> signService.recreateToken(refreshToken),
 			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
 
 		verify(jwtProvider, times(1)).getUser(refreshToken);
@@ -223,7 +223,7 @@ class UserServiceTest extends ServiceTest {
 		// then
 		Assertions.assertThrows(
 			CakkException.class,
-			() -> userService.recreateToken(refreshToken),
+			() -> signService.recreateToken(refreshToken),
 			ReturnCode.EMPTY_USER.getMessage());
 
 		verify(jwtProvider, times(1)).getUser(refreshToken);
@@ -240,7 +240,7 @@ class UserServiceTest extends ServiceTest {
 		// then
 		Assertions.assertThrows(
 			CakkException.class,
-			() -> userService.recreateToken(refreshToken),
+			() -> signService.recreateToken(refreshToken),
 			ReturnCode.BLACK_LIST_TOKEN.getMessage());
 
 		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken);

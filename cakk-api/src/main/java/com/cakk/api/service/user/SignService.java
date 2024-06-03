@@ -20,7 +20,7 @@ import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class SignService {
 
 	private final OidcProviderFactory oidcProviderFactory;
 	private final JwtProvider jwtProvider;
