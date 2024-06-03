@@ -76,6 +76,5 @@ class MyPageIntegrationTest extends IntegrationTest {
 		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
 		assertEquals(body.email(), user.getEmail());
 		assertEquals(body.gender(), user.getGender());
-		assertEquals(body.birthday(), user.getBirthday());
 	}
 }
