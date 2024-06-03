@@ -3,8 +3,10 @@ package com.cakk.api.mapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -21,6 +23,16 @@ public class UserMapper {
 			.deviceOs(dto.deviceOs())
 			.deviceToken(dto.deviceToken())
 			.role(Role.USER)
+			.build();
+	}
+
+	public static ProfileUpdateParam supplyProfileUpdateParamBy(final ProfileUpdateRequest dto) {
+		return ProfileUpdateParam.builder()
+			.profileImageUrl(dto.profileImageUrl())
+			.nickname(dto.nickname())
+			.email(dto.email())
+			.gender(dto.gender())
+			.birthday(dto.birthday())
 			.build();
 	}
 }
