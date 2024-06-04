@@ -1,5 +1,6 @@
 package com.cakk.api.mapper;
 
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.entity.user.UserWithdrawal;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
@@ -33,6 +35,16 @@ public class UserMapper {
 			.email(dto.email())
 			.gender(dto.gender())
 			.birthday(dto.birthday())
+			.build();
+	}
+
+	public static UserWithdrawal supplyUserWithdrawalBy(final User user) {
+		return UserWithdrawal.builder()
+			.email(user.getEmail())
+			.gender(user.getGender())
+			.birthday(user.getBirthday())
+			.role(user.getRole())
+			.withdrawalDate(LocalDateTime.now())
 			.build();
 	}
 }

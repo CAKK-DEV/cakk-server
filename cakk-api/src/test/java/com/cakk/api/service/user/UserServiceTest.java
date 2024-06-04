@@ -1,11 +1,14 @@
 package com.cakk.api.service.user;
 
 import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import net.jqwik.api.Arbitraries;
+
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
@@ -76,10 +79,10 @@ class UserServiceTest extends ServiceTest {
 		verify(cakeLikeWriter, times(1)).deleteAllByUser(user);
 		verify(cakeShopLikeWriter, times(1)).deleteAllByUser(user);
 		verify(businessInformationWriter, times(1)).deleteAllByUser(user);
-		verify(userWriter, times(1)).delete(user);
+		verify(userWriter, times(1)).delete(any(), any());
 	}
 
-	@TestWithDisplayName("유저를 탈퇴한다.")
+	@TestWithDisplayName("유저가 없는 경우, 탈퇴에 실패한다.")
 	void withdraw2() {
 		// given
 		final User user = getReflectionMonkey().giveMeBuilder(User.class)
@@ -99,6 +102,6 @@ class UserServiceTest extends ServiceTest {
 		verify(cakeLikeWriter, times(0)).deleteAllByUser(user);
 		verify(cakeShopLikeWriter, times(0)).deleteAllByUser(user);
 		verify(businessInformationWriter, times(0)).deleteAllByUser(user);
-		verify(userWriter, times(0)).delete(user);
+		verify(userWriter, times(0)).delete(any(), any());
 	}
 }

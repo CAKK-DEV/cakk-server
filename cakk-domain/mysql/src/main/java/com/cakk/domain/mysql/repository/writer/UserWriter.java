@@ -6,6 +6,7 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.annotation.Writer;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.entity.user.UserWithdrawal;
 import com.cakk.domain.mysql.repository.jpa.UserJpaRepository;
 import com.cakk.domain.mysql.repository.jpa.UserWithdrawalJpaRepository;
 
@@ -25,8 +26,8 @@ public class UserWriter {
 		return userJpaRepository.save(user);
 	}
 
-	public void delete(final User user) {
-		userWithdrawalJpaRepository.save(user.toWithdrawEntity());
+	public void delete(final User user, final UserWithdrawal withdrawal) {
+		userWithdrawalJpaRepository.save(withdrawal);
 		userJpaRepository.delete(user);
 	}
 }

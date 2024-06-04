@@ -116,14 +116,4 @@ public class User extends AuditEntity {
 		this.gender = param.gender();
 		this.birthday = param.birthday();
 	}
-
-	public UserWithdrawal toWithdrawEntity() {
-		return UserWithdrawal.builder()
-			.email(email)
-			.gender(gender)
-			.birthday(birthday)
-			.role(role)
-			.withdrawalDate(LocalDateTime.now())
-			.build();
-	}
 }
