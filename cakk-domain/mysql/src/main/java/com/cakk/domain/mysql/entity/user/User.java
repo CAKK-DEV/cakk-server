@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.common.enums.Gender;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 
 @Getter
@@ -106,5 +107,13 @@ public class User extends AuditEntity {
 
 	public void upgradedRoleToBusinessOwner() {
 		role = Role.BUSINESS_OWNER;
+	}
+
+	public void updateProfile(final ProfileUpdateParam param) {
+		this.profileImageUrl = param.profileImageUrl();
+		this.nickname = param.nickname();
+		this.email = param.email();
+		this.gender = param.gender();
+		this.birthday = param.birthday();
 	}
 }

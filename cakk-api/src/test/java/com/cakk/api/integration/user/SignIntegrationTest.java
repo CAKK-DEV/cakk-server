@@ -35,12 +35,6 @@ public class SignIntegrationTest extends IntegrationTest {
 	private static final String API_URL = "/api/v1";
 
 	@Autowired
-	private JwtProvider jwtProvider;
-
-	@Autowired
-	private UserReader userReader;
-
-	@Autowired
 	private TokenRedisRepository tokenRedisRepository;
 
 	@TestWithDisplayName("토큰 재발급에 성공한다.")
@@ -51,8 +45,7 @@ public class SignIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.build();
 
-		User user = userReader.findByUserId(1L);
-		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
+		JsonWebToken jsonWebToken = getAuthToken();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Refresh", jsonWebToken.refreshToken());
@@ -86,9 +79,8 @@ public class SignIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.build();
 
-		User user = userReader.findByUserId(1L);
-		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
-		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken(), jwtProvider.getRefreshTokenExpiredSecond());
+		JsonWebToken jsonWebToken = getAuthToken();
+		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken(), getRefreshTokenExpiredSecond());
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Refresh", jsonWebToken.refreshToken());

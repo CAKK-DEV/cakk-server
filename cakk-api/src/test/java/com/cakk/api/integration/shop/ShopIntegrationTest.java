@@ -6,6 +6,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +25,6 @@ import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
@@ -33,18 +33,16 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
-import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @SqlGroup({
 	@Sql(scripts = "/sql/insert-test-user.sql", executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/insert-cake-shop.sql", executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
-public class ShopIntegrationTest extends IntegrationTest {
+class ShopIntegrationTest extends IntegrationTest {
 
 	private static final String API_URL = "/api/v1/shops";
 
@@ -56,12 +54,6 @@ public class ShopIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private CakeShopLinkReader cakeShopLinkReader;
-
-	@Autowired
-	private JwtProvider jwtProvider;
-
-	@Autowired
-	private UserReader userReader;
 
 	@TestWithDisplayName("케이크 샵을 간단 조회에 성공한다.")
 	void simple1() {
@@ -175,11 +167,11 @@ public class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.path("/certification")
 			.build();
-		User user = userReader.findByUserId(1L);
 
-		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
+		JsonWebToken jsonWebToken = getAuthToken();
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
+
 		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
@@ -203,11 +195,11 @@ public class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.path("/certification")
 			.build();
-		User user = userReader.findByUserId(1L);
 
-		JsonWebToken jsonWebToken = jwtProvider.generateToken(user);
+		JsonWebToken jsonWebToken = getAuthToken();
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
+
 		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))

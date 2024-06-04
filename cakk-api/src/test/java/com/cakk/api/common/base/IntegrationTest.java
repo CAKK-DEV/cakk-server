@@ -8,6 +8,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.cakk.api.provider.jwt.JwtProvider;
+import com.cakk.api.vo.JsonWebToken;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
@@ -33,6 +37,12 @@ public abstract class IntegrationTest {
 	@Autowired
 	protected ObjectMapper objectMapper = new ObjectMapper();
 
+	@Autowired
+	private JwtProvider jwtProvider;
+
+	@Autowired
+	protected UserReader userReader;
+
 	protected static final String BASE_URL = "http://localhost:";
 
 	protected final FixtureMonkey getConstructorMonkey() {
@@ -54,5 +64,19 @@ public abstract class IntegrationTest {
 			.plugin(new JakartaValidationPlugin())
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
 			.build();
+	}
+
+	protected JsonWebToken getAuthToken() {
+		final User user = userReader.findByUserId(1L);
+
+		return jwtProvider.generateToken(user);
+	}
+
+	protected Long getUserId() {
+		return 1L;
+	}
+
+	protected long getRefreshTokenExpiredSecond() {
+		return jwtProvider.getRefreshTokenExpiredSecond();
 	}
 }
