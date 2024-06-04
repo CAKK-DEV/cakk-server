@@ -1,6 +1,8 @@
 description = "redis module"
 
 dependencies {
+	implementation project(':cakk-common')
+
 	implementation('org.springframework.boot:spring-boot-starter-data-redis')
 }
 
