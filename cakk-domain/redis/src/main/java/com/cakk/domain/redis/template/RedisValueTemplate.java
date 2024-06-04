@@ -1,11 +1,11 @@
-package com.cakk.domain.redis.repository;
+package com.cakk.domain.redis.template;
 
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface RedisValueRepository<T> {
+public interface RedisValueTemplate<T> {
 
 	void save(String key, T value, long timeout, TimeUnit unit);
 

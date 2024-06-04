@@ -24,7 +24,7 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.UserWriter;
-import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
+import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @DisplayName("Sign 관련 비즈니스 로직 테스트")
 class SignServiceTest extends ServiceTest {
