@@ -16,13 +16,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.response.user.JwtResponse;
-import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.redis.repository.impl.TokenRedisRepository;
+import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @SqlGroup({
 	@Sql(scripts = {

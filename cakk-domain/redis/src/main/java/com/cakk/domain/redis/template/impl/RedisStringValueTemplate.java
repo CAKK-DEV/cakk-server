@@ -1,4 +1,4 @@
-package com.cakk.domain.redis.repository.impl;
+package com.cakk.domain.redis.template.impl;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -10,12 +10,12 @@ import org.springframework.data.redis.core.ValueOperations;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.domain.redis.annotation.RedisRepository;
-import com.cakk.domain.redis.repository.RedisValueRepository;
+import com.cakk.domain.redis.annotation.RedisCustomTemplate;
+import com.cakk.domain.redis.template.RedisValueTemplate;
 
-@RedisRepository
+@RedisCustomTemplate
 @RequiredArgsConstructor
-public class TokenRedisRepository implements RedisValueRepository<String> {
+public class RedisStringValueTemplate implements RedisValueTemplate<String> {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
@@ -26,33 +26,25 @@ public class TokenRedisRepository implements RedisValueRepository<String> {
 		valueOperations = redisTemplate.opsForValue();
 	}
 
-	public void registerBlackList(String token, long timeout) {
-		save(token, "token", timeout, TimeUnit.MILLISECONDS);
-	}
-
-	public Boolean isBlackListToken(String token) {
-		return existByKey(token);
-	}
-
 	@Override
-	public void save(String key, String value, long timeout, TimeUnit unit) {
+	public void save(final String key, final String value, final long timeout, final TimeUnit unit) {
 		valueOperations.set(key, value, timeout, unit);
 	}
 
 	@Override
-	public String findByKey(String key) {
-		String value = valueOperations.get(key);
+	public String findByKey(final String key) {
+		final String value = valueOperations.get(key);
 
 		return Objects.isNull(value) ? null : value;
 	}
 
 	@Override
-	public Boolean existByKey(String key) {
+	public Boolean existByKey(final String key) {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(key));
 	}
 
 	@Override
-	public Boolean delete(String key) {
+	public Boolean delete(final String key) {
 		return Boolean.TRUE.equals(redisTemplate.delete(key));
 	}
 }
