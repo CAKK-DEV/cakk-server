@@ -10,6 +10,7 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.annotation.Reader;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository;
 import com.cakk.domain.mysql.repository.query.CakeQueryRepository;
 
@@ -30,5 +31,9 @@ public class CakeReader {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize);
+	}
+
+	public List<CakeImageResponseParam> searchCakeImagesByCakeShops(List<Long> cakeShopIds) {
+		return cakeQueryRepository.searchCakeImagesByCakeShopIds(cakeShopIds);
 	}
 }
