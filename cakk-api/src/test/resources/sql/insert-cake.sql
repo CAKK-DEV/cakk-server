@@ -18,6 +18,31 @@ values (1, 1, 'cake_image_url1', 0, now(), now()),
        (9, 1, 'cake_image_url9', 0, now(), now()),
        (10, 1, 'cake_image_url10', 0, now(), now());
 
+insert into tag(tag_id, tag_name, created_at)
+values (1, 'tag_name1', now()),
+       (2, 'tag_name2', now()),
+       (3, 'tag_name3', now()),
+       (4, 'tag_name4', now()),
+       (5, 'tag_name5', now()),
+       (6, 'tag_name6', now()),
+       (7, 'tag_name7', now()),
+       (8, 'tag_name8', now()),
+       (9, 'tag_name9', now()),
+       (10, 'tag_name10', now());
+
+insert into cake_tag(cake_tag_id, cake_id, tag_id, created_at)
+values (1, 1, 1, now()),
+       (2, 2, 2, now()),
+       (3, 3, 3, now()),
+       (4, 4, 4, now()),
+       (5, 5, 5, now()),
+       (6, 6, 6, now()),
+       (7, 7, 7, now()),
+       (8, 8, 8, now()),
+       (9, 9, 9, now()),
+       (10, 10, 10, now());
+
+
 insert into cake_category (cake_category_id, cake_id, cake_design_category, created_at)
 values (1, 1, 'FLOWER', now()),
        (2, 2, 'FLOWER', now()),
