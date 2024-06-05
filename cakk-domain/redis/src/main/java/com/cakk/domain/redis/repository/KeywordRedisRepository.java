@@ -24,4 +24,8 @@ public class KeywordRedisRepository {
 	public List<String> findTopSearchedLimitCount(final long count) {
 		return redisStringZSetTemplate.findAllReverseScore(key, count);
 	}
+
+	public void clear() {
+		redisStringZSetTemplate.removeAll(key);
+	}
 }

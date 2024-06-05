@@ -48,4 +48,9 @@ public class RedisStringZSetTemplate implements RedisZSetTemplate<String> {
 
 		return List.copyOf(data);
 	}
+
+	@Override
+	public void removeAll(String key) {
+		zSetOperations.removeRangeByScore(key, 0, Double.MAX_VALUE);
+	}
 }
