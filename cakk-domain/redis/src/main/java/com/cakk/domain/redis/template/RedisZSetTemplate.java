@@ -9,4 +9,6 @@ public interface RedisZSetTemplate<T> {
 	void increaseScore(String key, String value, int delta);
 
 	List<T> findAllReverseScore(String key, long count);
+
+	void removeAll(String key);
 }
