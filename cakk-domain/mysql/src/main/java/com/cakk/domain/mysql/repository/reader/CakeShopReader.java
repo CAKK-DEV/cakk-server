@@ -2,6 +2,10 @@ package com.cakk.domain.mysql.repository.reader;
 
 import static java.util.Objects.*;
 
+import java.util.List;
+
+import org.locationtech.jts.geom.Point;
+
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.ReturnCode;
@@ -69,4 +73,7 @@ public class CakeShopReader {
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
+	public List<CakeShop> searchShopByLocationBased(Point point) {
+		return cakeShopJpaRepository.findByLocationBased(point);
+	}
 }
