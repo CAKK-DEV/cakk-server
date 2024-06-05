@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class CakeShopMapParam {
+
 	private Long cakeShopId;
 	private String thumbnailUrl;
 	private String cakeShopName;
@@ -23,3 +24,4 @@ public class CakeShopMapParam {
 		cakeImageUrls.add(cakeImageUrl);
 	}
 }
+

@@ -11,3 +11,4 @@ public record SearchShopByLocationRequest(
 	Double longitude
 ) {
 }
+

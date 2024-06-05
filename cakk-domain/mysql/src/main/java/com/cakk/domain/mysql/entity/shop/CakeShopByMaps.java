@@ -40,7 +40,7 @@ public class CakeShopByMaps {
 		for (CakeImageResponseParam cake : cakes) {
 			CakeShopMapParam param;
 
-			if(map.containsKey(cake.cakeShopId())) {
+			if (map.containsKey(cake.cakeShopId())) {
 				param = map.get(cake.cakeShopId());
 			} else {
 				param = findCakeShop(cake.cakeShopId());
@@ -68,3 +68,4 @@ public class CakeShopByMaps {
 		return cakeShopByMaps;
 	}
 }
+
