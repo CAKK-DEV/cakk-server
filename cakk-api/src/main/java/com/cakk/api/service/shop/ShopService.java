@@ -113,7 +113,7 @@ public class ShopService {
 		List<CakeShop> cakeShops = cakeShopReader.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
 		List<CakeImageResponseParam> cakes = cakeReader.searchCakeImagesByCakeShops(ShopMapper.supplyCakeShopIdsBy(cakeShops));
 
-		CakeShopByMaps cakeShopByMaps = new CakeShopByMaps(cakeShops, cakes);
+		final CakeShopByMaps cakeShopByMaps = new CakeShopByMaps(cakeShops, cakes);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShopByMaps.getCakeShopByMaps());
 	}

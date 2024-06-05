@@ -22,6 +22,10 @@ public class CakeShopByMaps {
 		matchRepresentCakeImagesByMaxFour(cakes);
 	}
 
+	public List<CakeShopMapParam> getCakeShopByMaps() {
+		return cakeShopByMaps;
+	}
+
 	private void initCakeShopByMaps(List<CakeShop> cakeShops) {
 		cakeShops.forEach(cakeShop -> cakeShopByMaps.add(
 			CakeShopMapParam.builder()
@@ -62,10 +66,6 @@ public class CakeShopByMaps {
 			.filter(cakeShopMapParam -> Objects.equals(cakeShopMapParam.getCakeShopId(), cakeShopId))
 			.findFirst()
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
-	}
-
-	public List<CakeShopMapParam> getCakeShopByMaps() {
-		return cakeShopByMaps;
 	}
 }
 
