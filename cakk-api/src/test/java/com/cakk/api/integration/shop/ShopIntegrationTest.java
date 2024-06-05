@@ -1,5 +1,6 @@
 package com.cakk.api.integration.shop;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
@@ -22,6 +23,7 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -268,5 +270,33 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("테스트 sql script를 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
+	void findAllShopsByLocationBased1() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/location-based")
+			.queryParam("latitude", 37.2096575)
+			.queryParam("longitude", 127.0998228)
+			.build();
+
+		//when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		//then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopByMapResponse data = objectMapper.convertValue(response.getData(), CakeShopByMapResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		data.cakeShops().forEach(cakeShop -> {
+			assertThat(cakeShop.getCakeShopId()).isIn(1L, 2L, 3L);
+			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.getCakeShopName()).isNotNull();
+		});
 	}
 }
