@@ -3,6 +3,7 @@ package com.cakk.api.controller.shop;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
+import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -75,6 +78,14 @@ public class ShopController {
 		@PathVariable Long cakeShopId
 	) {
 		final CakeShopInfoResponse response = shopService.searchInfoById(cakeShopId);
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/location-based")
+	public ApiResponse<CakeShopByMapResponse> searchShop(
+		@Valid @ModelAttribute SearchShopByLocationRequest request
+	) {
+		final CakeShopByMapResponse response = shopService.searchShop(request);
 		return ApiResponse.success(response);
 	}
 }

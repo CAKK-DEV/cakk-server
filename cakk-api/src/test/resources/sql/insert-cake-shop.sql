@@ -8,6 +8,18 @@ values (1, 'thumbnail_url1', '케이크 맛집1', '케이크 맛집입니다.', 
        (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '서울시 강남구 어쩌고로2', '케이크 맛집입니다.', ST_GeomFromText(@g2, 4326), 0, false, now(), now()),
        (3, 'thumbnail_url3', '케이크 맛집3', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g3, 4326), 0, false, now(), now());
 
+insert into cake (cake_id, shop_id, cake_image_url, like_count, created_at, updated_at)
+values (1, 1, 'cake_image_url1', 0, now(), now()),
+       (2, 1, 'cake_image_url2', 0, now(), now()),
+       (3, 1, 'cake_image_url3', 0, now(), now()),
+       (4, 2, 'cake_image_url4', 0, now(), now()),
+       (5, 2, 'cake_image_url5', 0, now(), now()),
+       (6, 2, 'cake_image_url6', 0, now(), now()),
+       (7, 3, 'cake_image_url7', 0, now(), now()),
+       (8, 3, 'cake_image_url8', 0, now(), now()),
+       (9, 3, 'cake_image_url9', 0, now(), now()),
+       (10, 3, 'cake_image_url10', 0, now(), now());
+
 insert into cake_shop_operation (operation_id, shop_id, operation_day, start_time, end_time, created_at, updated_at)
 values (1, 1, 0, '10:00:00', '22:00:00', now(), now()),
        (2, 1, 1, '10:00:00', '22:00:00', now(), now()),

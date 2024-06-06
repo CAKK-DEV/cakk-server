@@ -3,17 +3,20 @@ package com.cakk.api.mapper;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopMapParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -96,5 +99,13 @@ public class ShopMapper {
 			longitude,
 			param.shopOperationDays()
 		);
+	}
+
+	public static List<Long> supplyCakeShopIdsBy(List<CakeShop> cakeShops) {
+		return cakeShops.stream().map(CakeShop::getId).collect(Collectors.toList());
+	}
+
+	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopMapParam> params) {
+		return new CakeShopByMapResponse(params);
 	}
 }
