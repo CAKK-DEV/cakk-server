@@ -1,4 +1,4 @@
-package com.cakk.domain.mysql.entity.shop;
+package com.cakk.domain.mysql.bo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopMapParam;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 
 public class CakeShopByMaps {
 
