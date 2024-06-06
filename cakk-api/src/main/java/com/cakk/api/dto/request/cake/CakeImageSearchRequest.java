@@ -1,10 +1,10 @@
 package com.cakk.api.dto.request.cake;
 
-import com.cakk.api.mapper.PointMapper;
-import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import com.cakk.api.mapper.PointMapper;
+import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 
 public record CakeImageSearchRequest(
 	Long cursorId,
@@ -16,7 +16,7 @@ public record CakeImageSearchRequest(
 	Integer pageSize
 ) {
 
-	public CakeSearchParam ToParam() {
+	public CakeSearchParam toParam() {
 		return new CakeSearchParam(
 			cursorId == null ? 0 : cursorId,
 			searchText,
