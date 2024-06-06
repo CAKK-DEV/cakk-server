@@ -2,22 +2,27 @@ package com.cakk.api.service.cake;
 
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.request.cake.CakeImageSearchRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.api.mapper.PointMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
+import com.cakk.domain.mysql.repository.reader.CakeTagReader;
 
 @Service
 @RequiredArgsConstructor
 public class CakeService {
 
 	private final CakeReader cakeReader;
+	private final CakeTagReader cakeTagReader;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
@@ -29,6 +34,13 @@ public class CakeService {
 	public CakeImageListResponse findCakeImagesByCursorAndCakeShopId(final CakeSearchByShopRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReader.searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+
+		return CakeMapper.supplyCakeImageListResponse(cakeImages);
+	}
+
+	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeImageSearchRequest dto) {
+		final List<CakeImageResponseParam> cakeImages
+			= cakeTagReader.searchCakeImagesByCursorAndSearchText(dto.ToParam());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}
