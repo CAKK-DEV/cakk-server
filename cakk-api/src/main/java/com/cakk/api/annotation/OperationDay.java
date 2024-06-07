@@ -13,7 +13,7 @@ import com.cakk.api.validator.OperationValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Constraint(validatedBy = OperationValidator.class)
-public @interface OperationDays {
+public @interface OperationDay {
 
 	String message() default "영업 일자 형식이 잘못됐습니다.";
 

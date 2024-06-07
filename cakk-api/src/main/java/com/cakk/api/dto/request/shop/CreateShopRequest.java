@@ -3,13 +3,13 @@ package com.cakk.api.dto.request.shop;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.cakk.api.annotation.OperationDays;
+import com.cakk.api.annotation.OperationDay;
 
 public record CreateShopRequest(
 
 	@NotBlank
 	String businessNumber,
-	@OperationDays
+	@OperationDay
 	OperationDayRequest operationDayRequest,
 	@NotBlank
 	String shopName,
