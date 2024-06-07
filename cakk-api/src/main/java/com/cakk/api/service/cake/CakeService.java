@@ -38,7 +38,7 @@ public class CakeService {
 
 	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeImageSearchRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
-			= cakeTagReader.searchCakeImagesByCursorAndSearchText(dto.toParam());
+			= cakeTagReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}

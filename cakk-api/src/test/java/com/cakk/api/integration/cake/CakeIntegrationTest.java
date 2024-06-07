@@ -215,7 +215,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cursorId", 0)
-			.queryParam("searchText", "케")
+			.queryParam("keyword", "케")
 			.queryParam("latitude", 37.2096575)
 			.queryParam("longitude", 127.0998228)
 			.queryParam("pageSize", 10)

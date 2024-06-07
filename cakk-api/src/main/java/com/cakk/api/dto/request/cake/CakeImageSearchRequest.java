@@ -8,7 +8,7 @@ import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 
 public record CakeImageSearchRequest(
 	Long cursorId,
-	String searchText,
+	String keyword,
 	@Min(-90) @Max(90)
 	Double latitude,
 	@Min(-180) @Max(180)
@@ -19,7 +19,7 @@ public record CakeImageSearchRequest(
 	public CakeSearchParam toParam() {
 		return new CakeSearchParam(
 			cursorId == null ? 0 : cursorId,
-			searchText,
+			keyword,
 			PointMapper.supplyPointBy(latitude, longitude),
 			pageSize
 		);

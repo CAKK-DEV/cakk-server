@@ -17,10 +17,10 @@ public class CakeTagReader {
 
 	private final CakeTagQueryRepository cakeTagQueryRepository;
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchText(CakeSearchParam param) {
-		return cakeTagQueryRepository.searchCakeImagesByCursorAndSearchText(
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(CakeSearchParam param) {
+		return cakeTagQueryRepository.searchCakeImagesByCursorAndSearchKeyword(
 			param.cursorId(),
-			param.searchText(),
+			param.keyword(),
 			param.location(),
 			param.pageSize()
 		);

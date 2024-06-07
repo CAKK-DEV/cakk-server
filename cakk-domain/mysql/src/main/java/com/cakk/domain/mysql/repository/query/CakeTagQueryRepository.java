@@ -27,7 +27,7 @@ public class CakeTagQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchText(Long cakeId, String searchText,
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(Long cakeId, String keyword,
 		Point location, Integer pageSize) {
 		return queryFactory
 			.select(Projections.constructor(CakeImageResponseParam.class,
@@ -41,9 +41,9 @@ public class CakeTagQueryRepository {
 			.on(cakeCategory.cake.eq(cake))
 			.where(
 				ltCakeId(cakeId)
-					.or(containsSearchTextInShopBio(searchText))
-					.or(containsSearchTextInShopDesc(searchText))
-					.or(containsSearchTextInTagName(searchText))
+					.or(containsSearchTextInShopBio(keyword))
+					.or(containsSearchTextInShopDesc(keyword))
+					.or(containsSearchTextInTagName(keyword))
 					.or(includeDistance(location))
 			)
 			.limit(pageSize)
@@ -59,28 +59,28 @@ public class CakeTagQueryRepository {
 		return cake.id.gt(cakeId);
 	}
 
-	private BooleanExpression containsSearchTextInShopBio(String searchText) {
-		if (isNull(searchText)) {
+	private BooleanExpression containsSearchTextInShopBio(String keyword) {
+		if (isNull(keyword)) {
 			return null;
 		}
 
-		return cakeTag.cake.cakeShop.shopBio.containsIgnoreCase(searchText);
+		return cakeTag.cake.cakeShop.shopBio.containsIgnoreCase(keyword);
 	}
 
-	private BooleanExpression containsSearchTextInShopDesc(String searchText) {
-		if (isNull(searchText)) {
+	private BooleanExpression containsSearchTextInShopDesc(String keyword) {
+		if (isNull(keyword)) {
 			return null;
 		}
 
-		return cakeTag.cake.cakeShop.shopDescription.containsIgnoreCase(searchText);
+		return cakeTag.cake.cakeShop.shopDescription.containsIgnoreCase(keyword);
 	}
 
-	private BooleanExpression containsSearchTextInTagName(String searchText) {
-		if (isNull(searchText)) {
+	private BooleanExpression containsSearchTextInTagName(String keyword) {
+		if (isNull(keyword)) {
 			return null;
 		}
 
-		return cakeTag.tag.tagName.containsIgnoreCase(searchText);
+		return cakeTag.tag.tagName.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression includeDistance(Point location) {
