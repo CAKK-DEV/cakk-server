@@ -3,6 +3,7 @@ package com.cakk.api.controller.user;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
+import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.api.service.user.UserService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
@@ -22,6 +24,15 @@ import com.cakk.domain.mysql.entity.user.User;
 public class MyPageController {
 
 	private final UserService userService;
+
+	@GetMapping
+	public ApiResponse<ProfileInformationResponse> profile(
+		@SignInUser User user
+	) {
+		final ProfileInformationResponse response = userService.findProfile(user);
+
+		return ApiResponse.success(response);
+	}
 
 	@PutMapping
 	public ApiResponse<Void> modify(

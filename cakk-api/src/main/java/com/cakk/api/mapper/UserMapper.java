@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
+import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
@@ -26,6 +27,17 @@ public class UserMapper {
 			.deviceOs(dto.deviceOs())
 			.deviceToken(dto.deviceToken())
 			.role(Role.USER)
+			.build();
+	}
+
+	public static ProfileInformationResponse supplyProfileInformationResponseBy(final User user) {
+		return ProfileInformationResponse.builder()
+			.profileImageUrl(user.getProfileImageUrl())
+			.nickname(user.getNickname())
+			.email(user.getEmail())
+			.gender(user.getGender())
+			.birthday(user.getBirthday())
+			.role(user.getRole())
 			.build();
 	}
 
