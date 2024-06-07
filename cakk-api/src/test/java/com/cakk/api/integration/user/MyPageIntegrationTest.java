@@ -20,6 +20,7 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
+import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.Gender;
 import com.cakk.common.enums.ReturnCode;
@@ -37,6 +38,42 @@ import com.cakk.domain.mysql.repository.reader.UserReader;
 class MyPageIntegrationTest extends IntegrationTest {
 
 	private static final String API_URL = "/api/v1/me";
+
+	@TestWithDisplayName("프로필 조회에 성공한다.")
+	void profile() {
+		// given
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.build();
+
+		final JsonWebToken jsonWebToken = getAuthToken();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + jsonWebToken.accessToken());
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(headers),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final ProfileInformationResponse body = objectMapper.convertValue(response.getData(), ProfileInformationResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		final User user = userReader.findByUserId(getUserId());
+		assertEquals(body.nickname(), user.getNickname());
+		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
+		assertEquals(body.email(), user.getEmail());
+		assertEquals(body.gender(), user.getGender());
+		assertEquals(body.role(), user.getRole());
+	}
 
 	@TestWithDisplayName("프로필 수정에 성공한다.")
 	void modify() {
