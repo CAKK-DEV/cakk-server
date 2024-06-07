@@ -214,7 +214,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("cursorId", 0)
+			.queryParam("cakeId", 0)
 			.queryParam("keyword", "케")
 			.queryParam("latitude", 37.2096575)
 			.queryParam("longitude", 127.0998228)

@@ -7,7 +7,7 @@ import com.cakk.api.mapper.PointMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 
 public record CakeImageSearchRequest(
-	Long cursorId,
+	Long cakeId,
 	String keyword,
 	@Min(-90) @Max(90)
 	Double latitude,
@@ -18,7 +18,7 @@ public record CakeImageSearchRequest(
 
 	public CakeSearchParam toParam() {
 		return new CakeSearchParam(
-			cursorId == null ? 0 : cursorId,
+			cakeId == null ? 0 : cakeId,
 			keyword,
 			PointMapper.supplyPointBy(latitude, longitude),
 			pageSize
