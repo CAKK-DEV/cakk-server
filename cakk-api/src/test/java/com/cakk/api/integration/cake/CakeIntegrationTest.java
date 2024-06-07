@@ -209,7 +209,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(0, data.size());
 	}
 
-	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색")
+	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
 	void searchCakeImagesByTextAndLocation1() {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -226,13 +226,15 @@ class CakeIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(10, data.size());
 	}
 
-	@TestWithDisplayName("사용자 위치를 포함한 동적 검색")
+	@TestWithDisplayName("사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
 	void searchCakeImagesByTextAndLocation2() {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -247,9 +249,11 @@ class CakeIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(10, data.size());
 	}
 }

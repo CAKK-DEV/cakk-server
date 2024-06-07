@@ -13,14 +13,12 @@ import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeTagReader;
 
 @Service
 @RequiredArgsConstructor
 public class CakeService {
 
 	private final CakeReader cakeReader;
-	private final CakeTagReader cakeTagReader;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
@@ -38,7 +36,7 @@ public class CakeService {
 
 	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeImageSearchRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
-			= cakeTagReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
+			= cakeReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}

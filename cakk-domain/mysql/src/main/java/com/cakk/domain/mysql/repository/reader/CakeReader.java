@@ -9,6 +9,7 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.annotation.Reader;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository;
@@ -35,5 +36,14 @@ public class CakeReader {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCakeShops(List<Long> cakeShopIds) {
 		return cakeQueryRepository.searchCakeImagesByCakeShopIds(cakeShopIds);
+	}
+
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(CakeSearchParam param) {
+		return cakeQueryRepository.searchCakeImagesByCursorAndSearchKeyword(
+			param.cursorId(),
+			param.keyword(),
+			param.location(),
+			param.pageSize()
+		);
 	}
 }
