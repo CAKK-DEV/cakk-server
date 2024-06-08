@@ -169,18 +169,14 @@ class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.path("/certification")
 			.build();
-
-		JsonWebToken jsonWebToken = getAuthToken();
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
-
 		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.setNull("cakeShopId")
 			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11).ofMinLength(1))
 			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
-		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, httpHeaders);
+
+		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, getAuthHeader());
 
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
@@ -197,18 +193,14 @@ class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.path("/certification")
 			.build();
-
-		JsonWebToken jsonWebToken = getAuthToken();
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jsonWebToken.accessToken());
-
-		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
+		final CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1).lessOrEqual(3))
 			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11).ofMinLength(1))
 			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
-		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, httpHeaders);
+
+		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, getAuthHeader());
 
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
