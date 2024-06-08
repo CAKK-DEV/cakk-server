@@ -13,14 +13,4 @@ public record CakeImageListResponse(
 	Long lastCakeId,
 	int size
 ) {
-
-	public static CakeImageListResponse from(List<CakeImageResponseParam> cakeImages) {
-		int size = cakeImages.size();
-
-		return CakeImageListResponse.builder()
-			.cakeImages(cakeImages)
-			.lastCakeId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeId())
-			.size(cakeImages.size())
-			.build();
-	}
 }

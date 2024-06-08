@@ -3,17 +3,19 @@ package com.cakk.api.service.cake;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.request.cake.CakeImageSearchRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
+import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CakeService {
@@ -34,7 +36,7 @@ public class CakeService {
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}
 
-	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeImageSearchRequest dto) {
+	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeSearchByLocationRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
 

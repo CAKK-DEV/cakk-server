@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Min;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 
-public record CakeImageSearchRequest(
+public record CakeSearchByLocationRequest(
 	Long cakeId,
 	String keyword,
 	@Min(-90) @Max(90)

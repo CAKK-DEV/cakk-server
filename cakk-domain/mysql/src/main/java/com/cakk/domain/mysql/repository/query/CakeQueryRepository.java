@@ -56,8 +56,6 @@ public class CakeQueryRepository {
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
-			.innerJoin(cakeCategory)
-			.on(cakeCategory.cake.eq(cake))
 			.where(
 				ltCakeId(cakeId),
 				eqCakeShopId(cakeShopId))
@@ -133,14 +131,6 @@ public class CakeQueryRepository {
 		return cake.cakeShop.id.in(cakeShopIds);
 	}
 
-	private OrderSpecifier<Long> cakeIdDesc() {
-		return cake.id.desc();
-	}
-
-	private OrderSpecifier<Integer> cakeLikeCountDesc() {
-		return cake.likeCount.desc();
-	}
-
 	private BooleanExpression containsKeywordInShopBio(String keyword) {
 		if (isNull(keyword)) {
 			return null;
@@ -171,5 +161,13 @@ public class CakeQueryRepository {
 		}
 
 		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 5000), {1})", location, cakeShop.location);
+	}
+
+	private OrderSpecifier<Long> cakeIdDesc() {
+		return cake.id.desc();
+	}
+
+	private OrderSpecifier<Integer> cakeLikeCountDesc() {
+		return cake.likeCount.desc();
 	}
 }
