@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
+import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.api.mapper.UserMapper;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
@@ -25,6 +26,13 @@ public class UserService {
 	private final CakeShopLikeWriter cakeShopLikeWriter;
 	private final CakeLikeWriter cakeLikeWriter;
 	private final BusinessInformationWriter businessInformationWriter;
+
+	@Transactional(readOnly = true)
+	public ProfileInformationResponse findProfile(final User signInUser) {
+		final User user = userReader.findByUserId(signInUser.getId());
+
+		return UserMapper.supplyProfileInformationResponseBy(user);
+	}
 
 	@Transactional
 	public void updateInformation(final User signInUser, final ProfileUpdateRequest dto) {
