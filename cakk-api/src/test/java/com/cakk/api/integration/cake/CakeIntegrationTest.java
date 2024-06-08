@@ -208,4 +208,52 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertNull(data.lastCakeId());
 		assertEquals(0, data.size());
 	}
+
+	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
+	void searchCakeImagesByTextAndLocation1() {
+		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeId", 0)
+			.queryParam("keyword", "케")
+			.queryParam("latitude", 37.2096575)
+			.queryParam("longitude", 127.0998228)
+			.queryParam("pageSize", 10)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(10, data.size());
+	}
+
+	@TestWithDisplayName("사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
+	void searchCakeImagesByTextAndLocation2() {
+		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("latitude", 37.2096575)
+			.queryParam("longitude", 127.0998228)
+			.queryParam("pageSize", 10)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(10, data.size());
+	}
 }

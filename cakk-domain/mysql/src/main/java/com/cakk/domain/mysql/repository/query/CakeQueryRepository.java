@@ -2,16 +2,19 @@ package com.cakk.domain.mysql.repository.query;
 
 import static com.cakk.domain.mysql.entity.cake.QCake.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeCategory.*;
+import static com.cakk.domain.mysql.entity.cake.QCakeTag.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static java.util.Objects.*;
 
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -79,6 +82,37 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(
+		Long cakeId,
+		String keyword,
+		Point location,
+		Integer pageSize
+	) {
+		return queryFactory
+			.select(
+				Projections.constructor(CakeImageResponseParam.class,
+					cake.cakeShop.id,
+					cake.id,
+					cake.cakeImageUrl))
+			.from(cake)
+			.innerJoin(cakeShop)
+			.on(cakeShop.eq(cake.cakeShop))
+			.leftJoin(cakeTag)
+			.on(cakeTag.cake.eq(cake))
+			.leftJoin(cakeCategory)
+			.on(cakeCategory.cake.eq(cake))
+			.where(
+				ltCakeId(cakeId)
+					.or(containsKeywordInShopBio(keyword))
+					.or(containsKeywordInShopDesc(keyword))
+					.or(containsKeywordInTagName(keyword))
+					.or(includeDistance(location))
+			)
+			.limit(pageSize)
+			.orderBy(cakeIdDesc())
+			.fetch();
+	}
+
 	private BooleanExpression ltCakeId(Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
@@ -105,5 +139,37 @@ public class CakeQueryRepository {
 
 	private OrderSpecifier<Integer> cakeLikeCountDesc() {
 		return cake.likeCount.desc();
+	}
+
+	private BooleanExpression containsKeywordInShopBio(String keyword) {
+		if (isNull(keyword)) {
+			return null;
+		}
+
+		return cakeShop.shopBio.containsIgnoreCase(keyword);
+	}
+
+	private BooleanExpression containsKeywordInShopDesc(String keyword) {
+		if (isNull(keyword)) {
+			return null;
+		}
+
+		return cakeShop.shopDescription.containsIgnoreCase(keyword);
+	}
+
+	private BooleanExpression containsKeywordInTagName(String keyword) {
+		if (isNull(keyword)) {
+			return null;
+		}
+
+		return cakeTag.tag.tagName.containsIgnoreCase(keyword);
+	}
+
+	private BooleanExpression includeDistance(Point location) {
+		if (isNull(location)) {
+			return null;
+		}
+
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 5000), {1})", location, cakeShop.location);
 	}
 }

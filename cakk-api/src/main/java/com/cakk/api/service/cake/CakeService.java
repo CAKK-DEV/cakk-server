@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.request.cake.CakeImageSearchRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
@@ -29,6 +30,13 @@ public class CakeService {
 	public CakeImageListResponse findCakeImagesByCursorAndCakeShopId(final CakeSearchByShopRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReader.searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+
+		return CakeMapper.supplyCakeImageListResponse(cakeImages);
+	}
+
+	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeImageSearchRequest dto) {
+		final List<CakeImageResponseParam> cakeImages
+			= cakeReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}
