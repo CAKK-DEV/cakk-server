@@ -4,13 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import com.cakk.api.annotation.OperationDay;
+import com.cakk.common.dto.OperationDays;
 
 public record CreateShopRequest(
 
 	@NotBlank
 	String businessNumber,
 	@OperationDay
-	OperationDayRequest operationDayRequest,
+	OperationDays operationDays,
 	@NotBlank
 	String shopName,
 	String shopBio,

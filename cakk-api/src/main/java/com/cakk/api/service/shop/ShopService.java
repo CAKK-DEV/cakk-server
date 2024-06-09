@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -18,6 +17,7 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.common.dto.OperationDays;
 import com.cakk.domain.mysql.bo.CakeShopByMaps;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
@@ -46,15 +46,15 @@ public class ShopService {
 
 	@Transactional
 	public void createCakeShopByCertification(CreateShopRequest request) {
-		final OperationDayRequest operationDayRequest = request.operationDayRequest();
+		final OperationDays operationDays = request.operationDays();
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
 		List<CakeShopOperation> cakeShopOperations = ShopMapper
 			.supplyCakeShopOperationsBy(
 				cakeShop,
-				operationDayRequest.days(),
-				operationDayRequest.startTimes(),
-				operationDayRequest.endTimes()
+				operationDays.days(),
+				operationDays.startTimes(),
+				operationDays.endTimes()
 			);
 
 		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
