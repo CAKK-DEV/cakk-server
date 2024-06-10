@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -64,6 +65,13 @@ public abstract class IntegrationTest {
 			.plugin(new JakartaValidationPlugin())
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
 			.build();
+	}
+
+	protected HttpHeaders getAuthHeader() {
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthToken().accessToken());
+
+		return headers;
 	}
 
 	protected JsonWebToken getAuthToken() {

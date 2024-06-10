@@ -47,16 +47,11 @@ class MyPageIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.build();
 
-		final JsonWebToken jsonWebToken = getAuthToken();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + jsonWebToken.accessToken());
-
 		// when
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.GET,
-			new HttpEntity<>(headers),
+			new HttpEntity<>(getAuthHeader()),
 			ApiResponse.class);
 
 		// then
@@ -82,8 +77,6 @@ class MyPageIntegrationTest extends IntegrationTest {
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.build();
-
-		final JsonWebToken jsonWebToken = getAuthToken();
 		final ProfileUpdateRequest body = getConstructorMonkey().giveMeBuilder(ProfileUpdateRequest.class)
 			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("profileImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(200))
@@ -92,14 +85,11 @@ class MyPageIntegrationTest extends IntegrationTest {
 			.set("birthday", LocalDate.now())
 			.sample();
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + jsonWebToken.accessToken());
-
 		// when
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(body, headers),
+			new HttpEntity<>(body, getAuthHeader()),
 			ApiResponse.class);
 
 		// then
@@ -124,16 +114,11 @@ class MyPageIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.build();
 
-		final JsonWebToken jsonWebToken = getAuthToken();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + jsonWebToken.accessToken());
-
 		// when
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.DELETE,
-			new HttpEntity<>(headers),
+			new HttpEntity<>(getAuthHeader()),
 			ApiResponse.class);
 
 		// then
