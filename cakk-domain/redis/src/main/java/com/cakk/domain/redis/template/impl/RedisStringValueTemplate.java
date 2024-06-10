@@ -32,6 +32,11 @@ public class RedisStringValueTemplate implements RedisValueTemplate<String> {
 	}
 
 	@Override
+	public Boolean saveIfAbsent(String key, String value, long timeout, TimeUnit unit) {
+		return valueOperations.setIfAbsent(key, value, timeout, unit);
+	}
+
+	@Override
 	public String findByKey(final String key) {
 		final String value = valueOperations.get(key);
 
