@@ -51,4 +51,12 @@ public class Cake extends AuditEntity {
 		this.cakeShop = cakeShop;
 		this.likeCount = 0;
 	}
+
+	public void increaseLikeCount() {
+		this.likeCount++;
+	}
+
+	public void decreaseLikeCount() {
+		this.likeCount--;
+	}
 }
