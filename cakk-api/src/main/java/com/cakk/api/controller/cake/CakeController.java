@@ -4,17 +4,22 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.service.cake.CakeService;
+import com.cakk.api.service.like.LikeService;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.domain.mysql.entity.user.User;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ import com.cakk.common.response.ApiResponse;
 public class CakeController {
 
 	private final CakeService cakeService;
+	private final LikeService likeService;
 
 	@GetMapping("/search/categories")
 	public ApiResponse<CakeImageListResponse> listByCategory(
@@ -48,5 +54,15 @@ public class CakeController {
 		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndSearch(request);
 
 		return ApiResponse.success(response);
+	}
+
+	@PutMapping("/{cakeId}/like")
+	public ApiResponse<Void> like(
+		@SignInUser User user,
+		@PathVariable Long cakeId
+	) {
+		likeService.likeCakeWithLock(user, cakeId);
+
+		return ApiResponse.success();
 	}
 }
