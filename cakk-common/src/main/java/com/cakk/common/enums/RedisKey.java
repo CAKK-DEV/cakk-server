@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RedisKey {
 
-	SEARCH_KEYWORD("SEARCH::keyword");
+	SEARCH_KEYWORD("SEARCH::keyword"),
+	LOCK_CAKE_LIKE("LOCK::cake-like"),
+	LOCK_SHOP_LIKE("LOCK::shop-like");
 
 	private final String value;
 }

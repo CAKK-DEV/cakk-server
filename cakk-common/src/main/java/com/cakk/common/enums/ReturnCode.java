@@ -35,7 +35,8 @@ public enum ReturnCode {
 	WRONG_PARAMETER("9000", "잘못된 파라미터 입니다."),
 	METHOD_NOT_ALLOWED("9001", "허용되지 않은 메소드 입니다."),
 
-	// 서버 에러 (9998, 9999)
+	// 서버 에러 (9997 ~ 9999)
+	LOCK_RESOURCES_ERROR("9997", "락에 의해 리소스을 점유할 수 없습니다."),
 	INTERNAL_SERVER_ERROR("9998", "내부 서버 에러 입니다."),
 	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다.");
 

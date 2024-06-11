@@ -9,6 +9,8 @@ public interface RedisValueTemplate<T> {
 
 	void save(String key, T value, long timeout, TimeUnit unit);
 
+	Boolean saveIfAbsent(String key, T value, long timeout, TimeUnit unit);
+
 	T findByKey(String key);
 
 	Boolean existByKey(String key);
