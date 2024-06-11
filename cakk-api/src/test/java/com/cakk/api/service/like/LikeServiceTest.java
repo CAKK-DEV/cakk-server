@@ -128,14 +128,12 @@ public class LikeServiceTest extends ServiceTest {
 
 		doReturn(cake).when(cakeReader).findById(cakeId);
 		doReturn(null).when(cakeLikeReader).findOrNullByUserAndCake(user, cake);
-		doNothing().when(lockRedisRepository).executeWithLock(any(RedisKey.class), anyLong(), any(Runnable.class));
 
 		// when & then
 		assertDoesNotThrow(() -> likeService.likeCake(user, cakeId));
 
 		verify(cakeReader, times(1)).findById(cakeId);
 		verify(cakeLikeReader, times(1)).findOrNullByUserAndCake(user, cake);
-		verify(lockRedisRepository, times(1)).executeWithLock(any(RedisKey.class), anyLong(), any(Runnable.class));
 	}
 
 	@TestWithDisplayName("해당 케이크가 없으면 좋아요 동작을 실패한다.")
