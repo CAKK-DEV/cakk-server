@@ -33,7 +33,8 @@ public class LikeService {
 	private final LockRedisRepository lockRedisRepository;
 
 	@Transactional(readOnly = true)
-	public LikeCakeImageListResponse findCakeImagesByCursorAndLike(final LikeCakeSearchRequest dto, final User signInUser) {
+	public LikeCakeImageListResponse findCakeImagesByCursorAndLike(final LikeCakeSearchRequest dto,
+		final User signInUser) {
 		final List<LikeCakeImageResponseParam> cakeImages = cakeLikeReader.searchCakeImagesByCursorAndLike(
 			dto.cakeLikeId(),
 			signInUser.getId(),
@@ -43,21 +44,19 @@ public class LikeService {
 		return CakeMapper.supplyLikeCakeImageListResponseBy(cakeImages);
 	}
 
+	public void likeCakeWithLock(final User user, final Long cakeId) {
+		lockRedisRepository.executeWithLock(RedisKey.LOCK_CAKE_LIKE, 1000L,
+			() -> {
+				likeCake(user, cakeId);
+			}
+		);
+	}
+
 	@Transactional
 	public void likeCake(final User user, final Long cakeId) {
 		final Cake cake = cakeReader.findById(cakeId);
 		final CakeLike cakeLike = cakeLikeReader.findOrNullByUserAndCake(user, cake);
 
-		lockRedisRepository.executeWithLock(RedisKey.LOCK_CAKE_LIKE, 1000L,
-			() -> likeCakeOrCancel(cakeLike, user, cake)
-		);
-	}
-
-	private void likeCakeOrCancel(final CakeLike cakeLike, final User user, final Cake cake) {
-		if (isNull(cakeLike)) {
-			cakeLikeWriter.like(cake, user);
-		} else {
-			cakeLikeWriter.cancelLike(cakeLike);
-		}
+		cakeLikeWriter.likeCakeOrCancel(cakeLike, user, cake);
 	}
 }
