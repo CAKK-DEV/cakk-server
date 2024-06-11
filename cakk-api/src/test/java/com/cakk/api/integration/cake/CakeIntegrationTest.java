@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,7 +26,8 @@ import com.cakk.domain.mysql.repository.reader.CakeCategoryReader;
 @SqlGroup({
 	@Sql(scripts = {
 		"/sql/insert-test-user.sql",
-		"/sql/insert-cake.sql"
+		"/sql/insert-cake.sql",
+		"/sql/insert-like.sql"
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
@@ -255,5 +258,55 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 		assertEquals(10, data.size());
+	}
+
+	@TestWithDisplayName("해당 id의 케이크 좋아요에 성공한다.")
+	void likeCake() {
+		// given
+		final Long cakeId = 1L;
+		final String url = "%s%d%s/{cakeId}/like".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
+	}
+
+	@TestWithDisplayName("해당 id의 케이크 좋아요 취소에 성공한다.")
+	void likeCancelCake() {
+		// given
+		final Long cakeId = 3L;
+		final String url = "%s%d%s/{cakeId}/like".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
 	}
 }
