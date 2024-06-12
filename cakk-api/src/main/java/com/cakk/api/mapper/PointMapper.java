@@ -13,6 +13,9 @@ public class PointMapper {
 		SPATIAL_REFERENCE_IDENTIFIER_NUMBER);
 
 	public static Point supplyPointBy(Double latitude, Double longitude) {
+		if (latitude == null || longitude == null) {
+			return null;
+		}
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }
