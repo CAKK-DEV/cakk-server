@@ -1,10 +1,10 @@
 package com.cakk.api.dto.request.shop;
 
-import com.cakk.api.mapper.PointMapper;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import com.cakk.api.mapper.PointMapper;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 
 public record CakeShopSearchRequest(
 	Long cakeShopId,

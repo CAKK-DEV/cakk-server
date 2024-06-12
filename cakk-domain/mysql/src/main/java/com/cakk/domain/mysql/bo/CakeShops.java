@@ -29,8 +29,7 @@ public class CakeShops {
 	public CakeShops(
 		List<CakeShopByKeywordParam> cakeShops,
 		List<ShopOperationParam> cakeShopOperations,
-		List<CakeImageResponseParam> cakeImages
-		) {
+		List<CakeImageResponseParam> cakeImages) {
 		Map<Long, CakeShopParam> map = new HashMap<>();
 		this.cakeShops = new ArrayList<>();
 		initCakeShopBySearchKeyword(cakeShops);
