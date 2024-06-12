@@ -24,26 +24,17 @@ import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeLikeWriter;
 
-@SpringBootTest(
-	properties = "spring.profiles.active=test",
-	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+@SpringBootTest(properties = "spring.profiles.active=test")
 @SqlGroup({
 	@Sql(scripts = {
 		"/sql/insert-like-for-concurrency-test.sql"
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
-public class LikeConcurrencyTest {
+class LikeConcurrencyTest {
 
 	@Autowired
 	private LikeService likeService;
-
-	@Autowired
-	private CakeLikeWriter cakeLikeWriter;
-
-	@Autowired
-	private CakeLikeReader cakeLikeReader;
 
 	@Autowired
 	private CakeReader cakeReader;
@@ -58,7 +49,7 @@ public class LikeConcurrencyTest {
 		userList = userReader.findAll();
 	}
 
-	@TestWithDisplayName("동시성 문제가 발생한다.")
+	@TestWithDisplayName("Lock 없이 케이크 좋아요 동작 시, 동시성 문제가 발생한다.")
 	void executeLikeCakeWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
@@ -87,7 +78,7 @@ public class LikeConcurrencyTest {
 		assertNotEquals(100, cake.getLikeCount().intValue());
 	}
 
-	@TestWithDisplayName("동시성 문제가 발생하지 않는다.")
+	@TestWithDisplayName("Lock을 활용하여 케이크 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
 	void executeLikeCakeWithLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
