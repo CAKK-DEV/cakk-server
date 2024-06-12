@@ -25,5 +25,15 @@ public class CakeShopParam {
 	public void addCakeImageUrl(String cakeImageUrl) {
 		cakeImageUrls.add(cakeImageUrl);
 	}
+
+	public void setOperationDay(ShopOperationParam operationDay) {
+		operationDays.add(
+			new CakeShopOperationParam(
+				operationDay.operationDay(),
+				operationDay.operationStartTime(),
+				operationDay.operationEndTime()
+			)
+		);
+	}
 }
 
