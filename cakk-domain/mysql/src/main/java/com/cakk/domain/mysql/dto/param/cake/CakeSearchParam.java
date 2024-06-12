@@ -4,7 +4,7 @@ import org.locationtech.jts.geom.Point;
 
 public record CakeSearchParam(
 
-	Long cursorId,
+	Long cakeId,
 	String keyword,
 	Point location,
 	Integer pageSize
