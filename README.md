@@ -21,6 +21,9 @@
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://avatars.githubusercontent.com/u/56003992?v=4" width="100" height="100" style="border-radius: 50%;"><br/><a href="https://www.linkedin.com/in/hyunseok-ko-326b62254" target="_blank"><img src="https://img.shields.io/badge/Hyunseok Ko-%230077B5.svg?style=for-the-socail&logo=linkedin&logoColor=white"/></a><br/><a href="https://github.com/lcomment" target="_blank"><img src="https://img.shields.io/badge/lcomment-181717?style=for-the-social&logo=github&logoColor=white"/></a> | <img src="https://avatars.githubusercontent.com/u/86272688?v=4" width="100" height="100" style="border-radius: 50%;"><br/><a href="https://www.linkedin.com/in/%ED%83%9C%EC%9A%A9-%EA%B9%80-76a31228a" target="_blank"><img src="https://img.shields.io/badge/Taeyong Kim-%230077B5.svg?style=for-the-social&logo=linkedin&logoColor=white"/></a><br/><a href="https://github.com/YongsHub" target="_blank"><img src="https://img.shields.io/badge/YongsHub-181717?style=for-the-social&logo=github&logoColor=white"/></a> |   <img src="https://avatars.githubusercontent.com/u/42805428?v=4" width="100" height="100" style="border-radius: 50%;"><br/><a href="https://github.com/skmwit" target="_blank"><img src="https://img.shields.io/badge/skmwit-181717?style=for-the-social&logo=github&logoColor=white"/></a>     |
 
+## Architecture
+
+![Architecture](https://github.com/CAKK-DEV/cakk-server/assets/56003992/351d1a27-c887-434a-85cf-f1c1f1c29d25)
 
 ## Trouble Shooting
 
@@ -38,6 +41,9 @@
 │       └── intellij-formatter
 ├── cakk-api
 ├── cakk-common
-├── cakk-client 
+├── cakk-client
+├── cakk-external
 └── cakk-domain
+    ├── mysql
+    └── redis
 ```
