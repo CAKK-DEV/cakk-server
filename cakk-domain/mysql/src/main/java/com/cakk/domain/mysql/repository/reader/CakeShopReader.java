@@ -11,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.annotation.Reader;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
@@ -75,5 +78,14 @@ public class CakeShopReader {
 
 	public List<CakeShop> searchShopByLocationBased(Point point) {
 		return cakeShopJpaRepository.findByLocationBased(point);
+	}
+
+	public List<CakeShopByKeywordParam> searchShopByKeyword(CakeShopSearchParam param) {
+		return cakeShopQueryRepository.findByKeywordWithLocation(
+			param.cakeShopId(),
+			param.keyword(),
+			param.location(),
+			param.pageSize()
+		);
 	}
 }
