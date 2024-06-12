@@ -71,7 +71,7 @@ jobs:
         run: SPRING_PROFILES_ACTIVE=[prod] ./gradlew clean build
 
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ always() }}
         with:
           files: ./cakk-api/build/test-results/**/*.xml

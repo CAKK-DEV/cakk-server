@@ -18,18 +18,12 @@ public class CakeLikeWriter {
 
 	private final CakeLikeJpaRepository cakeLikeJpaRepository;
 
-	public void like(final Cake cake, final User user) {
-		final CakeLike cakeLike = new CakeLike(cake, user);
-
-		cakeLikeJpaRepository.save(cakeLike);
-		cake.increaseLikeCount();
-	}
-
-	public void cancelLike(final CakeLike cakeLike) {
-		final Cake cake = cakeLike.getCake();
-
-		cakeLikeJpaRepository.delete(cakeLike);
-		cake.decreaseLikeCount();
+	public void likeCakeOrCancel(final CakeLike cakeLike, final User user, final Cake cake) {
+		if (isNull(cakeLike)) {
+			this.like(cake, user);
+		} else {
+			this.cancelLike(cakeLike);
+		}
 	}
 
 	public void deleteAllByUser(final User user) {
@@ -40,5 +34,19 @@ public class CakeLikeWriter {
 		}
 
 		cakeLikeJpaRepository.deleteAllInBatch(cakeLikes);
+	}
+
+	private void like(final Cake cake, final User user) {
+		final CakeLike cakeLike = new CakeLike(cake, user);
+
+		cakeLikeJpaRepository.save(cakeLike);
+		cake.increaseLikeCount();
+	}
+
+	private void cancelLike(final CakeLike cakeLike) {
+		final Cake cake = cakeLike.getCake();
+
+		cakeLikeJpaRepository.delete(cakeLike);
+		cake.decreaseLikeCount();
 	}
 }

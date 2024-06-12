@@ -1,5 +1,7 @@
 package com.cakk.domain.mysql.repository.reader;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.ReturnCode;
@@ -20,5 +22,9 @@ public class UserReader {
 
 	public User findByProviderId(String providerId) {
 		return userJpaRepository.findByProviderId(providerId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_USER));
+	}
+
+	public List<User> findAll() {
+		return userJpaRepository.findAll();
 	}
 }

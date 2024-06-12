@@ -1,7 +1,6 @@
 package com.cakk.domain.redis.repository;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,17 +20,18 @@ public class LockRedisRepository {
 		final String lockName = key.getValue();
 
 		try {
-			getLock(lockName, timeout);
+			while (!getLock(lockName, timeout)) {
+				Thread.sleep(100);
+			}
+
 			task.run();
-		} finally {
-			releaseLock(lockName);
+		} catch (InterruptedException e) {
+			throw new CakkException(ReturnCode.LOCK_RESOURCES_ERROR);
 		}
 	}
 
-	private void getLock(final String key, final long timeout) {
-		final boolean result = redisStringValueTemplate.saveIfAbsent(key, "lock", timeout, TimeUnit.MILLISECONDS);
-
-		checkResult(result);
+	private boolean getLock(final String key, final long timeout) {
+		return redisStringValueTemplate.saveIfAbsent(key, "lock", timeout, TimeUnit.MILLISECONDS);
 	}
 
 	private void releaseLock(final String key) {
