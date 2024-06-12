@@ -21,7 +21,7 @@ public record CakeSearchByLocationRequest(
 			cakeId == null ? 0 : cakeId,
 			keyword,
 			PointMapper.supplyPointBy(latitude, longitude),
-			pageSize
+			pageSize == null ? 10 : pageSize
 		);
 	}
 }
