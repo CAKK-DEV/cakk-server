@@ -9,20 +9,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeLikeReader;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
+import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.mysql.repository.writer.CakeLikeWriter;
 
 @SpringBootTest(properties = "spring.profiles.active=test")
 @SqlGroup({
@@ -38,6 +36,9 @@ class LikeConcurrencyTest {
 
 	@Autowired
 	private CakeReader cakeReader;
+
+	@Autowired
+	private CakeShopReader cakeShopReader;
 
 	@Autowired
 	private UserReader userReader;
@@ -105,5 +106,63 @@ class LikeConcurrencyTest {
 		// then
 		final Cake cake = cakeReader.findById(cakeId);
 		assertEquals(100, cake.getLikeCount().intValue());
+	}
+
+	@TestWithDisplayName("Lock 없이 케이크 샵 좋아요 동작 시, 동시성 문제가 발생한다.")
+	void executeLikeCakeShopWithoutLock() throws InterruptedException {
+		// given
+		final int threadCount = 100;
+		final Long cakeCakeId = 1L;
+
+		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		CountDownLatch latch = new CountDownLatch(threadCount);
+
+		// when
+		for (int i = 0; i < threadCount; i++) {
+			final int index = i;
+
+			executorService.submit(() -> {
+				try {
+					likeService.likeCakeShop(userList.get(index), cakeCakeId);
+				} finally {
+					latch.countDown();
+				}
+			});
+		}
+
+		latch.await();
+
+		// then
+		final CakeShop cakeShop = cakeShopReader.findById(cakeCakeId);
+		assertNotEquals(100, cakeShop.getLikeCount().intValue());
+	}
+
+	@TestWithDisplayName("Lock을 활용하여 케이크 샵 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
+	void executeLikeCakeShopWithLock() throws InterruptedException {
+		// given
+		final int threadCount = 100;
+		final Long cakeShopId = 1L;
+
+		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		CountDownLatch latch = new CountDownLatch(threadCount);
+
+		// when
+		for (int i = 0; i < threadCount; i++) {
+			final int index = i;
+
+			executorService.submit(() -> {
+				try {
+					likeService.likeCakeShopWithLock(userList.get(index), cakeShopId);
+				} finally {
+					latch.countDown();
+				}
+			});
+		}
+
+		latch.await();
+
+		// then
+		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		assertEquals(100, cakeShop.getLikeCount().intValue());
 	}
 }

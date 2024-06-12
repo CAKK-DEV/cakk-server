@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -27,7 +27,6 @@ import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
@@ -40,8 +39,11 @@ import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 
 @SqlGroup({
-	@Sql(scripts = "/sql/insert-test-user.sql", executionPhase = BEFORE_TEST_METHOD),
-	@Sql(scripts = "/sql/insert-cake-shop.sql", executionPhase = BEFORE_TEST_METHOD),
+	@Sql(scripts = {
+		"/sql/insert-test-user.sql",
+		"/sql/insert-cake-shop.sql",
+		"/sql/insert-like.sql"
+	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
 class ShopIntegrationTest extends IntegrationTest {
@@ -290,5 +292,55 @@ class ShopIntegrationTest extends IntegrationTest {
 			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
 			assertThat(cakeShop.getCakeShopName()).isNotNull();
 		});
+	}
+
+	@TestWithDisplayName("해당 id의 케이크 샵 좋아요에 성공한다.")
+	void likeCakeShop() {
+		// given
+		final Long cakeShopId = 2L;
+		final String url = "%s%d%s/{cakeShopId}/like".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
+	}
+
+	@TestWithDisplayName("해당 id의 케이크 샵 좋아요 취소에 성공한다.")
+	void likeCancelCake() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/like".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
 	}
 }
