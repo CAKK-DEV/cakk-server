@@ -102,6 +102,7 @@ public class CakeShopQueryRepository {
 				cakeShop.shopName,
 				cakeShop.shopBio
 			))
+			.from(cakeShop)
 			.where(
 				ltCakeShopId(cakeShopId)
 					.or(containsKeywordInShopDesc(keyword))
