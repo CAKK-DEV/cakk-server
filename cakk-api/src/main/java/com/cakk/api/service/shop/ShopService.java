@@ -18,7 +18,7 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.dto.OperationDays;
-import com.cakk.domain.mysql.bo.CakeShopByMaps;
+import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -30,6 +30,7 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
+import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
@@ -42,6 +43,7 @@ public class ShopService {
 	private final CakeShopReader cakeShopReader;
 	private final CakeShopWriter cakeShopWriter;
 	private final CakeReader cakeReader;
+	private final CakeShopOperationReader cakeShopOperationReader;
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
@@ -112,8 +114,8 @@ public class ShopService {
 		List<CakeShop> cakeShops = cakeShopReader.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
 		List<CakeImageResponseParam> cakes = cakeReader.searchCakeImagesByCakeShops(ShopMapper.supplyCakeShopIdsBy(cakeShops));
 
-		final CakeShopByMaps cakeShopByMaps = new CakeShopByMaps(cakeShops, cakes);
+		final CakeShops cakeShopsByMap = new CakeShops(cakeShops, cakes);
 
-		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShopByMaps.getCakeShopByMaps());
+		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShopsByMap.getCakeShops());
 	}
 }

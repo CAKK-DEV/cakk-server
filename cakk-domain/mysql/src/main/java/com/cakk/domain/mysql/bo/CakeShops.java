@@ -10,40 +10,41 @@ import java.util.Objects;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopMapParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 
-public class CakeShopByMaps {
+public class CakeShops {
 
-	private List<CakeShopMapParam> cakeShopByMaps;
+	private List<CakeShopParam> cakeShops;
 
-	public CakeShopByMaps(List<CakeShop> cakeShops, List<CakeImageResponseParam> cakes) {
-		cakeShopByMaps = new ArrayList<>();
-		initCakeShopByMaps(cakeShops);
+	public CakeShops(List<CakeShop> cakeShops, List<CakeImageResponseParam> cakes) {
+		this.cakeShops = new ArrayList<>();
+		initCakeShopByLocationBased(cakeShops);
 		matchRepresentCakeImagesByMaxFour(cakes);
 	}
 
-	public List<CakeShopMapParam> getCakeShopByMaps() {
-		return cakeShopByMaps;
+	public List<CakeShopParam> getCakeShops() {
+		return cakeShops;
 	}
 
-	private void initCakeShopByMaps(List<CakeShop> cakeShops) {
-		cakeShops.forEach(cakeShop -> cakeShopByMaps.add(
-			CakeShopMapParam.builder()
+	private void initCakeShopByLocationBased(List<CakeShop> cakeShops) {
+		cakeShops.forEach(cakeShop -> this.cakeShops.add(
+			CakeShopParam.builder()
 				.cakeShopId(cakeShop.getId())
 				.cakeShopName(cakeShop.getShopName())
 				.cakeShopBio(cakeShop.getShopBio())
 				.thumbnailUrl(cakeShop.getThumbnailUrl())
 				.cakeImageUrls(new HashSet<>())
+				.operationDays(null)
 				.build()
 		));
 	}
 
 	private void matchRepresentCakeImagesByMaxFour(List<CakeImageResponseParam> cakes) {
-		Map<Long, CakeShopMapParam> map = new HashMap<>();
+		Map<Long, CakeShopParam> map = new HashMap<>();
 
 		for (CakeImageResponseParam cake : cakes) {
-			CakeShopMapParam param;
+			CakeShopParam param;
 
 			if (map.containsKey(cake.cakeShopId())) {
 				param = map.get(cake.cakeShopId());
@@ -58,13 +59,13 @@ public class CakeShopByMaps {
 		}
 	}
 
-	private boolean isCakeImageUrlsCountLessThanFour(CakeShopMapParam param) {
+	private boolean isCakeImageUrlsCountLessThanFour(CakeShopParam param) {
 		return param.getCakeImageUrls().size() < 4;
 	}
 
-	private CakeShopMapParam findCakeShop(Long cakeShopId) {
-		return cakeShopByMaps.stream()
-			.filter(cakeShopMapParam -> Objects.equals(cakeShopMapParam.getCakeShopId(), cakeShopId))
+	private CakeShopParam findCakeShop(Long cakeShopId) {
+		return cakeShops.stream()
+			.filter(cakeShopParam -> Objects.equals(cakeShopParam.getCakeShopId(), cakeShopId))
 			.findFirst()
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
