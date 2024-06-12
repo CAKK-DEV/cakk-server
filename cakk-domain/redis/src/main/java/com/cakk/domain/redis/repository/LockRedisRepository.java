@@ -23,11 +23,10 @@ public class LockRedisRepository {
 			while (!getLock(lockName, timeout)) {
 				Thread.sleep(100);
 			}
+
 			task.run();
 		} catch (InterruptedException e) {
 			throw new CakkException(ReturnCode.LOCK_RESOURCES_ERROR);
-		} finally {
-			releaseLock(lockName);
 		}
 	}
 

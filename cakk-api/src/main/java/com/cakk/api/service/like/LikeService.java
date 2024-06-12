@@ -44,11 +44,10 @@ public class LikeService {
 		return CakeMapper.supplyLikeCakeImageListResponseBy(cakeImages);
 	}
 
+	@Transactional
 	public void likeCakeWithLock(final User user, final Long cakeId) {
-		lockRedisRepository.executeWithLock(RedisKey.LOCK_CAKE_LIKE, 1000L,
-			() -> {
-				likeCake(user, cakeId);
-			}
+		lockRedisRepository.executeWithLock(RedisKey.LOCK_CAKE_LIKE, 100L,
+			() -> likeCake(user, cakeId)
 		);
 	}
 
