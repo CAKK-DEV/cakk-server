@@ -8,21 +8,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.dto.OperationDays;
 import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -117,5 +121,20 @@ public class ShopService {
 		final CakeShops cakeShopsByMap = new CakeShops(cakeShops, cakes);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShopsByMap.getCakeShops());
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopSearchResponse searchShopByKeyword(CakeShopSearchRequest dto) {
+		final List<CakeShopByKeywordParam> cakeShops = cakeShopReader.searchShopByKeyword(dto.toParam());
+		final List<ShopOperationParam> cakeShopOperations = cakeShopOperationReader.searchShopOperationsByCakeShops(
+			ShopMapper.supplyCakeShopIdsByCakeShopParams(cakeShops)
+		);
+		final List<CakeImageResponseParam> cakeImages = cakeReader.searchCakeImagesByCakeShops(
+			ShopMapper.supplyCakeShopIdsByCakeShopParams(cakeShops)
+		);
+
+		final CakeShops cakeShopsByKeyword = new CakeShops(cakeShops, cakeShopOperations, cakeImages);
+
+		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShopsByKeyword.getCakeShops());
 	}
 }

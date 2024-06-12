@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
+import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
@@ -22,6 +23,7 @@ import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.like.LikeService;
 import com.cakk.api.service.shop.ShopService;
@@ -100,5 +102,13 @@ public class ShopController {
 		likeService.likeCakeShop(user, cakeShopId);
 
 		return ApiResponse.success();
+	}
+
+	@GetMapping("/search/shops")
+	public ApiResponse<CakeShopSearchResponse> searchShopByKeyword(
+		@Valid @ModelAttribute CakeShopSearchRequest request
+	) {
+		final CakeShopSearchResponse response = shopService.searchShopByKeyword(request);
+		return ApiResponse.success(response);
 	}
 }
