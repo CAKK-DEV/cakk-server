@@ -27,7 +27,7 @@
 
 ## Trouble Shooting
 
-- #### 채워나갈 예정
+- #### [(2024.06.11) 간단하게 OIDC 소셜 로그인 3개 Ctrl+v 하기](https://velog.io/@komment/Cakk-OIDC-Ctrlv)
 
 ## Directory Structure
 
