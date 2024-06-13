@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.service.like.LikeService;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
@@ -32,6 +34,7 @@ import com.cakk.domain.mysql.entity.user.User;
 public class ShopController {
 
 	private final ShopService shopService;
+	private final LikeService likeService;
 
 	@PostMapping("/certification")
 	public ApiResponse<Void> requestCertification(
@@ -87,5 +90,15 @@ public class ShopController {
 	) {
 		final CakeShopByMapResponse response = shopService.searchShop(request);
 		return ApiResponse.success(response);
+	}
+
+	@PutMapping("/{cakeShopId}/like")
+	public ApiResponse<Void> like(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId
+	) {
+		likeService.likeCakeShop(user, cakeShopId);
+
+		return ApiResponse.success();
 	}
 }

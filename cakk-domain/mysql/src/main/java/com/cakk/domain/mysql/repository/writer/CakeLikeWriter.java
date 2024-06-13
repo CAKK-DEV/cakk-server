@@ -18,7 +18,7 @@ public class CakeLikeWriter {
 
 	private final CakeLikeJpaRepository cakeLikeJpaRepository;
 
-	public void likeCakeOrCancel(final CakeLike cakeLike, final User user, final Cake cake) {
+	public void likeOrCancel(final CakeLike cakeLike, final User user, final Cake cake) {
 		if (isNull(cakeLike)) {
 			this.like(cake, user);
 		} else {
