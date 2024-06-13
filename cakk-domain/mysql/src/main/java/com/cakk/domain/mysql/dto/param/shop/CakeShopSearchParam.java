@@ -1,13 +1,11 @@
-package com.cakk.domain.mysql.dto.param.cake;
+package com.cakk.domain.mysql.dto.param.shop;
 
 import org.locationtech.jts.geom.Point;
 
-public record CakeSearchParam(
-
-	Long cakeId,
+public record CakeShopSearchParam(
+	Long cakeShopId,
 	String keyword,
 	Point location,
 	Integer pageSize
 ) {
-
 }

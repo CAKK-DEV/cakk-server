@@ -18,13 +18,13 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.OperationDayRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
@@ -60,8 +60,8 @@ public class ShopServiceTest extends ServiceTest {
 	@Mock
 	private ApplicationEventPublisher publisher;
 
-	private OperationDayRequest getOperationDayFixture() {
-		return getConstructorMonkey().giveMeBuilder(OperationDayRequest.class)
+	private OperationDays getOperationDayFixture() {
+		return getConstructorMonkey().giveMeBuilder(OperationDays.class)
 			.set("days", Arbitraries.of(Days.class).list().ofSize(7))
 			.set("startTimes",
 				Arbitraries.of(
@@ -78,7 +78,7 @@ public class ShopServiceTest extends ServiceTest {
 	private CreateShopRequest getCreateShopRequestFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
-			.set("operationDayRequest", getOperationDayFixture())
+			.set("operationDays", getOperationDayFixture())
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))

@@ -12,11 +12,13 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopMapParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -105,7 +107,21 @@ public class ShopMapper {
 		return cakeShops.stream().map(CakeShop::getId).collect(Collectors.toList());
 	}
 
-	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopMapParam> params) {
+	public static List<Long> supplyCakeShopIdsByCakeShopParams(List<CakeShopByKeywordParam> cakeShops) {
+		return cakeShops.stream().map(CakeShopByKeywordParam::cakeShopId).collect(Collectors.toList());
+	}
+
+	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopParam> params) {
 		return new CakeShopByMapResponse(params);
+	}
+
+	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(List<CakeShopParam> cakeShops) {
+		final int size = cakeShops.size();
+
+		return CakeShopSearchResponse.builder()
+			.cakeShops(cakeShops)
+			.lastCakeShopId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId())
+			.size(cakeShops.size())
+			.build();
 	}
 }

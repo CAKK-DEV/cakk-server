@@ -11,6 +11,7 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -100,14 +101,10 @@ public class CakeQueryRepository {
 			.leftJoin(cakeCategory)
 			.on(cakeCategory.cake.eq(cake))
 			.where(
-				ltCakeId(cakeId)
-					.or(containsKeywordInShopBio(keyword))
-					.or(containsKeywordInShopDesc(keyword))
-					.or(containsKeywordInTagName(keyword))
-					.or(includeDistance(location))
+				includeDistance(location).and(containKeyword(keyword)), ltCakeId(cakeId)
 			)
-			.limit(pageSize)
 			.orderBy(cakeIdDesc())
+			.limit(pageSize)
 			.fetch();
 	}
 
@@ -129,6 +126,18 @@ public class CakeQueryRepository {
 
 	private BooleanExpression includeCakeShopIds(List<Long> cakeShopIds) {
 		return cake.cakeShop.id.in(cakeShopIds);
+	}
+
+	private BooleanBuilder containKeyword(String keyword) {
+		BooleanBuilder builder = new BooleanBuilder();
+
+		if (nonNull(keyword)) {
+			builder.or(containsKeywordInShopBio(keyword));
+			builder.or(containsKeywordInShopDesc(keyword));
+			builder.or(containsKeywordInTagName(keyword));
+		}
+
+		return builder;
 	}
 
 	private BooleanExpression containsKeywordInShopBio(String keyword) {

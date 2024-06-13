@@ -26,6 +26,7 @@ import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
@@ -266,7 +267,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage(), response.getReturnMessage());
 	}
 
-	@TestWithDisplayName("테스트 sql script를 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
+	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
 	void findAllShopsByLocationBased1() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -287,6 +288,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
+		assertEquals(3, data.cakeShops().size());
 		data.cakeShops().forEach(cakeShop -> {
 			assertThat(cakeShop.getCakeShopId()).isIn(1L, 2L, 3L);
 			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
@@ -342,5 +344,96 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 		assertNull(response.getData());
+	}
+
+	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
+	void findAllShopsByLocationBased2() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/location-based")
+			.queryParam("latitude", 37.543343)
+			.queryParam("longitude", 127.052609)
+			.build();
+
+		//when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		//then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopByMapResponse data = objectMapper.convertValue(response.getData(), CakeShopByMapResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(7, data.cakeShops().size());
+		data.cakeShops().forEach(cakeShop -> {
+			assertThat(cakeShop.getCakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L);
+			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.getCakeShopName()).isNotNull();
+		});
+	}
+
+	@TestWithDisplayName("테스트 sql script 기준 7개의 케이크 샵이 조회된다")
+	void searchCakeShopsByKeywordsWithConditions1() {
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeShopId", 11L)
+			.queryParam("latitude", 37.543343)
+			.queryParam("longitude", 127.052609)
+			.queryParam("pageSize", 10)
+			.build();
+
+		//when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		//then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSearchResponse data = objectMapper.convertValue(response.getData(), CakeShopSearchResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(7, data.size());
+		data.cakeShops().forEach(cakeShop -> {
+			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.getCakeShopId()).isNotNull();
+			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.getOperationDays()).isNotNull();
+		});
+	}
+
+	@TestWithDisplayName("테스트 sql script를 기준 3개의 케이크샵이 조회된다")
+	void searchCakeShopsByKeywordWithConditions2() {
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("keyword", "케이크")
+			.queryParam("latitude", 37.2096575)
+			.queryParam("longitude", 127.0998228)
+			.queryParam("pageSize", 10)
+			.build();
+
+		//when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		//then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSearchResponse data = objectMapper.convertValue(response.getData(), CakeShopSearchResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(3, data.size());
+		data.cakeShops().forEach(cakeShop -> {
+			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.getCakeShopId()).isNotNull();
+			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.getOperationDays()).isNotNull();
+		});
 	}
 }
