@@ -1,4 +1,4 @@
-package com.cakk.common.dto;
+package com.cakk.api.dto.request.shop;
 
 import java.time.LocalTime;
 import java.util.List;

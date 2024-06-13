@@ -24,7 +24,7 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.common.dto.OperationDays;
+import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
