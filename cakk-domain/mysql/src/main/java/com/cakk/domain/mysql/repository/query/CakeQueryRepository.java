@@ -92,7 +92,7 @@ public class CakeQueryRepository {
 				Projections.constructor(CakeImageResponseParam.class,
 					cake.cakeShop.id,
 					cake.id,
-					cake.cakeImageUrl))
+					cake.cakeImageUrl)).distinct()
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cakeShop.eq(cake.cakeShop))
