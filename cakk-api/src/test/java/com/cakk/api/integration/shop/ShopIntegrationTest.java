@@ -375,12 +375,14 @@ class ShopIntegrationTest extends IntegrationTest {
 		});
 	}
 
-	@TestWithDisplayName("테스트 sql script 기준 10개의 케이크 샵이 조회된다")
+	@TestWithDisplayName("테스트 sql script 기준 7개의 케이크 샵이 조회된다")
 	void searchCakeShopsByKeywordsWithConditions1() {
 		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("keyword", "케이크")
+			.queryParam("cakeShopId", 11L)
+			.queryParam("latitude", 37.543343)
+			.queryParam("longitude", 127.052609)
 			.queryParam("pageSize", 10)
 			.build();
 
@@ -395,7 +397,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		assertEquals(10, data.size());
+		assertEquals(7, data.size());
 		data.cakeShops().forEach(cakeShop -> {
 			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
 			assertThat(cakeShop.getCakeShopId()).isNotNull();
@@ -404,7 +406,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		});
 	}
 
-	@TestWithDisplayName("테스트 sql script를 기준 10개의 케이크샵이 조회된다")
+	@TestWithDisplayName("테스트 sql script를 기준 3개의 케이크샵이 조회된다")
 	void searchCakeShopsByKeywordWithConditions2() {
 		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -426,7 +428,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		assertEquals(10, data.size());
+		assertEquals(3, data.size());
 		data.cakeShops().forEach(cakeShop -> {
 			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
 			assertThat(cakeShop.getCakeShopId()).isNotNull();

@@ -100,14 +100,15 @@ public class CakeQueryRepository {
 			.leftJoin(cakeCategory)
 			.on(cakeCategory.cake.eq(cake))
 			.where(
-				ltCakeId(cakeId)
+				includeDistance(location)
 					.or(containsKeywordInShopBio(keyword))
 					.or(containsKeywordInShopDesc(keyword))
 					.or(containsKeywordInTagName(keyword))
 					.or(includeDistance(location))
+				,ltCakeId(cakeId)
 			)
-			.limit(pageSize)
 			.orderBy(cakeIdDesc())
+			.limit(pageSize)
 			.fetch();
 	}
 
