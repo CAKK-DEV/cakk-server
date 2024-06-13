@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -19,7 +20,6 @@ import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;

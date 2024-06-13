@@ -14,7 +14,6 @@ import com.cakk.domain.mysql.annotation.Reader;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;

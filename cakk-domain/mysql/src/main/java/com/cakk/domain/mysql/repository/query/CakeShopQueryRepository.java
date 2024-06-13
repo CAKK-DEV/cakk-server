@@ -105,9 +105,7 @@ public class CakeShopQueryRepository {
 			))
 			.from(cakeShop)
 			.where(
-				includeDistance(location)
-					.and(containKeyword(keyword))
-				, ltCakeShopId(cakeShopId)
+				includeDistance(location).and(containKeyword(keyword)), ltCakeShopId(cakeShopId)
 			)
 			.orderBy(cakeShopIdDesc())
 			.limit(pageSize)
