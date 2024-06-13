@@ -233,6 +233,8 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(3, data.cakeImages().size());
 	}
 
 	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색, SQL 파일 기준 7개가 조회된다")
@@ -256,6 +258,8 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(7, data.cakeImages().size());
 	}
 
 	@TestWithDisplayName("사용자 위치를 포함한 동적 검색, SQL 파일 기준 3개가 조회된다")
@@ -278,6 +282,8 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(3, data.cakeImages().size());
 	}
 
 	@TestWithDisplayName("해당 id의 케이크 좋아요에 성공한다.")
