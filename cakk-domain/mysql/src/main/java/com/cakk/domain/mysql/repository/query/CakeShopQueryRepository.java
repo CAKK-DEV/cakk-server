@@ -3,6 +3,8 @@ package com.cakk.domain.mysql.repository.query;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopLink.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopOperation.*;
+import static com.cakk.domain.mysql.entity.user.QBusinessInformation.*;
+import static com.cakk.domain.mysql.entity.user.QUser.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
@@ -26,6 +28,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 
 @Repository
 @RequiredArgsConstructor
@@ -110,6 +113,15 @@ public class CakeShopQueryRepository {
 			.orderBy(cakeShopIdDesc())
 			.limit(pageSize)
 			.fetch();
+	}
+
+	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeId) {
+		return queryFactory
+			.selectFrom(cakeShop)
+			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
+			.join(businessInformation.user, user).fetchJoin()
+			.where(cakeShop.id.eq(cakeId))
+			.fetchOne();
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
