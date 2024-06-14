@@ -113,7 +113,7 @@ public class ShopController {
 		return ApiResponse.success(response);
 	}
 
-	@PutMapping("/{cakeShopId}/default")
+	@PutMapping("/{cakeShopId}")
 	public ApiResponse<Void> updateDefaultInformation(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,

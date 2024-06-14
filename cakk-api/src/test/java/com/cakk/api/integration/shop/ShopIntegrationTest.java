@@ -442,7 +442,7 @@ class ShopIntegrationTest extends IntegrationTest {
 	void updateCakeShopDefaultInfo() {
 		// given
 		final Long cakeShopId = 1L;
-		final String url = "%s%d%s/{cakeShopId}/default".formatted(BASE_URL, port, API_URL);
+		final String url = "%s%d%s/{cakeShopId}".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeShopId);
