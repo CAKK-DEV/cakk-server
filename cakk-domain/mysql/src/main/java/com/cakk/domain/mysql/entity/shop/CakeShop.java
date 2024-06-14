@@ -2,7 +2,6 @@ package com.cakk.domain.mysql.entity.shop;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -73,7 +72,7 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
-	@OneToOne(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
+	@OneToOne(mappedBy = "cakeShop")
 	private BusinessInformation businessInformation;
 
 	@Builder
