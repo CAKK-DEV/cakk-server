@@ -2,11 +2,13 @@ package com.cakk.domain.mysql.entity.shop;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -18,7 +20,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.cakk.common.enums.ReturnCode;
+import com.cakk.common.exception.CakkException;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
+import com.cakk.domain.mysql.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -66,6 +73,9 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
+	@OneToOne(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
+	private BusinessInformation businessInformation;
+
 	@Builder
 	public CakeShop(
 		String shopName,
@@ -96,5 +106,21 @@ public class CakeShop extends AuditEntity {
 
 	public void decreaseHeartCount() {
 		this.heartCount--;
+	}
+
+	public void updateDefaultInformation(CakeShopUpdateParam param) {
+		User owner = param.user();
+
+		if (isNotOwner(owner)) {
+			throw new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER);
+		}
+
+		shopName = param.shopName();
+		shopBio = param.shopBio();
+		shopDescription = param.shopDescription();
+	}
+
+	private boolean isNotOwner(User owner) {
+		return businessInformation.getUser().getId() != owner.getId();
 	}
 }
