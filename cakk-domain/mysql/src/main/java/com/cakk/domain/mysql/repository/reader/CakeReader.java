@@ -45,4 +45,8 @@ public class CakeReader {
 			param.pageSize()
 		);
 	}
+
+	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
+		return cakeQueryRepository.searchCakeImagesByCakeIds(cakeIds);
+	}
 }
