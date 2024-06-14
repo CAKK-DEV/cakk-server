@@ -78,7 +78,7 @@ public class ShopService {
 
 	@Transactional
 	public void updateDefaultInformation(CakeShopUpdateParam param) {
-		CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.cakeShopId());
+		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.cakeShopId());
 
 		cakeShop.updateDefaultInformation(param);
 	}
