@@ -1,0 +1,9 @@
+1718345996733|0|rollback|connection 275|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996733|0|rollback|connection 274|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996735|0|rollback|connection 273|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996735|0|rollback|connection 269|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996758|0|rollback|connection 270|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996771|0|rollback|connection 268|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996813|0|rollback|connection 266|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996821|0|rollback|connection 267|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||
+1718345996829|0|rollback|connection 272|url jdbc:mysql://localhost:62157/test?useSSL=false&allowPublicKeyRetrieval=true||

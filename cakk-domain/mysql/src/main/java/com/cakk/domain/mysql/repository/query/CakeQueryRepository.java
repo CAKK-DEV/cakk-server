@@ -6,7 +6,9 @@ import static com.cakk.domain.mysql.entity.cake.QCakeTag.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static java.util.Objects.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -108,6 +112,21 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
+	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
+		return queryFactory
+			.select(Projections.constructor(CakeImageResponseParam.class,
+				cakeShop.id,
+				cake.id,
+				cake.cakeImageUrl))
+			.from(cake)
+			.innerJoin(cakeShop)
+			.on(cake.cakeShop.eq(cakeShop))
+			.where(
+				includeCakeIds(cakeIds)
+			)
+			.fetch();
+	}
+
 	private BooleanExpression ltCakeId(Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
@@ -126,6 +145,10 @@ public class CakeQueryRepository {
 
 	private BooleanExpression includeCakeShopIds(List<Long> cakeShopIds) {
 		return cake.cakeShop.id.in(cakeShopIds);
+	}
+
+	private BooleanExpression includeCakeIds(List<Long> cakeIds) {
+		return cake.id.in(cakeIds);
 	}
 
 	private BooleanBuilder containKeyword(String keyword) {

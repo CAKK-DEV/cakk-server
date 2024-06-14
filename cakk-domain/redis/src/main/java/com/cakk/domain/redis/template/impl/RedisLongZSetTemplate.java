@@ -17,7 +17,7 @@ import com.cakk.domain.redis.template.RedisZSetTemplate;
 
 @RedisCustomTemplate
 @RequiredArgsConstructor
-public class RedisStringZSetTemplate implements RedisZSetTemplate<String> {
+public class RedisLongZSetTemplate implements RedisZSetTemplate<Long> {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
@@ -29,35 +29,35 @@ public class RedisStringZSetTemplate implements RedisZSetTemplate<String> {
 	}
 
 	@Override
-	public void save(final String key, final String value) {
-		zSetOperations.addIfAbsent(key, value, 0);
+	public void save(final String key, final Long value) {
+		zSetOperations.addIfAbsent(key, String.valueOf(value), 0);
 	}
 
 	@Override
-	public void increaseScore(final String key, final String value, final int delta) {
-		zSetOperations.incrementScore(key, value, delta);
+	public void increaseScore(final String key, final Long value, final int delta) {
+		zSetOperations.incrementScore(key, String.valueOf(value), delta);
 	}
 
 	@Override
-	public List<String> findAllReverseScore(final String key, final long count) {
+	public List<Long> findAllReverseScore(final String key, final long count) {
 		final Set<String> data = zSetOperations.reverseRangeByScore(key, 0, Double.MAX_VALUE, 0, count);
 
 		if (isNull(data) || data.isEmpty()) {
 			return List.of();
 		}
 
-		return List.copyOf(data);
+		return List.copyOf(data).stream().map(Long::parseLong).toList();
 	}
 
 	@Override
-	public List<String> findAllReverseScore(final String key, final long offset, final long count) {
+	public List<Long> findAllReverseScore(final String key, final long offset, final long count) {
 		final Set<String> data = zSetOperations.reverseRangeByScore(key, 0, Double.MAX_VALUE, offset, count);
 
 		if (isNull(data) || data.isEmpty()) {
 			return List.of();
 		}
 
-		return List.copyOf(data);
+		return List.copyOf(data).stream().map(Long::parseLong).toList();
 	}
 
 	@Override

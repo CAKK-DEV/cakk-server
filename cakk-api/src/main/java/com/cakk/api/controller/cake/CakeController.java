@@ -15,6 +15,7 @@ import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
+import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.service.cake.CakeService;
 import com.cakk.api.service.like.HeartService;
@@ -52,6 +53,15 @@ public class CakeController {
 		@Valid @ModelAttribute CakeSearchByLocationRequest request
 	) {
 		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndSearch(request);
+
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/search/views")
+	public ApiResponse<CakeImageListResponse> listByViews(
+		@Valid @ModelAttribute CakeSearchByViewsRequest request
+	) {
+		final CakeImageListResponse response = cakeService.searchCakeImagesByCursorAndViews(request);
 
 		return ApiResponse.success(response);
 	}
