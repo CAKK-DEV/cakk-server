@@ -19,8 +19,8 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.BusinessInformationWriter;
-import com.cakk.domain.mysql.repository.writer.CakeLikeWriter;
-import com.cakk.domain.mysql.repository.writer.CakeShopLikeWriter;
+import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
+import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
 import com.cakk.domain.mysql.repository.writer.UserWriter;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
@@ -36,10 +36,10 @@ class UserServiceTest extends ServiceTest {
 	private UserWriter userWriter;
 
 	@Mock
-	private CakeShopLikeWriter cakeShopLikeWriter;
+	private CakeShopHeartWriter cakeShopHeartWriter;
 
 	@Mock
-	private CakeLikeWriter cakeLikeWriter;
+	private CakeHeartWriter cakeHeartWriter;
 
 	@Mock
 	private BusinessInformationWriter businessInformationWriter;
@@ -116,8 +116,8 @@ class UserServiceTest extends ServiceTest {
 		Assertions.assertDoesNotThrow(() -> userService.withdraw(user));
 
 		verify(userReader, times(1)).findByUserId(user.getId());
-		verify(cakeLikeWriter, times(1)).deleteAllByUser(user);
-		verify(cakeShopLikeWriter, times(1)).deleteAllByUser(user);
+		verify(cakeHeartWriter, times(1)).deleteAllByUser(user);
+		verify(cakeShopHeartWriter, times(1)).deleteAllByUser(user);
 		verify(businessInformationWriter, times(1)).deleteAllByUser(user);
 		verify(userWriter, times(1)).delete(any(), any());
 	}
@@ -139,8 +139,8 @@ class UserServiceTest extends ServiceTest {
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
 		verify(userReader, times(1)).findByUserId(user.getId());
-		verify(cakeLikeWriter, times(0)).deleteAllByUser(user);
-		verify(cakeShopLikeWriter, times(0)).deleteAllByUser(user);
+		verify(cakeHeartWriter, times(0)).deleteAllByUser(user);
+		verify(cakeShopHeartWriter, times(0)).deleteAllByUser(user);
 		verify(businessInformationWriter, times(0)).deleteAllByUser(user);
 		verify(userWriter, times(0)).delete(any(), any());
 	}

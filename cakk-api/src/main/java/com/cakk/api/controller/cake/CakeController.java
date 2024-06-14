@@ -17,7 +17,7 @@ import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.service.cake.CakeService;
-import com.cakk.api.service.like.LikeService;
+import com.cakk.api.service.like.HeartService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
 
@@ -27,7 +27,7 @@ import com.cakk.domain.mysql.entity.user.User;
 public class CakeController {
 
 	private final CakeService cakeService;
-	private final LikeService likeService;
+	private final HeartService heartService;
 
 	@GetMapping("/search/categories")
 	public ApiResponse<CakeImageListResponse> listByCategory(
@@ -56,12 +56,12 @@ public class CakeController {
 		return ApiResponse.success(response);
 	}
 
-	@PutMapping("/{cakeId}/like")
-	public ApiResponse<Void> like(
+	@PutMapping("/{cakeId}/heart")
+	public ApiResponse<Void> heart(
 		@SignInUser User user,
 		@PathVariable Long cakeId
 	) {
-		likeService.likeCakeWithLock(user, cakeId);
+		heartService.heartCakeWithLock(user, cakeId);
 
 		return ApiResponse.success();
 	}

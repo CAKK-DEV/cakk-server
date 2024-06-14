@@ -13,8 +13,8 @@ import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.entity.user.UserWithdrawal;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.BusinessInformationWriter;
-import com.cakk.domain.mysql.repository.writer.CakeLikeWriter;
-import com.cakk.domain.mysql.repository.writer.CakeShopLikeWriter;
+import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
+import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
 import com.cakk.domain.mysql.repository.writer.UserWriter;
 
 @Service
@@ -23,8 +23,8 @@ public class UserService {
 
 	private final UserReader userReader;
 	private final UserWriter userWriter;
-	private final CakeShopLikeWriter cakeShopLikeWriter;
-	private final CakeLikeWriter cakeLikeWriter;
+	private final CakeShopHeartWriter cakeShopHeartWriter;
+	private final CakeHeartWriter cakeHeartWriter;
 	private final BusinessInformationWriter businessInformationWriter;
 
 	@Transactional(readOnly = true)
@@ -47,8 +47,8 @@ public class UserService {
 		final User user = userReader.findByUserId(signInUser.getId());
 		final UserWithdrawal withdrawal = UserMapper.supplyUserWithdrawalBy(user);
 
-		cakeLikeWriter.deleteAllByUser(user);
-		cakeShopLikeWriter.deleteAllByUser(user);
+		cakeHeartWriter.deleteAllByUser(user);
+		cakeShopHeartWriter.deleteAllByUser(user);
 		businessInformationWriter.deleteAllByUser(user);
 
 		userWriter.delete(user, withdrawal);

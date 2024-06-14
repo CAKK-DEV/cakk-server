@@ -25,14 +25,14 @@ import com.cakk.domain.mysql.repository.reader.UserReader;
 @SpringBootTest(properties = "spring.profiles.active=test")
 @SqlGroup({
 	@Sql(scripts = {
-		"/sql/insert-like-for-concurrency-test.sql"
+		"/sql/insert-heart-for-concurrency-test.sql"
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
-class LikeConcurrencyTest {
+class HeartConcurrencyTest {
 
 	@Autowired
-	private LikeService likeService;
+	private HeartService heartService;
 
 	@Autowired
 	private CakeReader cakeReader;
@@ -51,7 +51,7 @@ class LikeConcurrencyTest {
 	}
 
 	@TestWithDisplayName("Lock 없이 케이크 좋아요 동작 시, 동시성 문제가 발생한다.")
-	void executeLikeCakeWithoutLock() throws InterruptedException {
+	void executeHeartCakeWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
 		final Long cakeId = 1L;
@@ -65,7 +65,7 @@ class LikeConcurrencyTest {
 
 			executorService.submit(() -> {
 				try {
-					likeService.likeCake(userList.get(index), cakeId);
+					heartService.heartCake(userList.get(index), cakeId);
 				} finally {
 					latch.countDown();
 				}
@@ -76,11 +76,11 @@ class LikeConcurrencyTest {
 
 		// then
 		final Cake cake = cakeReader.findById(cakeId);
-		assertNotEquals(100, cake.getLikeCount().intValue());
+		assertNotEquals(100, cake.getHeartCount().intValue());
 	}
 
 	@TestWithDisplayName("Lock을 활용하여 케이크 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
-	void executeLikeCakeWithLock() throws InterruptedException {
+	void executeHeartCakeWithLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
 		final Long cakeId = 1L;
@@ -94,7 +94,7 @@ class LikeConcurrencyTest {
 
 			executorService.submit(() -> {
 				try {
-					likeService.likeCakeWithLock(userList.get(index), cakeId);
+					heartService.heartCakeWithLock(userList.get(index), cakeId);
 				} finally {
 					latch.countDown();
 				}
@@ -105,11 +105,11 @@ class LikeConcurrencyTest {
 
 		// then
 		final Cake cake = cakeReader.findById(cakeId);
-		assertEquals(100, cake.getLikeCount().intValue());
+		assertEquals(100, cake.getHeartCount().intValue());
 	}
 
 	@TestWithDisplayName("Lock 없이 케이크 샵 좋아요 동작 시, 동시성 문제가 발생한다.")
-	void executeLikeCakeShopWithoutLock() throws InterruptedException {
+	void executeHeartCakeShopWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
 		final Long cakeCakeId = 1L;
@@ -123,7 +123,7 @@ class LikeConcurrencyTest {
 
 			executorService.submit(() -> {
 				try {
-					likeService.likeCakeShop(userList.get(index), cakeCakeId);
+					heartService.heartCakeShop(userList.get(index), cakeCakeId);
 				} finally {
 					latch.countDown();
 				}
@@ -138,7 +138,7 @@ class LikeConcurrencyTest {
 	}
 
 	@TestWithDisplayName("Lock을 활용하여 케이크 샵 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
-	void executeLikeCakeShopWithLock() throws InterruptedException {
+	void executeHeartCakeShopWithLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
 		final Long cakeShopId = 1L;
@@ -152,7 +152,7 @@ class LikeConcurrencyTest {
 
 			executorService.submit(() -> {
 				try {
-					likeService.likeCakeShopWithLock(userList.get(index), cakeShopId);
+					heartService.heartCakeShopWithLock(userList.get(index), cakeShopId);
 				} finally {
 					latch.countDown();
 				}
@@ -163,6 +163,6 @@ class LikeConcurrencyTest {
 
 		// then
 		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
-		assertEquals(100, cakeShop.getLikeCount().intValue());
+		assertEquals(100, cakeShop.getHeartCount().intValue());
 	}
 }

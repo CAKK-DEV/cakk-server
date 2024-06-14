@@ -77,7 +77,7 @@ public class CakeQueryRepository {
 			.where(
 				includeCakeShopIds(cakeShopIds)
 			)
-			.orderBy(cakeLikeCountDesc())
+			.orderBy(cakeHeartCountDesc())
 			.fetch();
 	}
 
@@ -176,7 +176,7 @@ public class CakeQueryRepository {
 		return cake.id.desc();
 	}
 
-	private OrderSpecifier<Integer> cakeLikeCountDesc() {
-		return cake.likeCount.desc();
+	private OrderSpecifier<Integer> cakeHeartCountDesc() {
+		return cake.heartCount.desc();
 	}
 }

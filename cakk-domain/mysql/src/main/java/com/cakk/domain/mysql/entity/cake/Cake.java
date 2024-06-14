@@ -35,8 +35,8 @@ public class Cake extends AuditEntity {
 	@Column(name = "cake_image_url", nullable = false, length = 200)
 	private String cakeImageUrl;
 
-	@Column(name = "like_count", nullable = false, columnDefinition = "MEDIUMINT")
-	private Integer likeCount;
+	@Column(name = "heart_count", nullable = false, columnDefinition = "MEDIUMINT")
+	private Integer heartCount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
@@ -49,14 +49,14 @@ public class Cake extends AuditEntity {
 	public Cake(String cakeImageUrl, CakeShop cakeShop) {
 		this.cakeImageUrl = cakeImageUrl;
 		this.cakeShop = cakeShop;
-		this.likeCount = 0;
+		this.heartCount = 0;
 	}
 
-	public void increaseLikeCount() {
-		this.likeCount++;
+	public void increaseHeartCount() {
+		this.heartCount++;
 	}
 
-	public void decreaseLikeCount() {
-		this.likeCount--;
+	public void decreaseHeartCount() {
+		this.heartCount--;
 	}
 }

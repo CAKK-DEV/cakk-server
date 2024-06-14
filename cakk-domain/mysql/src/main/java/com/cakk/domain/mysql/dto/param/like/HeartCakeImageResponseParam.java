@@ -1,9 +1,9 @@
 package com.cakk.domain.mysql.dto.param.like;
 
-public record LikeCakeImageResponseParam(
+public record HeartCakeImageResponseParam(
 	Long cakeShopId,
 	Long cakeId,
-	Long cakeLikeId,
+	Long cakeHeartId,
 	String cakeImageUrl
 ) {
 }

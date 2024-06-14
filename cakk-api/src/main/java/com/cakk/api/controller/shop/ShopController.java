@@ -25,7 +25,7 @@ import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.api.service.like.LikeService;
+import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
@@ -36,7 +36,7 @@ import com.cakk.domain.mysql.entity.user.User;
 public class ShopController {
 
 	private final ShopService shopService;
-	private final LikeService likeService;
+	private final HeartService heartService;
 
 	@PostMapping("/certification")
 	public ApiResponse<Void> requestCertification(
@@ -94,12 +94,12 @@ public class ShopController {
 		return ApiResponse.success(response);
 	}
 
-	@PutMapping("/{cakeShopId}/like")
-	public ApiResponse<Void> like(
+	@PutMapping("/{cakeShopId}/heart")
+	public ApiResponse<Void> heart(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId
 	) {
-		likeService.likeCakeShop(user, cakeShopId);
+		heartService.heartCakeShopWithLock(user, cakeShopId);
 
 		return ApiResponse.success();
 	}

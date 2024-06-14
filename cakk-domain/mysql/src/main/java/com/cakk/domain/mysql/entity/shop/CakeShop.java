@@ -54,6 +54,10 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "like_count", nullable = false, columnDefinition = "MEDIUMINT")
 	private Integer likeCount;
 
+	@ColumnDefault("0")
+	@Column(name = "heart_count", nullable = false, columnDefinition = "MEDIUMINT")
+	private Integer heartCount;
+
 	@ColumnDefault("false")
 	@Column(name = "linked_flag", nullable = false, columnDefinition = "TINYINT(1)")
 	private Boolean linkedFlag;
@@ -78,6 +82,7 @@ public class CakeShop extends AuditEntity {
 		this.shopDescription = shopDescription;
 		this.location = location;
 		this.likeCount = 0;
+		this.heartCount = 0;
 		this.linkedFlag = false;
 	}
 
@@ -85,11 +90,11 @@ public class CakeShop extends AuditEntity {
 		linkedFlag = true;
 	}
 
-	public void increaseLikeCount() {
-		this.likeCount++;
+	public void increaseHeartCount() {
+		this.heartCount++;
 	}
 
-	public void decreaseLikeCount() {
-		this.likeCount--;
+	public void decreaseHeartCount() {
+		this.heartCount--;
 	}
 }

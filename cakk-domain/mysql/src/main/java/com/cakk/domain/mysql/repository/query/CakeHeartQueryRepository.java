@@ -1,7 +1,7 @@
 package com.cakk.domain.mysql.repository.query;
 
 import static com.cakk.domain.mysql.entity.cake.QCake.*;
-import static com.cakk.domain.mysql.entity.cake.QCakeLike.*;
+import static com.cakk.domain.mysql.entity.cake.QCakeHeart.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static java.util.Objects.*;
 
@@ -16,48 +16,48 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.domain.mysql.dto.param.like.LikeCakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 
 @RequiredArgsConstructor
 @Repository
-public class CakeLikeQueryRepository {
+public class CakeHeartQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<LikeCakeImageResponseParam> searchCakeImagesByCursorAndLike(Long cakeLikeId, Long userId, int pageSize) {
+	public List<HeartCakeImageResponseParam> searchCakeImagesByCursorAndHeart(Long cakeHeartId, Long userId, int pageSize) {
 		return queryFactory
-			.select(Projections.constructor(LikeCakeImageResponseParam.class,
+			.select(Projections.constructor(HeartCakeImageResponseParam.class,
 				cakeShop.id,
 				cake.id,
-				cakeLike.id,
+				cakeHeart.id,
 				cake.cakeImageUrl))
-			.from(cakeLike)
+			.from(cakeHeart)
 			.innerJoin(cake)
-			.on(cakeLike.cake.eq(cake))
+			.on(cakeHeart.cake.eq(cake))
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
 			.where(
-				ltCakeLikeId(cakeLikeId),
-				isLike(userId)
+				ltCakeHeartId(cakeHeartId),
+				isHeart(userId)
 			)
 			.limit(pageSize)
-			.orderBy(cakeLikeIdDesc())
+			.orderBy(cakeHeartIdDesc())
 			.fetch();
 	}
 
-	private BooleanExpression ltCakeLikeId(Long cakeLikeId) {
-		if (isNull(cakeLikeId)) {
+	private BooleanExpression ltCakeHeartId(Long cakeHeartId) {
+		if (isNull(cakeHeartId)) {
 			return null;
 		}
 
-		return cakeLike.id.lt(cakeLikeId);
+		return cakeHeart.id.lt(cakeHeartId);
 	}
 
-	private BooleanExpression isLike(Long userId) {
-		return cakeLike.user.id.eq(userId);
+	private BooleanExpression isHeart(Long userId) {
+		return cakeHeart.user.id.eq(userId);
 	}
 
-	private OrderSpecifier<Long> cakeLikeIdDesc() {
-		return cakeLike.id.desc();
+	private OrderSpecifier<Long> cakeHeartIdDesc() {
+		return cakeHeart.id.desc();
 	}
 }
