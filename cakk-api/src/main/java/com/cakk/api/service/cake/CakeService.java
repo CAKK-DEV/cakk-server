@@ -50,7 +50,9 @@ public class CakeService {
 	}
 
 	public CakeImageListResponse searchCakeImagesByCursorAndViews(final CakeSearchByViewsRequest dto) {
-		final List<Long> cakeIds = cakeViewRedisRepository.findTopCakeIdsByOffsetAndCount(dto.cursor(), dto.pageSize());
+		final long offset = isNull(dto.offset()) ? 0 : dto.offset();
+		final int pageSize = dto.pageSize();
+		final List<Long> cakeIds = cakeViewRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize);
 
 		if (isNull(cakeIds) || cakeIds.isEmpty()) {
 			return CakeMapper.supplyCakeImageListResponse(List.of(), cakeIds);

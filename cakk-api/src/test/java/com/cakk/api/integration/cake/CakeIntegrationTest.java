@@ -323,7 +323,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("cursor", 0L)
+			.queryParam("offset", 0L)
 			.queryParam("pageSize", 4)
 			.build();
 
@@ -351,7 +351,6 @@ class CakeIntegrationTest extends IntegrationTest {
 		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("cursor", 0L)
 			.queryParam("pageSize", 4)
 			.build();
 
