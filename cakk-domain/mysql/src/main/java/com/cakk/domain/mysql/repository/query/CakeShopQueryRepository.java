@@ -115,12 +115,12 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
-	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeId) {
+	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeShopId) {
 		return queryFactory
 			.selectFrom(cakeShop)
 			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
 			.join(businessInformation.user, user).fetchJoin()
-			.where(cakeShop.id.eq(cakeId))
+			.where(cakeShop.id.eq(cakeShopId))
 			.fetchOne();
 	}
 
