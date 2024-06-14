@@ -87,4 +87,8 @@ public class CakeShopReader {
 			param.pageSize()
 		);
 	}
+
+	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeShopId) {
+		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(cakeShopId);
+	}
 }
