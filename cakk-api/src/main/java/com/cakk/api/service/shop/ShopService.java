@@ -26,6 +26,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
@@ -73,6 +74,13 @@ public class ShopService {
 			.findBusinessInformationWithShop(request.cakeShopId());
 
 		businessInformation.promotedByBusinessOwner(user);
+	}
+
+	@Transactional
+	public void updateDefaultInformation(CakeShopUpdateParam param) {
+		CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.cakeShopId());
+
+		cakeShop.updateDefaultInformation(param);
 	}
 
 	@Transactional(readOnly = true)

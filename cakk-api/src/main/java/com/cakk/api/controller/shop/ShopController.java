@@ -19,6 +19,7 @@ import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
+import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
@@ -110,5 +111,16 @@ public class ShopController {
 	) {
 		final CakeShopSearchResponse response = shopService.searchShopByKeyword(request);
 		return ApiResponse.success(response);
+	}
+
+	@PutMapping("/{cakeShopId}/default")
+	public ApiResponse<Void> updateDefaultInformation(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId,
+		@Valid @RequestBody UpdateShopRequest request
+	) {
+		shopService.updateDefaultInformation(request.toParam(user, cakeShopId));
+
+		return ApiResponse.success();
 	}
 }
