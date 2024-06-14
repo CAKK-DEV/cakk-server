@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum RedisKey {
 
 	SEARCH_KEYWORD("SEARCH::keyword"),
-	LOCK_CAKE_LIKE("LOCK::cake-like"),
-	LOCK_SHOP_LIKE("LOCK::shop-like");
+	LOCK_CAKE_HEART("LOCK::cake-heart"),
+	LOCK_SHOP_HEART("LOCK::shop-heart");
 
 	private final String value;
 }

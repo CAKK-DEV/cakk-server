@@ -1,4 +1,4 @@
-package com.cakk.domain.mysql.entity.cake;
+package com.cakk.domain.mysql.entity.shop;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,24 +19,24 @@ import com.cakk.domain.mysql.entity.user.User;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake_like")
-public class CakeLike extends AuditCreatedEntity {
+@Table(name = "cake_shop_heart")
+public class CakeShopHeart extends AuditCreatedEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cake_like_id", nullable = false)
+	@Column(name = "shop_heart_id", nullable = false)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "cake_id", referencedColumnName = "cake_id", nullable = false)
-	private Cake cake;
+	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id", nullable = false)
+	private CakeShop cakeShop;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
 	private User user;
 
-	public CakeLike(Cake cake, User user) {
-		this.cake = cake;
+	public CakeShopHeart(CakeShop cakeShop, User user) {
+		this.cakeShop = cakeShop;
 		this.user = user;
 	}
 }

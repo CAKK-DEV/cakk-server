@@ -14,32 +14,32 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
-import com.cakk.api.dto.request.like.LikeCakeSearchRequest;
-import com.cakk.api.dto.response.like.LikeCakeImageListResponse;
+import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
+import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.mysql.dto.param.like.LikeCakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 
 @SqlGroup({
 	@Sql(scripts = {
 		"/sql/insert-test-user.sql",
 		"/sql/insert-cake.sql",
-		"/sql/insert-like.sql"
+		"/sql/insert-heart.sql"
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
-public class LikeIntegrationTest extends IntegrationTest {
+public class HeartIntegrationTest extends IntegrationTest {
 
 	private static final String API_URL = "/api/v1/me";
 
-	@TestWithDisplayName("좋아요 한 케이크 목록을 조회한다.")
-	void listByLike1() {
+	@TestWithDisplayName("하트 한 케이크 목록을 조회한다.")
+	void listByHeart1() {
 		// given
-		final String url = "%s%d%s/liked-cakes".formatted(BASE_URL, port, API_URL);
-		final LikeCakeSearchRequest params = new LikeCakeSearchRequest(null, 5);
+		final String url = "%s%d%s/heart-cakes".formatted(BASE_URL, port, API_URL);
+		final HeartCakeSearchRequest params = new HeartCakeSearchRequest(null, 5);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("cakeLikeId", params.cakeLikeId())
+			.queryParam("cakeHeartId", params.cakeHeartId())
 			.queryParam("pageSize", params.pageSize())
 			.build();
 
@@ -52,28 +52,28 @@ public class LikeIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final LikeCakeImageListResponse data = objectMapper.convertValue(response.getData(), LikeCakeImageListResponse.class);
+		final HeartCakeImageListResponse data = objectMapper.convertValue(response.getData(), HeartCakeImageListResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
 		final Long lastCakeLikeId = data.cakeImages().stream()
-			.map(LikeCakeImageResponseParam::cakeLikeId)
+			.map(HeartCakeImageResponseParam::cakeHeartId)
 			.min(Long::compareTo)
 			.orElse(null);
-		assertEquals(lastCakeLikeId, data.lastCakeLikeId());
+		assertEquals(lastCakeLikeId, data.lastCakeHeartId());
 		assertEquals(params.pageSize().intValue(), data.size());
 	}
 
-	@TestWithDisplayName("좋아요 한 케이크 목록이 없을 시 빈 배열을 조회한다.")
-	void listByLike2() {
+	@TestWithDisplayName("하트 한 케이크 목록이 없을 시 빈 배열을 조회한다.")
+	void listByHeart2() {
 		// given
-		final String url = "%s%d%s/liked-cakes".formatted(BASE_URL, port, API_URL);
-		final LikeCakeSearchRequest params = new LikeCakeSearchRequest(1L, 5);
+		final String url = "%s%d%s/heart-cakes".formatted(BASE_URL, port, API_URL);
+		final HeartCakeSearchRequest params = new HeartCakeSearchRequest(1L, 5);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.queryParam("cakeLikeId", params.cakeLikeId())
+			.queryParam("cakeHeartId", params.cakeHeartId())
 			.queryParam("pageSize", params.pageSize())
 			.build();
 
@@ -86,17 +86,17 @@ public class LikeIntegrationTest extends IntegrationTest {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final LikeCakeImageListResponse data = objectMapper.convertValue(response.getData(), LikeCakeImageListResponse.class);
+		final HeartCakeImageListResponse data = objectMapper.convertValue(response.getData(), HeartCakeImageListResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
 		final Long lastCakeLikeId = data.cakeImages().stream()
-			.map(LikeCakeImageResponseParam::cakeLikeId)
+			.map(HeartCakeImageResponseParam::cakeHeartId)
 			.min(Long::compareTo)
 			.orElse(null);
-		assertEquals(lastCakeLikeId, data.lastCakeLikeId());
+		assertEquals(lastCakeLikeId, data.lastCakeHeartId());
 		assertEquals(0, data.size());
 	}
 }

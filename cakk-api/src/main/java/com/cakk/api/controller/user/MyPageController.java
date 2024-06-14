@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
-import com.cakk.api.dto.request.like.LikeCakeSearchRequest;
+import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
-import com.cakk.api.dto.response.like.LikeCakeImageListResponse;
+import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
-import com.cakk.api.service.like.LikeService;
+import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.user.UserService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
@@ -28,7 +28,7 @@ import com.cakk.domain.mysql.entity.user.User;
 public class MyPageController {
 
 	private final UserService userService;
-	private final LikeService likeService;
+	private final HeartService heartService;
 
 	@GetMapping
 	public ApiResponse<ProfileInformationResponse> profile(
@@ -58,12 +58,12 @@ public class MyPageController {
 		return ApiResponse.success();
 	}
 
-	@GetMapping("/liked-cakes")
-	public ApiResponse<LikeCakeImageListResponse> likedCakeList(
+	@GetMapping("/heart-cakes")
+	public ApiResponse<HeartCakeImageListResponse> heartCakeList(
 		@SignInUser User user,
-		@Valid @ModelAttribute LikeCakeSearchRequest request
+		@Valid @ModelAttribute HeartCakeSearchRequest request
 	) {
-		final LikeCakeImageListResponse response = likeService.findCakeImagesByCursorAndLike(request, user);
+		final HeartCakeImageListResponse response = heartService.findCakeImagesByCursorAndHeart(request, user);
 
 		return ApiResponse.success(response);
 	}

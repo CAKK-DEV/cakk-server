@@ -27,7 +27,7 @@ import com.cakk.domain.mysql.repository.reader.CakeCategoryReader;
 	@Sql(scripts = {
 		"/sql/insert-test-user.sql",
 		"/sql/insert-cake.sql",
-		"/sql/insert-like.sql"
+		"/sql/insert-heart.sql"
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
@@ -286,11 +286,11 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(10, data.cakeImages().size());
 	}
 
-	@TestWithDisplayName("해당 id의 케이크 좋아요에 성공한다.")
-	void likeCake() {
+	@TestWithDisplayName("해당 id의 케이크 하트에 성공한다.")
+	void heartCake() {
 		// given
 		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}/like".formatted(BASE_URL, port, API_URL);
+		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeId);
@@ -311,11 +311,11 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertNull(response.getData());
 	}
 
-	@TestWithDisplayName("해당 id의 케이크 좋아요 취소에 성공한다.")
-	void likeCancelCake() {
+	@TestWithDisplayName("해당 id의 케이크 하트 취소에 성공한다.")
+	void heartCancelCake() {
 		// given
 		final Long cakeId = 3L;
-		final String url = "%s%d%s/{cakeId}/like".formatted(BASE_URL, port, API_URL);
+		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeId);

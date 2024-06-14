@@ -6,9 +6,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
-import com.cakk.api.dto.response.like.LikeCakeImageListResponse;
+import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.mysql.dto.param.like.LikeCakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CakeMapper {
@@ -23,12 +23,12 @@ public class CakeMapper {
 			.build();
 	}
 
-	public static LikeCakeImageListResponse supplyLikeCakeImageListResponseBy(final List<LikeCakeImageResponseParam> cakeImages) {
+	public static HeartCakeImageListResponse supplyHeartCakeImageListResponseBy(final List<HeartCakeImageResponseParam> cakeImages) {
 		final int size = cakeImages.size();
 
-		return LikeCakeImageListResponse.builder()
+		return HeartCakeImageListResponse.builder()
 			.cakeImages(cakeImages)
-			.lastCakeLikeId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeLikeId())
+			.lastCakeHeartId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeHeartId())
 			.size(cakeImages.size())
 			.build();
 	}
