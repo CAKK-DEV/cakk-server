@@ -14,7 +14,7 @@ public class CakeViewRedisRepository {
 
 	private final RedisLongZSetTemplate redisLongZSetTemplate;
 
-	private final String key = RedisKey.VIEW_CAKE.getValue();
+	private final String key = RedisKey.VIEWS_CAKE.getValue();
 
 	public void saveOrIncreaseSearchCount(final Long value) {
 		redisLongZSetTemplate.save(key, value);
