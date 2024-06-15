@@ -44,6 +44,7 @@ class BusinessInformationTest extends DomainTest {
 	private User getUserFixture() {
 		return getReflectionMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
 			.sample();
 	}
 
@@ -64,12 +65,13 @@ class BusinessInformationTest extends DomainTest {
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
 		User user = getUserFixture();
 		CertificationParam param = getCertificationParamFixtureWithUser(user);
+		String shopName = businessInformation.getCakeShop().getShopName();
 
 		//when
 		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
 
 		//then
-		assertThat(certificationEvent.shopName()).isNotNull();
+		assertThat(certificationEvent.shopName()).isEqualTo(shopName);
 	}
 
 	@Test
