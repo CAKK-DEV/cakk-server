@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
+import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
@@ -120,6 +121,17 @@ public class ShopController {
 		@Valid @RequestBody UpdateShopRequest request
 	) {
 		shopService.updateDefaultInformation(request.toParam(user, cakeShopId));
+
+		return ApiResponse.success();
+	}
+
+	@PutMapping("/{cakeShopId}/links")
+	public ApiResponse<Void> updateShopLinks(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId,
+		@Valid @RequestBody UpdateLinkRequest request
+	) {
+		shopService.updateShopLinks(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
 	}

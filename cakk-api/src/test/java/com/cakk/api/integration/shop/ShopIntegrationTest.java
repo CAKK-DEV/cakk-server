@@ -22,6 +22,7 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
+import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -447,6 +448,31 @@ class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.buildAndExpand(cakeShopId);
 		final UpdateShopRequest request = getConstructorMonkey().giveMeBuilder(UpdateShopRequest.class).sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("케이크샵 외부 링크 업데이트에 성공한다")
+	void updateShopLinks() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/links".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		final UpdateLinkRequest request = getConstructorMonkey().giveMeBuilder(UpdateLinkRequest.class).sample();
 
 		// when
 		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(

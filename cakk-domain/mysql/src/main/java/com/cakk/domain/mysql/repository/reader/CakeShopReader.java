@@ -18,6 +18,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.jpa.BusinessInformationJpaRepository;
 import com.cakk.domain.mysql.repository.jpa.CakeShopJpaRepository;
 import com.cakk.domain.mysql.repository.query.CakeShopQueryRepository;
@@ -88,7 +89,13 @@ public class CakeShopReader {
 		);
 	}
 
-	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeShopId) {
-		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(cakeShopId);
+	public CakeShop findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
+		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(owner, cakeShopId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
+	}
+
+	public CakeShop findWithShopLinks(User owner, Long cakeShopId) {
+		return cakeShopQueryRepository.findWithShopLinks(owner, cakeShopId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 }

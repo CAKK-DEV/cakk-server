@@ -9,6 +9,7 @@ import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Repository
 @RequiredArgsConstructor
@@ -115,13 +117,22 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
-	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeShopId) {
-		return queryFactory
+	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
+		return Optional.ofNullable(queryFactory
 			.selectFrom(cakeShop)
+			.join(cakeShop.businessInformation, businessInformation)
+			.join(businessInformation.user, user)
+			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
+			.fetchOne());
+	}
+
+	public Optional<CakeShop> findWithShopLinks(User owner, Long cakeShopId) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(cakeShop)
+			.join(cakeShop.cakeShopLinks, cakeShopLink).fetchJoin()
 			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.join(businessInformation.user, user).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId))
-			.fetchOne();
+			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
+			.fetchOne());
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {

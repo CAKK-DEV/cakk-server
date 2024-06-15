@@ -22,6 +22,7 @@ import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -78,9 +79,15 @@ public class ShopService {
 
 	@Transactional
 	public void updateDefaultInformation(CakeShopUpdateParam param) {
-		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.cakeShopId());
+		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.user(), param.cakeShopId());
 
 		cakeShop.updateDefaultInformation(param);
+	}
+
+	@Transactional
+	public void updateShopLinks(UpdateLinkParam param) {
+		final CakeShop cakeShop = cakeShopReader.findWithShopLinks(param.user(), param.cakeShopId());
+		cakeShop.updateShopLinks(param.cakeShopLinks());
 	}
 
 	@Transactional(readOnly = true)
