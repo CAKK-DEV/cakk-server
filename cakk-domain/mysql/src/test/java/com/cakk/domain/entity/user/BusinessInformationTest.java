@@ -19,6 +19,8 @@ class BusinessInformationTest extends DomainTest {
 	private CakeShop getCakeShopFixture() {
 		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
 			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
 			.sample();
 	}
@@ -47,8 +49,12 @@ class BusinessInformationTest extends DomainTest {
 
 	private CertificationParam getCertificationParamFixtureWithUser(User user) {
 		return getBuilderMonkey().giveMeBuilder(CertificationParam.class)
-			.set("user", user)
+			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
+			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(0))
+			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
+			.set("user", user)
 			.sample();
 	}
 
