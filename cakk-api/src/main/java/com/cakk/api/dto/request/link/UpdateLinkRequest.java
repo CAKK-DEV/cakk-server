@@ -5,13 +5,12 @@ import static java.util.Objects.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
+
 import com.cakk.api.mapper.LinkMapper;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 import com.cakk.domain.mysql.entity.user.User;
-
-
-import jakarta.validation.constraints.Size;
 
 public record UpdateLinkRequest(
 	@Size(min = 1, max = 200)

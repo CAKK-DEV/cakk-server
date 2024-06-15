@@ -1,10 +1,11 @@
 package com.cakk.api.mapper;
 
-import com.cakk.common.enums.LinkKind;
-import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import com.cakk.common.enums.LinkKind;
+import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LinkMapper {
