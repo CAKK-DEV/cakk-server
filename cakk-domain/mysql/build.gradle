@@ -44,3 +44,13 @@ bootJar {
 jar {
     enabled = true
 }
+
+test {
+	testLogging {
+		showStandardStreams = true
+		showCauses = true
+		showExceptions = true
+		showStackTraces = true
+		exceptionFormat = 'full'
+	}
+}
