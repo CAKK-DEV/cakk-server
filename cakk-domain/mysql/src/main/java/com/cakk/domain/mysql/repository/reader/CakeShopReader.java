@@ -93,4 +93,9 @@ public class CakeShopReader {
 		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
+
+	public CakeShop findWithShopLinks(User owner, Long cakeShopId) {
+		return cakeShopQueryRepository.findWithShopLinks(owner, cakeShopId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
+	}
 }

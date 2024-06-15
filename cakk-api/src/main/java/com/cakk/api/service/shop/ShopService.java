@@ -84,6 +84,12 @@ public class ShopService {
 		cakeShop.updateDefaultInformation(param);
 	}
 
+	@Transactional
+	public void updateShopLinks(UpdateLinkParam param) {
+		final CakeShop cakeShop = cakeShopReader.findWithShopLinks(param.user(), param.cakeShopId());
+		cakeShop.updateShopLinks(param.cakeShopLinks());
+	}
+
 	@Transactional(readOnly = true)
 	public void requestCertificationBusinessOwner(CertificationParam param) {
 		BusinessInformation businessInformation;
