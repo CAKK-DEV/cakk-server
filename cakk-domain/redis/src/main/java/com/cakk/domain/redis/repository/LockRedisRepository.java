@@ -1,48 +1,38 @@
 package com.cakk.domain.redis.repository;
 
-import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.common.enums.RedisKey;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
 import com.cakk.domain.redis.annotation.RedisRepository;
-import com.cakk.domain.redis.template.impl.RedisStringValueTemplate;
+import com.cakk.domain.redis.dto.param.ExecuteWithLockParam;
 
 @RedisRepository
 @RequiredArgsConstructor
 public class LockRedisRepository {
 
-	private final RedisStringValueTemplate redisStringValueTemplate;
+	private final RedissonClient redissonClient;
 
-	public void executeWithLock(final RedisKey key, final long timeout, Runnable task) {
-		final String lockName = key.getValue();
+	public Object executeWithLock(final ExecuteWithLockParam param) {
+		final String lockName = param.keyAsString();
+		final Supplier<Object> supplier = param.supplier();
+		final RLock rLock = redissonClient.getLock(lockName);
 
 		try {
-			while (!getLock(lockName, timeout)) {
-				Thread.sleep(100);
+			boolean available = rLock.tryLock(param.waitTime(), param.leaseTime(), param.timeUnit());
+
+			if (!available) {
+				return false;
 			}
 
-			task.run();
+			return supplier.get();
 		} catch (InterruptedException e) {
-			throw new CakkException(ReturnCode.LOCK_RESOURCES_ERROR);
-		}
-	}
-
-	private boolean getLock(final String key, final long timeout) {
-		return redisStringValueTemplate.saveIfAbsent(key, "lock", timeout, TimeUnit.MILLISECONDS);
-	}
-
-	private void releaseLock(final String key) {
-		final boolean result = redisStringValueTemplate.delete(key);
-
-		checkResult(result);
-	}
-
-	private void checkResult(final boolean result) {
-		if (!result) {
-			throw new CakkException(ReturnCode.LOCK_RESOURCES_ERROR);
+			throw new RuntimeException(e);
+		} finally {
+			rLock.unlock();
 		}
 	}
 }

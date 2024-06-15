@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.DistributedLock;
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
@@ -36,11 +37,11 @@ public class HeartService {
 	private final CakeShopHeartReader cakeShopHeartReader;
 	private final CakeShopHeartWriter cakeShopHeartWriter;
 
-	private final LockRedisRepository lockRedisRepository;
-
 	@Transactional(readOnly = true)
-	public HeartCakeImageListResponse findCakeImagesByCursorAndHeart(final HeartCakeSearchRequest dto,
-																	final User signInUser) {
+	public HeartCakeImageListResponse findCakeImagesByCursorAndHeart(
+		final HeartCakeSearchRequest dto,
+		final User signInUser
+	) {
 		final List<HeartCakeImageResponseParam> cakeImages = cakeHeartReader.searchCakeImagesByCursorAndHeart(
 			dto.cakeHeartId(),
 			signInUser.getId(),
@@ -50,21 +51,7 @@ public class HeartService {
 		return CakeMapper.supplyHeartCakeImageListResponseBy(cakeImages);
 	}
 
-	@Transactional
-	public void heartCakeWithLock(final User user, final Long cakeId) {
-		lockRedisRepository.executeWithLock(RedisKey.LOCK_CAKE_HEART, 100L,
-			() -> heartCake(user, cakeId)
-		);
-	}
-
-	@Transactional
-	public void heartCakeShopWithLock(final User user, final Long cakeShopId) {
-		lockRedisRepository.executeWithLock(RedisKey.LOCK_SHOP_HEART, 500L,
-			() -> heartCakeShop(user, cakeShopId)
-		);
-	}
-
-	@Transactional
+	@DistributedLock
 	public void heartCake(final User user, final Long cakeId) {
 		final Cake cake = cakeReader.findById(cakeId);
 		final CakeHeart cakeHeart = cakeHeartReader.findOrNullByUserAndCake(user, cake);
@@ -72,7 +59,7 @@ public class HeartService {
 		cakeHeartWriter.heartOrCancel(cakeHeart, user, cake);
 	}
 
-	@Transactional
+	@DistributedLock
 	public void heartCakeShop(final User user, final Long cakeShopId) {
 		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
 		final CakeShopHeart cakeShopHeart = cakeShopHeartReader.findOrNullByUserAndCakeShop(user, cakeShop);

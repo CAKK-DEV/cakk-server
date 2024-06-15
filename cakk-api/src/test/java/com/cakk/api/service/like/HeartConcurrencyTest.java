@@ -50,7 +50,7 @@ class HeartConcurrencyTest {
 		userList = userReader.findAll();
 	}
 
-	@TestWithDisplayName("Lock 없이 케이크 좋아요 동작 시, 동시성 문제가 발생한다.")
+	@TestWithDisplayName("케이크 하트 동작 시, 동시성 문제가 발생하지 않는다.")
 	void executeHeartCakeWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
@@ -76,39 +76,10 @@ class HeartConcurrencyTest {
 
 		// then
 		final Cake cake = cakeReader.findById(cakeId);
-		assertNotEquals(100, cake.getHeartCount().intValue());
-	}
-
-	@TestWithDisplayName("Lock을 활용하여 케이크 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
-	void executeHeartCakeWithLock() throws InterruptedException {
-		// given
-		final int threadCount = 100;
-		final Long cakeId = 1L;
-
-		ExecutorService executorService = Executors.newFixedThreadPool(32);
-		CountDownLatch latch = new CountDownLatch(threadCount);
-
-		// when
-		for (int i = 0; i < threadCount; i++) {
-			final int index = i;
-
-			executorService.submit(() -> {
-				try {
-					heartService.heartCakeWithLock(userList.get(index), cakeId);
-				} finally {
-					latch.countDown();
-				}
-			});
-		}
-
-		latch.await();
-
-		// then
-		final Cake cake = cakeReader.findById(cakeId);
 		assertEquals(100, cake.getHeartCount().intValue());
 	}
 
-	@TestWithDisplayName("Lock 없이 케이크 샵 좋아요 동작 시, 동시성 문제가 발생한다.")
+	@TestWithDisplayName("케이크 샵 하트 동작 시, 동시성 문제가 발생하지 않는다.")
 	void executeHeartCakeShopWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
@@ -134,35 +105,6 @@ class HeartConcurrencyTest {
 
 		// then
 		final CakeShop cakeShop = cakeShopReader.findById(cakeCakeId);
-		assertNotEquals(100, cakeShop.getLikeCount().intValue());
-	}
-
-	@TestWithDisplayName("Lock을 활용하여 케이크 샵 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
-	void executeHeartCakeShopWithLock() throws InterruptedException {
-		// given
-		final int threadCount = 100;
-		final Long cakeShopId = 1L;
-
-		ExecutorService executorService = Executors.newFixedThreadPool(32);
-		CountDownLatch latch = new CountDownLatch(threadCount);
-
-		// when
-		for (int i = 0; i < threadCount; i++) {
-			final int index = i;
-
-			executorService.submit(() -> {
-				try {
-					heartService.heartCakeShopWithLock(userList.get(index), cakeShopId);
-				} finally {
-					latch.countDown();
-				}
-			});
-		}
-
-		latch.await();
-
-		// then
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
 		assertEquals(100, cakeShop.getHeartCount().intValue());
 	}
 }
