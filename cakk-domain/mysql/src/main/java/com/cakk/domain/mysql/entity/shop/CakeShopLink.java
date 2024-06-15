@@ -48,4 +48,8 @@ public class CakeShopLink extends AuditEntity {
 		this.linkPath = linkPath;
 		this.cakeShop = cakeShop;
 	}
+
+	public void updateCakeShop(CakeShop cakeShop) {
+		this.cakeShop = cakeShop;
+	}
 }

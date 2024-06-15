@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -75,7 +76,7 @@ public class CakeShop extends AuditEntity {
 	@OneToOne(mappedBy = "cakeShop")
 	private BusinessInformation businessInformation;
 
-	@OneToMany(mappedBy = "cakeShop")
+	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<CakeShopLink> cakeShopLinks = new ArrayList<>();
 
 	@Builder
@@ -114,5 +115,14 @@ public class CakeShop extends AuditEntity {
 		shopName = param.shopName();
 		shopBio = param.shopBio();
 		shopDescription = param.shopDescription();
+	}
+
+	public void updateShopLinks(List<CakeShopLink> cakeShopLinks) {
+		this.cakeShopLinks.clear();
+
+		cakeShopLinks.forEach(cakeShopLink -> {
+			cakeShopLink.updateCakeShop(this);
+			this.cakeShopLinks.add(cakeShopLink);
+		});
 	}
 }
