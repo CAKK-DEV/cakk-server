@@ -1,5 +1,8 @@
 package com.cakk.domain.redis.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,7 @@ public class RedisConfig {
 
 	private final int port;
 	private final String host;
+	private final String address;
 
 	public RedisConfig(
 		@Value("${spring.data.redis.port}")
@@ -28,6 +32,7 @@ public class RedisConfig {
 	) {
 		this.port = port;
 		this.host = host;
+		this.address = "redis://%s:%d".formatted(host, port);
 	}
 
 	@Bean
@@ -44,6 +49,14 @@ public class RedisConfig {
 		redisTemplate.setValueSerializer(new StringRedisSerializer());
 
 		return redisTemplate;
+	}
+
+	@Bean
+	public RedissonClient redissonClient() {
+		final Config config = new Config();
+		config.useSingleServer().setAddress(address);
+
+		return Redisson.create(config);
 	}
 
 	@Bean
