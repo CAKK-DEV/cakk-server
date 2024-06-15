@@ -9,10 +9,12 @@ import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import com.cakk.domain.mysql.entity.user.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -115,13 +117,13 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
-	public CakeShop findWithBusinessInformationAndOwnerById(Long cakeShopId) {
-		return queryFactory
+	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
+		return Optional.ofNullable(queryFactory
 			.selectFrom(cakeShop)
-			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.join(businessInformation.user, user).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId))
-			.fetchOne();
+			.join(cakeShop.businessInformation, businessInformation)
+			.join(businessInformation.user, user)
+			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
+			.fetchOne());
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
