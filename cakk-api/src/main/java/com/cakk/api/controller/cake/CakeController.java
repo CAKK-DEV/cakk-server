@@ -71,7 +71,7 @@ public class CakeController {
 		@SignInUser User user,
 		@PathVariable Long cakeId
 	) {
-		heartService.heartCakeWithLock(user, cakeId);
+		heartService.heartCake(user, cakeId);
 
 		return ApiResponse.success();
 	}

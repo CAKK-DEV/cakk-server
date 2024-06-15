@@ -100,7 +100,7 @@ public class ShopController {
 		@SignInUser User user,
 		@PathVariable Long cakeShopId
 	) {
-		heartService.heartCakeShopWithLock(user, cakeShopId);
+		heartService.heartCakeShop(user, cakeShopId);
 
 		return ApiResponse.success();
 	}

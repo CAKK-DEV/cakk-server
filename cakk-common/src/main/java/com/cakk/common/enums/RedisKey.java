@@ -3,6 +3,8 @@ package com.cakk.common.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.common.exception.CakkException;
+
 @Getter
 @RequiredArgsConstructor
 public enum RedisKey {
@@ -13,4 +15,12 @@ public enum RedisKey {
 	LOCK_SHOP_HEART("LOCK::shop-heart");
 
 	private final String value;
+
+	public static RedisKey getLockByMethodName(String method) {
+		return switch (method) {
+			case "heartCake" -> LOCK_CAKE_HEART;
+			case "heartCakeShop" -> LOCK_SHOP_HEART;
+			default -> throw new CakkException(ReturnCode.INTERNAL_SERVER_ERROR);
+		};
+	}
 }

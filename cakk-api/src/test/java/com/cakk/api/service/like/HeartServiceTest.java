@@ -16,7 +16,6 @@ import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
-import com.cakk.common.enums.RedisKey;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
@@ -30,7 +29,6 @@ import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
 import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
-import com.cakk.domain.redis.repository.LockRedisRepository;
 
 @DisplayName("좋아요 기능 관련 비즈니스 로직 테스트")
 public class HeartServiceTest extends ServiceTest {
@@ -55,9 +53,6 @@ public class HeartServiceTest extends ServiceTest {
 
 	@Mock
 	private CakeShopHeartWriter cakeShopHeartWriter;
-
-	@Mock
-	private LockRedisRepository lockRedisRepository;
 
 	@TestWithDisplayName("하트 한 케이크 목록을 조회한다.")
 	void findCakeImagesByCursorAndHeart() {
@@ -167,7 +162,6 @@ public class HeartServiceTest extends ServiceTest {
 
 		verify(cakeReader, times(1)).findById(cakeId);
 		verify(cakeHeartReader, times(0)).findOrNullByUserAndCake(user, cake);
-		verify(lockRedisRepository, times(0)).executeWithLock(any(RedisKey.class), anyLong(), any(Runnable.class));
 	}
 
 	@TestWithDisplayName("케이크 샵에 대하여 하트를 동작한다.")
