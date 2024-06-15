@@ -14,7 +14,6 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
-import com.cakk.domain.mysql.entity.user.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -31,6 +30,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.user.User;
 
 @Repository
 @RequiredArgsConstructor
@@ -122,6 +122,15 @@ public class CakeShopQueryRepository {
 			.selectFrom(cakeShop)
 			.join(cakeShop.businessInformation, businessInformation)
 			.join(businessInformation.user, user)
+			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
+			.fetchOne());
+	}
+
+	public Optional<CakeShop> findWithShopLinks(User owner, Long cakeShopId) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(cakeShop)
+			.join(cakeShop.cakeShopLinks, cakeShopLink).fetchJoin()
+			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
 			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
 			.fetchOne());
 	}
