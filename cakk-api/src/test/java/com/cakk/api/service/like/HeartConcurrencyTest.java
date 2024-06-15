@@ -50,7 +50,7 @@ class HeartConcurrencyTest {
 		userList = userReader.findAll();
 	}
 
-	@TestWithDisplayName("Lock 없이 케이크 좋아요 동작 시, 동시성 문제가 발생한다.")
+	@TestWithDisplayName("케이크 하트 동작 시, 동시성 문제가 발생하지 않는다.")
 	void executeHeartCakeWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;
@@ -79,7 +79,7 @@ class HeartConcurrencyTest {
 		assertEquals(100, cake.getHeartCount().intValue());
 	}
 
-	@TestWithDisplayName("Lock 없이 케이크 샵 좋아요 동작 시, 동시성 문제가 발생한다.")
+	@TestWithDisplayName("케이크 샵 하트 동작 시, 동시성 문제가 발생하지 않는다.")
 	void executeHeartCakeShopWithoutLock() throws InterruptedException {
 		// given
 		final int threadCount = 100;

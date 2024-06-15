@@ -25,7 +25,6 @@ public class LockRedisRepository {
 			boolean available = rLock.tryLock(param.waitTime(), param.leaseTime(), param.timeUnit());
 
 			if (!available) {
-				System.out.println("못 얻음");
 				return false;
 			}
 

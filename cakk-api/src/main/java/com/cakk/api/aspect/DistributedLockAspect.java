@@ -25,7 +25,7 @@ public class DistributedLockAspect {
 	private final AopForTransaction aopForTransaction;
 
 	@Around("@annotation(com.cakk.api.annotation.DistributedLock)")
-	public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object lock(final ProceedingJoinPoint joinPoint) {
 		final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		final Method method = signature.getMethod();
 		final DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
