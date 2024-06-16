@@ -30,7 +30,7 @@ import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
 import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
 
-@DisplayName("좋아요 기능 관련 비즈니스 로직 테스트")
+@DisplayName("하트 기능 관련 비즈니스 로직 테스트")
 public class HeartServiceTest extends ServiceTest {
 
 	@InjectMocks

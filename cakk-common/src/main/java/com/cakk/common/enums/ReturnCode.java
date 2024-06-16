@@ -23,6 +23,7 @@ public enum ReturnCode {
 	WRONG_PROVIDER("1200", "잘못된 인증 제공자 입니다."),
 	NOT_EXIST_USER("1201", "존재하지 않는 유저 입니다."),
 	ALREADY_EXIST_USER("1202", "이미 가입한 유저 입니다."),
+	MAX_CAKE_SHOP_LIKE("1203", "케이크샵 좋아요는 최대 50번 입니다."),
 
 	// 케이크 샵 에러 (1300 ~ 1350)
 	NOT_EXIST_CAKE_SHOP("1300", "존재하지 않는 케이크 샵 입니다"),

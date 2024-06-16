@@ -348,6 +348,31 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertNull(response.getData());
 	}
 
+	@TestWithDisplayName("해당 id의 케이크 샵 좋아요에 성공한다.")
+	void likeCakeShop() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/like".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
+	}
+
 	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
 	void findAllShopsByLocationBased2() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
