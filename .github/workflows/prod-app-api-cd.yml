@@ -8,6 +8,7 @@ on:
       - cakk-api/**
       - cakk-domain/**
       - cakk-common/**
+      - cakk-external/**
 
 permissions: write-all
 
