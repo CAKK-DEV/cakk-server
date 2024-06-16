@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.link.UpdateLinkRequest;
+import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
+import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -145,6 +147,28 @@ public class ShopController {
 		@Valid @RequestBody UpdateLinkRequest request
 	) {
 		shopService.updateShopLinks(request.toParam(user, cakeShopId));
+
+		return ApiResponse.success();
+	}
+
+	@PutMapping("/{cakeShopId}/address")
+	public ApiResponse<Void> updateShopAddress(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId,
+		@Valid @RequestBody UpdateShopAddressRequest request
+	) {
+		shopService.updateShopAddress(request.toParam(user, cakeShopId));
+
+		return ApiResponse.success();
+	}
+
+	@PutMapping("/{cakeShopId}/operation-days")
+	public ApiResponse<Void> updateShopOperationDays(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId,
+		@Valid @RequestBody UpdateShopOperationRequest request
+	) {
+		shopService.updateShopOperationDays(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
 	}

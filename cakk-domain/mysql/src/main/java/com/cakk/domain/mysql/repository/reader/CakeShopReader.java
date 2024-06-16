@@ -98,4 +98,14 @@ public class CakeShopReader {
 		return cakeShopQueryRepository.findWithShopLinks(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
+
+	public CakeShop findByIdAndOwner(Long cakeShopId, User owner) {
+		return cakeShopJpaRepository.findCakeShopByIdAndBusinessInformation_User(cakeShopId, owner)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
+	}
+
+	public CakeShop findWithOperations(User owner, Long cakeShopId) {
+		return cakeShopQueryRepository.findWithOperations(owner, cakeShopId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
+	}
 }
