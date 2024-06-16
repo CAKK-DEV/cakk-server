@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
+import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 
@@ -79,6 +80,9 @@ public class CakeShop extends AuditEntity {
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<CakeShopLink> cakeShopLinks = new ArrayList<>();
 
+	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
+
 	@Builder
 	public CakeShop(
 		String shopName,
@@ -88,6 +92,7 @@ public class CakeShop extends AuditEntity {
 		String shopDescription,
 		Point location
 	) {
+
 		this.shopName = shopName;
 		this.thumbnailUrl = thumbnailUrl;
 		this.shopAddress = shopAddress;
@@ -127,6 +132,20 @@ public class CakeShop extends AuditEntity {
 		cakeShopLinks.forEach(cakeShopLink -> {
 			cakeShopLink.updateCakeShop(this);
 			this.cakeShopLinks.add(cakeShopLink);
+		});
+	}
+
+	public void updateShopAddress(UpdateShopAddressParam param) {
+		shopAddress = param.shopAddress();
+		location = param.location();
+	}
+
+	public void updateShopOperationDays(List<CakeShopOperation> cakeShopOperations) {
+		this.cakeShopOperations.clear();
+
+		cakeShopOperations.forEach(cakeShopOperation -> {
+			cakeShopOperation.updateCakeShop(this);
+			this.cakeShopOperations.add(cakeShopOperation);
 		});
 	}
 }
