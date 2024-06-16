@@ -135,6 +135,15 @@ public class CakeShopQueryRepository {
 			.fetchOne());
 	}
 
+	public Optional<CakeShop> findWithOperations(User owner, Long cakeShopId) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(cakeShop)
+			.join(cakeShop.cakeShopOperations, cakeShopOperation).fetchJoin()
+			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
+			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
+			.fetchOne());
+	}
+
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
 		return cakeShop.id.eq(cakeShopId);
 	}
