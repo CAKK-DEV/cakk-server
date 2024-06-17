@@ -23,12 +23,14 @@ import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
+import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam;
+import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -88,6 +90,18 @@ public class ShopService {
 	public void updateShopLinks(UpdateLinkParam param) {
 		final CakeShop cakeShop = cakeShopReader.findWithShopLinks(param.user(), param.cakeShopId());
 		cakeShop.updateShopLinks(param.cakeShopLinks());
+	}
+
+	@Transactional
+	public void updateShopAddress(UpdateShopAddressParam param) {
+		final CakeShop cakeShop = cakeShopReader.findByIdAndOwner(param.cakeShopId(), param.user());
+		cakeShop.updateShopAddress(param);
+	}
+
+	@Transactional
+	public void updateShopOperationDays(UpdateShopOperationParam param) {
+		final CakeShop cakeShop = cakeShopReader.findWithOperations(param.user(), param.cakeShopId());
+		cakeShop.updateShopOperationDays(param.cakeShopOperations());
 	}
 
 	@Transactional(readOnly = true)
