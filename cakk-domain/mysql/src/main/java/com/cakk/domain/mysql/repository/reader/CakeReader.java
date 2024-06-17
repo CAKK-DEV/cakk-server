@@ -11,6 +11,7 @@ import com.cakk.domain.mysql.annotation.Reader;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository;
 import com.cakk.domain.mysql.repository.query.CakeQueryRepository;
 
@@ -48,5 +49,10 @@ public class CakeReader {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
 		return cakeQueryRepository.searchCakeImagesByCakeIds(cakeIds);
+	}
+
+	public Cake findWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
+		return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 }
