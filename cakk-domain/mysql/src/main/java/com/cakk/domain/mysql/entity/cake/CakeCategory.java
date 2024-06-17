@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,8 +39,13 @@ public class CakeCategory extends AuditCreatedEntity {
 	@Column(name = "cake_design_category")
 	private CakeDesignCategory cakeDesignCategory;
 
+	@Builder
 	public CakeCategory(Cake cake, CakeDesignCategory cakeDesignCategory) {
 		this.cake = cake;
 		this.cakeDesignCategory = cakeDesignCategory;
+	}
+
+	public void updateCake(Cake cake) {
+		this.cake = cake;
 	}
 }
