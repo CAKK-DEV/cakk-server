@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
+import com.cakk.api.dto.request.cake.CakeCreateRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.request.cake.CakeUpdateRequest;
+import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.service.cake.CakeService;
 import com.cakk.api.service.like.HeartService;
@@ -67,6 +70,24 @@ public class CakeController {
 		final CakeImageListResponse response = cakeService.searchCakeImagesByCursorAndViews(request);
 
 		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/{cakeId}")
+	public ApiResponse<CakeDetailResponse> getCakeDetail(@PathVariable Long cakeId) {
+		final CakeDetailResponse response = cakeService.findCakeDetailById(cakeId);
+
+		return ApiResponse.success(response);
+	}
+
+	@PostMapping("/{cakeShopId}")
+	public ApiResponse<Void> createCake(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId,
+		@Valid @RequestBody CakeCreateRequest request
+	) {
+		cakeService.createCake(request.toParam(user, cakeShopId));
+
+		return ApiResponse.success();
 	}
 
 	@PutMapping("/{cakeId}/heart")

@@ -8,6 +8,7 @@ import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.annotation.Reader;
+import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
@@ -54,5 +55,10 @@ public class CakeReader {
 	public Cake findWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
 		return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
+	}
+
+	public CakeDetailParam searchCakeDetailById(Long cakeId) {
+		return cakeQueryRepository.searchCakeDetailById(cakeId)
+			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE));
 	}
 }
