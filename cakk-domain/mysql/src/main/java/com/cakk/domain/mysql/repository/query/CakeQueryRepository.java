@@ -16,8 +16,6 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
-import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
-import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -28,7 +26,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
+import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.User;
 
