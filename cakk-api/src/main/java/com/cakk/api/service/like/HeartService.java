@@ -9,10 +9,14 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.DistributedLock;
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
+import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
+import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.cake.CakeHeart;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
@@ -49,6 +53,20 @@ public class HeartService {
 		);
 
 		return CakeMapper.supplyHeartCakeImageListResponseBy(cakeImages);
+	}
+
+	@Transactional(readOnly = true)
+	public HeartCakeShopListResponse findCakeShopByCursorAndHeart(
+		final HeartCakeShopSearchRequest dto,
+		final User signInUser
+	) {
+		final List<HeartCakeShopResponseParam> cakeShops = cakeShopHeartReader.searchAllByCursorAndHeart(
+			dto.cakeShopHeartId(),
+			signInUser.getId(),
+			dto.pageSize()
+		);
+
+		return ShopMapper.supplyHeartCakeShopListResponseBy(cakeShops);
 	}
 
 	@DistributedLock

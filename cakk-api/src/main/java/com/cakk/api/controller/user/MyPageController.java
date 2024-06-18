@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
+import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
+import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.user.UserService;
@@ -64,6 +66,16 @@ public class MyPageController {
 		@Valid @ModelAttribute HeartCakeSearchRequest request
 	) {
 		final HeartCakeImageListResponse response = heartService.findCakeImagesByCursorAndHeart(request, user);
+
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/heart-shops")
+	public ApiResponse<HeartCakeShopListResponse> heartCakeList(
+		@SignInUser User user,
+		@Valid @ModelAttribute HeartCakeShopSearchRequest request
+	) {
+		final HeartCakeShopListResponse response = heartService.findCakeShopByCursorAndHeart(request, user);
 
 		return ApiResponse.success(response);
 	}
