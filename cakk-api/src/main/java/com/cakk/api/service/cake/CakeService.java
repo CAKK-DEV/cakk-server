@@ -16,7 +16,14 @@ import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeUpdateParam;
+import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.cake.Tag;
+import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
+import com.cakk.domain.mysql.repository.reader.TagReader;
+import com.cakk.domain.mysql.repository.writer.CakeWriter;
+import com.cakk.domain.mysql.repository.writer.TagWriter;
 import com.cakk.domain.redis.repository.CakeViewRedisRepository;
 
 @Transactional(readOnly = true)
@@ -25,7 +32,9 @@ import com.cakk.domain.redis.repository.CakeViewRedisRepository;
 public class CakeService {
 
 	private final CakeReader cakeReader;
-
+	private final CakeWriter cakeWriter;
+	private final TagReader tagReader;
+	private final TagWriter tagWriter;
 	private final CakeViewRedisRepository cakeViewRedisRepository;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
@@ -60,5 +69,27 @@ public class CakeService {
 
 		final List<CakeImageResponseParam> cakeImages = cakeReader.searchCakeImagesByCakeIds(cakeIds);
 		return CakeMapper.supplyCakeImageListResponse(cakeImages, cakeIds);
+	}
+
+	@Transactional
+	public void updateCake(CakeUpdateParam param) {
+		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(param.cakeId(), param.owner());
+		List<Tag> tags = param.tagNames()
+			.stream()
+			.map(tagName -> tagReader.findByTagName(tagName).orElseGet(() -> tagWriter.saveTag(tagName)))
+			.toList();
+
+		cake.updateCakeImageUrl(param.cakeImageUrl());
+		cake.updateCakeCategories(param.cakeCategories());
+		cake.updateCakeTags(tags);
+	}
+
+	@Transactional
+	public void deleteCake(User owner, Long cakeId) {
+		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(cakeId, owner);
+
+		cake.removeCakeCategories();
+		cake.removeCakeTags();
+		cakeWriter.deleteCake(cake);
 	}
 }

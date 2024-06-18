@@ -4,11 +4,11 @@ import static com.cakk.domain.mysql.entity.cake.QCake.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeCategory.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeTag.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
+import static com.cakk.domain.mysql.entity.user.QBusinessInformation.*;
 import static java.util.Objects.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
@@ -17,15 +17,15 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.user.User;
 
 @RequiredArgsConstructor
 @Repository
@@ -127,6 +127,26 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
+	public Optional<Cake> searchCakeByCakeIdAndOwner(Long cakeId, User owner) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(cake)
+			.innerJoin(cake.cakeShop, cakeShop)
+			.innerJoin(cakeShop.businessInformation, businessInformation)
+			.where(eqCakeId(cakeId), businessInformation.user.eq(owner))
+			.fetchOne());
+	}
+
+	public Optional<Cake> searchWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(cake)
+			.innerJoin(cake.cakeShop, cakeShop)
+			.innerJoin(cakeShop.businessInformation, businessInformation)
+			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
+			.leftJoin(cake.cakeTags, cakeTag).fetchJoin()
+			.where(eqCakeId(cakeId), businessInformation.user.eq(owner))
+			.fetchOne());
+	}
+
 	private BooleanExpression ltCakeId(Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
@@ -137,6 +157,10 @@ public class CakeQueryRepository {
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
 		return cakeShop.id.eq(cakeShopId);
+	}
+
+	private BooleanExpression eqCakeId(Long cakeId) {
+		return cake.id.eq(cakeId);
 	}
 
 	private BooleanExpression eqCategory(CakeDesignCategory category) {

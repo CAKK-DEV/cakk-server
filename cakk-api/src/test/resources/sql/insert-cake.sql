@@ -42,6 +42,10 @@ values (1, 1, 'cake_image_url1', 0, now(), now()),
        (17, 9, 'cake_image_url12', 0, now(), now()),
        (18, 10, 'cake_image_url12', 0, now(), now());
 
+insert into business_information(business_number, shop_id, user_id)
+values ('010-3375-5555', 1, 1),
+       ('010-3375-5555', 2, 2),
+       ('010-3375-5555', 3, 3);
 
 insert into tag(tag_id, tag_name, created_at)
 values (1, 'tag_name1', now()),

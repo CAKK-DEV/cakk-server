@@ -11,11 +11,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.cakk.domain.mysql.entity.audit.AuditCreatedEntity;
-import com.cakk.domain.mysql.entity.user.User;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +36,7 @@ public class CakeTag extends AuditCreatedEntity {
 	@JoinColumn(name = "tag_id", referencedColumnName = "tag_id", nullable = false)
 	private Tag tag;
 
+	@Builder
 	public CakeTag(Cake cake, Tag tag) {
 		this.cake = cake;
 		this.tag = tag;

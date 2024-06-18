@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ public class Tag extends AuditCreatedEntity {
 	@Column(name = "tag_name", length = 20, nullable = false)
 	private String tagName;
 
+	@Builder
 	public Tag(String tagName) {
 		this.tagName = tagName;
 	}
