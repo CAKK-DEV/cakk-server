@@ -20,11 +20,11 @@ public class CakeHeartReader {
 	private final CakeHeartQueryRepository cakeHeartQueryRepository;
 
 	public List<HeartCakeImageResponseParam> searchCakeImagesByCursorAndHeart(
-		final Long cakeLikeId,
+		final Long cakeHeartId,
 		final Long userId,
 		final int pageSize
 	) {
-		return cakeHeartQueryRepository.searchCakeImagesByCursorAndHeart(cakeLikeId, userId, pageSize);
+		return cakeHeartQueryRepository.searchCakeImagesByCursorAndHeart(cakeHeartId, userId, pageSize);
 	}
 
 	public CakeHeart findOrNullByUserAndCake(final User user, final Cake cake) {
