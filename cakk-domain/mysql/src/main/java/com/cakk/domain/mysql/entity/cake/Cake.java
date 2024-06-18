@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -58,6 +59,7 @@ public class Cake extends AuditEntity {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
+	@Builder
 	public Cake(String cakeImageUrl, CakeShop cakeShop) {
 		this.cakeImageUrl = cakeImageUrl;
 		this.cakeShop = cakeShop;
@@ -97,5 +99,20 @@ public class Cake extends AuditEntity {
 
 	public void removeCakeTags() {
 		this.cakeTags.clear();
+	}
+
+	public void registerTags(List<Tag> tags) {
+		tags.forEach(tag -> this.cakeTags.add(CakeTagMapper.supplyCakeTagBy(this, tag)));
+	}
+
+	public void registerCategories(List<CakeCategory> cakeCategories) {
+		cakeCategories.forEach(cakeCategory -> {
+			cakeCategory.updateCake(this);
+			this.cakeCategories.add(cakeCategory);
+		});
+	}
+
+	public void updateCakeShop(CakeShop cakeShop) {
+		this.cakeShop = cakeShop;
 	}
 }
