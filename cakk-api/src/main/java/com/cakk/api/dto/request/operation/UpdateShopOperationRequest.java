@@ -7,7 +7,10 @@ import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.User;
 
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateShopOperationRequest(
+	@NotNull
 	List<ShopOperationParam> operationDays
 ) {
 
