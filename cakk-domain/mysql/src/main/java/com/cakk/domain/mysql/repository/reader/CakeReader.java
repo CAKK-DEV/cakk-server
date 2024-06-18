@@ -1,6 +1,9 @@
 package com.cakk.domain.mysql.repository.reader;
 
+import static java.util.Objects.*;
+
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,7 +61,11 @@ public class CakeReader {
 	}
 
 	public CakeDetailParam searchCakeDetailById(Long cakeId) {
-		return cakeQueryRepository.searchCakeDetailById(cakeId)
-			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE));
+		CakeDetailParam param = cakeQueryRepository.searchCakeDetailById(cakeId);
+
+		if (isNull(param)) {
+			throw new CakkException(ReturnCode.NOT_EXIST_CAKE);
+		}
+		return param;
 	}
 }

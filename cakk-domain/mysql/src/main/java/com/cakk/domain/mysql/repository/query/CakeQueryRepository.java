@@ -143,7 +143,7 @@ public class CakeQueryRepository {
 			.fetchOne());
 	}
 
-	public Optional<CakeDetailParam> searchCakeDetailById(Long cakeId) {
+	public CakeDetailParam searchCakeDetailById(Long cakeId) {
 		List<CakeDetailParam> results = queryFactory
 			.selectFrom(cake)
 			.innerJoin(cake.cakeShop, cakeShop)
@@ -163,7 +163,7 @@ public class CakeQueryRepository {
 						tag.tagName)
 					)
 				)));
-		return results.isEmpty() ? Optional.empty() : Optional.ofNullable(results.get(0));
+		return results.isEmpty() ? null : results.get(0);
 	}
 
 	private BooleanExpression ltCakeId(Long cakeId) {
