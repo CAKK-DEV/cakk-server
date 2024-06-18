@@ -9,12 +9,15 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
+import com.cakk.common.utils.SetUtils;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -122,6 +125,17 @@ public class ShopMapper {
 			.cakeShops(cakeShops)
 			.lastCakeShopId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId())
 			.size(cakeShops.size())
+			.build();
+	}
+
+	public static HeartCakeShopListResponse supplyHeartCakeShopListResponseBy(final List<HeartCakeShopResponseParam> cakeShops) {
+		final int size = cakeShops.size();
+		cakeShops.forEach(it -> SetUtils.keepOnlyNElements(it.cakeImageUrls(), 4));
+
+		return HeartCakeShopListResponse.builder()
+			.cakeShops(cakeShops)
+			.lastCakeShopHeartId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId())
+			.size(size)
 			.build();
 	}
 }
