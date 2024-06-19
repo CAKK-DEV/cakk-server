@@ -18,7 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.common.annotation.TestWithDisplayName;
+import com.cakk.api.dto.request.cake.CakeCreateRequest;
 import com.cakk.api.dto.request.cake.CakeUpdateRequest;
+import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
@@ -465,6 +467,59 @@ class CakeIntegrationTest extends IntegrationTest {
 			uriComponents.toUriString(),
 			HttpMethod.DELETE,
 			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
+	}
+
+	@TestWithDisplayName("케이크 상세 조회에 성공한다")
+	void getDetailCake() {
+		// given
+		final Long cakeId = 1L;
+		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeDetailResponse data = objectMapper.convertValue(response.getData(), CakeDetailResponse.class);
+
+		assertEquals("cake_image_url1", data.cakeImageUrl());
+		assertEquals("케이크 맛집1", data.cakeShopName());
+		assertEquals("케이크 맛집입니다.", data.shopBio());
+		assertEquals(1L, data.cakeShopId().longValue());
+		assertEquals(1, data.cakeCategories().size());
+		assertEquals(5, data.tags().size());
+	}
+
+	@TestWithDisplayName("케이크 추가에 성공한다")
+	void createCake() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		final CakeCreateRequest request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest.class)
+			.set("tagNames", List.of("tag_name1", "new_tag1", "new_tag2"))
+			.sample();
+
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.POST,
+			new HttpEntity<>(request, getAuthHeader()),
 			ApiResponse.class);
 
 		// then

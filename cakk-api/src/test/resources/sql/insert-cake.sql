@@ -11,16 +11,16 @@ SET @g10 = 'Point(37.541530 127.054164)';
 
 insert into cake_shop (shop_id, thumbnail_url, shop_name, shop_address, shop_bio, shop_description, location, like_count, heart_count, linked_flag,
                        created_at, updated_at)
-values (1, 'thumbnail_url1', '케이크 맛집1', '케이크 맛집입니다.', '서울시 강남구 어쩌고로1', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, 0, false, now(), now()),
-       (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '서울시 강남구 어쩌고로2', '케이크 맛집입니다.', ST_GeomFromText(@g2, 4326), 0, 0, false, now(), now()),
-       (3, 'thumbnail_url3', '케이크 맛집3', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g3, 4326), 0, 0, false, now(), now()),
-       (4, 'thumbnail_url4', '케이크 맛집4', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g4, 4326), 0, 0, false, now(), now()),
-       (5, 'thumbnail_url5', '케이크 맛집5', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g5, 4326), 0, 0, false, now(), now()),
-       (6, 'thumbnail_url6', '케이크 맛집6', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g6, 4326), 0, 0, false, now(), now()),
-       (7, 'thumbnail_url7', '케이크 맛집7', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g7, 4326), 0, 0, false, now(), now()),
-       (8, 'thumbnail_url8', '케이크 맛집8', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g8, 4326), 0, 0, false, now(), now()),
-       (9, 'thumbnail_url9', '케이크 맛집9', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g9, 4326), 0, 0, false, now(), now()),
-       (10, 'thumbnail_url10', '케이크 맛집10', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g10, 4326), 0, 0, false, now(), now());
+values (1, 'thumbnail_url1', '케이크 맛집1', '서울시 강남구 어쩌고로1', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, 0, false, now(), now()),
+       (2, 'thumbnail_url2', '케이크 맛집2', '서울시 강남구 어쩌고로2', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g2, 4326), 0, 0, false, now(), now()),
+       (3, 'thumbnail_url3', '케이크 맛집3', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g3, 4326), 0, 0, false, now(), now()),
+       (4, 'thumbnail_url4', '케이크 맛집4', '서울시 강남구 어쩌고로4', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g4, 4326), 0, 0, false, now(), now()),
+       (5, 'thumbnail_url5', '케이크 맛집5', '서울시 강남구 어쩌고로5', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g5, 4326), 0, 0, false, now(), now()),
+       (6, 'thumbnail_url6', '케이크 맛집6', '서울시 강남구 어쩌고로6', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g6, 4326), 0, 0, false, now(), now()),
+       (7, 'thumbnail_url7', '케이크 맛집7', '서울시 강남구 어쩌고로7', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g7, 4326), 0, 0, false, now(), now()),
+       (8, 'thumbnail_url8', '케이크 맛집8', '서울시 강남구 어쩌고로8', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g8, 4326), 0, 0, false, now(), now()),
+       (9, 'thumbnail_url9', '케이크 맛집9', '서울시 강남구 어쩌고로9', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g9, 4326), 0, 0, false, now(), now()),
+       (10, 'thumbnail_url10', '케이크 맛집10', '서울시 강남구 어쩌고로10', '케이크 맛집입니다.', '케이크 맛집입니다.', ST_GeomFromText(@g10, 4326), 0, 0, false, now(), now());
 
 insert into cake_shop_operation (operation_id, shop_id, operation_day, start_time, end_time, created_at, updated_at)
 values (1, 1, 0, '10:00:00', '22:00:00', now(), now()),

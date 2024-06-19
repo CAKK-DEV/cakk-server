@@ -3,8 +3,11 @@ package com.cakk.domain.mysql.repository.query;
 import static com.cakk.domain.mysql.entity.cake.QCake.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeCategory.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeTag.*;
+import static com.cakk.domain.mysql.entity.cake.QTag.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static com.cakk.domain.mysql.entity.user.QBusinessInformation.*;
+import static com.querydsl.core.group.GroupBy.*;
+import static com.querydsl.core.types.Projections.*;
 import static java.util.Objects.*;
 
 import java.util.List;
@@ -23,7 +26,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
+import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.User;
 
@@ -35,7 +40,7 @@ public class CakeQueryRepository {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
 		return queryFactory
-			.select(Projections.constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
 				cake.id,
 				cake.cakeImageUrl))
@@ -54,7 +59,7 @@ public class CakeQueryRepository {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
 		return queryFactory
-			.select(Projections.constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
 				cake.id,
 				cake.cakeImageUrl))
@@ -71,7 +76,7 @@ public class CakeQueryRepository {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCakeShopIds(List<Long> cakeShopIds) {
 		return queryFactory
-			.select(Projections.constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
 				cake.id,
 				cake.cakeImageUrl))
@@ -93,7 +98,7 @@ public class CakeQueryRepository {
 	) {
 		return queryFactory
 			.select(
-				Projections.constructor(CakeImageResponseParam.class,
+				constructor(CakeImageResponseParam.class,
 					cake.cakeShop.id,
 					cake.id,
 					cake.cakeImageUrl)).distinct()
@@ -114,7 +119,7 @@ public class CakeQueryRepository {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
 		return queryFactory
-			.select(Projections.constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
 				cake.id,
 				cake.cakeImageUrl))
@@ -127,15 +132,6 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public Optional<Cake> searchCakeByCakeIdAndOwner(Long cakeId, User owner) {
-		return Optional.ofNullable(queryFactory
-			.selectFrom(cake)
-			.innerJoin(cake.cakeShop, cakeShop)
-			.innerJoin(cakeShop.businessInformation, businessInformation)
-			.where(eqCakeId(cakeId), businessInformation.user.eq(owner))
-			.fetchOne());
-	}
-
 	public Optional<Cake> searchWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
 		return Optional.ofNullable(queryFactory
 			.selectFrom(cake)
@@ -145,6 +141,29 @@ public class CakeQueryRepository {
 			.leftJoin(cake.cakeTags, cakeTag).fetchJoin()
 			.where(eqCakeId(cakeId), businessInformation.user.eq(owner))
 			.fetchOne());
+	}
+
+	public CakeDetailParam searchCakeDetailById(Long cakeId) {
+		List<CakeDetailParam> results = queryFactory
+			.selectFrom(cake)
+			.innerJoin(cake.cakeShop, cakeShop)
+			.leftJoin(cake.cakeCategories, cakeCategory)
+			.leftJoin(cake.cakeTags, cakeTag)
+			.innerJoin(cakeTag.tag, tag)
+			.where(eqCakeId(cakeId))
+			.transform(groupBy(cake.id)
+				.list(Projections.constructor(CakeDetailParam.class,
+					cake.cakeImageUrl,
+					cakeShop.shopName,
+					cakeShop.shopBio,
+					cakeShop.id,
+					set(cakeCategory.cakeDesignCategory),
+					set(Projections.constructor(TagParam.class,
+						tag.id,
+						tag.tagName)
+					)
+				)));
+		return results.isEmpty() ? null : results.get(0);
 	}
 
 	private BooleanExpression ltCakeId(Long cakeId) {

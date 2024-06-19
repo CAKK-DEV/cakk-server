@@ -4,13 +4,14 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.entity.user.User;
 
 public record UpdateShopAddressRequest(
-	@NotBlank
+	@NotBlank @Size(max = 50)
 	String shopAddress,
 	@NotNull @Min(-90) @Max(90)
 	Double latitude,

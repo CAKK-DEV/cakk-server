@@ -13,14 +13,19 @@ import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
+import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.domain.mysql.dto.param.cake.CakeCreateParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeUpdateParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.cake.Tag;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
+import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.TagReader;
 import com.cakk.domain.mysql.repository.writer.CakeWriter;
 import com.cakk.domain.mysql.repository.writer.TagWriter;
@@ -35,6 +40,7 @@ public class CakeService {
 	private final CakeWriter cakeWriter;
 	private final TagReader tagReader;
 	private final TagWriter tagWriter;
+	private final CakeShopReader cakeShopReader;
 	private final CakeViewRedisRepository cakeViewRedisRepository;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
@@ -69,6 +75,26 @@ public class CakeService {
 
 		final List<CakeImageResponseParam> cakeImages = cakeReader.searchCakeImagesByCakeIds(cakeIds);
 		return CakeMapper.supplyCakeImageListResponse(cakeImages, cakeIds);
+	}
+
+	public CakeDetailResponse findCakeDetailById(Long cakeId) {
+		final CakeDetailParam cake = cakeReader.searchCakeDetailById(cakeId);
+
+		return CakeMapper.cakeDetailResponseFromParam(cake);
+	}
+
+	@Transactional
+	public void createCake(CakeCreateParam param) {
+		CakeShop cakeShop = cakeShopReader.findByIdAndOwner(param.cakeShopId(), param.owner());
+		Cake cake = param.cake();
+		List<Tag> tags = param.tagNames()
+			.stream()
+			.map(tagName -> tagReader.findByTagName(tagName).orElseGet(() -> tagWriter.saveTag(tagName)))
+			.toList();
+
+		cake.registerTags(tags);
+		cake.registerCategories(param.cakeCategories());
+		cakeShop.registerCake(cake);
 	}
 
 	@Transactional

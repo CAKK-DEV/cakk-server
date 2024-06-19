@@ -4,14 +4,16 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import com.cakk.api.mapper.CakeDesignCategoryMapper;
+import com.cakk.api.mapper.CakeMapper;
 import com.cakk.common.enums.CakeDesignCategory;
-import com.cakk.domain.mysql.dto.param.cake.CakeUpdateParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeCreateParam;
 import com.cakk.domain.mysql.entity.user.User;
 
-public record CakeUpdateRequest(
-	@NotBlank
+public record CakeCreateRequest(
+	@NotBlank @Size(max = 200)
 	String cakeImageUrl,
 	@NotNull
 	List<CakeDesignCategory> cakeDesignCategories,
@@ -19,13 +21,13 @@ public record CakeUpdateRequest(
 	List<String> tagNames
 ) {
 
-	public CakeUpdateParam toParam(User owner, Long cakeId) {
-		return new CakeUpdateParam(
-			owner,
-			cakeId,
-			cakeImageUrl,
+	public CakeCreateParam toParam(User user, Long cakeShopId) {
+		return new CakeCreateParam(
+			CakeMapper.supplyCakeBy(cakeImageUrl),
 			CakeDesignCategoryMapper.supplyCakeCategoryListBy(cakeDesignCategories),
-			tagNames
+			tagNames,
+			user,
+			cakeShopId
 		);
 	}
 }

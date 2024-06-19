@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
+import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 
 @Getter
@@ -82,6 +83,9 @@ public class CakeShop extends AuditEntity {
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
+
+	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
+	private List<Cake> cakes = new ArrayList<>();
 
 	@Builder
 	public CakeShop(
@@ -147,5 +151,10 @@ public class CakeShop extends AuditEntity {
 			cakeShopOperation.updateCakeShop(this);
 			this.cakeShopOperations.add(cakeShopOperation);
 		});
+	}
+
+	public void registerCake(Cake cake) {
+		cake.updateCakeShop(this);
+		this.cakes.add(cake);
 	}
 }
