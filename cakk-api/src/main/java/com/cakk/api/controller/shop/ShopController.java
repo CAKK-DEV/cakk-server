@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.like.LikeService;
 import com.cakk.api.service.shop.ShopService;
+import com.cakk.api.service.views.ViewsService;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
 
@@ -43,6 +45,7 @@ public class ShopController {
 	private final ShopService shopService;
 	private final HeartService heartService;
 	private final LikeService likeService;
+	private final ViewsService viewsService;
 
 	@PostMapping("/certification")
 	public ApiResponse<Void> requestCertification(
@@ -70,9 +73,12 @@ public class ShopController {
 
 	@GetMapping("/{cakeShopId}/simple")
 	public ApiResponse<CakeShopSimpleResponse> simple(
-		@PathVariable Long cakeShopId
+		@PathVariable Long cakeShopId,
+		@RequestParam(required = false) Long cakeId
 	) {
 		final CakeShopSimpleResponse response = shopService.searchSimpleById(cakeShopId);
+		viewsService.increaseCakeViews(cakeId);
+
 		return ApiResponse.success(response);
 	}
 
