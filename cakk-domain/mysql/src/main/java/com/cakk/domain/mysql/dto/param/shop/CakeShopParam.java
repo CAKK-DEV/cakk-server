@@ -1,18 +1,18 @@
 package com.cakk.domain.mysql.dto.param.shop;
 
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 public class CakeShopParam {
 
 	private Long cakeShopId;
@@ -20,20 +20,10 @@ public class CakeShopParam {
 	private String cakeShopName;
 	private String cakeShopBio;
 	private Set<String> cakeImageUrls;
-	private List<CakeShopOperationParam> operationDays;
 
-	public void addCakeImageUrl(String cakeImageUrl) {
-		cakeImageUrls.add(cakeImageUrl);
-	}
 
-	public void setOperationDay(ShopOperationParam operationDay) {
-		operationDays.add(
-			new CakeShopOperationParam(
-				operationDay.operationDay(),
-				operationDay.operationStartTime(),
-				operationDay.operationEndTime()
-			)
-		);
+	public void setImageCountMaxFour() {
+		cakeImageUrls = cakeImageUrls.stream().limit(4).collect(Collectors.toSet());
 	}
 }
 
