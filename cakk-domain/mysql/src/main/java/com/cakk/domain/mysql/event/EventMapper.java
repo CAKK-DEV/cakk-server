@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -31,5 +32,9 @@ public class EventMapper {
 			.userId(param.user().getId())
 			.userEmail(param.user().getEmail())
 			.build();
+	}
+
+	public static CakeIncreaseViewsEvent supplyCakeIncreaseViewsEvent(Long cakeId) {
+		return new CakeIncreaseViewsEvent(cakeId);
 	}
 }
