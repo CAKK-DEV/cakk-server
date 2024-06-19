@@ -14,4 +14,6 @@ public interface CakeHeartJpaRepository extends JpaRepository<CakeHeart, Long> {
 	List<CakeHeart> findAllByUser(User user);
 
 	Optional<CakeHeart> findByUserAndCake(User user, Cake cake);
+
+	boolean existsByUserAndCake(User user, Cake cake);
 }

@@ -30,4 +30,8 @@ public class CakeHeartReader {
 	public CakeHeart findOrNullByUserAndCake(final User user, final Cake cake) {
 		return cakeHeartJpaRepository.findByUserAndCake(user, cake).orElse(null);
 	}
+
+	public boolean existsByUserAndCake(final User user, final Cake cake) {
+		return cakeHeartJpaRepository.existsByUserAndCake(user, cake);
+	}
 }

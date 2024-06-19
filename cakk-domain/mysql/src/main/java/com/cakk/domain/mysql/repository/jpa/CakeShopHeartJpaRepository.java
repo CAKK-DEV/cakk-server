@@ -14,4 +14,6 @@ public interface CakeShopHeartJpaRepository extends JpaRepository<CakeShopHeart,
 	List<CakeShopHeart> findAllByUser(User user);
 
 	Optional<CakeShopHeart> findByUserAndCakeShop(User user, CakeShop cakeShop);
+
+	boolean existsByUserAndCakeShop(User user, CakeShop cakeShop);
 }
