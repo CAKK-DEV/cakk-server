@@ -19,9 +19,10 @@ import com.cakk.common.enums.Days;
 import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -114,11 +115,11 @@ public class ShopMapper {
 		return cakeShops.stream().map(CakeShopByKeywordParam::cakeShopId).collect(Collectors.toList());
 	}
 
-	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopParam> params) {
+	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopByLocationParam> params) {
 		return new CakeShopByMapResponse(params);
 	}
 
-	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(List<CakeShopParam> cakeShops) {
+	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(List<CakeShopBySearchParam> cakeShops) {
 		final int size = cakeShops.size();
 
 		return CakeShopSearchResponse.builder()
