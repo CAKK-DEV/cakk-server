@@ -43,6 +43,7 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
+import com.cakk.domain.redis.repository.CakeViewRedisRepository;
 
 @SqlGroup({
 	@Sql(scripts = {
@@ -64,6 +65,9 @@ class ShopIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private CakeShopLinkReader cakeShopLinkReader;
+
+	@Autowired
+	private CakeViewRedisRepository cakeViewRedisRepository;
 
 	@TestWithDisplayName("케이크 샵을 간단 조회에 성공한다.")
 	void simple1() {
@@ -92,8 +96,40 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(cakeShop.getShopBio(), data.cakeShopBio());
 	}
 
-	@TestWithDisplayName("없는 케이크 샵일 경우, 간단 조회에 실패한다.")
+	@TestWithDisplayName("케이크 샵을 간단 조회 시, 케이크 조회수를 올리는 데 성공한다.")
 	void simple2() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final Long cakeShopId = 1L;
+		final Long cakeId = 1L;
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/{cakeShopId}/simple")
+			.queryParam("cakeId", cakeId)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSimpleResponse data = objectMapper.convertValue(response.getData(), CakeShopSimpleResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		assertEquals(cakeShop.getId(), data.cakeShopId());
+		assertEquals(cakeShop.getThumbnailUrl(), data.thumbnailUrl());
+		assertEquals(cakeShop.getShopName(), data.cakeShopName());
+		assertEquals(cakeShop.getShopBio(), data.cakeShopBio());
+
+		Long viewCakeId = cakeViewRedisRepository.findTopCakeIdsByOffsetAndCount(0, 10).get(0);
+		assertEquals(cakeId, viewCakeId);
+	}
+
+	@TestWithDisplayName("없는 케이크 샵일 경우, 간단 조회에 실패한다.")
+	void simple3() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
 		final Long cakeShopId = 1000L;
 		final UriComponents uriComponents = UriComponentsBuilder
