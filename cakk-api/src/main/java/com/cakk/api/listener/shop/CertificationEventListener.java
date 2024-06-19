@@ -1,4 +1,4 @@
-package com.cakk.api.event.shop.listener;
+package com.cakk.api.listener.shop;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
