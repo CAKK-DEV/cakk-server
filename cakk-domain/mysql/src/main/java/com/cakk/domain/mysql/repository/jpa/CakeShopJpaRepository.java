@@ -12,7 +12,7 @@ import com.cakk.domain.mysql.entity.user.User;
 
 public interface CakeShopJpaRepository extends JpaRepository<CakeShop, Long> {
 
-	@Query(value = "select CS from CakeShop as CS where ST_CONTAINS(ST_BUFFER(:point, 5000), CS.location)")
+	@Query(value = "select CS from CakeShop as CS join fetch CS.businessInformation where ST_CONTAINS(ST_BUFFER(:point, 5000), CS.location)")
 	List<CakeShop> findByLocationBased(Point point);
 
 	Optional<CakeShop> findCakeShopByIdAndBusinessInformation_User(Long cakeShopId, User owner);
