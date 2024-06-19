@@ -25,6 +25,7 @@ import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
@@ -103,6 +104,15 @@ public class ShopController {
 		@Valid @ModelAttribute SearchShopByLocationRequest request
 	) {
 		final CakeShopByMapResponse response = shopService.searchShop(request);
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/{cakeShopId}/heart")
+	public ApiResponse<HeartResponse> isHeart(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId
+	) {
+		final HeartResponse response = heartService.isHeartCakeShop(user, cakeShopId);
 		return ApiResponse.success(response);
 	}
 

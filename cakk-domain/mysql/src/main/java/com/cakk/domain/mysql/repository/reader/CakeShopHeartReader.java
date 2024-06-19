@@ -32,4 +32,8 @@ public class CakeShopHeartReader {
 	public CakeShopHeart findOrNullByUserAndCakeShop(final User user, final CakeShop cakeShop) {
 		return cakeShopHeartJpaRepository.findByUserAndCakeShop(user, cakeShop).orElse(null);
 	}
+
+	public boolean existsByUserAndCakeShop(final User user, final CakeShop cakeShop) {
+		return cakeShopHeartJpaRepository.existsByUserAndCakeShop(user, cakeShop);
+	}
 }

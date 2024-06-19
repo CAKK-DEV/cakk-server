@@ -28,6 +28,7 @@ import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
@@ -335,6 +336,60 @@ class ShopIntegrationTest extends IntegrationTest {
 			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
 			assertThat(cakeShop.getCakeShopName()).isNotNull();
 		});
+	}
+
+	@TestWithDisplayName("해당 id의 이전에 하트 누른 케이크샵에 대하여 하트 상태인지 조회에 성공한다.")
+	void isHeartShop1() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/heart".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final HeartResponse data = objectMapper.convertValue(response.getData(), HeartResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(true, data.isHeart());
+	}
+
+	@TestWithDisplayName("해당 id의 이전에 하트 누르지 않은 케이크샵에 대하여 하트 상태인지 조회에 성공한다.")
+	void isHeartCake2() {
+		// given
+		final Long cakeId = 2L;
+		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final HeartResponse data = objectMapper.convertValue(response.getData(), HeartResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(false, data.isHeart());
 	}
 
 	@TestWithDisplayName("해당 id의 케이크 샵 하트에 성공한다.")

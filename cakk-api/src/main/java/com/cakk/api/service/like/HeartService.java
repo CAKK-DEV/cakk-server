@@ -12,7 +12,9 @@ import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
+import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
@@ -67,6 +69,22 @@ public class HeartService {
 		);
 
 		return ShopMapper.supplyHeartCakeShopListResponseBy(cakeShops);
+	}
+
+	@Transactional(readOnly = true)
+	public HeartResponse isHeartCake(final User user, final Long cakeId) {
+		final Cake cake = cakeReader.findById(cakeId);
+		final boolean isHeart = cakeHeartReader.existsByUserAndCake(user, cake);
+
+		return HeartMapper.supplyHeartResponseBy(isHeart);
+	}
+
+	@Transactional(readOnly = true)
+	public HeartResponse isHeartCakeShop(final User user, final Long cakeShopId) {
+		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final boolean isHeart = cakeShopHeartReader.existsByUserAndCakeShop(user, cakeShop);
+
+		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}
 
 	@DistributedLock
