@@ -23,6 +23,7 @@ import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.request.cake.CakeUpdateRequest;
 import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
+import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.service.cake.CakeService;
 import com.cakk.api.service.like.HeartService;
 import com.cakk.common.response.ApiResponse;
@@ -88,6 +89,16 @@ public class CakeController {
 		cakeService.createCake(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
+	}
+
+	@GetMapping("/{cakeId}/heart")
+	public ApiResponse<HeartResponse> isHeart(
+		@SignInUser User user,
+		@PathVariable Long cakeId
+	) {
+		final HeartResponse response = heartService.isHeartCake(user, cakeId);
+
+		return ApiResponse.success(response);
 	}
 
 	@PutMapping("/{cakeId}/heart")
