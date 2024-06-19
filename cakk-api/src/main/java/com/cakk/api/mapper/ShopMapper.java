@@ -18,11 +18,12 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
 import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopLocationResponseParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
@@ -107,23 +108,44 @@ public class ShopMapper {
 		);
 	}
 
-	public static List<Long> supplyCakeShopIdsBy(List<CakeShop> cakeShops) {
-		return cakeShops.stream().map(CakeShop::getId).collect(Collectors.toList());
-	}
-
-	public static List<Long> supplyCakeShopIdsByCakeShopParams(List<CakeShopByKeywordParam> cakeShops) {
-		return cakeShops.stream().map(CakeShopByKeywordParam::cakeShopId).collect(Collectors.toList());
-	}
-
 	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopByLocationParam> params) {
-		return new CakeShopByMapResponse(params);
+		return new CakeShopByMapResponse(params
+			.stream()
+			.map(ShopMapper::supplyCakeShopLocationResponseParamBy)
+			.collect(Collectors.toList()));
+	}
+
+	public static CakeShopLocationResponseParam supplyCakeShopLocationResponseParamBy(CakeShopByLocationParam param) {
+		return new CakeShopLocationResponseParam(
+			param.getCakeShopId(),
+			param.getThumbnailUrl(),
+			param.getCakeShopName(),
+			param.getCakeShopBio(),
+			param.getCakeImageUrls(),
+			param.getLongitude(),
+			param.getLatitude()
+		);
+	}
+
+	public static CakeShopSearchResponseParam supplyCakeShopSearchResponseParamListBy(CakeShopBySearchParam param) {
+		return new CakeShopSearchResponseParam(
+			param.getCakeShopId(),
+			param.getThumbnailUrl(),
+			param.getCakeShopName(),
+			param.getCakeShopBio(),
+			param.getCakeImageUrls(),
+			param.getOperationDays()
+		);
 	}
 
 	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(List<CakeShopBySearchParam> cakeShops) {
 		final int size = cakeShops.size();
 
 		return CakeShopSearchResponse.builder()
-			.cakeShops(cakeShops)
+			.cakeShops(cakeShops
+				.stream()
+				.map(ShopMapper::supplyCakeShopSearchResponseParamListBy)
+				.collect(Collectors.toList()))
 			.lastCakeShopId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId())
 			.size(cakeShops.size())
 			.build();

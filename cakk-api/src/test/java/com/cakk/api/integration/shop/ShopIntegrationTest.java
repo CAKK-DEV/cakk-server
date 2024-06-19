@@ -332,9 +332,9 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(3, data.cakeShops().size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeShopId()).isIn(1L, 2L, 3L);
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.cakeShopId()).isIn(1L, 2L, 3L);
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopName()).isNotNull();
 		});
 	}
 
@@ -490,9 +490,9 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(7, data.cakeShops().size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L);
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.cakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L);
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopName()).isNotNull();
 		});
 	}
 
@@ -518,12 +518,13 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
+
 		assertEquals(7, data.size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopId()).isNotNull();
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
-			assertThat(cakeShop.getOperationDays()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
 		});
 	}
 
@@ -551,10 +552,10 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(3, data.size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopId()).isNotNull();
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
-			assertThat(cakeShop.getOperationDays()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
 		});
 	}
 
