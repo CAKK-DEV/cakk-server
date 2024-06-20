@@ -149,9 +149,10 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public CakeShopSearchResponse searchShopByKeyword(CakeShopSearchRequest dto) {
 		Integer pageSize = dto.pageSize();
-		final List<CakeShopBySearchParam> result = cakeShopReader.searchShopBySearch(dto.toParam());
+		final List<CakeShop> result = cakeShopReader.searchShopBySearch(dto.toParam());
+		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
-		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(result, pageSize);
+		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, pageSize);
 
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}

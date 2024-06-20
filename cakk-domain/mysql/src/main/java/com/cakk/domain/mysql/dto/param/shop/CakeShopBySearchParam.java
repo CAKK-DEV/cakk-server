@@ -15,10 +15,4 @@ import lombok.experimental.SuperBuilder;
 public class CakeShopBySearchParam extends CakeShopParam {
 
 	private Set<CakeShopOperationParam> operationDays;
-
-	public CakeShopBySearchParam(Long cakeShopId, String thumbnailUrl, String cakeShopName, String cakeShopBio,
-		Set<String> cakeImageUrls, Set<CakeShopOperationParam> operationDays) {
-		super(cakeShopId, thumbnailUrl, cakeShopName, cakeShopBio, cakeImageUrls);
-		this.operationDays = operationDays;
-	}
 }

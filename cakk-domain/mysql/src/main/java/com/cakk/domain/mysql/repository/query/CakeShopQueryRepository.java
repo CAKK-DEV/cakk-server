@@ -25,7 +25,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
@@ -97,7 +96,7 @@ public class CakeShopQueryRepository {
 		return results.isEmpty() ? null : results.get(0);
 	}
 
-	public List<CakeShopBySearchParam> findByKeywordWithLocation(
+	public List<CakeShop> findByKeywordWithLocation(
 		Long cakeShopId,
 		String keyword,
 		Point location,
@@ -105,29 +104,15 @@ public class CakeShopQueryRepository {
 	) {
 		return queryFactory
 			.selectFrom(cakeShop)
-			.leftJoin(cake)
-			.on(cakeShop.eq(cake.cakeShop))
-			.leftJoin(cakeShopOperation)
-			.on(cakeShop.eq(cakeShopOperation.cakeShop))
+			.innerJoin(cakeShop.businessInformation).fetchJoin()
+			.leftJoin(cakeShop.cakes).fetchJoin()
+			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
 			.where(
 				includeDistance(location).and(containKeyword(keyword)), ltCakeShopId(cakeShopId)
 			)
 			.orderBy(cakeShopIdDesc())
-			.limit(pageSize * 7L)
-			.transform(groupBy(cakeShop.id)
-				.list(Projections.constructor(CakeShopBySearchParam.class,
-					cakeShop.id,
-					cakeShop.thumbnailUrl,
-					cakeShop.shopName,
-					cakeShop.shopBio,
-					set(Projections.constructor(String.class,
-						cake.cakeImageUrl
-					)),
-					set(Projections.constructor(CakeShopOperationParam.class,
-						cakeShopOperation.operationDay,
-						cakeShopOperation.operationStartTime,
-						cakeShopOperation.operationEndTime))
-				)));
+			.limit(pageSize)
+			.fetch();
 	}
 
 	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {

@@ -81,7 +81,7 @@ public class CakeShopReader {
 		return cakeShopQueryRepository.findShopsByLocationBased(point);
 	}
 
-	public List<CakeShopBySearchParam> searchShopBySearch(CakeShopSearchParam param) {
+	public List<CakeShop> searchShopBySearch(CakeShopSearchParam param) {
 		return cakeShopQueryRepository.findByKeywordWithLocation(
 			param.cakeShopId(),
 			param.keyword(),

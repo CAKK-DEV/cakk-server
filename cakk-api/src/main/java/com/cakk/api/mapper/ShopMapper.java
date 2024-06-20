@@ -23,8 +23,10 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLocationResponseParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
@@ -160,5 +162,28 @@ public class ShopMapper {
 			.lastCakeShopHeartId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId())
 			.size(size)
 			.build();
+	}
+
+	public static List<CakeShopBySearchParam> supplyCakeShopBySearchParamListBy(List<CakeShop> cakeShops) {
+		return cakeShops.stream()
+			.map(ShopMapper::supplyCakeShopBySearchParamBy)
+			.collect(Collectors.toList());
+	}
+
+	public static CakeShopBySearchParam supplyCakeShopBySearchParamBy(CakeShop cakeShop) {
+		return CakeShopBySearchParam.builder()
+			.cakeShopId(cakeShop.getId())
+			.thumbnailUrl(cakeShop.getThumbnailUrl())
+			.cakeShopName(cakeShop.getShopName())
+			.cakeShopBio(cakeShop.getShopBio())
+			.cakeImageUrls(cakeShop.getCakes().stream().map(Cake::getCakeImageUrl).collect(Collectors.toSet()))
+			.operationDays(cakeShop.getCakeShopOperations()
+				.stream()
+				.map(cakeShopOperation -> new CakeShopOperationParam(
+					cakeShopOperation.getOperationDay(),
+					cakeShopOperation.getOperationStartTime(),
+					cakeShopOperation.getOperationEndTime())
+				).collect(Collectors.toSet())
+			).build();
 	}
 }

@@ -2,7 +2,9 @@ package com.cakk.domain.mysql.entity.shop;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -82,10 +84,10 @@ public class CakeShop extends AuditEntity {
 	private List<CakeShopLink> cakeShopLinks = new ArrayList<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
+	private Set<CakeShopOperation> cakeShopOperations = new HashSet<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
-	private List<Cake> cakes = new ArrayList<>();
+	private Set<Cake> cakes = new HashSet<>();
 
 	@Builder
 	public CakeShop(
