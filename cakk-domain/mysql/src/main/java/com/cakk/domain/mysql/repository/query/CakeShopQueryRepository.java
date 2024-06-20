@@ -1,5 +1,6 @@
 package com.cakk.domain.mysql.repository.query;
 
+import static com.cakk.domain.mysql.entity.cake.QCake.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopLink.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopOperation.*;
@@ -23,7 +24,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
@@ -95,20 +96,17 @@ public class CakeShopQueryRepository {
 		return results.isEmpty() ? null : results.get(0);
 	}
 
-	public List<CakeShopByKeywordParam> findByKeywordWithLocation(
+	public List<CakeShop> findByKeywordWithLocation(
 		Long cakeShopId,
 		String keyword,
 		Point location,
 		Integer pageSize
 	) {
 		return queryFactory
-			.select(Projections.constructor(CakeShopByKeywordParam.class,
-				cakeShop.id,
-				cakeShop.thumbnailUrl,
-				cakeShop.shopName,
-				cakeShop.shopBio
-			))
-			.from(cakeShop)
+			.selectFrom(cakeShop)
+			.innerJoin(cakeShop.businessInformation).fetchJoin()
+			.leftJoin(cakeShop.cakes).fetchJoin()
+			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
 			.where(
 				includeDistance(location).and(containKeyword(keyword)), ltCakeShopId(cakeShopId)
 			)
@@ -142,6 +140,25 @@ public class CakeShopQueryRepository {
 			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
 			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
 			.fetchOne());
+	}
+
+	public List<CakeShopByLocationParam> findShopsByLocationBased(Point location) {
+		return queryFactory
+			.selectFrom(cakeShop)
+			.leftJoin(cake)
+			.on(cakeShop.eq(cake.cakeShop))
+			.where(includeDistance(location))
+			.orderBy(cakeShopIdDesc())
+			.transform(groupBy(cakeShop.id)
+				.list(Projections.constructor(CakeShopByLocationParam.class,
+					cakeShop.id,
+					cakeShop.thumbnailUrl,
+					cakeShop.shopName,
+					cakeShop.shopBio,
+					set(Projections.constructor(String.class,
+						cake.cakeImageUrl
+					)),
+					cakeShop.location)));
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {

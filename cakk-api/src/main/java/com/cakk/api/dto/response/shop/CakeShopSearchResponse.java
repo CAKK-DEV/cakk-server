@@ -4,11 +4,11 @@ import java.util.List;
 
 import lombok.Builder;
 
-import com.cakk.domain.mysql.dto.param.shop.CakeShopParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
 
 @Builder
 public record CakeShopSearchResponse(
-	List<CakeShopParam> cakeShops,
+	List<CakeShopSearchResponseParam> cakeShops,
 	Long lastCakeShopId,
 	int size
 ) {

@@ -21,15 +21,14 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.mysql.bo.CakeShops;
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopByKeywordParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
-import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
@@ -37,8 +36,6 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
@@ -50,8 +47,6 @@ public class ShopService {
 	private final UserReader userReader;
 	private final CakeShopReader cakeShopReader;
 	private final CakeShopWriter cakeShopWriter;
-	private final CakeReader cakeReader;
-	private final CakeShopOperationReader cakeShopOperationReader;
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
@@ -143,27 +138,22 @@ public class ShopService {
 	public CakeShopByMapResponse searchShop(final SearchShopByLocationRequest request) {
 		Double longitude = request.longitude();
 		Double latitude = request.latitude();
+		final List<CakeShopByLocationParam> result = cakeShopReader
+			.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
 
-		List<CakeShop> cakeShops = cakeShopReader.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
-		List<CakeImageResponseParam> cakes = cakeReader.searchCakeImagesByCakeShops(ShopMapper.supplyCakeShopIdsBy(cakeShops));
+		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result);
 
-		final CakeShops cakeShopsByMap = new CakeShops(cakeShops, cakes);
-
-		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShopsByMap.getCakeShops());
+		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShops.getCakeShops());
 	}
 
 	@Transactional(readOnly = true)
 	public CakeShopSearchResponse searchShopByKeyword(CakeShopSearchRequest dto) {
-		final List<CakeShopByKeywordParam> cakeShops = cakeShopReader.searchShopByKeyword(dto.toParam());
-		final List<ShopOperationParam> cakeShopOperations = cakeShopOperationReader.searchShopOperationsByCakeShops(
-			ShopMapper.supplyCakeShopIdsByCakeShopParams(cakeShops)
-		);
-		final List<CakeImageResponseParam> cakeImages = cakeReader.searchCakeImagesByCakeShops(
-			ShopMapper.supplyCakeShopIdsByCakeShopParams(cakeShops)
-		);
+		Integer pageSize = dto.pageSize();
+		final List<CakeShop> result = cakeShopReader.searchShopBySearch(dto.toParam());
+		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
-		final CakeShops cakeShopsByKeyword = new CakeShops(cakeShops, cakeShopOperations, cakeImages);
+		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, pageSize);
 
-		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShopsByKeyword.getCakeShops());
+		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}
 }
