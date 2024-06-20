@@ -39,6 +39,17 @@ public class RedisStringZSetTemplate implements RedisZSetTemplate<String> {
 	}
 
 	@Override
+	public List<String> findAll(String key) {
+		final Set<String> data = zSetOperations.rangeByScore(key, 0, Double.MAX_VALUE);
+
+		if (isNull(data) || data.isEmpty()) {
+			return List.of();
+		}
+
+		return List.copyOf(data);
+	}
+
+	@Override
 	public List<String> findAllReverseScore(final String key, final long count) {
 		final Set<String> data = zSetOperations.reverseRangeByScore(key, 0, Double.MAX_VALUE, 0, count);
 
@@ -58,6 +69,11 @@ public class RedisStringZSetTemplate implements RedisZSetTemplate<String> {
 		}
 
 		return List.copyOf(data);
+	}
+
+	@Override
+	public void remove(String key, String value) {
+		zSetOperations.remove(key, value);
 	}
 
 	@Override
