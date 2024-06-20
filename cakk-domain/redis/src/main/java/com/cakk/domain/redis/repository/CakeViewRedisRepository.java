@@ -25,6 +25,14 @@ public class CakeViewRedisRepository {
 		return redisLongZSetTemplate.findAllReverseScore(key, offset, count);
 	}
 
+	public List<Long> findAll() {
+		return redisLongZSetTemplate.findAll(key);
+	}
+
+	public void deleteByValue(final Long value) {
+		redisLongZSetTemplate.remove(key, value);
+	}
+
 	public void clear() {
 		redisLongZSetTemplate.removeAll(key);
 	}

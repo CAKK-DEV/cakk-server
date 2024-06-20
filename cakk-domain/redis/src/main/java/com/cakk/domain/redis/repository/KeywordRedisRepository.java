@@ -25,6 +25,14 @@ public class KeywordRedisRepository {
 		return redisStringZSetTemplate.findAllReverseScore(key, count);
 	}
 
+	public List<String> findAll() {
+		return redisStringZSetTemplate.findAll(key);
+	}
+
+	public void deleteByValue(final String value) {
+		redisStringZSetTemplate.remove(key, value);
+	}
+
 	public void clear() {
 		redisStringZSetTemplate.removeAll(key);
 	}
