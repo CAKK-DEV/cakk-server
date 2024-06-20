@@ -2,9 +2,10 @@ rootProject.name = 'cakk'
 
 include(
 	'cakk-api',
+	'cakk-batch',
 	'cakk-client',
 	'cakk-domain:mysql',
 	'cakk-domain:redis',
-	'cakk-common',
-	'cakk-external'
+	'cakk-external',
+	'cakk-common'
 )

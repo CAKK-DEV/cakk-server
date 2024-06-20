@@ -1,0 +1,20 @@
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+storage:
+  datasource:
+    core:
+      jdbc-url: jdbc:mysql://localhost:3306/cakk
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      data-source-properties:
+        rewriteBatchedStatements: true
+
+slack:
+  webhook:
+    is-enable: false
+    url: url

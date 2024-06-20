@@ -1,0 +1,35 @@
+description = "batch module"
+
+dependencies {
+	implementation project(':cakk-common')
+	implementation project(':cakk-domain:mysql')
+	implementation project(':cakk-domain:redis')
+
+	// basic
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.boot:spring-boot-starter-batch')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+
+	// test
+	testImplementation('com.tngtech.archunit:archunit-junit5:1.1.0')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.batch:spring-batch-test')
+
+	// test container
+	testImplementation('org.testcontainers:junit-jupiter:1.19.7')
+
+	// slack 설정
+	implementation('net.gpedro.integrations.slack:slack-webhook:1.4.0')
+
+	// Point
+	implementation 'org.locationtech.jts:jts-core:1.18.2'
+}
+
+tasks.named("bootJar") {
+	enabled = true
+}
+
+tasks.named("jar") {
+	enabled = false
+}
