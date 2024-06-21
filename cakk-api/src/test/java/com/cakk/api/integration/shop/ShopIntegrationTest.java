@@ -559,6 +559,36 @@ class ShopIntegrationTest extends IntegrationTest {
 		});
 	}
 
+	@TestWithDisplayName("테스트 sql script를 기준 4개의 케이크샵이 조회된다")
+	void searchCakeShopsByKeywordWithConditions3() {
+		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeShopId", 5)
+			.queryParam("keyword", "케이크")
+			.queryParam("pageSize", 10)
+			.build();
+
+		//when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		//then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSearchResponse data = objectMapper.convertValue(response.getData(), CakeShopSearchResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(4, data.size());
+		data.cakeShops().forEach(cakeShop -> {
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
+		});
+	}
+
 	@TestWithDisplayName("케이크 샵 기본 정보 업데이트에 성공한다")
 	void updateCakeShopDefaultInfo() {
 		// given
