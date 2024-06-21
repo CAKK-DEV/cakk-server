@@ -74,22 +74,6 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCakeShopIds(List<Long> cakeShopIds) {
-		return queryFactory
-			.select(constructor(CakeImageResponseParam.class,
-				cakeShop.id,
-				cake.id,
-				cake.cakeImageUrl))
-			.from(cake)
-			.innerJoin(cakeShop)
-			.on(cake.cakeShop.eq(cakeShop))
-			.where(
-				includeCakeShopIds(cakeShopIds)
-			)
-			.orderBy(cakeHeartCountDesc())
-			.fetch();
-	}
-
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(
 		Long cakeId,
 		String keyword,
@@ -186,10 +170,6 @@ public class CakeQueryRepository {
 		return cakeCategory.cakeDesignCategory.eq(category);
 	}
 
-	private BooleanExpression includeCakeShopIds(List<Long> cakeShopIds) {
-		return cake.cakeShop.id.in(cakeShopIds);
-	}
-
 	private BooleanExpression includeCakeIds(List<Long> cakeIds) {
 		return cake.id.in(cakeIds);
 	}
@@ -240,9 +220,5 @@ public class CakeQueryRepository {
 
 	private OrderSpecifier<Long> cakeIdDesc() {
 		return cake.id.desc();
-	}
-
-	private OrderSpecifier<Integer> cakeHeartCountDesc() {
-		return cake.heartCount.desc();
 	}
 }

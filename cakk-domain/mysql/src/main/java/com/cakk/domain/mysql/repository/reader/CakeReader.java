@@ -3,7 +3,6 @@ package com.cakk.domain.mysql.repository.reader;
 import static java.util.Objects.*;
 
 import java.util.List;
-import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,10 +35,6 @@ public class CakeReader {
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize);
-	}
-
-	public List<CakeImageResponseParam> searchCakeImagesByCakeShops(List<Long> cakeShopIds) {
-		return cakeQueryRepository.searchCakeImagesByCakeShopIds(cakeShopIds);
 	}
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(CakeSearchParam param) {
