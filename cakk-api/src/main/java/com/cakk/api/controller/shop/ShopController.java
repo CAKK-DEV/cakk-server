@@ -29,6 +29,7 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.like.HeartService;
@@ -187,5 +188,15 @@ public class ShopController {
 		shopService.updateShopOperationDays(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
+	}
+
+	@GetMapping("/{cakeShopId}/owner")
+	public ApiResponse<CakeShopOwnerResponse> existBusinessInformation(
+		@SignInUser User user,
+		@PathVariable Long cakeShopId
+	) {
+		final CakeShopOwnerResponse response = shopService.isExistBusinessInformation(user, cakeShopId);
+
+		return ApiResponse.success(response);
 	}
 }
