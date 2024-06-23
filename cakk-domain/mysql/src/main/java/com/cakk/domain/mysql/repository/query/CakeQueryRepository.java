@@ -94,7 +94,7 @@ public class CakeQueryRepository {
 			.leftJoin(cakeCategory)
 			.on(cakeCategory.cake.eq(cake))
 			.where(
-				includeDistance(location).and(containKeyword(keyword)), ltCakeId(cakeId)
+				containKeyword(keyword).and(includeDistance(location)), ltCakeId(cakeId)
 			)
 			.orderBy(cakeIdDesc())
 			.limit(pageSize)

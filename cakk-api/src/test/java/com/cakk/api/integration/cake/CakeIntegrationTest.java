@@ -250,7 +250,7 @@ class CakeIntegrationTest extends IntegrationTest {
 	}
 
 	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
-	void searchCakeImagesByTextAndLocation1() {
+	void searchCakeImagesByKeywordAndLocation1() {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
@@ -275,7 +275,7 @@ class CakeIntegrationTest extends IntegrationTest {
 	}
 
 	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색, SQL 파일 기준 7개가 조회된다")
-	void searchCakeImagesByTextAndLocation2() {
+	void searchCakeImagesByKeywordAndLocation2() {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
@@ -300,7 +300,7 @@ class CakeIntegrationTest extends IntegrationTest {
 	}
 
 	@TestWithDisplayName("사용자 위치를 포함한 동적 검색, SQL 파일 기준 10개가 조회된다")
-	void searchCakeImagesByTextAndLocation3() {
+	void searchCakeImagesByKeywordAndLocation3() {
 		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
@@ -321,6 +321,30 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
 		assertEquals(10, data.cakeImages().size());
+	}
+
+	@TestWithDisplayName("검색어와 커서 아이디로 동적 검색, SQL 파일 기준 4개가 조회된다")
+	void searchCakeImagesByKeyword() {
+		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("cakeId", 5)
+			.queryParam("keyword", "tag")
+			.queryParam("pageSize", 10)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(4, data.cakeImages().size());
 	}
 
 	@TestWithDisplayName("조회수로 케이크 이미지 조회에 성공한다")

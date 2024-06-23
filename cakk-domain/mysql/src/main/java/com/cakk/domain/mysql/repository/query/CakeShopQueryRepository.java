@@ -108,7 +108,7 @@ public class CakeShopQueryRepository {
 			.leftJoin(cakeShop.cakes).fetchJoin()
 			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
 			.where(
-				includeDistance(location).and(containKeyword(keyword)), ltCakeShopId(cakeShopId)
+				containKeyword(keyword).and(includeDistance(location)), ltCakeShopId(cakeShopId)
 			)
 			.orderBy(cakeShopIdDesc())
 			.limit(pageSize)
@@ -118,7 +118,7 @@ public class CakeShopQueryRepository {
 	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
 		return Optional.ofNullable(queryFactory
 			.selectFrom(cakeShop)
-			.join(cakeShop.businessInformation, businessInformation)
+			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin()
 			.join(businessInformation.user, user)
 			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
 			.fetchOne());
