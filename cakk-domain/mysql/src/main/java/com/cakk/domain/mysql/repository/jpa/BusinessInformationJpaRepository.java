@@ -19,4 +19,6 @@ public interface BusinessInformationJpaRepository extends JpaRepository<Business
 	Optional<BusinessInformation> findBusinessInformationByCakeShopId(Long cakeShopId);
 
 	List<BusinessInformation> findAllByUser(User user);
+
+	Boolean existsBusinessInformationByUserAndCakeShop_Id(User owner, Long cakeShopId);
 }

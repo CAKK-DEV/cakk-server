@@ -32,6 +32,7 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
@@ -672,7 +673,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		final UriComponents uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeShopId);
-		List<com.cakk.api.dto.request.operation.ShopOperationParam> shopOperationParams = getConstructorMonkey().giveMeBuilder(
+		List<ShopOperationParam> shopOperationParams = getConstructorMonkey().giveMeBuilder(
 				ShopOperationParam.class)
 			.setNotNull("operationDay")
 			.setNotNull("operationStartTime")
@@ -694,5 +695,57 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("케이크 샵 사업자 연동 여부 True 확인에 성공한다")
+	void isOwnedCakeShop1() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/owner".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopOwnerResponse data = objectMapper.convertValue(response.getData(), CakeShopOwnerResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(true, data.isOwned());
+	}
+
+	@TestWithDisplayName("케이크 샵 사업자 연동 여부 True 확인에 성공한다")
+	void isOwnedCakeShop2() {
+		// given
+		final Long cakeShopId = 2L;
+		final String url = "%s%d%s/{cakeShopId}/owner".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopOwnerResponse data = objectMapper.convertValue(response.getData(), CakeShopOwnerResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertEquals(false, data.isOwned());
 	}
 }

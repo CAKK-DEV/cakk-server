@@ -13,6 +13,7 @@ import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
@@ -185,5 +186,9 @@ public class ShopMapper {
 					cakeShopOperation.getOperationEndTime())
 				).collect(Collectors.toSet())
 			).build();
+	}
+
+	public static CakeShopOwnerResponse supplyCakeShopOwnerResponseBy(Boolean isOwned) {
+		return new CakeShopOwnerResponse(isOwned);
 	}
 }

@@ -16,6 +16,7 @@ import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
@@ -36,6 +37,7 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.repository.reader.BusinessInformationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
@@ -46,6 +48,7 @@ public class ShopService {
 
 	private final UserReader userReader;
 	private final CakeShopReader cakeShopReader;
+	private final BusinessInformationReader businessInformationReader;
 	private final CakeShopWriter cakeShopWriter;
 	private final ApplicationEventPublisher publisher;
 
@@ -155,5 +158,12 @@ public class ShopService {
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, pageSize);
 
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopOwnerResponse isExistBusinessInformation(User owner, Long cakeShopId) {
+		final Boolean isOwned = businessInformationReader.isExistBusinessInformation(owner, cakeShopId);
+
+		return ShopMapper.supplyCakeShopOwnerResponseBy(isOwned);
 	}
 }
