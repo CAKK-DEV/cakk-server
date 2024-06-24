@@ -74,7 +74,7 @@ public class S3Service {
 	}
 
 	private String makeObjectKey() {
-		return new StringBuffer().append(objectKey).append("/").append(UUID.randomUUID()).append(".webp").toString();
+		return new StringBuffer().append(objectKey).append("/").append(UUID.randomUUID()).append(".jpeg").toString();
 	}
 
 	private String getImageUrl(String imagePath) {
