@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import com.cakk.api.annotation.OperationDay;
 
 public record CreateShopRequest(
-
-	@NotBlank
 	String businessNumber,
 	@OperationDay
 	OperationDays operationDays,
