@@ -1,13 +1,8 @@
 name: weekly-batch-job
 
-#on:
-#  schedule:
-#    - cron: '0 0 * * 1'
-
-# 매 분마다 실행
 on:
-  schedule:
-    - cron: '*/1 * * * *'  
+ schedule:
+   - cron: '0 0 * * 1'
 
 jobs:
   build:
