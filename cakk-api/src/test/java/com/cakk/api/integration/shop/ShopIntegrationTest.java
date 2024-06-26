@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -25,11 +27,14 @@ import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.operation.ShopOperationParam;
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
+import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -70,6 +75,36 @@ class ShopIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private CakeViewRedisRepository cakeViewRedisRepository;
+
+	@TestWithDisplayName("백 오피스 API, 케이크샵 생성에 성공한다")
+	void backOfficeCreateCakeShop() {
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/admin/create")
+			.build();
+		final OperationDays operationDays = getConstructorMonkey().giveMeBuilder(OperationDays.class)
+			.set("days", Arbitraries.of(Days.class).list().ofSize(6))
+			.set("startTimes", Arbitraries.of(LocalTime.now()).list().ofSize(6))
+			.set("endTimes", Arbitraries.of(LocalTime.now()).list().ofSize(6))
+			.sample();
+		final CreateShopRequest request = getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
+			.set("operationDays", operationDays)
+			.sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.POST,
+			new HttpEntity<>(request),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopCreateResponse data = objectMapper.convertValue(response.getData(), CakeShopCreateResponse.class);
+
+		Assertions.assertThat(data.cakeShopId()).isNotNull();
+	}
 
 	@TestWithDisplayName("케이크 샵을 간단 조회에 성공한다.")
 	void simple1() {
