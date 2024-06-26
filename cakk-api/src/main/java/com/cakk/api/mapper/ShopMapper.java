@@ -1,6 +1,5 @@
 package com.cakk.api.mapper;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import com.cakk.api.dto.request.operation.ShopOperationParam;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -17,7 +17,6 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.common.enums.Days;
 import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
@@ -42,6 +41,7 @@ public class ShopMapper {
 			.shopName(request.shopName())
 			.shopBio(request.shopBio())
 			.shopDescription(request.shopDescription())
+			.shopAddress(request.shopAddress())
 			.location(PointMapper.supplyPointBy(request.latitude(), request.longitude()))
 			.build();
 	}
@@ -60,21 +60,18 @@ public class ShopMapper {
 	}
 
 	public static List<CakeShopOperation> supplyCakeShopOperationsBy(
-		CakeShop cakeShop,
-		List<Days> operationsDays,
-		List<LocalTime> startTimes,
-		List<LocalTime> endTimes
+		final CakeShop cakeShop,
+		final List<ShopOperationParam> operationDays
 	) {
 		List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
 
-		for (int i = 0; i < operationsDays.size(); i++) {
-			cakeShopOperations.add(CakeShopOperation.builder()
-				.operationDay(operationsDays.get(i))
-				.operationStartTime(startTimes.get(i))
-				.operationEndTime(endTimes.get(i))
-				.cakeShop(cakeShop)
-				.build());
-		}
+		operationDays.forEach(operationParam -> cakeShopOperations
+			.add(CakeShopOperation.builder()
+			.operationDay(operationParam.operationDay())
+			.operationStartTime(operationParam.operationStartTime())
+			.operationEndTime(operationParam.operationEndTime())
+			.cakeShop(cakeShop)
+			.build()));
 
 		return cakeShopOperations;
 	}

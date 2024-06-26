@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -55,16 +54,10 @@ public class ShopService {
 
 	@Transactional
 	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopRequest request) {
-		final OperationDays operationDays = request.operationDays();
 		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
-		final List<CakeShopOperation> cakeShopOperations = ShopMapper
-			.supplyCakeShopOperationsBy(
-				cakeShop,
-				operationDays.days(),
-				operationDays.startTimes(),
-				operationDays.endTimes()
-			);
+		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, request.operationDays());
+
 		final CakeShop result = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
 
 		return ShopMapper.supplyCakeShopCreateResponseBy(result);
