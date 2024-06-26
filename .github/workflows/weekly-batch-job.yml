@@ -32,5 +32,3 @@ jobs:
           SERVER_URL: ${{ secrets.PROD_BATCH_LAMBDA }}
         run: |
           curl -X GET $SERVER_URL 
-          # \
-          #      -H "Authorization: Bearer $API_TOKEN"
