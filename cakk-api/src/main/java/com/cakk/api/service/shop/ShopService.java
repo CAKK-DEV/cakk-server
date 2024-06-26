@@ -14,6 +14,7 @@ import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -53,7 +54,7 @@ public class ShopService {
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
-	public void createCakeShopByCertification(CreateShopRequest request) {
+	public CakeShopCreateResponse createCakeShopByCertification(CreateShopRequest request) {
 		final OperationDays operationDays = request.operationDays();
 		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
@@ -64,8 +65,9 @@ public class ShopService {
 				operationDays.startTimes(),
 				operationDays.endTimes()
 			);
+		final CakeShop result = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
 
-		cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
+		return ShopMapper.supplyCakeShopCreateResponseBy(result);
 	}
 
 	@Transactional

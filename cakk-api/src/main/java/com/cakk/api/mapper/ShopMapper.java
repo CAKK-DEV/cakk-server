@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -190,5 +191,9 @@ public class ShopMapper {
 
 	public static CakeShopOwnerResponse supplyCakeShopOwnerResponseBy(Boolean isOwned) {
 		return new CakeShopOwnerResponse(isOwned);
+	}
+
+	public static CakeShopCreateResponse supplyCakeShopCreateResponseBy(CakeShop cakeShop) {
+		return new CakeShopCreateResponse(cakeShop.getId());
 	}
 }

@@ -27,6 +27,7 @@ import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -58,11 +59,12 @@ public class ShopController {
 	}
 
 	@PostMapping("/admin/create")
-	public ApiResponse<Void> createCakeShopByAdmin(
+	public ApiResponse<CakeShopCreateResponse> createCakeShopByAdmin(
 		@Valid @RequestBody CreateShopRequest createShopRequest
 	) {
-		shopService.createCakeShopByCertification(createShopRequest);
-		return ApiResponse.success();
+		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(createShopRequest);
+
+		return ApiResponse.success(response);
 	}
 
 	@PatchMapping("/admin/promote")
