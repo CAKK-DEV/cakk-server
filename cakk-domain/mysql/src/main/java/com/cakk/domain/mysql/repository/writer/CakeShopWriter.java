@@ -20,7 +20,10 @@ public class CakeShopWriter {
 	private final CakeShopJpaRepository cakeShopJpaRepository;
 	private final CakeShopOperationJpaRepository cakeShopOperationJpaRepository;
 
-	public CakeShop createCakeShop(CakeShop cakeShop, List<CakeShopOperation> cakeShopOperations, BusinessInformation businessInformation) {
+	public CakeShop createCakeShop(
+		final CakeShop cakeShop,
+		final List<CakeShopOperation> cakeShopOperations,
+		final BusinessInformation businessInformation) {
 		final CakeShop result = cakeShopJpaRepository.save(cakeShop);
 		cakeShopOperationJpaRepository.saveAll(cakeShopOperations);
 		businessInformationJpaRepository.save(businessInformation);

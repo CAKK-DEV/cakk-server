@@ -54,11 +54,11 @@ public class ShopService {
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
-	public CakeShopCreateResponse createCakeShopByCertification(CreateShopRequest request) {
+	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopRequest request) {
 		final OperationDays operationDays = request.operationDays();
-		CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
-		BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
-		List<CakeShopOperation> cakeShopOperations = ShopMapper
+		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
+		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
+		final List<CakeShopOperation> cakeShopOperations = ShopMapper
 			.supplyCakeShopOperationsBy(
 				cakeShop,
 				operationDays.days(),
