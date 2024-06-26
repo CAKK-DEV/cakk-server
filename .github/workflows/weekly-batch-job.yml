@@ -4,11 +4,10 @@ name: weekly-batch-job
 #  schedule:
 #    - cron: '0 0 * * 1'
 
-env:
-  SERVER_NAME: prod-batch
-  APPLICATION_YML: ./server-secret/application-batch.yml
-  RESOURCE_PATH: ./cakk-batch/src/main/resources
-  AWS_S3_REGION: ${{ secrets.AWS_S3_REGION }}
+# 매 분마다 실행
+on:
+  schedule:
+    - cron: '*/1 * * * *'  
 
 jobs:
   build:
@@ -26,57 +25,12 @@ jobs:
       - name: Print Current Time
         run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
-
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-          token: ${{ secrets.ACTION_KEY }}
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: 21
-          distribution: corretto
-
-      - name: Copy application.yml
+  
+      - name: Send GET request to API with Authorization
+        env:
+          # API_TOKEN: ${{ secrets.API_TOKEN }}
+          SERVER_URL: ${{ secrets.PROD_BATCH_LAMBDA }}
         run: |
-          cp ${{ env.APPLICATION_YML }} ${{ env.RESOURCE_PATH }}/application-prod.yml
-          ls ${{ env.RESOURCE_PATH }}
-
-      - name: Gradle Caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Permission
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: SPRING_PROFILES_ACTIVE=[prod] ./gradlew clean build
-
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: Install AWS SAM CLI
-        run: |
-          pip install aws-sam-cli
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.DEPLOY_IAM_KEY }}
-          aws-secret-access-key: ${{ secrets.DEPLOY_IAM_SECRET }}
-          aws-region: ${{ env.AWS_S3_REGION }}
-
-      - name: Deploy lambda function
-        run: |
-            sam deploy --template-file ./template.yml --stack-name cakk-batch --capabilities CAPABILITY_IAM
+          curl -X GET $SERVER_URL 
+          # \
+          #      -H "Authorization: Bearer $API_TOKEN"
