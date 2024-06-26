@@ -17,12 +17,13 @@ public class OperationValidator implements ConstraintValidator<OperationDay, Lis
 	public boolean isValid(List<ShopOperationParam> operationParams, ConstraintValidatorContext context) {
 		Map<Days, Boolean> days = new HashMap<>();
 
-		for (ShopOperationParam operationParam : operationParams)
+		for (ShopOperationParam operationParam : operationParams) {
 			if (days.containsKey(operationParam.operationDay())) {
 				return false;
 			} else {
 				days.put(operationParam.operationDay(), true);
 			}
+		}
 		return true;
 	}
 }
