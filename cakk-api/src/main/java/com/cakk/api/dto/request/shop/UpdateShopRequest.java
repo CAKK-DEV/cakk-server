@@ -7,6 +7,8 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 
 public record UpdateShopRequest(
+	@NotBlank
+	String thumbnailUrl,
 	@NotBlank @Size(max = 30)
 	String shopName,
 	@Size(max = 40)
@@ -17,6 +19,7 @@ public record UpdateShopRequest(
 
 	public CakeShopUpdateParam toParam(User user, Long cakeShopId) {
 		return new CakeShopUpdateParam(
+			thumbnailUrl,
 			shopName,
 			shopBio,
 			shopDescription,

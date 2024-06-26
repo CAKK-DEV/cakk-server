@@ -127,6 +127,7 @@ public class CakeShop extends AuditEntity {
 	}
 
 	public void updateDefaultInformation(CakeShopUpdateParam param) {
+		thumbnailUrl = param.thumbnailUrl();
 		shopName = param.shopName();
 		shopBio = param.shopBio();
 		shopDescription = param.shopDescription();
