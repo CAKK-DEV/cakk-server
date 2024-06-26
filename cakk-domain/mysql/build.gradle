@@ -31,10 +31,6 @@ dependencies {
 
 	// log
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
-
-	// flyway
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-mysql'
 }
 
 bootJar {

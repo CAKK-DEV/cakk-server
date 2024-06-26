@@ -4,21 +4,11 @@ import java.util.TimeZone;
 
 import jakarta.annotation.PostConstruct;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.batch.job.launcher.WeeklyJobLauncher;
-
-@RequiredArgsConstructor
 @SpringBootApplication
-public class BatchApplication implements ApplicationRunner {
-
-	private final WeeklyJobLauncher jobLauncher;
+public class BatchApplication {
 
 	@PostConstruct
 	public static void started() {
@@ -28,14 +18,6 @@ public class BatchApplication implements ApplicationRunner {
 	public static void main(String[] args) {
 		started();
 
-		final ConfigurableApplicationContext context = SpringApplication.run(BatchApplication.class, args);
-		final int exitCode = SpringApplication.exit(context, () -> 0);
-
-		System.exit(exitCode);
-	}
-
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		jobLauncher.launch();
+		SpringApplication.run(BatchApplication.class, args);
 	}
 }
