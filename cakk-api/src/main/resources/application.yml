@@ -17,9 +17,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         show_sql: false
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
