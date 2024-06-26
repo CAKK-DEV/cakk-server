@@ -19,6 +19,7 @@ import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -102,6 +103,7 @@ public class ShopServiceTest extends ServiceTest {
 
 	private CakeShop getCakeShopFixture() {
 		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
+			.set("id", Arbitraries.longs().greaterOrEqual(1))
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
@@ -199,11 +201,14 @@ public class ShopServiceTest extends ServiceTest {
 	void createCakeShop() {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
+		when(cakeShopWriter.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class)))
+			.thenReturn(getCakeShopFixture());
 
 		//when
-		shopService.createCakeShopByCertification(request);
+		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(request);
 
 		//verify
+		assertThat(response.cakeShopId()).isNotNull();
 		verify(cakeShopWriter, times(1))
 			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class));
 	}
