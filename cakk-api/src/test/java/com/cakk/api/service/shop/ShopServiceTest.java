@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,8 +24,6 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.api.dto.request.shop.OperationDays;
-import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
@@ -61,25 +58,10 @@ public class ShopServiceTest extends ServiceTest {
 	@Mock
 	private ApplicationEventPublisher publisher;
 
-	private OperationDays getOperationDayFixture() {
-		return getConstructorMonkey().giveMeBuilder(OperationDays.class)
-			.set("days", Arbitraries.of(Days.class).list().ofSize(7))
-			.set("startTimes",
-				Arbitraries.of(
-						LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
-					.list()
-					.ofSize(7))
-			.set("endTimes",
-				Arbitraries.of(LocalTime.of(Arbitraries.integers().greaterOrEqual(0).lessOrEqual(23).sample(), Arbitraries.integers().greaterOrEqual(0).lessOrEqual(59).sample()))
-					.list()
-					.ofSize(7))
-			.sample();
-	}
-
 	private CreateShopRequest getCreateShopRequestFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
-			.set("operationDays", getOperationDayFixture())
+			.setNotNull("operationDays")
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))

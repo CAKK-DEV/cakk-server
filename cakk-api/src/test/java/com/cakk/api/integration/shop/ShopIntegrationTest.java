@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +27,6 @@ import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.operation.ShopOperationParam;
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.OperationDays;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
@@ -83,13 +81,7 @@ class ShopIntegrationTest extends IntegrationTest {
 			.fromUriString(url)
 			.path("/admin/create")
 			.build();
-		final OperationDays operationDays = getConstructorMonkey().giveMeBuilder(OperationDays.class)
-			.set("days", Arbitraries.of(Days.class).list().ofSize(6))
-			.set("startTimes", Arbitraries.of(LocalTime.now()).list().ofSize(6))
-			.set("endTimes", Arbitraries.of(LocalTime.now()).list().ofSize(6))
-			.sample();
 		final CreateShopRequest request = getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
-			.set("operationDays", operationDays)
 			.sample();
 
 		// when
