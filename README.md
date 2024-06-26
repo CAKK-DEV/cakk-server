@@ -27,6 +27,8 @@
 
 ## Trouble Shooting
 
+- #### [(2024.06.26) Batch를 공짜로 돌린다고?](https://velog.io/@komment/Spring-Batch-free-cost)
+- #### [(2024.06.21) Hibernate Spatial, 그리고 MySQL과 함께하는 QueryDSL을 활용한 위치 기반 쿼리](https://velog.io/@taeyong_5201/Hibernate-Spatial-%EA%B7%B8%EB%A6%AC%EA%B3%A0-MySQL%EA%B3%BC-%ED%95%A8%EA%BB%98%ED%95%98%EB%8A%94-Spring-Boot-%EA%B8%B0%EB%B0%98-%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98)
 - #### [(2024.06.15) 동시성 문제와 쉐도우 복싱할 뻔한 이야기 (with. Redis)](https://velog.io/@komment/concurrency-shadow-boxing)
 - #### [(2024.06.11) 간단하게 OIDC 소셜 로그인 3개 Ctrl+v 하기](https://velog.io/@komment/Cakk-OIDC-Ctrlv)
 
@@ -41,6 +43,7 @@
 │   └── formatter
 │       └── intellij-formatter
 ├── cakk-api
+├── cakk-batch
 ├── cakk-common
 ├── cakk-client
 ├── cakk-external
