@@ -9,13 +9,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.cakk.api.annotation.OperationDay;
+import com.cakk.api.dto.request.link.ShopLinkParam;
 import com.cakk.api.dto.request.operation.ShopOperationParam;
 
 
 public record CreateShopRequest(
 	@Size(max = 20)
 	String businessNumber,
-	@NotNull @OperationDay
+	@OperationDay
 	List<ShopOperationParam> operationDays,
 	@NotBlank @Size(max = 30)
 	String shopName,
@@ -28,6 +29,8 @@ public record CreateShopRequest(
 	@NotNull @Min(-90) @Max(90)
 	Double latitude,
 	@NotNull @Min(-180) @Max(180)
-	Double longitude
+	Double longitude,
+	@NotNull
+	List<ShopLinkParam> links
 ) {
 }
