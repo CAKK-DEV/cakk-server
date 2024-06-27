@@ -183,7 +183,7 @@ public class ShopServiceTest extends ServiceTest {
 	void createCakeShop() {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
-		when(cakeShopWriter.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class)))
+		when(cakeShopWriter.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
 			.thenReturn(getCakeShopFixture());
 
 		//when
@@ -192,7 +192,7 @@ public class ShopServiceTest extends ServiceTest {
 		//verify
 		assertThat(response.cakeShopId()).isNotNull();
 		verify(cakeShopWriter, times(1))
-			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class));
+			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList());
 	}
 
 	@TestWithDisplayName("userId와 cakeShopId가 존재한다면, 해당 userId의 사용자는 Owner로 승격된다")
