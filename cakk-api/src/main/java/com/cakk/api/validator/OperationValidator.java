@@ -1,5 +1,7 @@
 package com.cakk.api.validator;
 
+import static java.util.Objects.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +17,11 @@ public class OperationValidator implements ConstraintValidator<OperationDay, Lis
 
 	@Override
 	public boolean isValid(List<ShopOperationParam> operationParams, ConstraintValidatorContext context) {
-		Map<Days, Boolean> days = new HashMap<>();
+		if (isNull(operationParams)) {
+			return false;
+		}
 
+		Map<Days, Boolean> days = new HashMap<>();
 		for (ShopOperationParam operationParam : operationParams) {
 			if (days.containsKey(operationParam.operationDay())) {
 				return false;

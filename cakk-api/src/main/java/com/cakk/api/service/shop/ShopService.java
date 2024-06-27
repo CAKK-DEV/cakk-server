@@ -19,6 +19,7 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.mapper.LinkMapper;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.mysql.bo.CakeShops;
@@ -33,6 +34,7 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
@@ -57,8 +59,9 @@ public class ShopService {
 		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
 		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
 		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, request.operationDays());
+		final List<CakeShopLink> cakeShopLinks = LinkMapper.supplyCakeShopLinksBy(cakeShop, request.links());
 
-		final CakeShop result = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation);
+		final CakeShop result = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks);
 
 		return ShopMapper.supplyCakeShopCreateResponseBy(result);
 	}
