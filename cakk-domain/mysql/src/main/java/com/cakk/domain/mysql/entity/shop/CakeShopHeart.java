@@ -19,7 +19,7 @@ import com.cakk.domain.mysql.entity.user.User;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake_shop_heart")
+@Table(name = "cake_shop_heart", catalog = "cakk")
 public class CakeShopHeart extends AuditCreatedEntity {
 
 	@Id
