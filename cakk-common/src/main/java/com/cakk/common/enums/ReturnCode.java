@@ -24,6 +24,7 @@ public enum ReturnCode {
 	NOT_EXIST_USER("1201", "존재하지 않는 유저 입니다."),
 	ALREADY_EXIST_USER("1202", "이미 가입한 유저 입니다."),
 	MAX_CAKE_SHOP_LIKE("1203", "케이크샵 좋아요는 최대 50번 입니다."),
+	WRONG_VERIFICATION_CODE("1204", "잘못된 이메일인증 코드 입니다."),
 
 	// 케이크 샵 에러 (1300 ~ 1350)
 	NOT_EXIST_CAKE_SHOP("1300", "존재하지 않는 케이크 샵 입니다"),
@@ -38,6 +39,7 @@ public enum ReturnCode {
 	METHOD_NOT_ALLOWED("9001", "허용되지 않은 메소드 입니다."),
 
 	// 서버 에러 (9997 ~ 9999)
+	SEND_EMAIL_ERROR("9996", "이메일 전송 에러 입니다."),
 	LOCK_RESOURCES_ERROR("9997", "락에 의해 리소스을 점유할 수 없습니다."),
 	INTERNAL_SERVER_ERROR("9998", "내부 서버 에러 입니다."),
 	EXTERNAL_SERVER_ERROR("9999", "외부 서버 에러 입니다.");
