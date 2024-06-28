@@ -9,6 +9,8 @@ import com.cakk.common.exception.CakkException;
 @RequiredArgsConstructor
 public enum RedisKey {
 
+	REFRESH_TOKEN("REFRESH_TOKEN::"),
+	EMAIL_VERIFICATION("EMAIL::"),
 	SEARCH_KEYWORD("SEARCH::keyword"),
 	VIEWS_CAKE("VIEWS::cake"),
 	LOCK_CAKE_HEART("LOCK::cake-heart"),
