@@ -7,8 +7,22 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: false
-  flyway:
-    enabled: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 oauth:
   kakao:
