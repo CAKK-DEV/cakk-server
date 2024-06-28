@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.RefreshToken;
+import com.cakk.api.dto.request.user.GenerateCodeRequest;
 import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
+import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
+import com.cakk.api.service.user.EmailVerificationService;
 import com.cakk.api.service.user.SignService;
 import com.cakk.common.response.ApiResponse;
 
@@ -20,6 +23,7 @@ import com.cakk.common.response.ApiResponse;
 public class SignController {
 
 	private final SignService signService;
+	private final EmailVerificationService emailVerificationService;
 
 	@PostMapping("/sign-up")
 	public ApiResponse<JwtResponse> signUp(
@@ -42,5 +46,23 @@ public class SignController {
 		final JwtResponse response = signService.recreateToken(refreshToken);
 
 		return ApiResponse.success(response);
+	}
+
+	@PostMapping("/email/request-code")
+	public ApiResponse<Void> sendEmailForVerification(
+		@Valid @RequestBody GenerateCodeRequest request
+	) {
+		emailVerificationService.sendEmailForVerification(request);
+
+		return ApiResponse.success();
+	}
+
+	@PostMapping("/email/verify-email")
+	public ApiResponse<Void> verifyEmail(
+		@Valid @RequestBody VerifyEmailRequest request
+	) {
+		emailVerificationService.checkEmailVerificationCode(request);
+
+		return ApiResponse.success();
 	}
 }
