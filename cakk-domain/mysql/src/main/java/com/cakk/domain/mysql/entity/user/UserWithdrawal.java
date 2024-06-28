@@ -29,7 +29,7 @@ import com.cakk.domain.mysql.entity.audit.AuditCreatedEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user_withdrawal", catalog = "cakk")
+@Table(name = "user_withdrawal")
 public class UserWithdrawal extends AuditCreatedEntity {
 
 	@Id

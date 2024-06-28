@@ -183,14 +183,15 @@ public class ShopServiceTest extends ServiceTest {
 	void createCakeShop() {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
+		CakeShop cakeShop = getCakeShopFixture();
 		when(cakeShopWriter.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
-			.thenReturn(getCakeShopFixture());
+			.thenReturn(cakeShop);
 
 		//when
 		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(request);
 
 		//verify
-		assertThat(response.cakeShopId()).isNotNull();
+		assertEquals(response.cakeShopId(), cakeShop.getId());
 		verify(cakeShopWriter, times(1))
 			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList());
 	}

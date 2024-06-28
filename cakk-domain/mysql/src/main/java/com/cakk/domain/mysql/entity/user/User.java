@@ -33,7 +33,7 @@ import com.cakk.domain.mysql.entity.audit.AuditEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "users", catalog = "cakk")
+@Table(name = "users")
 public class User extends AuditEntity {
 
 	@Id

@@ -20,7 +20,7 @@ import com.cakk.domain.mysql.entity.audit.AuditCreatedEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake_tag", catalog = "cakk")
+@Table(name = "cake_tag")
 public class CakeTag extends AuditCreatedEntity {
 
 	@Id
