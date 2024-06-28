@@ -35,7 +35,7 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake_shop")
+@Table(name = "cake_shop", catalog = "cakk")
 public class CakeShop extends AuditEntity {
 
 	@Id

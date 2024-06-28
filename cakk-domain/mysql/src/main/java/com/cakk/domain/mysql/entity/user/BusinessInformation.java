@@ -26,7 +26,7 @@ import com.cakk.domain.mysql.event.shop.CertificationEvent;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "business_information")
+@Table(name = "business_information", catalog = "cakk")
 public class BusinessInformation extends AuditEntity {
 
 	@Id

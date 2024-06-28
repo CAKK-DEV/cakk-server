@@ -33,7 +33,7 @@ import com.cakk.domain.mysql.mapper.CakeTagMapper;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake")
+@Table(name = "cake", catalog = "cakk")
 public class Cake extends AuditEntity {
 
 	@Id
