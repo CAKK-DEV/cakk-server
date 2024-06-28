@@ -31,6 +31,7 @@ public class MailService {
 
 			mailSender.send(emailForm);
 		} catch (RuntimeException e) {
+			e.printStackTrace();
 			throw new CakkException(ReturnCode.SEND_EMAIL_ERROR);
 		}
 	}
