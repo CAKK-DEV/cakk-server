@@ -118,21 +118,16 @@ public class CakeShopQueryRepository {
 	}
 
 	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
-		BooleanExpression userCondition = null;
-
-		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner);
-		}
-
 		JPQLQuery<CakeShop> query = queryFactory
 			.selectFrom(cakeShop)
-			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.join(businessInformation.user, user)
-			.where(cakeShop.id.eq(cakeShopId));
+			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin();
 
-		if (nonNull(userCondition)) {
-			query.where(userCondition);
+		if (owner.getRole() != Role.ADMIN) {
+			query.innerJoin(businessInformation.user, user)
+				.where(businessInformation.user.eq(owner));
 		}
+
+		query.where(cakeShop.id.eq(cakeShopId));
 
 		return Optional.ofNullable(query.fetchOne());
 	}
