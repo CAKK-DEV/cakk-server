@@ -13,6 +13,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
@@ -98,6 +99,12 @@ public class ShopService {
 	public void updateShopOperationDays(UpdateShopOperationParam param) {
 		final CakeShop cakeShop = cakeShopReader.findWithOperations(param.user(), param.cakeShopId());
 		cakeShop.updateShopOperationDays(param.cakeShopOperations());
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopByMineResponse getMyBusinessId(User user) {
+		final List<BusinessInformation> result = businessInformationReader.findAllWithCakeShopByUser(user);
+		return ShopMapper.supplyCakeShopByMineResponseBy(result);
 	}
 
 	@Transactional(readOnly = true)

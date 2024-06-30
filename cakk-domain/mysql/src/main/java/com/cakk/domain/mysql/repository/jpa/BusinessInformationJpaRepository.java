@@ -21,4 +21,7 @@ public interface BusinessInformationJpaRepository extends JpaRepository<Business
 	List<BusinessInformation> findAllByUser(User user);
 
 	Boolean existsBusinessInformationByUserAndCakeShop_Id(User owner, Long cakeShopId);
+
+	@Query("select bi from BusinessInformation as bi join fetch bi.cakeShop where bi.user =:user")
+	List<BusinessInformation> findAllWithCakeShopByUser(User user);
 }
