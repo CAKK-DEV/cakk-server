@@ -74,8 +74,21 @@ public abstract class IntegrationTest {
 		return headers;
 	}
 
+	protected HttpHeaders getAuthHeaderById(Long id) {
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthTokenById(id).accessToken());
+
+		return headers;
+	}
+
 	protected JsonWebToken getAuthToken() {
 		final User user = userReader.findByUserId(1L);
+
+		return jwtProvider.generateToken(user);
+	}
+
+	private JsonWebToken getAuthTokenById(Long id) {
+		final User user = userReader.findByUserId(id);
 
 		return jwtProvider.generateToken(user);
 	}

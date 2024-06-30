@@ -9,4 +9,4 @@ values (1, 'GOOGLE', '123456', '테스트 유저1', 'image_url1', 'test1@google.
        (7, 'GOOGLE', '123458', '테스트 유저7', 'image_url7', 'test7@google.com', 'MALE', '1998-01-03', 'USER', now(), now(), null),
        (8, 'GOOGLE', '123458', '테스트 유저8', 'image_url8', 'test8@google.com', 'MALE', '1998-01-03', 'USER', now(), now(), null),
        (9, 'GOOGLE', '123458', '테스트 유저9', 'image_url9', 'test9@google.com', 'MALE', '1998-01-03', 'USER', now(), now(), null),
-       (10, 'GOOGLE', '123458', '테스트 유저10', 'image_url10', 'test10@google.com', 'MALE', '1998-01-03', 'USER', now(), now(), null);
+       (10, 'GOOGLE', '123458', '테스트 유저10', 'image_url10', 'test10@google.com', 'MALE', '1998-01-03', 'ADMIN', now(), now(), null);
