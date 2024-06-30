@@ -100,7 +100,7 @@ public class CakeShopReader {
 	}
 
 	public CakeShop findByIdAndOwner(Long cakeShopId, User owner) {
-		return cakeShopJpaRepository.findCakeShopByIdAndBusinessInformation_User(cakeShopId, owner)
+		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 
