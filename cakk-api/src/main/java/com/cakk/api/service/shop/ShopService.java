@@ -91,7 +91,7 @@ public class ShopService {
 
 	@Transactional
 	public void updateShopAddress(UpdateShopAddressParam param) {
-		final CakeShop cakeShop = cakeShopReader.findByIdAndOwner(param.cakeShopId(), param.user());
+		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.user(), param.cakeShopId());
 		cakeShop.updateShopAddress(param);
 	}
 

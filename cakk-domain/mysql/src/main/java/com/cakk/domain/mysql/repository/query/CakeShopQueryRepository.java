@@ -20,10 +20,12 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -116,30 +118,63 @@ public class CakeShopQueryRepository {
 	}
 
 	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
-		return Optional.ofNullable(queryFactory
+		BooleanExpression userCondition = null;
+
+		if (owner.getRole() != Role.ADMIN) {
+			userCondition = businessInformation.user.eq(owner);
+		}
+
+		JPQLQuery<CakeShop> query = queryFactory
 			.selectFrom(cakeShop)
 			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin()
 			.join(businessInformation.user, user)
-			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
-			.fetchOne());
+			.where(cakeShop.id.eq(cakeShopId));
+
+		if (nonNull(userCondition)) {
+			query.where(userCondition);
+		}
+
+		return Optional.ofNullable(query.fetchOne());
 	}
 
 	public Optional<CakeShop> findWithShopLinks(User owner, Long cakeShopId) {
-		return Optional.ofNullable(queryFactory
+		BooleanExpression userCondition = null;
+
+		if (owner.getRole() != Role.ADMIN) {
+			userCondition = businessInformation.user.eq(owner);
+		}
+
+		JPQLQuery<CakeShop> query = queryFactory
 			.selectFrom(cakeShop)
 			.join(cakeShop.cakeShopLinks, cakeShopLink).fetchJoin()
 			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
-			.fetchOne());
+			.where(cakeShop.id.eq(cakeShopId));
+
+		if (nonNull(userCondition)) {
+			query.where(userCondition);
+		}
+
+		return Optional.ofNullable(query.fetchOne());
 	}
 
 	public Optional<CakeShop> findWithOperations(User owner, Long cakeShopId) {
-		return Optional.ofNullable(queryFactory
+		BooleanExpression userCondition = null;
+
+		if (owner.getRole() != Role.ADMIN) {
+			userCondition = businessInformation.user.eq(owner);
+		}
+
+		JPQLQuery<CakeShop> query = queryFactory
 			.selectFrom(cakeShop)
 			.join(cakeShop.cakeShopOperations, cakeShopOperation).fetchJoin()
 			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId), businessInformation.user.eq(owner))
-			.fetchOne());
+			.where(cakeShop.id.eq(cakeShopId));
+
+		if (nonNull(userCondition)) {
+			query.where(userCondition);
+		}
+
+		return Optional.ofNullable(query.fetchOne());
 	}
 
 	public List<CakeShopByLocationParam> findShopsByLocationBased(Point location) {
