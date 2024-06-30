@@ -11,12 +11,15 @@ import com.cakk.api.dto.request.operation.ShopOperationParam;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
+import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.common.enums.ReturnCode;
+import com.cakk.common.exception.CakkException;
 import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
@@ -192,5 +195,20 @@ public class ShopMapper {
 
 	public static CakeShopCreateResponse supplyCakeShopCreateResponseBy(CakeShop cakeShop) {
 		return new CakeShopCreateResponse(cakeShop.getId());
+	}
+
+	public static CakeShopByMineResponse supplyCakeShopByMineResponseBy(List<BusinessInformation> result) {
+		if (result.isEmpty()) {
+			return new CakeShopByMineResponse(false, null);
+		}
+		return new CakeShopByMineResponse(
+			true,
+			result
+				.stream()
+				.findAny()
+				.get()
+				.getCakeShop()
+				.getId()
+		);
 	}
 }
