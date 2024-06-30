@@ -531,6 +531,35 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertNull(response.getData());
 	}
 
+	@TestWithDisplayName("어드민에 의해 케이크 정보 업데이트에 성공한다")
+	void updateCakeByAdmin() {
+		// given
+		final Long cakeId = 1L;
+		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+		final CakeUpdateRequest request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest.class)
+			.set("tagNames", List.of("tag_name1", "new_tag"))
+			.sample();
+
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeaderById(10L)),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		assertNull(response.getData());
+	}
+
 	@TestWithDisplayName("케이크 삭제에 성공한다")
 	void deleteCake() {
 		// given

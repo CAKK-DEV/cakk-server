@@ -643,6 +643,31 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 	}
 
+	@TestWithDisplayName("어드민에 의해 케이크 샵 기본 정보 업데이트에 성공한다")
+	void updateCakeShopDefaultInfoByAdmin() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		final UpdateShopRequest request = getConstructorMonkey().giveMeBuilder(UpdateShopRequest.class).sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeaderById(10L)),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
 	@TestWithDisplayName("케이크샵 외부 링크 업데이트에 성공한다")
 	void updateShopLinks() {
 		// given
@@ -658,6 +683,31 @@ class ShopIntegrationTest extends IntegrationTest {
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
 			new HttpEntity<>(request, getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("어드민에 의해 케이크샵 외부 링크 업데이트에 성공한다")
+	void updateShopLinksByAdmin() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/links".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		final UpdateLinkRequest request = getConstructorMonkey().giveMeBuilder(UpdateLinkRequest.class).sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeaderById(10L)),
 			ApiResponse.class);
 
 		// then
@@ -693,6 +743,31 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 	}
 
+	@TestWithDisplayName("어드민에 의해 케이크 샵 주소 업데이트에 성공한다")
+	void updateShopAddressByAdmin() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/address".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		final UpdateShopAddressRequest request = getConstructorMonkey().giveMeBuilder(UpdateShopAddressRequest.class).sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeaderById(10L)),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
 	@TestWithDisplayName("케이크 샵 영업일 업데이트에 성공한다")
 	void updateShopOperationDays() {
 		// given
@@ -715,6 +790,38 @@ class ShopIntegrationTest extends IntegrationTest {
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
 			new HttpEntity<>(request, getAuthHeader()),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("케이크 샵 영업일 업데이트에 성공한다")
+	void updateShopOperationDaysByAdmin() {
+		// given
+		final Long cakeShopId = 1L;
+		final String url = "%s%d%s/{cakeShopId}/operation-days".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeShopId);
+		List<ShopOperationParam> shopOperationParams = getConstructorMonkey().giveMeBuilder(
+				ShopOperationParam.class)
+			.setNotNull("operationDay")
+			.setNotNull("operationStartTime")
+			.setNotNull("operationEndTime").sampleList(6);
+		final UpdateShopOperationRequest request = getConstructorMonkey().giveMeBuilder(UpdateShopOperationRequest.class)
+			.set("operationDays", shopOperationParams)
+			.sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request, getAuthHeaderById(10L)),
 			ApiResponse.class);
 
 		// then

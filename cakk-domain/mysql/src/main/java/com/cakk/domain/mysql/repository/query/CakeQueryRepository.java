@@ -21,11 +21,13 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
+import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.tag.TagParam;
@@ -117,14 +119,25 @@ public class CakeQueryRepository {
 	}
 
 	public Optional<Cake> searchWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
-		return Optional.ofNullable(queryFactory
+		BooleanExpression userCondition = null;
+
+		if (owner.getRole() != Role.ADMIN) {
+			userCondition = businessInformation.user.eq(owner);
+		}
+
+		JPQLQuery<Cake> query = queryFactory
 			.selectFrom(cake)
 			.innerJoin(cake.cakeShop, cakeShop)
 			.innerJoin(cakeShop.businessInformation, businessInformation)
 			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
 			.leftJoin(cake.cakeTags, cakeTag).fetchJoin()
-			.where(eqCakeId(cakeId), businessInformation.user.eq(owner))
-			.fetchOne());
+			.where(eqCakeId(cakeId));
+
+		if (nonNull(userCondition)) {
+			query.where(userCondition);
+		}
+
+		return Optional.ofNullable(query.fetchOne());
 	}
 
 	public CakeDetailParam searchCakeDetailById(Long cakeId) {
