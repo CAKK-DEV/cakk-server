@@ -53,12 +53,13 @@ values (1, 1, 'cake_image_url1', 0, now(), now()),
        (10, 3, 'cake_image_url10', 0, now(), now()),
        (11, 3, 'cake_image_url11', 0, now(), now()),
        (12, 4, 'cake_image_url12', 0, now(), now()),
-       (13, 5, 'cake_image_url12', 0, now(), now()),
-       (14, 6, 'cake_image_url12', 0, now(), now()),
-       (15, 7, 'cake_image_url12', 0, now(), now()),
-       (16, 8, 'cake_image_url12', 0, now(), now()),
-       (17, 9, 'cake_image_url12', 0, now(), now()),
-       (18, 10, 'cake_image_url12', 0, now(), now());
+       (13, 5, 'cake_image_url13', 0, now(), now()),
+       (14, 6, 'cake_image_url14', 0, now(), now()),
+       (15, 7, 'cake_image_url15', 0, now(), now()),
+       (16, 8, 'cake_image_url16', 0, now(), now()),
+       (17, 9, 'cake_image_url17', 0, now(), now()),
+       (18, 10, 'cake_image_url18', 0, now(), now()),
+       (19, 10, 'cake_image_url19', 0, now(), now());
 
 insert into business_information(business_number, shop_id, user_id)
 values ('010-3375-5555', 1, 1),

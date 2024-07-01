@@ -610,6 +610,30 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(5, data.tags().size());
 	}
 
+	@TestWithDisplayName("케이크 상세 조회에서 카테고리가 없는 경우, 태그가 없는 경우에 성공한다")
+	void getDetailCakeWithNoCategoriesAndNoTags() {
+		// given
+		final Long cakeId = 19L;
+		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(cakeId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeDetailResponse data = objectMapper.convertValue(response.getData(), CakeDetailResponse.class);
+
+		assertEquals("cake_image_url19", data.cakeImageUrl());
+		assertEquals("케이크 맛집10", data.cakeShopName());
+		assertEquals("케이크 맛집입니다.", data.shopBio());
+		assertEquals(10L, data.cakeShopId().longValue());
+		assertEquals(0, data.cakeCategories().size());
+		assertEquals(0, data.tags().size());
+	}
+
 	@TestWithDisplayName("케이크 추가에 성공한다")
 	void createCake() {
 		// given
