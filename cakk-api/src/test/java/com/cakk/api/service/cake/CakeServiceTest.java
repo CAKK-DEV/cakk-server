@@ -21,7 +21,7 @@ import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
 class CakeServiceTest extends ServiceTest {
@@ -33,7 +33,7 @@ class CakeServiceTest extends ServiceTest {
 	private CakeReader cakeReader;
 
 	@Mock
-	private CakeViewRedisRepository cakeViewRedisRepository;
+	private CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	@TestWithDisplayName("카테고리에 해당하는 케이크 목록을 조회한다")
 	void findCakeImagesByCursorAndCategory1() {
@@ -128,7 +128,7 @@ class CakeServiceTest extends ServiceTest {
 			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.sampleList(3);
 
-		doReturn(cakeIds).when(cakeViewRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
+		doReturn(cakeIds).when(cakeViewsRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
 		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCakeIds(cakeIds);
 
 		// when
@@ -138,7 +138,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertNotNull(result.cakeImages());
 		Assertions.assertNull(result.lastCakeId());
 
-		verify(cakeViewRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
+		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
 		verify(cakeReader, times(1)).searchCakeImagesByCakeIds(cakeIds);
 	}
 
@@ -149,7 +149,7 @@ class CakeServiceTest extends ServiceTest {
 		final int pageSize = 3;
 		final CakeSearchByViewsRequest dto = new CakeSearchByViewsRequest(cursor, pageSize);
 
-		doReturn(List.of()).when(cakeViewRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
+		doReturn(List.of()).when(cakeViewsRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
 
 		// when
 		CakeImageListResponse result = cakeService.searchCakeImagesByCursorAndViews(dto);
@@ -158,7 +158,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(0, result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeId());
 
-		verify(cakeViewRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
+		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
 		verify(cakeReader, times(0)).searchCakeImagesByCakeIds(anyList());
 	}
 }

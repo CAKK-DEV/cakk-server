@@ -8,17 +8,17 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @RequiredArgsConstructor
 @Component
 public class ViewsIncreaseEventListener {
 
-	private final CakeViewRedisRepository cakeViewRedisRepository;
+	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void increaseViews(final CakeIncreaseViewsEvent event) {
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(event.cakeId());
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(event.cakeId());
 	}
 }

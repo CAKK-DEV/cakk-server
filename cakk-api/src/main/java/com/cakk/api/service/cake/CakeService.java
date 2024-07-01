@@ -29,7 +29,7 @@ import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.TagReader;
 import com.cakk.domain.mysql.repository.writer.CakeWriter;
 import com.cakk.domain.mysql.repository.writer.TagWriter;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @Transactional(readOnly = true)
 @Service
@@ -41,7 +41,7 @@ public class CakeService {
 	private final TagReader tagReader;
 	private final TagWriter tagWriter;
 	private final CakeShopReader cakeShopReader;
-	private final CakeViewRedisRepository cakeViewRedisRepository;
+	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
@@ -67,7 +67,7 @@ public class CakeService {
 	public CakeImageListResponse searchCakeImagesByCursorAndViews(final CakeSearchByViewsRequest dto) {
 		final long offset = isNull(dto.offset()) ? 0 : dto.offset();
 		final int pageSize = dto.pageSize();
-		final List<Long> cakeIds = cakeViewRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize);
+		final List<Long> cakeIds = cakeViewsRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize);
 
 		if (isNull(cakeIds) || cakeIds.isEmpty()) {
 			return CakeMapper.supplyCakeImageListResponse(List.of(), cakeIds);

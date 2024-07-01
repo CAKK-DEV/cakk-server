@@ -10,7 +10,7 @@ import com.cakk.domain.redis.template.impl.RedisLongZSetTemplate;
 
 @RedisRepository
 @RequiredArgsConstructor
-public class CakeViewRedisRepository {
+public class CakeViewsRedisRepository {
 
 	private final RedisLongZSetTemplate redisLongZSetTemplate;
 

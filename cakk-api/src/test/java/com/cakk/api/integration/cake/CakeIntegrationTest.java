@@ -29,7 +29,7 @@ import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.entity.cake.CakeCategory;
 import com.cakk.domain.mysql.repository.reader.CakeCategoryReader;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @SqlGroup({
 	@Sql(scripts = {
@@ -47,32 +47,32 @@ class CakeIntegrationTest extends IntegrationTest {
 	private CakeCategoryReader cakeCategoryReader;
 
 	@Autowired
-	private CakeViewRedisRepository cakeViewRedisRepository;
+	private CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	private void initializeViews() {
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(3L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(3L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(4L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(5L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(6L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(8L);
-		cakeViewRedisRepository.saveOrIncreaseSearchCount(9L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(4L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(5L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(6L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(8L);
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(9L);
 	}
 
 	@AfterEach
 	void setUp() {
-		cakeViewRedisRepository.clear();
+		cakeViewsRedisRepository.clear();
 	}
 
 	@TestWithDisplayName("카테고리로 첫 페이지 케이크 이미지 조회에 성공한다")
