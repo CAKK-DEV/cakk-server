@@ -1,7 +1,9 @@
 package com.cakk.api.mapper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -58,13 +61,22 @@ public class CakeMapper {
 	}
 
 	public static CakeDetailResponse cakeDetailResponseFromParam(CakeDetailParam param) {
+		Set<TagParam> tags = param.tags();
+
+		for (TagParam tagParam : tags) {
+			if (tagParam.tagId() == null || tagParam.tagName() == null) {
+				tags = new HashSet<>();
+				break;
+			}
+		}
+
 		return CakeDetailResponse.builder()
 			.cakeShopId(param.cakeShopId())
 			.cakeShopName(param.cakeShopName())
 			.cakeImageUrl(param.cakeImageUrl())
 			.shopBio(param.shopBio())
 			.cakeCategories(param.cakeCategories())
-			.tags(param.tags())
+			.tags(tags)
 			.build();
 	}
 
