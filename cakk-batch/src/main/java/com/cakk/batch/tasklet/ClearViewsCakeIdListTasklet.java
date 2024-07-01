@@ -17,14 +17,14 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.batch.utils.BatchConstants;
 import com.cakk.batch.utils.BatchUtils;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @StepScope
 @Component
 @RequiredArgsConstructor
 public class ClearViewsCakeIdListTasklet implements Tasklet {
 
-	private final CakeViewRedisRepository cakeViewRedisRepository;
+	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	@Override
 	public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) {
@@ -32,7 +32,7 @@ public class ClearViewsCakeIdListTasklet implements Tasklet {
 		final List<Long> cakeIds = (List<Long>) executionContext.get(BatchConstants.CAKE_ID_LIST);
 
 		if (nonNull(cakeIds) && !cakeIds.isEmpty()) {
-			cakeIds.forEach(cakeViewRedisRepository::deleteByValue);
+			cakeIds.forEach(cakeViewsRedisRepository::deleteByValue);
 		}
 
 		contribution.setExitStatus(ExitStatus.COMPLETED);

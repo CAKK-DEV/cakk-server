@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.batch.utils.BatchConstants;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @StepScope
 @Component
 @RequiredArgsConstructor
 public class FindViewsCakeIdListTaskLet implements Tasklet {
 
-	private final CakeViewRedisRepository cakeViewRedisRepository;
+	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	@Override
 	public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) {
@@ -29,7 +29,7 @@ public class FindViewsCakeIdListTaskLet implements Tasklet {
 			.getJobExecution()
 			.getExecutionContext();
 
-		final List<Long> cakeIds = cakeViewRedisRepository.findAll();
+		final List<Long> cakeIds = cakeViewsRedisRepository.findAll();
 		executionContext.put(BatchConstants.CAKE_ID_LIST, cakeIds);
 
 		return RepeatStatus.FINISHED;

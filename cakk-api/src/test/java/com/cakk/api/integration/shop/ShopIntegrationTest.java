@@ -49,7 +49,7 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.redis.repository.CakeViewRedisRepository;
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @SqlGroup({
 	@Sql(scripts = {
@@ -73,7 +73,7 @@ class ShopIntegrationTest extends IntegrationTest {
 	private CakeShopLinkReader cakeShopLinkReader;
 
 	@Autowired
-	private CakeViewRedisRepository cakeViewRedisRepository;
+	private CakeViewsRedisRepository cakeViewsRedisRepository;
 
 	@TestWithDisplayName("백 오피스 API, 케이크샵 생성에 성공한다")
 	void backOfficeCreateCakeShop() {
@@ -154,7 +154,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(cakeShop.getShopName(), data.cakeShopName());
 		assertEquals(cakeShop.getShopBio(), data.cakeShopBio());
 
-		Long viewCakeId = cakeViewRedisRepository.findTopCakeIdsByOffsetAndCount(0, 10).get(0);
+		Long viewCakeId = cakeViewsRedisRepository.findTopCakeIdsByOffsetAndCount(0, 10).get(0);
 		assertEquals(cakeId, viewCakeId);
 	}
 
