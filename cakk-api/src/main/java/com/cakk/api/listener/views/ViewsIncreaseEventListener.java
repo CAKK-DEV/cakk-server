@@ -1,5 +1,7 @@
 package com.cakk.api.listener.views;
 
+import java.util.Objects;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -22,12 +24,12 @@ public class ViewsIncreaseEventListener {
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void increaseCakeViews(final CakeIncreaseViewsEvent event) {
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(event.cakeId());
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(Objects.requireNonNull(event.cakeId()));
 	}
 
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void increaseCakeShopViews(final CakeShopIncreaseViewsEvent event) {
-		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(event.cakeShopId());
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(Objects.requireNonNull(event.cakeShopId()));
 	}
 }
