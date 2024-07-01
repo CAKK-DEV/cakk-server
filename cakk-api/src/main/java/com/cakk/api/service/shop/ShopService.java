@@ -39,7 +39,9 @@ import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.event.EventMapper;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
 import com.cakk.domain.mysql.repository.reader.BusinessInformationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
@@ -53,6 +55,7 @@ public class ShopService {
 	private final CakeShopReader cakeShopReader;
 	private final BusinessInformationReader businessInformationReader;
 	private final CakeShopWriter cakeShopWriter;
+
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
@@ -131,7 +134,9 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public CakeShopDetailResponse searchDetailById(final Long cakeShopId) {
 		final CakeShopDetailParam cakeShop = cakeShopReader.searchDetailById(cakeShopId);
+		final CakeShopIncreaseViewsEvent event = EventMapper.supplyCakeShopIncreaseViewsEvent(cakeShopId);
 
+		publisher.publishEvent(event);
 		return ShopMapper.cakeShopDetailResponseFromParam(cakeShop);
 	}
 

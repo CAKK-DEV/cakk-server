@@ -62,7 +62,7 @@ public class SlackService {
 		SlackMessage slackMessage = new SlackMessage();
 
 		slackMessage.setAttachments(List.of(slackAttachment));
-		slackMessage.setChannel("#error-log");
+		slackMessage.setChannel("#log_server-error");
 		slackMessage.setUsername("%s API Error".formatted(profile));
 		slackMessage.setIcon(":alert:");
 		slackMessage.setText("%s api 에러 발생".formatted(profile));

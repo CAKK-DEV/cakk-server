@@ -13,6 +13,7 @@ public enum RedisKey {
 	EMAIL_VERIFICATION("EMAIL::"),
 	SEARCH_KEYWORD("SEARCH::keyword"),
 	VIEWS_CAKE("VIEWS::cake"),
+	VIEWS_CAKE_SHOP("VIEWS::cake-shop"),
 	LOCK_CAKE_HEART("LOCK::cake-heart"),
 	LOCK_SHOP_HEART("LOCK::shop-heart"),
 	LOCK_SHOP_LIKE("LOCK::shop-like");
