@@ -7,6 +7,7 @@ import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
+import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -36,5 +37,9 @@ public class EventMapper {
 
 	public static CakeIncreaseViewsEvent supplyCakeIncreaseViewsEvent(Long cakeId) {
 		return new CakeIncreaseViewsEvent(cakeId);
+	}
+
+	public static CakeShopIncreaseViewsEvent supplyCakeShopIncreaseViewsEvent(Long cakeShopId) {
+		return new CakeShopIncreaseViewsEvent(cakeShopId);
 	}
 }
