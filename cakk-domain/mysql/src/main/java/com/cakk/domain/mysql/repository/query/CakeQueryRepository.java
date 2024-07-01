@@ -146,7 +146,7 @@ public class CakeQueryRepository {
 			.innerJoin(cake.cakeShop, cakeShop)
 			.leftJoin(cake.cakeCategories, cakeCategory)
 			.leftJoin(cake.cakeTags, cakeTag)
-			.innerJoin(cakeTag.tag, tag)
+			.leftJoin(cakeTag.tag, tag)
 			.where(eqCakeId(cakeId))
 			.transform(groupBy(cake.id)
 				.list(Projections.constructor(CakeDetailParam.class,
