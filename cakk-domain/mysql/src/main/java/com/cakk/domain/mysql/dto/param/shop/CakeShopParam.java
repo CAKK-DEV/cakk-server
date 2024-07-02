@@ -22,8 +22,8 @@ public class CakeShopParam {
 	private Set<String> cakeImageUrls;
 
 
-	public void setImageCountMaxFour() {
-		cakeImageUrls = cakeImageUrls.stream().limit(4).collect(Collectors.toSet());
+	public void setImageCountMaxCount(final int maxCount) {
+		cakeImageUrls = cakeImageUrls.stream().limit(maxCount).collect(Collectors.toSet());
 	}
 }
 
