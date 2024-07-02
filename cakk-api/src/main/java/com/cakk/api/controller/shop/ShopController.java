@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.api.annotation.SignInUser;
 import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
+import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
@@ -206,6 +207,15 @@ public class ShopController {
 		@PathVariable Long cakeShopId
 	) {
 		final CakeShopOwnerResponse response = shopService.isExistBusinessInformation(user, cakeShopId);
+
+		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/search/views")
+	public ApiResponse<CakeShopSearchResponse> listByViews(
+		@Valid @ModelAttribute CakeShopSearchByViewsRequest request
+	) {
+		final CakeShopSearchResponse response = shopService.searchCakeShopsByCursorAndViews(request);
 
 		return ApiResponse.success(response);
 	}

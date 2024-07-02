@@ -70,11 +70,11 @@ public class ShopMapper {
 
 		operationDays.forEach(operationParam -> cakeShopOperations
 			.add(CakeShopOperation.builder()
-			.operationDay(operationParam.operationDay())
-			.operationStartTime(operationParam.operationStartTime())
-			.operationEndTime(operationParam.operationEndTime())
-			.cakeShop(cakeShop)
-			.build()));
+				.operationDay(operationParam.operationDay())
+				.operationStartTime(operationParam.operationStartTime())
+				.operationEndTime(operationParam.operationEndTime())
+				.cakeShop(cakeShop)
+				.build()));
 
 		return cakeShopOperations;
 	}
@@ -203,12 +203,7 @@ public class ShopMapper {
 		}
 		return new CakeShopByMineResponse(
 			true,
-			result
-				.stream()
-				.findAny()
-				.get()
-				.getCakeShop()
-				.getId()
+			result.stream().findAny().get().getCakeShop().getId()
 		);
 	}
 }
