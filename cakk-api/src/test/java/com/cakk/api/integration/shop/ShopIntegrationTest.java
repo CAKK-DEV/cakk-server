@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
@@ -49,6 +51,7 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
+import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @SqlGroup({
@@ -74,6 +77,36 @@ class ShopIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private CakeViewsRedisRepository cakeViewsRedisRepository;
+
+	@Autowired
+	private CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
+
+	private void initializeViews() {
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(2L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(3L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(3L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(4L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(5L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(6L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(1L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(7L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(8L);
+		cakeShopViewsRedisRepository.saveOrIncreaseSearchCount(9L);
+	}
+
+	@AfterEach
+	void setUp() {
+		cakeViewsRedisRepository.clear();
+		cakeShopViewsRedisRepository.clear();
+	}
 
 	@TestWithDisplayName("백 오피스 API, 케이크샵 생성에 성공한다")
 	void backOfficeCreateCakeShop() {
@@ -252,7 +285,8 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, getAuthHeader());
 
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity,
+			ApiResponse.class);
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
@@ -276,7 +310,8 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, getAuthHeader());
 
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity, ApiResponse.class);
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity,
+			ApiResponse.class);
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
@@ -546,7 +581,6 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-
 
 		assertEquals(7, data.size());
 		data.cakeShops().forEach(cakeShop -> {
@@ -908,5 +942,54 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 		assertEquals(true, data.isExist());
 		assertEquals(1L, data.cakeShopId().longValue());
+	}
+
+	@TestWithDisplayName("조회수로 케이크 샵 조회에 성공한다")
+	void searchByViews1() {
+		// given
+		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("offset", 0L)
+			.queryParam("pageSize", 4)
+			.build();
+
+		initializeViews();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSearchResponse data = objectMapper.convertValue(response.getData(), CakeShopSearchResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(4, data.size());
+	}
+
+	@TestWithDisplayName("조회한 케이크 샵이 없을 시, 인기 케이크 샵 조회에 빈 배열을 리턴한다")
+	void searchByViews2() {
+		// given
+		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.queryParam("pageSize", 4)
+			.build();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopSearchResponse data = objectMapper.convertValue(response.getData(), CakeShopSearchResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(0, data.size());
 	}
 }

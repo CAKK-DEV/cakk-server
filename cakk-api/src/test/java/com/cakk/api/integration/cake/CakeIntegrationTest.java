@@ -365,9 +365,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
-		data.cakeImages().forEach(cakeImage -> {
-			System.out.println(cakeImage.cakeId());
-		});
+
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
