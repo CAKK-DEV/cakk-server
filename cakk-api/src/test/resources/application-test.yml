@@ -42,6 +42,11 @@ storage:
       data-source-properties:
         rewriteBatchedStatements: true
 
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
+
 slack:
   webhook:
     is-enable: false
