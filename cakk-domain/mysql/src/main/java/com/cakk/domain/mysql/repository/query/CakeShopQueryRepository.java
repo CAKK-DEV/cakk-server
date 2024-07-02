@@ -79,8 +79,7 @@ public class CakeShopQueryRepository {
 	public CakeShopInfoParam searchInfoById(Long cakeShopId) {
 		List<CakeShopInfoParam> results = queryFactory
 			.selectFrom(cakeShop)
-			.innerJoin(cakeShopOperation)
-			.on(cakeShop.eq(cakeShopOperation.cakeShop))
+			.leftJoin(cakeShop.cakeShopOperations, cakeShopOperation)
 			.where(eqCakeShopId(cakeShopId))
 			.transform(groupBy(cakeShop.id)
 				.list(Projections.constructor(CakeShopInfoParam.class,
