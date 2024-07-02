@@ -103,12 +103,20 @@ public class ShopMapper {
 	public static CakeShopInfoResponse supplyCakeShopInfoResponseBy(CakeShopInfoParam param) {
 		Double longitude = param.point().getX();
 		Double latitude = param.point().getY();
+		List<CakeShopOperationParam> cakeShopOperationParams = param.shopOperationDays();
+
+		for (CakeShopOperationParam cakeShopOperationParam : cakeShopOperationParams) {
+			if (isEmptyCakeShopOperation(cakeShopOperationParam)) {
+				cakeShopOperationParams = new ArrayList<>();
+				break;
+			}
+		}
 
 		return new CakeShopInfoResponse(
 			param.shopAddress(),
 			latitude,
 			longitude,
-			param.shopOperationDays()
+			cakeShopOperationParams
 		);
 	}
 
@@ -205,5 +213,10 @@ public class ShopMapper {
 			true,
 			result.stream().findAny().get().getCakeShop().getId()
 		);
+	}
+
+	private static boolean isEmptyCakeShopOperation(CakeShopOperationParam cakeShopOperationParam) {
+		return cakeShopOperationParam.operationDay() == null || cakeShopOperationParam.operationStartTime() == null
+			|| cakeShopOperationParam.operationEndTime() == null;
 	}
 }

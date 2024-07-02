@@ -10,6 +10,7 @@ public class CakeShops<T extends CakeShopParam> {
 	private List<T> cakeShops;
 
 	public CakeShops(List<T> cakeShops, int imageMaxCount) {
+		validationEmptyCakeImage(cakeShops);
 		validationImageCountMaxCount(cakeShops, imageMaxCount);
 		this.cakeShops = cakeShops;
 	}
@@ -34,6 +35,14 @@ public class CakeShops<T extends CakeShopParam> {
 
 	private List<T> validationPageSize(List<T> cakeShops, int pageSize) {
 		return cakeShops.stream().limit(pageSize).collect(Collectors.toList());
+	}
+
+	private void validationEmptyCakeImage(List<T> cakeShops) {
+		cakeShops.forEach(cakeShop -> {
+			if (cakeShop.getCakeImageUrls().contains("")) {
+				cakeShop.setImagesEmptySet();
+			}
+		});
 	}
 }
 

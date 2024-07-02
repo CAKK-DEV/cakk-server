@@ -64,7 +64,7 @@ public class CakeMapper {
 		Set<TagParam> tags = param.tags();
 
 		for (TagParam tagParam : tags) {
-			if (tagParam.tagId() == null || tagParam.tagName() == null) {
+			if (isEmptyTag(tagParam)) {
 				tags = new HashSet<>();
 				break;
 			}
@@ -84,5 +84,9 @@ public class CakeMapper {
 		return Cake.builder()
 			.cakeImageUrl(cakeImageUrl)
 			.build();
+	}
+
+	private static boolean isEmptyTag(TagParam tagParam) {
+		return tagParam.tagId() == null || tagParam.tagName() == null;
 	}
 }

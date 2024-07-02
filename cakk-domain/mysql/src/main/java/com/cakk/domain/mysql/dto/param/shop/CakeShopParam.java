@@ -1,5 +1,6 @@
 package com.cakk.domain.mysql.dto.param.shop;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,10 @@ public class CakeShopParam {
 
 	public void setImageCountMaxCount(final int maxCount) {
 		cakeImageUrls = cakeImageUrls.stream().limit(maxCount).collect(Collectors.toSet());
+	}
+
+	public void setImagesEmptySet() {
+		cakeImageUrls = new HashSet<>();
 	}
 }
 
