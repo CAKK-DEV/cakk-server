@@ -9,13 +9,13 @@ public class CakeShops<T extends CakeShopParam> {
 
 	private List<T> cakeShops;
 
-	public CakeShops(List<T> cakeShops) {
-		validationImageCountMaxFour(cakeShops);
+	public CakeShops(List<T> cakeShops, int imageMaxCount) {
+		validationImageCountMaxCount(cakeShops, imageMaxCount);
 		this.cakeShops = cakeShops;
 	}
 
-	public CakeShops(List<T> cakeShops, int pageSize) {
-		validationImageCountMaxFour(cakeShops);
+	public CakeShops(List<T> cakeShops, int imageMaxCount, int pageSize) {
+		validationImageCountMaxCount(cakeShops, imageMaxCount);
 		cakeShops = validationPageSize(cakeShops, pageSize);
 		this.cakeShops = cakeShops;
 	}
@@ -24,10 +24,10 @@ public class CakeShops<T extends CakeShopParam> {
 		return cakeShops;
 	}
 
-	private void validationImageCountMaxFour(List<T> cakeShops) {
+	private void validationImageCountMaxCount(List<T> cakeShops, final int maxCount) {
 		cakeShops.forEach(cakeShop -> {
-			if (cakeShop.getCakeImageUrls().size() > 4) {
-				cakeShop.setImageCountMaxFour();
+			if (cakeShop.getCakeImageUrls().size() > maxCount) {
+				cakeShop.setImageCountMaxCount(maxCount);
 			}
 		});
 	}

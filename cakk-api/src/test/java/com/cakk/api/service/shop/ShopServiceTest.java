@@ -16,11 +16,13 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
+import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
@@ -38,6 +40,7 @@ import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
 
+import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
@@ -54,6 +57,9 @@ public class ShopServiceTest extends ServiceTest {
 
 	@Mock
 	private CakeShopWriter cakeShopWriter;
+
+	@Mock
+	private CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
 
 	@Mock
 	private ApplicationEventPublisher publisher;
@@ -282,5 +288,54 @@ public class ShopServiceTest extends ServiceTest {
 			.hasMessageContaining(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
 		verify(cakeShopReader, times(1)).searchInfoById(cakeShopId);
+	}
+
+	@TestWithDisplayName("인기 케이크 샵 목록을 조회한다.")
+	void searchCakeShopsByCursorAndViews1() {
+		// given
+		final long offset = 0L;
+		final int pageSize = 3;
+		final CakeShopSearchByViewsRequest dto = new CakeShopSearchByViewsRequest(offset, pageSize);
+		final List<Long> cakeShopIds = List.of(1L, 2L, 3L);
+		final List<CakeShop> cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop.class)
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
+			.set("thumbnailUrl", Arbitraries.strings().alpha().ofMinLength(100).ofMaxLength(200))
+			.set("cakeShopName", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(30))
+			.set("cakeShopBio", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(40))
+			.sampleList(3);
+
+		doReturn(cakeShopIds).when(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize);
+		doReturn(cakeShops).when(cakeShopReader).searchShopsByShopIds(cakeShopIds);
+
+		// when
+		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(dto);
+
+		// then
+		assertNotNull(result);
+		assertEquals(cakeShops.size(), result.size());
+
+		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize);
+		verify(cakeShopReader, times(1)).searchShopsByShopIds(cakeShopIds);
+	}
+
+	@TestWithDisplayName("인기 케이크 샵 목록이 없는 경우, 빈 배열을 조회한다.")
+	void searchCakeShopsByCursorAndViews2() {
+		// given
+		final long offset = 0L;
+		final int pageSize = 3;
+		final CakeShopSearchByViewsRequest dto = new CakeShopSearchByViewsRequest(offset, pageSize);
+		final List<Long> cakeShopIds = List.of();
+
+		doReturn(cakeShopIds).when(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize);
+
+		// when
+		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(dto);
+
+		// then
+		assertNotNull(result);
+		assertThat(result.cakeShops()).isEmpty();
+
+		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize);
+		verify(cakeShopReader, times(0)).searchShopsByShopIds(cakeShopIds);
 	}
 }

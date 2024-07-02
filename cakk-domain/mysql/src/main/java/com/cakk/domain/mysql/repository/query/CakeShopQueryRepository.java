@@ -189,8 +189,22 @@ public class CakeShopQueryRepository {
 					cakeShop.location)));
 	}
 
+	public List<CakeShop> searchByShopIds(List<Long> shopIds) {
+		return queryFactory
+			.selectFrom(cakeShop)
+			.innerJoin(cakeShop.businessInformation).fetchJoin()
+			.leftJoin(cakeShop.cakes).fetchJoin()
+			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
+			.where(includeShopIds(shopIds))
+			.fetch();
+	}
+
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
 		return cakeShop.id.eq(cakeShopId);
+	}
+
+	private BooleanExpression includeShopIds(List<Long> shopIds) {
+		return cakeShop.id.in(shopIds);
 	}
 
 	private BooleanExpression ltCakeShopId(Long cakeShopId) {

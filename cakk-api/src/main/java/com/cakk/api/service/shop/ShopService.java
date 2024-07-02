@@ -1,5 +1,7 @@
 package com.cakk.api.service.shop;
 
+import static java.util.Objects.*;
+
 import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
@@ -46,6 +49,7 @@ import com.cakk.domain.mysql.repository.reader.BusinessInformationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
+import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +59,7 @@ public class ShopService {
 	private final CakeShopReader cakeShopReader;
 	private final BusinessInformationReader businessInformationReader;
 	private final CakeShopWriter cakeShopWriter;
+	private final CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
 
 	private final ApplicationEventPublisher publisher;
 
@@ -154,7 +159,7 @@ public class ShopService {
 		final List<CakeShopByLocationParam> result = cakeShopReader
 			.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
 
-		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result);
+		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result, 4);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShops.getCakeShops());
 	}
@@ -165,7 +170,24 @@ public class ShopService {
 		final List<CakeShop> result = cakeShopReader.searchShopBySearch(dto.toParam());
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
-		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, pageSize);
+		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 4, pageSize);
+
+		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(CakeShopSearchByViewsRequest dto) {
+		final long offset = isNull(dto.offset()) ? 0 : dto.offset();
+		final int pageSize = dto.pageSize();
+		final List<Long> cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize);
+
+		if (isNull(cakeShopIds) || cakeShopIds.isEmpty()) {
+			return ShopMapper.supplyCakeShopSearchResponseBy(List.of());
+		}
+
+		final List<CakeShop> result = cakeShopReader.searchShopsByShopIds(cakeShopIds);
+		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
+		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 6, pageSize);
 
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}
