@@ -108,4 +108,8 @@ public class CakeShopReader {
 		return cakeShopQueryRepository.findWithOperations(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
+
+	public List<CakeShop> searchShopsByShopIds(List<Long> shopIds) {
+		return cakeShopQueryRepository.searchByShopIds(shopIds);
+	}
 }
