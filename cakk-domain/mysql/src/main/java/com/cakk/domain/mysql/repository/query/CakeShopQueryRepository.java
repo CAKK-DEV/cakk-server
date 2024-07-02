@@ -183,9 +183,7 @@ public class CakeShopQueryRepository {
 					cakeShop.thumbnailUrl,
 					cakeShop.shopName,
 					cakeShop.shopBio,
-					set(Projections.constructor(String.class,
-						cake.cakeImageUrl
-					)),
+					set(cake.cakeImageUrl.coalesce("")),
 					cakeShop.location)));
 	}
 
