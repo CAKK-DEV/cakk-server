@@ -338,7 +338,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage(), response.getReturnMessage());
 	}
 
-	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
+	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 10km 이내의 가게들을 조회한다")
 	void findAllShopsByLocationBased1() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -496,7 +496,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertNull(response.getData());
 	}
 
-	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 5km 이내의 가게들을 조회한다")
+	@TestWithDisplayName("테스트 sql script 기준으로 사용자 위치를 중심으로 반경 10km 이내의 가게들을 조회한다")
 	void findAllShopsByLocationBased2() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder

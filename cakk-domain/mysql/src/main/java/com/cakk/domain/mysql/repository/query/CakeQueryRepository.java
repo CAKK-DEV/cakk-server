@@ -89,12 +89,10 @@ public class CakeQueryRepository {
 					cake.id,
 					cake.cakeImageUrl)).distinct()
 			.from(cake)
-			.innerJoin(cakeShop)
-			.on(cakeShop.eq(cake.cakeShop))
-			.leftJoin(cakeTag)
-			.on(cakeTag.cake.eq(cake))
-			.leftJoin(cakeCategory)
-			.on(cakeCategory.cake.eq(cake))
+			.innerJoin(cake.cakeShop, cakeShop)
+			.leftJoin(cake.cakeCategories, cakeCategory)
+			.leftJoin(cake.cakeTags, cakeTag)
+			.leftJoin(cakeTag.tag, tag)
 			.where(
 				containKeyword(keyword).and(includeDistance(location)), ltCakeId(cakeId)
 			)
@@ -228,7 +226,7 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 5000), {1})", location, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 10000), {1})", location, cakeShop.location);
 	}
 
 	private OrderSpecifier<Long> cakeIdDesc() {

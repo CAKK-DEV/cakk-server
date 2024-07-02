@@ -44,10 +44,8 @@ public class CakeShopQueryRepository {
 	public CakeShopDetailParam searchDetailById(Long cakeShopId) {
 		List<CakeShopDetailParam> results = queryFactory
 			.selectFrom(cakeShop)
-			.innerJoin(cakeShopOperation)
-			.on(cakeShop.eq(cakeShopOperation.cakeShop))
-			.innerJoin(cakeShopLink)
-			.on(cakeShop.eq(cakeShopLink.cakeShop))
+			.leftJoin(cakeShop.cakeShopOperations, cakeShopOperation)
+			.leftJoin(cakeShop.cakeShopLinks, cakeShopLink)
 			.where(eqCakeShopId(cakeShopId))
 			.transform(groupBy(cakeShop.id)
 				.list(Projections.constructor(CakeShopDetailParam.class,
@@ -235,7 +233,7 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 5000), {1})", location, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 10000), {1})", location, cakeShop.location);
 	}
 
 	private OrderSpecifier<Long> cakeShopIdDesc() {
