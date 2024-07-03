@@ -56,7 +56,7 @@ public class CakeController {
 	}
 
 	@GetMapping("/search/cakes")
-	public ApiResponse<CakeImageListResponse> searchCakes(
+	public ApiResponse<CakeImageListResponse> listByKeywordAndLocation(
 		@Valid @ModelAttribute CakeSearchByLocationRequest request
 	) {
 		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndSearch(request);
@@ -74,14 +74,14 @@ public class CakeController {
 	}
 
 	@GetMapping("/{cakeId}")
-	public ApiResponse<CakeDetailResponse> getCakeDetail(@PathVariable Long cakeId) {
+	public ApiResponse<CakeDetailResponse> details(@PathVariable Long cakeId) {
 		final CakeDetailResponse response = cakeService.findCakeDetailById(cakeId);
 
 		return ApiResponse.success(response);
 	}
 
 	@PostMapping("/{cakeShopId}")
-	public ApiResponse<Void> createCake(
+	public ApiResponse<Void> create(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody CakeCreateRequest request
@@ -112,7 +112,7 @@ public class CakeController {
 	}
 
 	@PutMapping("/{cakeId}")
-	public ApiResponse<Void> updateCake(
+	public ApiResponse<Void> update(
 		@SignInUser User user,
 		@PathVariable Long cakeId,
 		@Valid @RequestBody CakeUpdateRequest request) {
@@ -122,7 +122,7 @@ public class CakeController {
 	}
 
 	@DeleteMapping("/{cakeId}")
-	public ApiResponse<Void> deleteCake(
+	public ApiResponse<Void> delete(
 		@SignInUser User user,
 		@PathVariable Long cakeId
 	) {

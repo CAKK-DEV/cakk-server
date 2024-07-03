@@ -14,7 +14,7 @@ public class CakeShopLinkReader {
 
 	private final CakeShopLinkJpaRepository cakeShopLinkJpaRepository;
 
-	public List<CakeShopLink> findAllByCakeShopId(Long cakeShopId) {
+	public List<CakeShopLink> findAllByCakeShopId(final Long cakeShopId) {
 		return cakeShopLinkJpaRepository.findAllByCakeShopId(cakeShopId);
 	}
 }

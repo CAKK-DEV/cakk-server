@@ -25,19 +25,27 @@ public class CakeReader {
 	private final CakeJpaRepository cakeJpaRepository;
 	private final CakeQueryRepository cakeQueryRepository;
 
-	public Cake findById(Long cakeId) {
+	public Cake findById(final Long cakeId) {
 		return cakeJpaRepository.findById(cakeId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE));
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(
+		final Long cakeId,
+		final CakeDesignCategory category,
+		final int pageSize
+	) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCategory(cakeId, category, pageSize);
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(
+		final Long cakeId,
+		final Long cakeShopId,
+		final int pageSize
+	) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize);
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(CakeSearchParam param) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(final CakeSearchParam param) {
 		return cakeQueryRepository.searchCakeImagesByCursorAndSearchKeyword(
 			param.cakeId(),
 			param.keyword(),
@@ -46,17 +54,17 @@ public class CakeReader {
 		);
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
+	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(final List<Long> cakeIds) {
 		return cakeQueryRepository.searchCakeImagesByCakeIds(cakeIds);
 	}
 
-	public Cake findWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
+	public Cake findWithCakeTagsAndCakeCategories(final Long cakeId, final User owner) {
 		return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 
-	public CakeDetailParam searchCakeDetailById(Long cakeId) {
-		CakeDetailParam param = cakeQueryRepository.searchCakeDetailById(cakeId);
+	public CakeDetailParam searchCakeDetailById(final Long cakeId) {
+		final CakeDetailParam param = cakeQueryRepository.searchCakeDetailById(cakeId);
 
 		if (isNull(param)) {
 			throw new CakkException(ReturnCode.NOT_EXIST_CAKE);

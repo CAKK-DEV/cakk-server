@@ -1,5 +1,7 @@
 package com.cakk.api.mapper;
 
+import static java.util.Objects.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +20,6 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
 import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
@@ -38,8 +38,7 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ShopMapper {
 
-	public static CakeShop supplyCakeShopBy(CreateShopRequest request) {
-
+	public static CakeShop supplyCakeShopBy(final CreateShopRequest request) {
 		return CakeShop.builder()
 			.shopName(request.shopName())
 			.shopBio(request.shopBio())
@@ -49,7 +48,7 @@ public class ShopMapper {
 			.build();
 	}
 
-	public static BusinessInformation supplyBusinessInformationBy(CreateShopRequest request, CakeShop cakeShop) {
+	public static BusinessInformation supplyBusinessInformationBy(final CreateShopRequest request, final CakeShop cakeShop) {
 		return BusinessInformation.builder()
 			.businessNumber(request.businessNumber())
 			.cakeShop(cakeShop)
@@ -66,7 +65,7 @@ public class ShopMapper {
 		final CakeShop cakeShop,
 		final List<ShopOperationParam> operationDays
 	) {
-		List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
+		final List<CakeShopOperation> cakeShopOperations = new ArrayList<>();
 
 		operationDays.forEach(operationParam -> cakeShopOperations
 			.add(CakeShopOperation.builder()
@@ -79,7 +78,7 @@ public class ShopMapper {
 		return cakeShopOperations;
 	}
 
-	public static CakeShopSimpleResponse cakeShopSimpleResponseFromParam(CakeShopSimpleParam param) {
+	public static CakeShopSimpleResponse cakeShopSimpleResponseFromParam(final CakeShopSimpleParam param) {
 		return CakeShopSimpleResponse.builder()
 			.cakeShopId(param.cakeShopId())
 			.thumbnailUrl(param.thumbnailUrl())
@@ -88,7 +87,7 @@ public class ShopMapper {
 			.build();
 	}
 
-	public static CakeShopDetailResponse cakeShopDetailResponseFromParam(CakeShopDetailParam param) {
+	public static CakeShopDetailResponse cakeShopDetailResponseFromParam(final CakeShopDetailParam param) {
 		return CakeShopDetailResponse.builder()
 			.cakeShopId(param.cakeShopId())
 			.cakeShopName(param.shopName())
@@ -100,12 +99,12 @@ public class ShopMapper {
 			.build();
 	}
 
-	public static CakeShopInfoResponse supplyCakeShopInfoResponseBy(CakeShopInfoParam param) {
-		Double longitude = param.point().getX();
-		Double latitude = param.point().getY();
+	public static CakeShopInfoResponse supplyCakeShopInfoResponseBy(final CakeShopInfoParam param) {
+		final Double longitude = param.point().getX();
+		final Double latitude = param.point().getY();
 		List<CakeShopOperationParam> cakeShopOperationParams = param.shopOperationDays();
 
-		for (CakeShopOperationParam cakeShopOperationParam : cakeShopOperationParams) {
+		for (final CakeShopOperationParam cakeShopOperationParam : cakeShopOperationParams) {
 			if (isEmptyCakeShopOperation(cakeShopOperationParam)) {
 				cakeShopOperationParams = new ArrayList<>();
 				break;
@@ -120,14 +119,13 @@ public class ShopMapper {
 		);
 	}
 
-	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(List<CakeShopByLocationParam> params) {
-		return new CakeShopByMapResponse(params
-			.stream()
+	public static CakeShopByMapResponse supplyCakeShopByMapResponseBy(final List<CakeShopByLocationParam> params) {
+		return new CakeShopByMapResponse(params.stream()
 			.map(ShopMapper::supplyCakeShopLocationResponseParamBy)
-			.collect(Collectors.toList()));
+			.toList());
 	}
 
-	public static CakeShopLocationResponseParam supplyCakeShopLocationResponseParamBy(CakeShopByLocationParam param) {
+	public static CakeShopLocationResponseParam supplyCakeShopLocationResponseParamBy(final CakeShopByLocationParam param) {
 		return new CakeShopLocationResponseParam(
 			param.getCakeShopId(),
 			param.getThumbnailUrl(),
@@ -139,7 +137,7 @@ public class ShopMapper {
 		);
 	}
 
-	public static CakeShopSearchResponseParam supplyCakeShopSearchResponseParamListBy(CakeShopBySearchParam param) {
+	public static CakeShopSearchResponseParam supplyCakeShopSearchResponseParamListBy(final CakeShopBySearchParam param) {
 		return new CakeShopSearchResponseParam(
 			param.getCakeShopId(),
 			param.getThumbnailUrl(),
@@ -150,14 +148,14 @@ public class ShopMapper {
 		);
 	}
 
-	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(List<CakeShopBySearchParam> cakeShops) {
+	public static CakeShopSearchResponse supplyCakeShopSearchResponseBy(final List<CakeShopBySearchParam> cakeShops) {
 		final int size = cakeShops.size();
+		final List<CakeShopSearchResponseParam> cakeShopSearchResponseParams = cakeShops.stream()
+			.map(ShopMapper::supplyCakeShopSearchResponseParamListBy)
+			.toList();
 
 		return CakeShopSearchResponse.builder()
-			.cakeShops(cakeShops
-				.stream()
-				.map(ShopMapper::supplyCakeShopSearchResponseParamListBy)
-				.collect(Collectors.toList()))
+			.cakeShops(cakeShopSearchResponseParams)
 			.lastCakeShopId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId())
 			.size(cakeShops.size())
 			.build();
@@ -177,10 +175,10 @@ public class ShopMapper {
 	public static List<CakeShopBySearchParam> supplyCakeShopBySearchParamListBy(List<CakeShop> cakeShops) {
 		return cakeShops.stream()
 			.map(ShopMapper::supplyCakeShopBySearchParamBy)
-			.collect(Collectors.toList());
+			.toList();
 	}
 
-	public static CakeShopBySearchParam supplyCakeShopBySearchParamBy(CakeShop cakeShop) {
+	public static CakeShopBySearchParam supplyCakeShopBySearchParamBy(final CakeShop cakeShop) {
 		return CakeShopBySearchParam.builder()
 			.cakeShopId(cakeShop.getId())
 			.thumbnailUrl(cakeShop.getThumbnailUrl())
@@ -197,15 +195,15 @@ public class ShopMapper {
 			).build();
 	}
 
-	public static CakeShopOwnerResponse supplyCakeShopOwnerResponseBy(Boolean isOwned) {
+	public static CakeShopOwnerResponse supplyCakeShopOwnerResponseBy(final Boolean isOwned) {
 		return new CakeShopOwnerResponse(isOwned);
 	}
 
-	public static CakeShopCreateResponse supplyCakeShopCreateResponseBy(CakeShop cakeShop) {
+	public static CakeShopCreateResponse supplyCakeShopCreateResponseBy(final CakeShop cakeShop) {
 		return new CakeShopCreateResponse(cakeShop.getId());
 	}
 
-	public static CakeShopByMineResponse supplyCakeShopByMineResponseBy(List<BusinessInformation> result) {
+	public static CakeShopByMineResponse supplyCakeShopByMineResponseBy(final List<BusinessInformation> result) {
 		if (result.isEmpty()) {
 			return new CakeShopByMineResponse(false, null);
 		}
@@ -215,8 +213,9 @@ public class ShopMapper {
 		);
 	}
 
-	private static boolean isEmptyCakeShopOperation(CakeShopOperationParam cakeShopOperationParam) {
-		return cakeShopOperationParam.operationDay() == null || cakeShopOperationParam.operationStartTime() == null
-			|| cakeShopOperationParam.operationEndTime() == null;
+	private static boolean isEmptyCakeShopOperation(final CakeShopOperationParam cakeShopOperationParam) {
+		return isNull(cakeShopOperationParam.operationDay())
+			|| isNull(cakeShopOperationParam.operationStartTime())
+			|| isNull(cakeShopOperationParam.operationEndTime());
 	}
 }

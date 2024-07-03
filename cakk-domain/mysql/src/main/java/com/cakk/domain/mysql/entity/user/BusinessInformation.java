@@ -57,7 +57,7 @@ public class BusinessInformation extends AuditEntity {
 		this.user = user;
 	}
 
-	public CertificationEvent getRequestCertificationMessage(CertificationParam param) {
+	public CertificationEvent getRequestCertificationMessage(final CertificationParam param) {
 		if (isExistMyCakeShop()) {
 			return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
 		}
@@ -65,7 +65,7 @@ public class BusinessInformation extends AuditEntity {
 
 	}
 
-	public void promotedByBusinessOwner(User businessOwner) {
+	public void promotedByBusinessOwner(final User businessOwner) {
 		user = businessOwner;
 		user.upgradedRoleToBusinessOwner();
 		cakeShop.ownedByUser();

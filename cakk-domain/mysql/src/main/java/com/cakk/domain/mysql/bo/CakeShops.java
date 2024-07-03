@@ -34,7 +34,7 @@ public class CakeShops<T extends CakeShopParam> {
 	}
 
 	private List<T> validationPageSize(List<T> cakeShops, int pageSize) {
-		return cakeShops.stream().limit(pageSize).collect(Collectors.toList());
+		return cakeShops.stream().limit(pageSize).toList();
 	}
 
 	private void validationEmptyCakeImage(List<T> cakeShops) {

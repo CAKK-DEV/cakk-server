@@ -40,7 +40,11 @@ public class CakeQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(Long cakeId, CakeDesignCategory category, int pageSize) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(
+		final Long cakeId,
+		final CakeDesignCategory category,
+		final int pageSize
+	) {
 		return queryFactory
 			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
@@ -59,7 +63,11 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(Long cakeId, Long cakeShopId, int pageSize) {
+	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(
+		final Long cakeId,
+		final Long cakeShopId,
+		final int pageSize
+	) {
 		return queryFactory
 			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
@@ -77,10 +85,10 @@ public class CakeQueryRepository {
 	}
 
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(
-		Long cakeId,
-		String keyword,
-		Point location,
-		Integer pageSize
+		final Long cakeId,
+		final String keyword,
+		final Point location,
+		final Integer pageSize
 	) {
 		return queryFactory
 			.select(
@@ -101,7 +109,7 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(List<Long> cakeIds) {
+	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(final List<Long> cakeIds) {
 		return queryFactory
 			.select(constructor(CakeImageResponseParam.class,
 				cakeShop.id,
@@ -116,7 +124,7 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public Optional<Cake> searchWithCakeTagsAndCakeCategories(Long cakeId, User owner) {
+	public Optional<Cake> searchWithCakeTagsAndCakeCategories(final Long cakeId, final User owner) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
@@ -138,7 +146,7 @@ public class CakeQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public CakeDetailParam searchCakeDetailById(Long cakeId) {
+	public CakeDetailParam searchCakeDetailById(final Long cakeId) {
 		List<CakeDetailParam> results = queryFactory
 			.selectFrom(cake)
 			.innerJoin(cake.cakeShop, cakeShop)
@@ -161,7 +169,7 @@ public class CakeQueryRepository {
 		return results.isEmpty() ? null : results.get(0);
 	}
 
-	private BooleanExpression ltCakeId(Long cakeId) {
+	private BooleanExpression ltCakeId(final Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
 		}

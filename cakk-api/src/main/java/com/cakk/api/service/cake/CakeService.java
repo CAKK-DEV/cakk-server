@@ -85,7 +85,7 @@ public class CakeService {
 
 	@Transactional
 	public void createCake(CakeCreateParam param) {
-		CakeShop cakeShop = cakeShopReader.findByIdAndOwner(param.cakeShopId(), param.owner());
+		CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.owner());
 		Cake cake = param.cake();
 		List<Tag> tags = param.tagNames()
 			.stream()

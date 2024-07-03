@@ -1,5 +1,7 @@
 package com.cakk.api.mapper;
 
+import static java.util.Objects.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +62,7 @@ public class CakeMapper {
 			.build();
 	}
 
-	public static CakeDetailResponse cakeDetailResponseFromParam(CakeDetailParam param) {
+	public static CakeDetailResponse cakeDetailResponseFromParam(final CakeDetailParam param) {
 		Set<TagParam> tags = param.tags();
 
 		for (TagParam tagParam : tags) {
@@ -87,6 +89,6 @@ public class CakeMapper {
 	}
 
 	private static boolean isEmptyTag(TagParam tagParam) {
-		return tagParam.tagId() == null || tagParam.tagName() == null;
+		return isNull(tagParam.tagId()) || isNull(tagParam.tagName() );
 	}
 }

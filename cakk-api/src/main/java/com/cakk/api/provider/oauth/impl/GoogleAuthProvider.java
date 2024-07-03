@@ -23,13 +23,13 @@ public class GoogleAuthProvider implements OidcProvider {
 	private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
 	@Override
-	public String getProviderId(String idToken) {
+	public String getProviderId(final String idToken) {
 		return getGoogleIdToken(idToken).getPayload().getSubject();
 	}
 
-	private GoogleIdToken getGoogleIdToken(String idToken) {
+	private GoogleIdToken getGoogleIdToken(final String idToken) {
 		try {
-			GoogleIdToken googleIdToken = googleIdTokenVerifier.verify(idToken);
+			final GoogleIdToken googleIdToken = googleIdTokenVerifier.verify(idToken);
 
 			if (isNull(googleIdToken)) {
 				throw new CakkException(EXTERNAL_SERVER_ERROR);

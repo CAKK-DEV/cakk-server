@@ -13,7 +13,7 @@ public class TagWriter {
 
 	private final TagJpaRepository tagJpaRepository;
 
-	public Tag saveTag(String tagName) {
+	public Tag saveTag(final String tagName) {
 		return tagJpaRepository.save(TagMapper.supplyTagBy(tagName));
 	}
 }

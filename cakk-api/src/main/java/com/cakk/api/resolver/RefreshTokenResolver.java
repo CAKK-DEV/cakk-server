@@ -27,7 +27,7 @@ public class RefreshTokenResolver implements HandlerMethodArgumentResolver {
 		NativeWebRequest webRequest,
 		WebDataBinderFactory binderFactory
 	) {
-		String refreshToken = webRequest.getHeader("Refresh");
+		final String refreshToken = webRequest.getHeader("Refresh");
 
 		if (!hasLength(refreshToken)) {
 			throw new CakkException(ReturnCode.EMPTY_REFRESH);

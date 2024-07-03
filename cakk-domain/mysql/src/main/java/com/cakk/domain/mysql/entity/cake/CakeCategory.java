@@ -45,7 +45,7 @@ public class CakeCategory extends AuditCreatedEntity {
 		this.cakeDesignCategory = cakeDesignCategory;
 	}
 
-	public void updateCake(Cake cake) {
+	public void updateCake(final Cake cake) {
 		this.cake = cake;
 	}
 }

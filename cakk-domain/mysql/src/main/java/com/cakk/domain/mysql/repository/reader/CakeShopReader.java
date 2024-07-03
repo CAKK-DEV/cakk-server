@@ -31,7 +31,7 @@ public class CakeShopReader {
 	private final CakeShopQueryRepository cakeShopQueryRepository;
 	private final BusinessInformationJpaRepository businessInformationJpaRepository;
 
-	public CakeShop findById(Long cakeShopId) {
+	public CakeShop findById(final Long cakeShopId) {
 		return cakeShopJpaRepository.findById(cakeShopId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
@@ -65,23 +65,22 @@ public class CakeShopReader {
 		return response;
 	}
 
-	public BusinessInformation findBusinessInformationWithShop(Long cakeShopId) {
-		return businessInformationJpaRepository
-			.findBusinessInformationWithCakeShop(cakeShopId)
+	public BusinessInformation findBusinessInformationWithShop(final Long cakeShopId) {
+		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
-	public BusinessInformation findBusinessInformationByCakeShopId(Long cakeShopId) {
+	public BusinessInformation findBusinessInformationByCakeShopId(final Long cakeShopId) {
 		return businessInformationJpaRepository.findBusinessInformationByCakeShopId(cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
-	public List<CakeShopByLocationParam> searchShopByLocationBased(Point point) {
+	public List<CakeShopByLocationParam> searchShopByLocationBased(final Point point) {
 		return cakeShopQueryRepository.findShopsByLocationBased(point);
 	}
 
-	public List<CakeShop> searchShopBySearch(CakeShopSearchParam param) {
-		return cakeShopQueryRepository.findByKeywordWithLocation(
+	public List<CakeShop> searchShopBySearch(final CakeShopSearchParam param) {
+		return cakeShopQueryRepository.searchByKeywordWithLocation(
 			param.cakeShopId(),
 			param.keyword(),
 			param.location(),
@@ -89,27 +88,22 @@ public class CakeShopReader {
 		);
 	}
 
-	public CakeShop findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
-		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(owner, cakeShopId)
+	public CakeShop searchWithShopLinks(final User owner, final Long cakeShopId) {
+		return cakeShopQueryRepository.searchWithShopLinks(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 
-	public CakeShop findWithShopLinks(User owner, Long cakeShopId) {
-		return cakeShopQueryRepository.findWithShopLinks(owner, cakeShopId)
+	public CakeShop searchByIdAndOwner(final Long cakeShopId, final User owner) {
+		return cakeShopQueryRepository.searchWithBusinessInformationAndOwnerById(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 
-	public CakeShop findByIdAndOwner(Long cakeShopId, User owner) {
-		return cakeShopQueryRepository.findWithBusinessInformationAndOwnerById(owner, cakeShopId)
+	public CakeShop searchWithOperations(final User owner, final Long cakeShopId) {
+		return cakeShopQueryRepository.searchWithOperations(owner, cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
 	}
 
-	public CakeShop findWithOperations(User owner, Long cakeShopId) {
-		return cakeShopQueryRepository.findWithOperations(owner, cakeShopId)
-			.orElseThrow(() -> new CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER));
-	}
-
-	public List<CakeShop> searchShopsByShopIds(List<Long> shopIds) {
+	public List<CakeShop> searchShopsByShopIds(final List<Long> shopIds) {
 		return cakeShopQueryRepository.searchByShopIds(shopIds);
 	}
 }

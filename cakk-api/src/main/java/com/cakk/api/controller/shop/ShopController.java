@@ -61,7 +61,7 @@ public class ShopController {
 	}
 
 	@PostMapping("/admin/create")
-	public ApiResponse<CakeShopCreateResponse> createCakeShopByAdmin(
+	public ApiResponse<CakeShopCreateResponse> createByAdmin(
 		@Valid @RequestBody CreateShopRequest createShopRequest
 	) {
 		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(createShopRequest);
@@ -89,7 +89,7 @@ public class ShopController {
 	}
 
 	@GetMapping("/{cakeShopId}")
-	public ApiResponse<CakeShopDetailResponse> detail(
+	public ApiResponse<CakeShopDetailResponse> details(
 		@PathVariable Long cakeShopId
 	) {
 		final CakeShopDetailResponse response = shopService.searchDetailById(cakeShopId);
@@ -105,7 +105,7 @@ public class ShopController {
 	}
 
 	@GetMapping("/location-based")
-	public ApiResponse<CakeShopByMapResponse> searchShop(
+	public ApiResponse<CakeShopByMapResponse> listByLocation(
 		@Valid @ModelAttribute SearchShopByLocationRequest request
 	) {
 		final CakeShopByMapResponse response = shopService.searchShop(request);
@@ -123,7 +123,8 @@ public class ShopController {
 
 	@GetMapping("/mine")
 	public ApiResponse<CakeShopByMineResponse> getMyBusinessId(
-		@SignInUser User user) {
+		@SignInUser User user
+	) {
 		final CakeShopByMineResponse response = shopService.getMyBusinessId(user);
 		return ApiResponse.success(response);
 	}
@@ -150,7 +151,7 @@ public class ShopController {
 	}
 
 	@GetMapping("/search/shops")
-	public ApiResponse<CakeShopSearchResponse> searchShopByKeyword(
+	public ApiResponse<CakeShopSearchResponse> listByKeywordAndLocation(
 		@Valid @ModelAttribute CakeShopSearchRequest request
 	) {
 		final CakeShopSearchResponse response = shopService.searchShopByKeyword(request);
@@ -158,18 +159,18 @@ public class ShopController {
 	}
 
 	@PutMapping("/{cakeShopId}")
-	public ApiResponse<Void> updateDefaultInformation(
+	public ApiResponse<Void> updateBasicInformation(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody UpdateShopRequest request
 	) {
-		shopService.updateDefaultInformation(request.toParam(user, cakeShopId));
+		shopService.updateBasicInformation(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
 	}
 
 	@PutMapping("/{cakeShopId}/links")
-	public ApiResponse<Void> updateShopLinks(
+	public ApiResponse<Void> updateLinks(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody UpdateLinkRequest request
@@ -180,7 +181,7 @@ public class ShopController {
 	}
 
 	@PutMapping("/{cakeShopId}/address")
-	public ApiResponse<Void> updateShopAddress(
+	public ApiResponse<Void> updateAddress(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody UpdateShopAddressRequest request
@@ -191,7 +192,7 @@ public class ShopController {
 	}
 
 	@PutMapping("/{cakeShopId}/operation-days")
-	public ApiResponse<Void> updateShopOperationDays(
+	public ApiResponse<Void> updateOperationDays(
 		@SignInUser User user,
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody UpdateShopOperationRequest request

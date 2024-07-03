@@ -2,15 +2,15 @@ package com.cakk.api.listener.user;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
 import com.cakk.external.service.MailService;
 
 @RequiredArgsConstructor
-@Component
+@ApplicationEventListener
 public class EmailSendEventListener {
 
 	private final MailService mailService;

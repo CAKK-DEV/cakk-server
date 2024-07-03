@@ -15,11 +15,11 @@ public class BusinessInformationReader {
 
 	private final BusinessInformationJpaRepository businessInformationJpaRepository;
 
-	public boolean isExistBusinessInformation(User owner, Long cakeShopId) {
+	public boolean isExistBusinessInformation(final User owner, final Long cakeShopId) {
 		return businessInformationJpaRepository.existsBusinessInformationByUserAndCakeShop_Id(owner, cakeShopId);
 	}
 
-	public List<BusinessInformation> findAllWithCakeShopByUser(User owner) {
+	public List<BusinessInformation> findAllWithCakeShopByUser(final User owner) {
 		return businessInformationJpaRepository.findAllWithCakeShopByUser(owner);
 	}
 }

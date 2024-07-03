@@ -12,11 +12,11 @@ import com.cakk.domain.mysql.entity.cake.CakeCategory;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CakeDesignCategoryMapper {
 
-	public static List<CakeCategory> supplyCakeCategoryListBy(List<CakeDesignCategory> cakeDesignCategories) {
+	public static List<CakeCategory> supplyCakeCategoryListBy(final List<CakeDesignCategory> cakeDesignCategories) {
 		return cakeDesignCategories
 			.stream()
 			.map(CakeDesignCategoryMapper::supplyCakeCategoryBy)
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	public static CakeCategory supplyCakeCategoryBy(CakeDesignCategory cakeDesignCategory) {

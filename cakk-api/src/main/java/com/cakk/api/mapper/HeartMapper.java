@@ -8,7 +8,7 @@ import com.cakk.api.dto.response.like.HeartResponse;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HeartMapper {
 
-	public static HeartResponse supplyHeartResponseBy(boolean isHeart) {
+	public static HeartResponse supplyHeartResponseBy(final boolean isHeart) {
 		return new HeartResponse(isHeart);
 	}
 }

@@ -44,7 +44,7 @@ public class HeartService {
 	private final CakeShopHeartWriter cakeShopHeartWriter;
 
 	@Transactional(readOnly = true)
-	public HeartCakeImageListResponse findCakeImagesByCursorAndHeart(
+	public HeartCakeImageListResponse searchCakeImagesByCursorAndHeart(
 		final HeartCakeSearchRequest dto,
 		final User signInUser
 	) {
@@ -58,7 +58,7 @@ public class HeartService {
 	}
 
 	@Transactional(readOnly = true)
-	public HeartCakeShopListResponse findCakeShopByCursorAndHeart(
+	public HeartCakeShopListResponse searchCakeShopByCursorAndHeart(
 		final HeartCakeShopSearchRequest dto,
 		final User signInUser
 	) {

@@ -1,5 +1,7 @@
 package com.cakk.api.factory;
 
+import static java.util.Objects.*;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -48,7 +50,7 @@ public class OidcProviderFactory {
 	private OidcProvider getProvider(Provider provider) {
 		OidcProvider oidcProvider = authProviderMap.get(provider);
 
-		if (oidcProvider == null) {
+		if (isNull(oidcProvider)) {
 			throw new CakkException(ReturnCode.WRONG_PROVIDER);
 		}
 

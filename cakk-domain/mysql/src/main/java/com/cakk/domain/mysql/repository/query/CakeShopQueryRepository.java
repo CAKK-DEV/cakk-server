@@ -95,7 +95,7 @@ public class CakeShopQueryRepository {
 		return results.isEmpty() ? null : results.get(0);
 	}
 
-	public List<CakeShop> findByKeywordWithLocation(
+	public List<CakeShop> searchByKeywordWithLocation(
 		Long cakeShopId,
 		String keyword,
 		Point location,
@@ -114,7 +114,7 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
-	public Optional<CakeShop> findWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
+	public Optional<CakeShop> searchWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
 		JPQLQuery<CakeShop> query = queryFactory
 			.selectFrom(cakeShop)
 			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin();
@@ -129,7 +129,7 @@ public class CakeShopQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public Optional<CakeShop> findWithShopLinks(User owner, Long cakeShopId) {
+	public Optional<CakeShop> searchWithShopLinks(User owner, Long cakeShopId) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
@@ -149,7 +149,7 @@ public class CakeShopQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public Optional<CakeShop> findWithOperations(User owner, Long cakeShopId) {
+	public Optional<CakeShop> searchWithOperations(User owner, Long cakeShopId) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
