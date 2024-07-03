@@ -3,19 +3,19 @@ package com.cakk.api.listener.views;
 import java.util.Objects;
 
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
 import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @RequiredArgsConstructor
-@Component
+@ApplicationEventListener
 public class ViewsIncreaseEventListener {
 
 	private final CakeViewsRedisRepository cakeViewsRedisRepository;

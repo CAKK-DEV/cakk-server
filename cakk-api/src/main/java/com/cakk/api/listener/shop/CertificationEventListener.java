@@ -1,17 +1,17 @@
 package com.cakk.api.listener.shop;
 
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.service.slack.SlackService;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
 @RequiredArgsConstructor
-@Component
+@ApplicationEventListener
 public class CertificationEventListener {
 
 	private final SlackService slackService;
