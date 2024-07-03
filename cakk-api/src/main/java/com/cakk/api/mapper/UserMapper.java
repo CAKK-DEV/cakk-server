@@ -16,7 +16,7 @@ import com.cakk.domain.mysql.entity.user.UserWithdrawal;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
 
-	public static User supplyUserBy(UserSignUpRequest dto, String providerId) {
+	public static User supplyUserBy(final UserSignUpRequest dto, final String providerId) {
 		return User.builder()
 			.provider(dto.provider())
 			.providerId(providerId)

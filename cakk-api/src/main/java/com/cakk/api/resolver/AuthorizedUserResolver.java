@@ -25,7 +25,7 @@ public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
 								ModelAndViewContainer mavContainer,
 								NativeWebRequest webRequest,
 								WebDataBinderFactory binderFactory) throws Exception {
-		OAuthUserDetails userDetails = (OAuthUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		final OAuthUserDetails userDetails = (OAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return isNull(userDetails) ? null : userDetails.getUser();
 	}
 }

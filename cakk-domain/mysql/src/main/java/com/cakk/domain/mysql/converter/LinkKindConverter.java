@@ -11,7 +11,7 @@ import com.cakk.common.exception.CakkException;
 public class LinkKindConverter implements AttributeConverter<LinkKind, String> {
 
 	@Override
-	public String convertToDatabaseColumn(LinkKind linkKind) {
+	public String convertToDatabaseColumn(final LinkKind linkKind) {
 		if (linkKind == null) {
 			return null;
 		}
@@ -20,7 +20,7 @@ public class LinkKindConverter implements AttributeConverter<LinkKind, String> {
 	}
 
 	@Override
-	public LinkKind convertToEntityAttribute(String value) {
+	public LinkKind convertToEntityAttribute(final String value) {
 		if (value == null) {
 			return null;
 		}

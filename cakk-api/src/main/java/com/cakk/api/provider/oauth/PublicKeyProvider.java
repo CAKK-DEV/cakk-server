@@ -20,17 +20,17 @@ import com.cakk.common.exception.CakkException;
 @Component
 public class PublicKeyProvider {
 
-	public PublicKey generatePublicKey(Map<String, String> tokenHeaders, OidcPublicKeyList publicKeys) {
-		OidcPublicKey publicKey = publicKeys.getMatchedKey(tokenHeaders.get("kid"), tokenHeaders.get("alg"));
+	public PublicKey generatePublicKey(final Map<String, String> tokenHeaders, final OidcPublicKeyList publicKeys) {
+		final OidcPublicKey publicKey = publicKeys.getMatchedKey(tokenHeaders.get("kid"), tokenHeaders.get("alg"));
 
 		return getPublicKey(publicKey);
 	}
 
-	private PublicKey getPublicKey(OidcPublicKey publicKey) {
-		byte[] nBytes = decodeBase64(publicKey.n());
-		byte[] eBytes = decodeBase64(publicKey.e());
+	private PublicKey getPublicKey(final OidcPublicKey publicKey) {
+		final byte[] nBytes = decodeBase64(publicKey.n());
+		final byte[] eBytes = decodeBase64(publicKey.e());
 
-		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(new BigInteger(1, nBytes), new BigInteger(1, eBytes));
+		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(new BigInteger(1, nBytes), new BigInteger(1, eBytes));
 
 		try {
 			return KeyFactory.getInstance(publicKey.kty()).generatePublic(publicKeySpec);

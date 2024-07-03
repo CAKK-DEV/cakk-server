@@ -55,7 +55,7 @@ public class CakeShopOperation extends AuditEntity {
 		this.cakeShop = cakeShop;
 	}
 
-	public void updateCakeShop(CakeShop cakeShop) {
+	public void updateCakeShop(final CakeShop cakeShop) {
 		this.cakeShop = cakeShop;
 	}
 }

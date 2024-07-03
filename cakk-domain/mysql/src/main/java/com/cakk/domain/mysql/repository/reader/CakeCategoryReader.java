@@ -14,7 +14,7 @@ public class CakeCategoryReader {
 
 	private final CakeCategoryJpaRepository cakeCategoryJpaRepository;
 
-	public CakeCategory findByCakeId(Long cakeId) {
+	public CakeCategory findByCakeId(final Long cakeId) {
 		return cakeCategoryJpaRepository.findByCakeId(cakeId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY));
 	}
 }

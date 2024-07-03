@@ -4,6 +4,7 @@ import static java.util.Objects.*;
 
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,56 +77,55 @@ public class ShopService {
 	}
 
 	@Transactional
-	public void promoteUserToBusinessOwner(PromotionRequest request) {
-		User user = userReader.findByUserId(request.userId());
-		BusinessInformation businessInformation = cakeShopReader
-			.findBusinessInformationWithShop(request.cakeShopId());
+	public void promoteUserToBusinessOwner(final PromotionRequest request) {
+		final User user = userReader.findByUserId(request.userId());
+		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationWithShop(request.cakeShopId());
 
 		businessInformation.promotedByBusinessOwner(user);
 	}
 
 	@Transactional
-	public void updateDefaultInformation(CakeShopUpdateParam param) {
-		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.user(), param.cakeShopId());
+	public void updateBasicInformation(final CakeShopUpdateParam param) {
+		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.user());
 
-		cakeShop.updateDefaultInformation(param);
+		cakeShop.updateBasicInformation(param);
 	}
 
 	@Transactional
-	public void updateShopLinks(UpdateLinkParam param) {
-		final CakeShop cakeShop = cakeShopReader.findWithShopLinks(param.user(), param.cakeShopId());
+	public void updateShopLinks(final UpdateLinkParam param) {
+		final CakeShop cakeShop = cakeShopReader.searchWithShopLinks(param.user(), param.cakeShopId());
 		cakeShop.updateShopLinks(param.cakeShopLinks());
 	}
 
 	@Transactional
-	public void updateShopAddress(UpdateShopAddressParam param) {
-		final CakeShop cakeShop = cakeShopReader.findWithBusinessInformationAndOwnerById(param.user(), param.cakeShopId());
+	public void updateShopAddress(final UpdateShopAddressParam param) {
+		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.user());
 		cakeShop.updateShopAddress(param);
 	}
 
 	@Transactional
-	public void updateShopOperationDays(UpdateShopOperationParam param) {
-		final CakeShop cakeShop = cakeShopReader.findWithOperations(param.user(), param.cakeShopId());
+	public void updateShopOperationDays(final UpdateShopOperationParam param) {
+		final CakeShop cakeShop = cakeShopReader.searchWithOperations(param.user(), param.cakeShopId());
 		cakeShop.updateShopOperationDays(param.cakeShopOperations());
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopByMineResponse getMyBusinessId(User user) {
+	public CakeShopByMineResponse getMyBusinessId(final User user) {
 		final List<BusinessInformation> result = businessInformationReader.findAllWithCakeShopByUser(user);
 		return ShopMapper.supplyCakeShopByMineResponseBy(result);
 	}
 
 	@Transactional(readOnly = true)
-	public void requestCertificationBusinessOwner(CertificationParam param) {
+	public void requestCertificationBusinessOwner(final CertificationParam param) {
 		BusinessInformation businessInformation;
 
-		if (param.cakeShopId() != null) {
+		if (nonNull(param.cakeShopId())) {
 			businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
 		} else {
 			businessInformation = ShopMapper.supplyBusinessInformationBy();
 		}
 
-		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
+		final CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
 		publisher.publishEvent(certificationEvent);
 	}
 
@@ -154,19 +154,19 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopByMapResponse searchShop(final SearchShopByLocationRequest request) {
-		Double longitude = request.longitude();
-		Double latitude = request.latitude();
-		final List<CakeShopByLocationParam> result = cakeShopReader
-			.searchShopByLocationBased(PointMapper.supplyPointBy(latitude, longitude));
+		final Double longitude = request.longitude();
+		final Double latitude = request.latitude();
+		final Point point = PointMapper.supplyPointBy(latitude, longitude);
 
+		final List<CakeShopByLocationParam> result = cakeShopReader.searchShopByLocationBased(point);
 		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result, 4);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShops.getCakeShops());
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopSearchResponse searchShopByKeyword(CakeShopSearchRequest dto) {
-		Integer pageSize = dto.pageSize();
+	public CakeShopSearchResponse searchShopByKeyword(final CakeShopSearchRequest dto) {
+		final int pageSize = dto.pageSize();
 		final List<CakeShop> result = cakeShopReader.searchShopBySearch(dto.toParam());
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
@@ -176,7 +176,7 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(CakeShopSearchByViewsRequest dto) {
+	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(final CakeShopSearchByViewsRequest dto) {
 		final long offset = isNull(dto.offset()) ? 0 : dto.offset();
 		final int pageSize = dto.pageSize();
 		final List<Long> cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize);
@@ -193,7 +193,7 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopOwnerResponse isExistBusinessInformation(User owner, Long cakeShopId) {
+	public CakeShopOwnerResponse isExistBusinessInformation(final User owner, final Long cakeShopId) {
 		final Boolean isOwned = businessInformationReader.isExistBusinessInformation(owner, cakeShopId);
 
 		return ShopMapper.supplyCakeShopOwnerResponseBy(isOwned);

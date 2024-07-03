@@ -126,14 +126,14 @@ public class CakeShop extends AuditEntity {
 		this.heartCount--;
 	}
 
-	public void updateDefaultInformation(CakeShopUpdateParam param) {
+	public void updateBasicInformation(final CakeShopUpdateParam param) {
 		thumbnailUrl = param.thumbnailUrl();
 		shopName = param.shopName();
 		shopBio = param.shopBio();
 		shopDescription = param.shopDescription();
 	}
 
-	public void updateShopLinks(List<CakeShopLink> cakeShopLinks) {
+	public void updateShopLinks(final List<CakeShopLink> cakeShopLinks) {
 		this.cakeShopLinks.clear();
 
 		cakeShopLinks.forEach(cakeShopLink -> {
@@ -142,12 +142,12 @@ public class CakeShop extends AuditEntity {
 		});
 	}
 
-	public void updateShopAddress(UpdateShopAddressParam param) {
+	public void updateShopAddress(final UpdateShopAddressParam param) {
 		shopAddress = param.shopAddress();
 		location = param.location();
 	}
 
-	public void updateShopOperationDays(List<CakeShopOperation> cakeShopOperations) {
+	public void updateShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {
 		this.cakeShopOperations.clear();
 
 		cakeShopOperations.forEach(cakeShopOperation -> {
@@ -156,7 +156,7 @@ public class CakeShop extends AuditEntity {
 		});
 	}
 
-	public void registerCake(Cake cake) {
+	public void registerCake(final Cake cake) {
 		cake.updateCakeShop(this);
 		this.cakes.add(cake);
 	}

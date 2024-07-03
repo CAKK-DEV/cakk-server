@@ -14,7 +14,7 @@ public class TagReader {
 
 	private final TagJpaRepository tagJpaRepository;
 
-	public Optional<Tag> findByTagName(String tagName) {
+	public Optional<Tag> findByTagName(final String tagName) {
 		return tagJpaRepository.findTagByTagName(tagName);
 	}
 }

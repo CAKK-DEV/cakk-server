@@ -12,7 +12,7 @@ public class CakeWriter {
 
 	private final CakeJpaRepository cakeJpaRepository;
 
-	public void deleteCake(Cake cake) {
+	public void deleteCake(final Cake cake) {
 		cakeJpaRepository.delete(cake);
 	}
 }

@@ -76,11 +76,11 @@ public class Cake extends AuditEntity {
 		this.heartCount--;
 	}
 
-	public void updateCakeImageUrl(String cakeImageUrl) {
+	public void updateCakeImageUrl(final String cakeImageUrl) {
 		this.cakeImageUrl = cakeImageUrl;
 	}
 
-	public void updateCakeCategories(List<CakeCategory> cakeCategories) {
+	public void updateCakeCategories(final List<CakeCategory> cakeCategories) {
 		this.cakeCategories.clear();
 
 		cakeCategories.forEach(cakeCategory -> {
@@ -89,7 +89,7 @@ public class Cake extends AuditEntity {
 		});
 	}
 
-	public void updateCakeTags(List<Tag> tags) {
+	public void updateCakeTags(final List<Tag> tags) {
 		this.cakeTags.clear();
 
 		tags.forEach(tag -> this.cakeTags.add(CakeTagMapper.supplyCakeTagBy(this, tag)));
@@ -103,18 +103,18 @@ public class Cake extends AuditEntity {
 		this.cakeTags.clear();
 	}
 
-	public void registerTags(List<Tag> tags) {
+	public void registerTags(final List<Tag> tags) {
 		tags.forEach(tag -> this.cakeTags.add(CakeTagMapper.supplyCakeTagBy(this, tag)));
 	}
 
-	public void registerCategories(List<CakeCategory> cakeCategories) {
+	public void registerCategories(final List<CakeCategory> cakeCategories) {
 		cakeCategories.forEach(cakeCategory -> {
 			cakeCategory.updateCake(this);
 			this.cakeCategories.add(cakeCategory);
 		});
 	}
 
-	public void updateCakeShop(CakeShop cakeShop) {
+	public void updateCakeShop(final CakeShop cakeShop) {
 		this.cakeShop = cakeShop;
 	}
 

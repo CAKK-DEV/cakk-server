@@ -2,6 +2,7 @@ package com.cakk.api.validator;
 
 import static java.util.Objects.*;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,12 @@ import com.cakk.common.enums.Days;
 public class OperationValidator implements ConstraintValidator<OperationDay, List<ShopOperationParam>> {
 
 	@Override
-	public boolean isValid(List<ShopOperationParam> operationParams, ConstraintValidatorContext context) {
+	public boolean isValid(final List<ShopOperationParam> operationParams, final ConstraintValidatorContext context) {
 		if (isNull(operationParams)) {
 			return false;
 		}
 
-		Map<Days, Boolean> days = new HashMap<>();
+		final Map<Days, Boolean> days = new EnumMap<>(Days.class);
 		for (ShopOperationParam operationParam : operationParams) {
 			if (days.containsKey(operationParam.operationDay())) {
 				return false;

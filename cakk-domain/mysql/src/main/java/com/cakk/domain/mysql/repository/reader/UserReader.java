@@ -16,11 +16,11 @@ public class UserReader {
 
 	private final UserJpaRepository userJpaRepository;
 
-	public User findByUserId(Long userId) {
+	public User findByUserId(final Long userId) {
 		return userJpaRepository.findById(userId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_USER));
 	}
 
-	public User findByProviderId(String providerId) {
+	public User findByProviderId(final String providerId) {
 		return userJpaRepository.findByProviderId(providerId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_USER));
 	}
 

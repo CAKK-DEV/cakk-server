@@ -65,7 +65,7 @@ public class MyPageController {
 		@SignInUser User user,
 		@Valid @ModelAttribute HeartCakeSearchRequest request
 	) {
-		final HeartCakeImageListResponse response = heartService.findCakeImagesByCursorAndHeart(request, user);
+		final HeartCakeImageListResponse response = heartService.searchCakeImagesByCursorAndHeart(request, user);
 
 		return ApiResponse.success(response);
 	}
@@ -75,7 +75,7 @@ public class MyPageController {
 		@SignInUser User user,
 		@Valid @ModelAttribute HeartCakeShopSearchRequest request
 	) {
-		final HeartCakeShopListResponse response = heartService.findCakeShopByCursorAndHeart(request, user);
+		final HeartCakeShopListResponse response = heartService.searchCakeShopByCursorAndHeart(request, user);
 
 		return ApiResponse.success(response);
 	}

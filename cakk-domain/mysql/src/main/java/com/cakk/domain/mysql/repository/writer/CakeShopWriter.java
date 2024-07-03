@@ -27,11 +27,14 @@ public class CakeShopWriter {
 		final CakeShop cakeShop,
 		final List<CakeShopOperation> cakeShopOperations,
 		final BusinessInformation businessInformation,
-		final List<CakeShopLink> cakeShopLinks) {
+		final List<CakeShopLink> cakeShopLinks
+	) {
 		final CakeShop result = cakeShopJpaRepository.save(cakeShop);
+
 		cakeShopOperationJpaRepository.saveAll(cakeShopOperations);
 		businessInformationJpaRepository.save(businessInformation);
 		cakeShopLinkJpaRepository.saveAll(cakeShopLinks);
+
 		return result;
 	}
 }

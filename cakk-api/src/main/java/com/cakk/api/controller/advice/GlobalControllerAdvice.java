@@ -9,8 +9,6 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -23,25 +21,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.cakk.api.service.slack.SlackService;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.common.response.ApiResponse;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalControllerAdvice {
 
 	private final SlackService slackService;
-	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ExceptionHandler(CakkException.class)
 	public ResponseEntity<ApiResponse<Void>> handleCakkException(CakkException exception, HttpServletRequest request) {
 		if (exception.getReturnCode().equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
 			slackService.sendSlackForError(exception, request);
 		}
-		logger.error(exception.getMessage());
+		log.error(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(exception.getReturnCode()));
 	}
 
@@ -51,13 +50,13 @@ public class GlobalControllerAdvice {
 		MethodArgumentTypeMismatchException.class
 	})
 	public ResponseEntity<ApiResponse<Void>> handleRequestException(Exception exception) {
-		logger.error(exception.getMessage());
+		log.error(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.WRONG_PARAMETER));
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
-		logger.error(exception.getMessage());
+		log.error(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.METHOD_NOT_ALLOWED));
 	}
 
@@ -70,7 +69,7 @@ public class GlobalControllerAdvice {
 			errors.put(fieldName, errorMessage);
 		});
 
-		logger.error("Validation failed: {}", errors);
+		log.error("Validation failed: {}", errors);
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(ReturnCode.WRONG_PARAMETER, errors));
 	}
 
@@ -80,7 +79,7 @@ public class GlobalControllerAdvice {
 	})
 	public ResponseEntity<ApiResponse<String>> handleServerException(SQLException exception, HttpServletRequest request) {
 		slackService.sendSlackForError(exception, request);
-		logger.error(exception.getMessage());
+		log.error(exception.getMessage());
 		return getResponseEntity(INTERNAL_SERVER_ERROR, ApiResponse.error(ReturnCode.INTERNAL_SERVER_ERROR, exception.getMessage()));
 	}
 

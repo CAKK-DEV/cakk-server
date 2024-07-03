@@ -8,7 +8,7 @@ import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
-	public static EmailWithVerificationCodeSendEvent supplyEmailWithVerificationCodeSendEventBy(String email, String code) {
+	public static EmailWithVerificationCodeSendEvent supplyEmailWithVerificationCodeSendEventBy(final String email, final String code) {
 		return new EmailWithVerificationCodeSendEvent(email, code);
 	}
 }

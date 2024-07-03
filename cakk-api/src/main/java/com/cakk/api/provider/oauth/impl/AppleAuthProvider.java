@@ -21,7 +21,7 @@ public class AppleAuthProvider implements OidcProvider {
 	private final JwtProvider jwtProvider;
 
 	@Override
-	public String getProviderId(String idToken) {
+	public String getProviderId(final String idToken) {
 		final OidcPublicKeyList oidcPublicKeyList = appleAuthClient.getPublicKeys();
 		final PublicKey publicKey = publicKeyProvider.generatePublicKey(parseHeaders(idToken), oidcPublicKeyList);
 

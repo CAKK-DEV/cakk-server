@@ -71,7 +71,7 @@ public class HeartServiceTest extends ServiceTest {
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.findCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
 
 		// then
 		Assertions.assertEquals(cakeImages, result.cakeImages());
@@ -98,7 +98,7 @@ public class HeartServiceTest extends ServiceTest {
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.findCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
 
 		// then
 		Assertions.assertEquals(cakeImages, result.cakeImages());
@@ -118,7 +118,7 @@ public class HeartServiceTest extends ServiceTest {
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.findCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
 
 		// then
 		Assertions.assertEquals(0, result.cakeImages().size());

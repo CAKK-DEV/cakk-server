@@ -24,7 +24,11 @@ public class CakeHeartQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<HeartCakeImageResponseParam> searchCakeImagesByCursorAndHeart(Long cakeHeartId, Long userId, int pageSize) {
+	public List<HeartCakeImageResponseParam> searchCakeImagesByCursorAndHeart(
+		final Long cakeHeartId,
+		final Long userId,
+		final int pageSize
+	) {
 		return queryFactory
 			.select(Projections.constructor(HeartCakeImageResponseParam.class,
 				cakeShop.id,
@@ -45,7 +49,7 @@ public class CakeHeartQueryRepository {
 			.fetch();
 	}
 
-	private BooleanExpression ltCakeHeartId(Long cakeHeartId) {
+	private BooleanExpression ltCakeHeartId(final Long cakeHeartId) {
 		if (isNull(cakeHeartId)) {
 			return null;
 		}
@@ -53,7 +57,7 @@ public class CakeHeartQueryRepository {
 		return cakeHeart.id.lt(cakeHeartId);
 	}
 
-	private BooleanExpression isHeart(Long userId) {
+	private BooleanExpression isHeart(final Long userId) {
 		return cakeHeart.user.id.eq(userId);
 	}
 

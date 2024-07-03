@@ -11,7 +11,7 @@ import com.cakk.common.exception.CakkException;
 public class DayOfWeekConverter implements AttributeConverter<Days, Integer> {
 
 	@Override
-	public Integer convertToDatabaseColumn(Days days) {
+	public Integer convertToDatabaseColumn(final Days days) {
 		if (days == null) {
 			return null;
 		}
@@ -20,7 +20,7 @@ public class DayOfWeekConverter implements AttributeConverter<Days, Integer> {
 	}
 
 	@Override
-	public Days convertToEntityAttribute(Integer code) {
+	public Days convertToEntityAttribute(final Integer code) {
 		if (code == null) {
 			return null;
 		}
