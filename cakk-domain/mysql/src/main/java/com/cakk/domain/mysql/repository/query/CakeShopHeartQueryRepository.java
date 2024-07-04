@@ -80,7 +80,7 @@ public class CakeShopHeartQueryRepository {
 
 	private BooleanExpression inCakeShopHeartIds(List<Long> cakeShopHeartIds) {
 		if (isNull(cakeShopHeartIds) || cakeShopHeartIds.isEmpty()) {
-			return null;
+			return cakeShopHeart.id.in(List.of());
 		}
 
 		return cakeShopHeart.id.in(cakeShopHeartIds);
