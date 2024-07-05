@@ -97,6 +97,10 @@ public abstract class IntegrationTest {
 		return 1L;
 	}
 
+	protected long getAccessTokenExpiredSecond() {
+		return jwtProvider.getAccessTokenExpiredSecond();
+	}
+
 	protected long getRefreshTokenExpiredSecond() {
 		return jwtProvider.getRefreshTokenExpiredSecond();
 	}
