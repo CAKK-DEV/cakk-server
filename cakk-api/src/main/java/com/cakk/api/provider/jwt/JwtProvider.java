@@ -20,15 +20,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.InvalidKeyException;
 
+
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.api.vo.OAuthUserDetails;
+import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
-
+import com.cakk.domain.redis.repository.TokenRedisRepository;
 @Component
 public class JwtProvider {
 
 	private final Key key;
+	private final TokenRedisRepository tokenRedisRepository;
 
 	private final Long accessTokenExpiredSecond;
 	private final Long refreshTokenExpiredSecond;
@@ -37,6 +40,7 @@ public class JwtProvider {
 
 	public JwtProvider(
 		Key key,
+		TokenRedisRepository tokenRedisRepository,
 		@Value("${jwt.expiration.access-token}")
 		Long accessTokenExpiredSecond,
 		@Value("${jwt.expiration.refresh-token}")
@@ -47,6 +51,7 @@ public class JwtProvider {
 		String userKey
 	) {
 		this.key = key;
+		this.tokenRedisRepository = tokenRedisRepository;
 		this.accessTokenExpiredSecond = accessTokenExpiredSecond;
 		this.refreshTokenExpiredSecond = refreshTokenExpiredSecond;
 		this.grantType = grantType;
@@ -97,11 +102,26 @@ public class JwtProvider {
 		return new ObjectMapper().convertValue(claims.get(userKey), User.class);
 	}
 
+	public long getTokenExpiredSecond(final String token) {
+		final Claims claims = parseClaims(token);
+		return claims.getExpiration().getTime();
+	}
+
+	public long getAccessTokenExpiredSecond() {
+		return this.accessTokenExpiredSecond;
+	}
+
 	public long getRefreshTokenExpiredSecond() {
 		return this.refreshTokenExpiredSecond;
 	}
 
 	public Claims parseClaims(String token) {
+		final boolean isBlackList = tokenRedisRepository.isBlackListToken(token);
+
+		if (isBlackList) {
+			throw new CakkException(ReturnCode.BLACK_LIST_TOKEN);
+		}
+
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(key)

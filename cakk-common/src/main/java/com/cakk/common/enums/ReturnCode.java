@@ -18,6 +18,7 @@ public enum ReturnCode {
 	INVALID_KEY("1105", "잘못된 key 입니다"),
 	EMPTY_REFRESH("1106", "리프레시 토큰이 존재하지 않습니다."),
 	BLACK_LIST_TOKEN("1107", "블랙 리스트에 등록된 토큰 입니다."),
+	EMPTY_ACCESS("1108", "액세스 토큰이 존재하지 않습니다."),
 
 	// 공통 유저 관련 (1200 ~ 1250)
 	WRONG_PROVIDER("1200", "잘못된 인증 제공자 입니다."),

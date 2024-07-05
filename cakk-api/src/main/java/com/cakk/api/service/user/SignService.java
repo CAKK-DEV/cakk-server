@@ -45,6 +45,14 @@ public class SignService {
 		return JwtResponse.from(jwtProvider.generateToken(user));
 	}
 
+	public void signOut(final String accessToken, final String refreshToken) {
+		final long accessTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(accessToken) - System.currentTimeMillis();
+		final long refreshTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - System.currentTimeMillis();
+
+		tokenRedisRepository.registerBlackList(accessToken, accessTokenExpiredSecond);
+		tokenRedisRepository.registerBlackList(refreshToken, refreshTokenExpiredSecond);
+	}
+
 	@Transactional(readOnly = true)
 	public JwtResponse recreateToken(final String refreshToken) {
 		final boolean isBlackList = tokenRedisRepository.isBlackListToken(refreshToken);
@@ -54,7 +62,7 @@ public class SignService {
 		}
 
 		final User user = jwtProvider.getUser(refreshToken);
-		final long expiredSecond = jwtProvider.getRefreshTokenExpiredSecond();
+		final long expiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - System.currentTimeMillis();
 
 		tokenRedisRepository.registerBlackList(refreshToken, expiredSecond);
 
