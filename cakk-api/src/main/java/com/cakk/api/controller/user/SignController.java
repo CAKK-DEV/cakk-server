@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.annotation.AccessToken;
 import com.cakk.api.annotation.RefreshToken;
 import com.cakk.api.dto.request.user.GenerateCodeRequest;
 import com.cakk.api.dto.request.user.UserSignInRequest;
@@ -37,6 +38,15 @@ public class SignController {
 		@Valid @RequestBody UserSignInRequest request
 	) {
 		return ApiResponse.success(signService.signIn(request));
+	}
+
+	@PostMapping("/sign-out")
+	public ApiResponse<Void> signOut(
+		@AccessToken String accessToken,
+		@RefreshToken String refreshToken
+	) {
+		signService.signOut(accessToken, refreshToken);
+		return ApiResponse.success();
 	}
 
 	@PostMapping("/recreate-token")
