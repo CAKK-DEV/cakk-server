@@ -177,7 +177,7 @@ class SignServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(false).when(tokenRedisRepository).isBlackListToken(refreshToken);
-		doReturn(11111L).when(jwtProvider).getRefreshTokenExpiredSecond();
+		doReturn(11111L).when(jwtProvider).getTokenExpiredSecond(refreshToken);
 		doReturn(user).when(jwtProvider).getUser(refreshToken);
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
@@ -245,5 +245,95 @@ class SignServiceTest extends ServiceTest {
 
 		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken);
 		verify(jwtProvider, times(0)).getUser(refreshToken);
+	}
+
+	@TestWithDisplayName("로그아웃에 성공한다")
+	void signOut() {
+		// given
+		final String accessToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+		final String refreshToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+
+		doReturn(11111111111111L).when(jwtProvider).getTokenExpiredSecond(accessToken);
+		doReturn(11111111111111L).when(jwtProvider).getTokenExpiredSecond(refreshToken);
+		doNothing().when(tokenRedisRepository).registerBlackList(anyString(), anyLong());
+
+		// when
+		signService.signOut(accessToken, refreshToken);
+
+		// then
+		verify(jwtProvider, times(2)).getTokenExpiredSecond(anyString());
+		verify(tokenRedisRepository, times(2)).registerBlackList(anyString(), anyLong());
+	}
+
+	@TestWithDisplayName("만료된 액세스 토큰일 경우 로그아웃에 실패한다")
+	void signOut2() {
+		// given
+		final String accessToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+
+		doThrow(new CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).when(jwtProvider).getTokenExpiredSecond(accessToken);
+
+		// when & then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> signService.signOut(accessToken, null),
+			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
+
+		verify(jwtProvider, times(1)).getTokenExpiredSecond(anyString());
+		verify(tokenRedisRepository, times(0)).registerBlackList(anyString(), anyLong());
+	}
+
+	@TestWithDisplayName("만료된 리프레시 토큰일 경우 로그아웃에 실패한다")
+	void signOut3() {
+		// given
+		final String accessToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+		final String refreshToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+
+		doReturn(11111111111111L).when(jwtProvider).getTokenExpiredSecond(accessToken);
+		doThrow(new CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).when(jwtProvider).getTokenExpiredSecond(refreshToken);
+
+		// when & then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> signService.signOut(accessToken, refreshToken),
+			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
+
+		verify(jwtProvider, times(2)).getTokenExpiredSecond(anyString());
+		verify(tokenRedisRepository, times(0)).registerBlackList(anyString(), anyLong());
+	}
+
+	@TestWithDisplayName("유효하지 않은 액세스 토큰일 경우 로그아웃에 실패한다")
+	void signOut4() {
+		// given
+		final String accessToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+
+		doThrow(new CakkException(ReturnCode.WRONG_JWT_TOKEN)).when(jwtProvider).getTokenExpiredSecond(accessToken);
+
+		// when & then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> signService.signOut(accessToken, null),
+			ReturnCode.WRONG_JWT_TOKEN.getMessage());
+
+		verify(jwtProvider, times(1)).getTokenExpiredSecond(anyString());
+		verify(tokenRedisRepository, times(0)).registerBlackList(anyString(), anyLong());
+	}
+
+	@TestWithDisplayName("유효하지 않은 리프레시 토큰일 경우 로그아웃에 실패한다")
+	void signOut5() {
+		// given
+		final String accessToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+		final String refreshToken = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
+
+		doReturn(11111111111111L).when(jwtProvider).getTokenExpiredSecond(accessToken);
+		doThrow(new CakkException(ReturnCode.WRONG_JWT_TOKEN)).when(jwtProvider).getTokenExpiredSecond(refreshToken);
+
+		// when & then
+		Assertions.assertThrows(
+			CakkException.class,
+			() -> signService.signOut(accessToken, refreshToken),
+			ReturnCode.WRONG_JWT_TOKEN.getMessage());
+
+		verify(jwtProvider, times(2)).getTokenExpiredSecond(anyString());
+		verify(tokenRedisRepository, times(0)).registerBlackList(anyString(), anyLong());
 	}
 }

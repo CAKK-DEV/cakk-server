@@ -27,6 +27,7 @@ import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @Import(JwtConfig.class)
 @DisplayName("Jwt Provider 테스트")
@@ -37,6 +38,9 @@ class JwtProviderTest extends ProviderTest {
 
 	@Mock
 	private Key key;
+
+	@Mock
+	private TokenRedisRepository tokenRedisRepository;
 
 	@Value("${jwt.secret}")
 	private String secretKey;

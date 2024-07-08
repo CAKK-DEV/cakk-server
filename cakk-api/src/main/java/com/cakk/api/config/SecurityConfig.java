@@ -46,7 +46,7 @@ public class SecurityConfig {
 
 	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> setAuthorizePath() {
 		return authorizeHttpRequests -> authorizeHttpRequests
-			.requestMatchers("/me/**").hasAnyRole("USER", "BUSINESS_OWNER", "ADMIN")
+			.requestMatchers("/me/**", "/sign-out").hasAnyRole("USER", "BUSINESS_OWNER", "ADMIN")
 			.requestMatchers("/**").permitAll()
 			.anyRequest().authenticated();
 	}

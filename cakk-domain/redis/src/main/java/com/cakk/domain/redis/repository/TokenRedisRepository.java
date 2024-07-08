@@ -23,4 +23,8 @@ public class TokenRedisRepository {
 	public Boolean isBlackListToken(final String token) {
 		return redisStringValueTemplate.existByKey(key + token);
 	}
+
+	public void deleteByToken(final String token) {
+		redisStringValueTemplate.delete(key + token);
+	}
 }
