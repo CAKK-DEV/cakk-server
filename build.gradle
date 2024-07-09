@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'checkstyle'
 }
 
 allprojects {
@@ -20,6 +19,7 @@ subprojects {
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'checkstyle'
+	apply plugin: 'jacoco'
 
 	configurations {
 		compileOnly {
@@ -52,6 +52,60 @@ subprojects {
 
 	tasks.named('test') {
 		useJUnitPlatform()
+		finalizedBy 'jacocoTestReport'
+	}
+
+	jacoco {
+		toolVersion = "0.8.12"
+	}
+
+	jacocoTestReport {
+		reports {
+			html.required.set(true)
+			csv.required.set(false)
+			xml.required.set(true)
+		}
+
+		finalizedBy 'jacocoTestCoverageVerification'
+	}
+
+	jacocoTestCoverageVerification {
+		def Qdomains = []
+		for (qPattern in '*.QA'..'*.QZ') { // qPattern = '*.QA', '*.QB', ... '*.QZ'
+			Qdomains.add(qPattern + '*')
+		}
+
+		violationRules {
+			rule {
+				enabled = true
+				element = 'CLASS'
+
+				limit {
+					counter = 'LINE'
+					value = 'COVEREDRATIO'
+					minimum = 0.70
+				}
+
+				limit {
+					counter = 'BRANCH'
+					value = 'COVEREDRATIO'
+					minimum = 0.70
+				}
+
+				limit {
+					counter = "LINE"
+					value = "TOTALCOUNT"
+					maximum = "200".toBigDecimal()
+				}
+
+				excludes = [
+				    "com.cakk.api.dto.**",
+					"com.cakk.api.mapper.**",
+					"com.cakk.api.vo.**",
+					"com.cakk.domain.**"
+				] + Qdomains as List<String>
+			}
+		}
 	}
 }
 
