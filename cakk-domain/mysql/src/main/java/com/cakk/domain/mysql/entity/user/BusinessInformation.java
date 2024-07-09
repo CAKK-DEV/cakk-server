@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
-import com.cakk.domain.mysql.event.EventMapper;
+import com.cakk.domain.mysql.mapper.EventMapper;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
 @Getter

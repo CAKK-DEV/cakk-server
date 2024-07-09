@@ -1,4 +1,4 @@
-package com.cakk.api.dto.request.operation;
+package com.cakk.api.dto.param.operation;
 
 import java.time.LocalTime;
 

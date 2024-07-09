@@ -1,4 +1,4 @@
-package com.cakk.domain.mysql.event;
+package com.cakk.domain.mysql.mapper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

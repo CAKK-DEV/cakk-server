@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.api.dto.request.link.ShopLinkParam;
+import com.cakk.api.dto.param.link.ShopLinkParam;
 import com.cakk.common.enums.LinkKind;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopLink;

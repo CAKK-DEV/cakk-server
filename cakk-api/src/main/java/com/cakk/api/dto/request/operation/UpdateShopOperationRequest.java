@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
+import com.cakk.api.dto.param.operation.ShopOperationParam;
 import com.cakk.api.mapper.ShopOperationMapper;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
