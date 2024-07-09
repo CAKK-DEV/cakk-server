@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
 	group = 'com.cakk'
-	version = '1.0.0-SNAPSHOT'
+	version = '2.0.1-SNAPSHOT'
 	sourceCompatibility = '21'
 
 	repositories {
@@ -99,6 +99,7 @@ subprojects {
 				}
 
 				excludes = [
+					"com.cakk.api.Application",
 				    "com.cakk.api.dto.**",
 					"com.cakk.api.mapper.**",
 					"com.cakk.api.vo.**",
