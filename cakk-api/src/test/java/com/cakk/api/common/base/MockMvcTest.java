@@ -13,6 +13,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.cakk.api.controller.advice.GlobalControllerAdvice;
+import com.cakk.api.controller.s3.AwsS3Controller;
 import com.cakk.api.controller.shop.ShopController;
 import com.cakk.api.controller.user.SignController;
 import com.cakk.api.filter.JwtAuthenticationFilter;
@@ -23,6 +24,7 @@ import com.cakk.api.service.slack.SlackService;
 import com.cakk.api.service.user.EmailVerificationService;
 import com.cakk.api.service.user.SignService;
 import com.cakk.api.service.views.ViewsService;
+import com.cakk.external.service.S3Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
@@ -37,6 +39,7 @@ import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPl
 	value = {
 		SignController.class,
 		ShopController.class,
+		AwsS3Controller.class,
 		GlobalControllerAdvice.class
 	}
 )
@@ -53,6 +56,9 @@ public abstract class MockMvcTest {
 
 	@MockBean
 	protected SlackService slackService;
+
+	@MockBean
+	protected S3Service s3Service;
 
 	@MockBean
 	protected SignService signService;
