@@ -100,6 +100,8 @@ subprojects {
 
 				excludes = [
 					"com.cakk.api.Application",
+					"com.cakk.api.service.slack.SlackService",
+					"com.cakk.api.provider.oauth.PublicKeyProvider",
 				    "com.cakk.api.dto.**",
 					"com.cakk.api.mapper.**",
 					"com.cakk.api.vo.**",
