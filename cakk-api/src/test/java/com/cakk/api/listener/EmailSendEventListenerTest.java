@@ -9,12 +9,12 @@ import org.mockito.Mock;
 import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.EventListenerTest;
+import com.cakk.api.common.base.MockitoTest;
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
 import com.cakk.api.listener.user.EmailSendEventListener;
 import com.cakk.external.service.MailService;
 
-class EmailSendEventListenerTest extends EventListenerTest {
+class EmailSendEventListenerTest extends MockitoTest {
 
 	@InjectMocks
 	private EmailSendEventListener emailSendEventListener;

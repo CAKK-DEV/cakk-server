@@ -13,7 +13,7 @@ import net.jqwik.api.Arbitraries;
 import io.jsonwebtoken.impl.DefaultClaims;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.ProviderTest;
+import com.cakk.api.common.base.MockitoTest;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.provider.oauth.PublicKeyProvider;
 import com.cakk.api.provider.oauth.impl.KakaoAuthProvider;
@@ -22,7 +22,7 @@ import com.cakk.client.web.KakaoAuthClient;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 
-class KakaoAuthProviderTest extends ProviderTest {
+class KakaoAuthProviderTest extends MockitoTest {
 
 	@InjectMocks
 	private KakaoAuthProvider kakaoAuthProvider;
@@ -41,9 +41,9 @@ class KakaoAuthProviderTest extends ProviderTest {
 	@TestWithDisplayName("id token으로 제공자 id를 가져온다.")
 	void getProviderId() {
 		// given
-		OidcPublicKeyList oidcPublicKeyList = fixtureMonkey.giveMeOne(OidcPublicKeyList.class);
-		PublicKey publicKey = fixtureMonkey.giveMeOne(PublicKey.class);
-		DefaultClaims claims = fixtureMonkey.giveMeBuilder(DefaultClaims.class)
+		OidcPublicKeyList oidcPublicKeyList = getConstructorMonkey().giveMeOne(OidcPublicKeyList.class);
+		PublicKey publicKey = getConstructorMonkey().giveMeOne(PublicKey.class);
+		DefaultClaims claims = getConstructorMonkey().giveMeBuilder(DefaultClaims.class)
 			.set("sub", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample())
 			.sample();
 

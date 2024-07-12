@@ -1,71 +1,17 @@
-package com.cakk.api.advice;
+package com.cakk.api.controller;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.sql.SQLException;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.controller.advice.GlobalControllerAdvice;
-import com.cakk.api.controller.shop.ShopController;
-import com.cakk.api.filter.JwtAuthenticationFilter;
-import com.cakk.api.service.like.HeartService;
-import com.cakk.api.service.like.LikeService;
-import com.cakk.api.service.shop.ShopService;
-import com.cakk.api.service.slack.SlackService;
-import com.cakk.api.service.views.ViewsService;
+import com.cakk.api.common.base.MockMvcTest;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 
-@AutoConfigureMockMvc()
-@ActiveProfiles("test")
-@WebMvcTest(
-	properties = "spring.profiles.active=test",
-	value = {ShopController.class, GlobalControllerAdvice.class}
-)
-public class GlobalControllerAdviceTest {
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@MockBean
-	private ShopService shopService;
-
-	@MockBean
-	private HeartService heartService;
-
-	@MockBean
-	private LikeService likeService;
-
-	@MockBean
-	private ViewsService viewsService;
-
-	@MockBean
-	private SlackService slackService;
-
-	@MockBean
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-	@BeforeEach
-	void setup(WebApplicationContext webApplicationContext) {
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-			.addFilters(new CharacterEncodingFilter("UTF-8", true))
-			.alwaysDo(print())
-			.build();
-	}
+public class GlobalControllerAdviceTest extends MockMvcTest {
 
 	@TestWithDisplayName("CakkException이 발생하면 BAD_REQUEST를 반환한다.")
 	void handleCakkException1() throws Exception {
