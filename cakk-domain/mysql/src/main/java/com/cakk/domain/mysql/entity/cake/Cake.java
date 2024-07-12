@@ -26,9 +26,9 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
-import com.cakk.domain.mysql.mapper.EventMapper;
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
 import com.cakk.domain.mysql.mapper.CakeTagMapper;
+import com.cakk.domain.mysql.mapper.EventMapper;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
