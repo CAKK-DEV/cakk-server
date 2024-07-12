@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.api.dto.request.operation.ShopOperationParam;
+import com.cakk.api.dto.param.operation.ShopOperationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

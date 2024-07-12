@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cakk.common.exception.CakkException;
+
 @Component
 public class AopForTransaction {
 
@@ -13,6 +15,10 @@ public class AopForTransaction {
 		try {
 			return joinPoint.proceed();
 		} catch (Throwable e) {
+			if (e instanceof CakkException) {
+				throw (CakkException) e;
+			}
+
 			throw new RuntimeException(e);
 		}
 	}

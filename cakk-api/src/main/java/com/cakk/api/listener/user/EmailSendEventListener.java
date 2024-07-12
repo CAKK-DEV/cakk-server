@@ -1,5 +1,7 @@
 package com.cakk.api.listener.user;
 
+import java.util.Objects;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
@@ -18,6 +20,6 @@ public class EmailSendEventListener {
 	@Async
 	@EventListener
 	public void sendEmailIncludeVerificationCode(EmailWithVerificationCodeSendEvent event) {
-		mailService.sendEmail(event.email(), event.code());
+		mailService.sendEmail(Objects.requireNonNull(event.email()), Objects.requireNonNull(event.code()));
 	}
 }

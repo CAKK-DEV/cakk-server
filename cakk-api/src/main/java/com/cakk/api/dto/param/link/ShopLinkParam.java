@@ -1,4 +1,4 @@
-package com.cakk.api.dto.request.link;
+package com.cakk.api.dto.param.link;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
