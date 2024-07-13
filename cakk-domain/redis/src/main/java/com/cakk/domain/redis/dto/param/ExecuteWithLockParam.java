@@ -9,14 +9,10 @@ import com.cakk.common.enums.RedisKey;
 
 @Builder
 public record ExecuteWithLockParam(
-	RedisKey key,
+	String key,
 	Supplier<Object> supplier,
 	long waitTime,
 	long leaseTime,
 	TimeUnit timeUnit
 ) {
-
-	public String keyAsString() {
-		return key.getValue();
-	}
 }

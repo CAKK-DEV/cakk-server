@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.DistributedLock;
+import com.cakk.api.utils.CustomSpringExpressionLanguageParser;
 import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.redis.dto.param.ExecuteWithLockParam;
 import com.cakk.domain.redis.repository.LockRedisRepository;
@@ -30,7 +31,8 @@ public class DistributedLockAspect {
 		final Method method = signature.getMethod();
 		final DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
 
-		final RedisKey key = RedisKey.getLockByMethodName(method.getName());
+		String key = generateKey(method, distributedLock.key(), signature.getParameterNames(), joinPoint.getArgs());
+
 
 		final ExecuteWithLockParam param = ExecuteWithLockParam.builder()
 			.key(key)
@@ -43,4 +45,10 @@ public class DistributedLockAspect {
 		return lockRedisRepository.executeWithLock(param);
 	}
 
+	private String generateKey(final Method method, final String key, final String[] parameterNames, final Object[] args) {
+		String generatedKey = RedisKey.getLockByMethodName(method.getName()).getValue();
+		generatedKey += CustomSpringExpressionLanguageParser.getDynamicValue(key, parameterNames, args);
+
+		return generatedKey;
+	}
 }
