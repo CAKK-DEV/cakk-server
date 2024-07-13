@@ -4,11 +4,13 @@ import static java.util.Objects.*;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
@@ -43,6 +45,8 @@ public class CakeService {
 	private final CakeShopReader cakeShopReader;
 	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 
+	private final ApplicationEventPublisher publisher;
+
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReader.searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
@@ -60,6 +64,9 @@ public class CakeService {
 	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeSearchByLocationRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
+		final IncreaseSearchCountEvent event = new IncreaseSearchCountEvent(dto.keyword());
+
+		publisher.publishEvent(event);
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}

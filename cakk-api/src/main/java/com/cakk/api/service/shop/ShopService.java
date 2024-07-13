@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
@@ -171,6 +172,9 @@ public class ShopService {
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 4, pageSize);
+		final IncreaseSearchCountEvent event = com.cakk.api.mapper.EventMapper.supplyIncreaseSearchCountEventBy(dto.keyword());
+
+		publisher.publishEvent(event);
 
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}
