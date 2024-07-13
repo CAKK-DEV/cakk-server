@@ -31,7 +31,7 @@ public class LikeService {
 		}
 	}
 
-	@DistributedLock
+	@DistributedLock(key = "#cakeShopId")
 	public void likeCakeShop(final User user, final Long cakeShopId) {
 		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
 

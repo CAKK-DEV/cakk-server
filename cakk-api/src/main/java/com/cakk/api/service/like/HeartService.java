@@ -87,7 +87,7 @@ public class HeartService {
 		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}
 
-	@DistributedLock
+	@DistributedLock(key = "#cakeId")
 	public void heartCake(final User user, final Long cakeId) {
 		final Cake cake = cakeReader.findById(cakeId);
 		final CakeHeart cakeHeart = cakeHeartReader.findOrNullByUserAndCake(user, cake);
@@ -95,7 +95,7 @@ public class HeartService {
 		cakeHeartWriter.heartOrCancel(cakeHeart, user, cake);
 	}
 
-	@DistributedLock
+	@DistributedLock(key = "#cakeShopId")
 	public void heartCakeShop(final User user, final Long cakeShopId) {
 		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
 		final CakeShopHeart cakeShopHeart = cakeShopHeartReader.findOrNullByUserAndCakeShop(user, cakeShop);
