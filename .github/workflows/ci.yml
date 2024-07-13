@@ -57,12 +57,12 @@ jobs:
         with:
           files: ./cakk-api/build/test-results/**/*.xml
 
-#      - name: Upload test coverage
-#        id: jacoco
-#        uses: codecov/codecov-action@v3
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          files: ./codecov.yml
-#          directory: ./lovebird-api/build/reports/jacoco/test
-#          fail_ci_if_error: true
-#        continue-on-error: true
+      - name: Upload test coverage
+        id: jacoco
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./codecov.yml
+          directory: ./cakk-api/build/reports/jacoco/test
+          fail_ci_if_error: true
+        continue-on-error: true
