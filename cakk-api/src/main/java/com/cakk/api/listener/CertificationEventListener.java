@@ -1,4 +1,4 @@
-package com.cakk.api.listener.shop;
+package com.cakk.api.listener;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.event.TransactionPhase;

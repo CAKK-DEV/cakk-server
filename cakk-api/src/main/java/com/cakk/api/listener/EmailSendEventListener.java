@@ -1,4 +1,4 @@
-package com.cakk.api.listener.user;
+package com.cakk.api.listener;
 
 import java.util.Objects;
 
