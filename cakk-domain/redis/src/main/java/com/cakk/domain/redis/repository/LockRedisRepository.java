@@ -17,7 +17,7 @@ public class LockRedisRepository {
 	private final RedissonClient redissonClient;
 
 	public Object executeWithLock(final ExecuteWithLockParam param) {
-		final String lockName = param.keyAsString();
+		final String lockName = param.key();
 		final Supplier<Object> supplier = param.supplier();
 		final RLock rLock = redissonClient.getLock(lockName);
 
