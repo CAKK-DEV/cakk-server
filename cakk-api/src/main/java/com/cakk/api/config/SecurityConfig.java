@@ -36,7 +36,7 @@ public class SecurityConfig {
 			.sessionManagement(setSessionManagement())
 			.authorizeHttpRequests(setAuthorizePath())
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterAfter(jwtExceptionFilter, JwtAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
 			.build();
 	}
 

@@ -37,7 +37,8 @@ public class GlobalControllerAdvice {
 
 	@ExceptionHandler(CakkException.class)
 	public ResponseEntity<ApiResponse<Void>> handleCakkException(CakkException exception, HttpServletRequest request) {
-		if (exception.getReturnCode().equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
+		final ReturnCode returnCode = exception.getReturnCode();
+		if (returnCode.equals(ReturnCode.INTERNAL_SERVER_ERROR) || returnCode.equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
 			slackService.sendSlackForError(exception, request);
 		}
 		log.error(exception.getMessage());
@@ -61,10 +62,10 @@ public class GlobalControllerAdvice {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ApiResponse<Map<String, String>>> badRequestExHandler(MethodArgumentNotValidException exception) {
+	public ResponseEntity<ApiResponse<Map<String, String>>> handleMethodArgNotValidException(MethodArgumentNotValidException exception) {
 		Map<String, String> errors = new HashMap<>();
-		exception.getBindingResult().getAllErrors().forEach((error) -> {
-			String fieldName = ((FieldError) error).getField();
+		exception.getBindingResult().getAllErrors().forEach(error -> {
+			String fieldName = ((FieldError)error).getField();
 			String errorMessage = error.getDefaultMessage();
 			errors.put(fieldName, errorMessage);
 		});
@@ -77,7 +78,7 @@ public class GlobalControllerAdvice {
 		SQLException.class,
 		RuntimeException.class
 	})
-	public ResponseEntity<ApiResponse<String>> handleServerException(SQLException exception, HttpServletRequest request) {
+	public ResponseEntity<ApiResponse<String>> handleServerException(Exception exception, HttpServletRequest request) {
 		slackService.sendSlackForError(exception, request);
 		log.error(exception.getMessage());
 		return getResponseEntity(INTERNAL_SERVER_ERROR, ApiResponse.error(ReturnCode.INTERNAL_SERVER_ERROR, exception.getMessage()));

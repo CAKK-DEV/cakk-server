@@ -68,8 +68,35 @@ class SignIntegrationTest extends IntegrationTest {
 		assertNotNull(data.grantType());
 	}
 
-	@TestWithDisplayName("블랙리스트인 리프레시 토큰인 경우, 토큰 재발급에 성공한다.")
+	@TestWithDisplayName("비어있는 리프레시 토큰인 경우, 토큰 재발급에 실패한다.")
 	void recreate2() {
+		// given
+		final String url = "%s%d%s/recreate-token".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.build();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Refresh", "");
+
+		HttpEntity request = new HttpEntity(headers);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(
+			uriComponents.toUriString(),
+			request,
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.EMPTY_REFRESH.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.EMPTY_REFRESH.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("블랙리스트인 리프레시 토큰인 경우, 토큰 재발급에 실패한다.")
+	void recreate3() {
 		// given
 		final String url = "%s%d%s/recreate-token".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -99,7 +126,7 @@ class SignIntegrationTest extends IntegrationTest {
 	}
 
 	@TestWithDisplayName("잘못된 리프레시 토큰인 경우, 토큰 재발급에 성공한다.")
-	void recreate3() {
+	void recreate4() {
 		// given
 		final String url = "%s%d%s/recreate-token".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder

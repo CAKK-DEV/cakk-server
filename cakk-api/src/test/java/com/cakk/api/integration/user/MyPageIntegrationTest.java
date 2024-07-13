@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -68,6 +69,34 @@ class MyPageIntegrationTest extends IntegrationTest {
 		assertEquals(body.email(), user.getEmail());
 		assertEquals(body.gender(), user.getGender());
 		assertEquals(body.role(), user.getRole());
+	}
+
+	@TestWithDisplayName("토큰에 Bearer가 붙어있지 않으면 Filter에서 에러를 반환한다.")
+	void profile2() {
+		// given
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.build();
+
+		final HttpHeaders headers = new HttpHeaders();
+		final JsonWebToken jsonWebToken = getAuthToken();
+		headers.set(HttpHeaders.AUTHORIZATION, jsonWebToken.accessToken());
+		headers.set("Refresh", jsonWebToken.refreshToken());
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.GET,
+			new HttpEntity<>(headers),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(401), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.NOT_EXIST_BEARER_SUFFIX.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.NOT_EXIST_BEARER_SUFFIX.getMessage(), response.getReturnMessage());
 	}
 
 	@TestWithDisplayName("프로필 수정에 성공한다.")

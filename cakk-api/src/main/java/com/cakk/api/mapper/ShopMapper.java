@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.api.dto.request.operation.ShopOperationParam;
+import com.cakk.api.dto.param.operation.ShopOperationParam;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
