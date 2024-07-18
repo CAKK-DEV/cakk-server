@@ -162,7 +162,7 @@ public class ShopService {
 		final Point point = PointMapper.supplyPointBy(latitude, longitude);
 
 		final List<CakeShopByLocationParam> result = cakeShopReader
-			.searchShopByLocationBased(point, Objects.requireNonNullElse(distance, 5000.0));
+			.searchShopByLocationBased(point, Objects.requireNonNullElse(distance, 1000.0));
 		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result, 4);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShops.getCakeShops());
