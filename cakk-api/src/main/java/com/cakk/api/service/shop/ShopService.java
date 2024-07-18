@@ -3,6 +3,7 @@ package com.cakk.api.service.shop;
 import static java.util.Objects.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.context.ApplicationEventPublisher;
@@ -157,9 +158,11 @@ public class ShopService {
 	public CakeShopByMapResponse searchShop(final SearchShopByLocationRequest request) {
 		final Double longitude = request.longitude();
 		final Double latitude = request.latitude();
+		final Double distance = request.distance();
 		final Point point = PointMapper.supplyPointBy(latitude, longitude);
 
-		final List<CakeShopByLocationParam> result = cakeShopReader.searchShopByLocationBased(point);
+		final List<CakeShopByLocationParam> result = cakeShopReader
+			.searchShopByLocationBased(point, Objects.requireNonNullElse(distance, 1000.0));
 		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result, 4);
 
 		return ShopMapper.supplyCakeShopByMapResponseBy(cakeShops.getCakeShops());

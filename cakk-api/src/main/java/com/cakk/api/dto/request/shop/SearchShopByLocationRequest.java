@@ -9,7 +9,9 @@ public record SearchShopByLocationRequest(
 	@NotNull @Min(-90) @Max(90)
 	Double latitude,
 	@NotNull @Min(-180) @Max(180)
-	Double longitude
+	Double longitude,
+	@Min(0) @Max(10000)
+	Double distance
 ) {
 }
 
