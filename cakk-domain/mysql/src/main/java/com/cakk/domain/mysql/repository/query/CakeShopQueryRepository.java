@@ -169,12 +169,12 @@ public class CakeShopQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public List<CakeShopByLocationParam> findShopsByLocationBased(Point location) {
+	public List<CakeShopByLocationParam> findShopsByLocationBased(final Point location, final Double distance) {
 		return queryFactory
 			.selectFrom(cakeShop)
 			.leftJoin(cake)
 			.on(cakeShop.eq(cake.cakeShop))
-			.where(includeDistance(location))
+			.where(includeDistance(location, distance))
 			.orderBy(cakeShopIdDesc())
 			.transform(groupBy(cakeShop.id)
 				.list(Projections.constructor(CakeShopByLocationParam.class,
@@ -239,12 +239,20 @@ public class CakeShopQueryRepository {
 		return cakeShop.shopDescription.containsIgnoreCase(keyword);
 	}
 
+	private BooleanExpression includeDistance(Point location, Double distance) {
+		if (isNull(location)) {
+			return null;
+		}
+
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, {1}), {2})", location, distance, cakeShop.location);
+	}
+
 	private BooleanExpression includeDistance(Point location) {
 		if (isNull(location)) {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 10000), {1})", location, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 5000), {1})", location, cakeShop.location);
 	}
 
 	private OrderSpecifier<Long> cakeShopIdDesc() {

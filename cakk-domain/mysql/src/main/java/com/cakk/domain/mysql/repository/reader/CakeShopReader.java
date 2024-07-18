@@ -75,8 +75,8 @@ public class CakeShopReader {
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
-	public List<CakeShopByLocationParam> searchShopByLocationBased(final Point point) {
-		return cakeShopQueryRepository.findShopsByLocationBased(point);
+	public List<CakeShopByLocationParam> searchShopByLocationBased(final Point point, final Double distance) {
+		return cakeShopQueryRepository.findShopsByLocationBased(point, distance);
 	}
 
 	public List<CakeShop> searchShopBySearch(final CakeShopSearchParam param) {
