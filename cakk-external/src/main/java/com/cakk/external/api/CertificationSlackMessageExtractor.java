@@ -37,3 +37,4 @@ public class CertificationSlackMessageExtractor implements CertificationMessageE
 		return slackMessage;
 	}
 }
+

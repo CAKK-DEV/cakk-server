@@ -25,3 +25,4 @@ public class CertificationSlackApiExecutor implements CertificationApiExecutor<S
 		slackApi.call(message);
 	}
 }
+
