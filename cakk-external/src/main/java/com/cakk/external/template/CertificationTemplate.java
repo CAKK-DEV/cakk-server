@@ -5,9 +5,9 @@ import com.cakk.external.api.CertificationMessageExtractor;
 import com.cakk.external.vo.CertificationMessage;
 
 public class CertificationTemplate {
-	private CertificationApiExecutor certificationApiExecutor;
-	private CertificationMessageExtractor certificationMessageExtractor;
-	
+
+	private final CertificationApiExecutor certificationApiExecutor;
+	private final CertificationMessageExtractor certificationMessageExtractor;
 
 	public CertificationTemplate(
 		CertificationApiExecutor certificationApiExecutor,
@@ -16,17 +16,15 @@ public class CertificationTemplate {
 		this.certificationMessageExtractor = certificationMessageExtractor;
 	}
 
-	public <T> void sendMessageForCertification(CertificationMessage certificationMessage, Class<T> messageType) {
-		this.sendMessageForCertification(certificationMessage, certificationMessageExtractor,
-			certificationApiExecutor, messageType);
+	public void sendMessageForCertification(CertificationMessage certificationMessage) {
+		this.sendMessageForCertification(certificationMessage, certificationMessageExtractor, certificationApiExecutor);
 	}
 
 	public <T> void sendMessageForCertification(
 		CertificationMessage certificationMessage,
 		CertificationMessageExtractor certificationMessageExtractor,
-		CertificationApiExecutor certificationApiExecutor,
-		Class<T> messageType) {
-		T extractMessage = certificationMessageExtractor.extract(certificationMessage, messageType);
-		certificationApiExecutor.send(extractMessage, messageType);
+		CertificationApiExecutor certificationApiExecutor) {
+		T extractMessage = (T)certificationMessageExtractor.extract(certificationMessage);
+		certificationApiExecutor.send(extractMessage);
 	}
 }
