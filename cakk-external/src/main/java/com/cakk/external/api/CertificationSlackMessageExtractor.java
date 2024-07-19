@@ -7,14 +7,11 @@ import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
 
 import com.cakk.external.vo.CertificationMessage;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CertificationSlackMessageExtractor implements CertificationMessageExtractor<SlackMessage> {
 
 	@Override
 	public SlackMessage extract(CertificationMessage certificationMessage) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		SlackMessage slackMessage;
 		SlackAttachment slackAttachment = new SlackAttachment();
 		slackAttachment.setColor("good");
 		slackAttachment.setFallback("OK");
@@ -32,7 +29,7 @@ public class CertificationSlackMessageExtractor implements CertificationMessageE
 			new SlackField().setTitle("가게 위치 경도").setValue(String.valueOf(certificationMessage.longitude()))
 		));
 
-		slackMessage = new SlackMessage();
+		SlackMessage slackMessage = new SlackMessage();
 		slackMessage.setAttachments(List.of(slackAttachment));
 		slackMessage.setChannel("#cs_사장님인증");
 		slackMessage.setText("사장님 인증 요청");

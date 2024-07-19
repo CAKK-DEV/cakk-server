@@ -22,7 +22,8 @@ public class EventMapper {
 	}
 
 	public static CertificationMessage supplyCertificationMessageBy(final CertificationEvent certificationEvent) {
-		Double latitude = null, longitude = null;
+		Double latitude = null;
+		Double longitude = null;
 
 		if (Objects.nonNull(certificationEvent.location())) {
 			latitude = certificationEvent.location().getY();
