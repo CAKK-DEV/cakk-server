@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import net.gpedro.integrations.slack.SlackApi;
 import net.gpedro.integrations.slack.SlackMessage;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class CertificationSlackApiExecutor implements CertificationApiExecutor {
+public class CertificationSlackApiExecutor implements CertificationApiExecutor<SlackMessage> {
 
 	private final SlackApi slackApi;
 
@@ -27,8 +25,7 @@ public class CertificationSlackApiExecutor implements CertificationApiExecutor {
 	}
 
 	@Override
-	public <T> void send(T message, Class<T> messageType) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		slackApi.call(objectMapper.convertValue(message, SlackMessage.class));
+	public void send(SlackMessage message) {
+		slackApi.call(message);
 	}
 }

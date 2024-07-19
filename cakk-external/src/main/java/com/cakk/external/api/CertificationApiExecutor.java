@@ -1,5 +1,5 @@
 package com.cakk.external.api;
 
-public interface CertificationApiExecutor {
-	<T> void send(T message, Class<T> messageType);
+public interface CertificationApiExecutor<T> {
+	void send(T message);
 }

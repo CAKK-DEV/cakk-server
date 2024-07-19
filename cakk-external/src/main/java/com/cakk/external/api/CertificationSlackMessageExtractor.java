@@ -9,9 +9,10 @@ import net.gpedro.integrations.slack.SlackMessage;
 import com.cakk.external.vo.CertificationMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CertificationSlackMessageExtractor implements CertificationMessageExtractor {
+public class CertificationSlackMessageExtractor implements CertificationMessageExtractor<SlackMessage> {
+
 	@Override
-	public <T> T extract(CertificationMessage certificationMessage, Class<T> returnType) {
+	public SlackMessage extract(CertificationMessage certificationMessage) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		SlackMessage slackMessage;
 		SlackAttachment slackAttachment = new SlackAttachment();
@@ -36,6 +37,6 @@ public class CertificationSlackMessageExtractor implements CertificationMessageE
 		slackMessage.setChannel("#cs_사장님인증");
 		slackMessage.setText("사장님 인증 요청");
 
-		return objectMapper.convertValue(slackMessage, returnType);
+		return slackMessage;
 	}
 }
