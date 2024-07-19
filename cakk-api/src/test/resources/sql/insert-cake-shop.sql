@@ -20,7 +20,8 @@ values (1, 'thumbnail_url1', '케이크 맛집1', '케이크 맛집입니다.', 
        (7, 'thumbnail_url7', '케이크 맛집7', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g7, 4326), 0, 0, false, now(), now()),
        (8, 'thumbnail_url8', '케이크 맛집8', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g8, 4326), 0, 0, false, now(), now()),
        (9, 'thumbnail_url9', '케이크 맛집9', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g9, 4326), 0, 0, false, now(), now()),
-       (10, 'thumbnail_url10', '케이크 맛집10', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g10, 4326), 0, 0, false, now(), now());
+       (10, 'thumbnail_url10', '케이크 맛집10', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g10, 4326), 0, 0, false, now(), now()),
+       (11, 'thumbnail_url10', '케이크 맛집11', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g10, 4326), 0, 0, false, now(), now());
 
 insert into cake (cake_id, shop_id, cake_image_url, heart_count, created_at, updated_at)
 values (1, 1, 'cake_image_url1', 0, now(), now()),
@@ -95,4 +96,5 @@ values ('010-3375-5555', 1, 1),
        ('010-3375-5555', 7, 7),
        ('010-3375-5555', 8, 8),
        ('010-3375-5555', 9, 9),
-       ('010-3375-5555', 10, 10);
+       ('010-3375-5555', 10, 10),
+       ('010-3375-5555', 11, null);
