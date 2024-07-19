@@ -1,9 +1,9 @@
-package com.cakk.external.template;
+package com.cakk.api.template;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.external.api.CertificationApiExecutor;
-import com.cakk.external.api.CertificationMessageExtractor;
+import com.cakk.external.executor.CertificationApiExecutor;
+import com.cakk.external.extractor.CertificationMessageExtractor;
 import com.cakk.external.vo.CertificationMessage;
 
 @RequiredArgsConstructor

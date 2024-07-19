@@ -1,4 +1,4 @@
-package com.cakk.external.config;
+package com.cakk.api.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 
 import net.gpedro.integrations.slack.SlackApi;
 
-import com.cakk.external.api.CertificationApiExecutor;
-import com.cakk.external.api.CertificationMessageExtractor;
-import com.cakk.external.api.CertificationSlackApiExecutor;
-import com.cakk.external.api.CertificationSlackMessageExtractor;
-import com.cakk.external.template.CertificationTemplate;
+import com.cakk.api.template.CertificationTemplate;
+import com.cakk.external.executor.CertificationApiExecutor;
+import com.cakk.external.executor.CertificationSlackApiExecutor;
+import com.cakk.external.extractor.CertificationMessageExtractor;
+import com.cakk.external.extractor.CertificationSlackMessageExtractor;
 
 @Configuration
 public class CertificationTemplateConfig {

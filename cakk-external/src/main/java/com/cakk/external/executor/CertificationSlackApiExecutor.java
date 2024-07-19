@@ -1,4 +1,4 @@
-package com.cakk.external.api;
+package com.cakk.external.executor;
 
 import net.gpedro.integrations.slack.SlackApi;
 import net.gpedro.integrations.slack.SlackMessage;

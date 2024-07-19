@@ -1,4 +1,4 @@
-package com.cakk.external.api;
+package com.cakk.external.extractor;
 
 import com.cakk.external.vo.CertificationMessage;
 
