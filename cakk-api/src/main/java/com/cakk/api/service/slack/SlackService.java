@@ -15,15 +15,6 @@ import net.gpedro.integrations.slack.SlackAttachment;
 import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
 
-import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.external.api.CertificationApiExecutor;
-import com.cakk.external.api.CertificationMessageExtractor;
-import com.cakk.external.api.CertificationSlackApiExecutor;
-import com.cakk.external.api.CertificationSlackMessageExtractor;
-import com.cakk.external.vo.CertificationMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class SlackService {
 
@@ -75,18 +66,6 @@ public class SlackService {
 		slackMessage.setText("%s api 에러 발생".formatted(profile));
 
 		slackApi.call(slackMessage);
-	}
-
-	public void sendSlackForCertification(CertificationMessage certificationMessage) {
-		if (!isEnable) {
-			return;
-		}
-		SlackMessage slackMessage;
-		CertificationMessageExtractor certificationMessageExtractor = new CertificationSlackMessageExtractor();
-
-		slackMessage = certificationMessageExtractor.extract(certificationMessage, SlackMessage.class);
-		CertificationApiExecutor certificationApiExecutor = new CertificationSlackApiExecutor(slackApi);
-		certificationApiExecutor.send(slackMessage, SlackMessage.class);
 	}
 
 	private String getRequestParameters(HttpServletRequest request) {
