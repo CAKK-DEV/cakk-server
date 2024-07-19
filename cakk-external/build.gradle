@@ -12,6 +12,9 @@ dependencies {
 
 	// Mail
 	implementation('org.springframework.boot:spring-boot-starter-mail')
+
+	// Slack
+	implementation 'net.gpedro.integrations.slack:slack-webhook:1.4.0'
 }
 
 
