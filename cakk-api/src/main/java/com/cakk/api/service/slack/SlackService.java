@@ -16,6 +16,8 @@ import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
 
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SlackService {
@@ -75,29 +77,15 @@ public class SlackService {
 			return;
 		}
 
-		SlackAttachment slackAttachment = new SlackAttachment();
-		slackAttachment.setColor("good");
-		slackAttachment.setFallback("OK");
-		slackAttachment.setTitle("Request Certification");
-		slackAttachment.setFields(List.of(
-			new SlackField().setTitle("요청자 PK").setValue(String.valueOf(certificationEvent.userId())),
-			new SlackField().setTitle("요청자 이메일").setValue(certificationEvent.userEmail()),
-			new SlackField().setTitle("요청자 비상연락망").setValue(certificationEvent.emergencyContact()),
-			new SlackField().setTitle("요청자 신분증 이미지").setValue(certificationEvent.idCardImageUrl()),
-			new SlackField().setTitle("요청자 사업자등록증 이미지").setValue(certificationEvent.businessRegistrationImageUrl()),
-			new SlackField().setTitle("요청 사항").setValue(certificationEvent.message()),
-			new SlackField().setTitle("가게 이름").setValue(certificationEvent.shopName()),
-			new SlackField().setTitle("가게 위치 위도").setValue(String.valueOf(certificationEvent.location().getY())),
-			new SlackField().setTitle("가게 위치 경도").setValue(String.valueOf(certificationEvent.location().getX()))
-		));
+		SlackMessage slackMessage;
 
-		SlackMessage slackMessage = new SlackMessage();
+		try {
+			slackMessage = messageExtractor(certificationEvent, SlackMessage.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
-		slackMessage.setAttachments(List.of(slackAttachment));
-		slackMessage.setChannel("#cs_사장님인증");
-		slackMessage.setText("%s 사장님 인증 요청".formatted(profile));
-
-		slackApi.call(slackMessage);
+		send(slackMessage);
 	}
 
 	private String getRequestParameters(HttpServletRequest request) {
@@ -116,5 +104,38 @@ public class SlackService {
 		}
 
 		return sb.toString();
+	}
+
+	private <T> T messageExtractor(CertificationEvent certificationEvent, Class<T> returnType) throws
+		JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		SlackMessage slackMessage;
+		SlackAttachment slackAttachment = new SlackAttachment();
+		slackAttachment.setColor("good");
+		slackAttachment.setFallback("OK");
+		slackAttachment.setTitle("Request Certification");
+
+		slackAttachment.setFields(List.of(
+			new SlackField().setTitle("요청자 PK").setValue(String.valueOf(certificationEvent.userId())),
+			new SlackField().setTitle("요청자 이메일").setValue(certificationEvent.userEmail()),
+			new SlackField().setTitle("요청자 비상연락망").setValue(certificationEvent.emergencyContact()),
+			new SlackField().setTitle("요청자 신분증 이미지").setValue(certificationEvent.idCardImageUrl()),
+			new SlackField().setTitle("요청자 사업자등록증 이미지").setValue(certificationEvent.businessRegistrationImageUrl()),
+			new SlackField().setTitle("요청 사항").setValue(certificationEvent.message()),
+			new SlackField().setTitle("가게 이름").setValue(certificationEvent.shopName()),
+			new SlackField().setTitle("가게 위치 위도").setValue(String.valueOf(certificationEvent.location().getY())),
+			new SlackField().setTitle("가게 위치 경도").setValue(String.valueOf(certificationEvent.location().getX()))
+		));
+
+		slackMessage = new SlackMessage();
+		slackMessage.setAttachments(List.of(slackAttachment));
+		slackMessage.setChannel("#cs_사장님인증");
+		slackMessage.setText("%s 사장님 인증 요청".formatted(profile));
+
+		return objectMapper.convertValue(slackMessage, returnType);
+	}
+
+	private void send(SlackMessage slackMessage) {
+		slackApi.call(slackMessage);
 	}
 }
