@@ -293,7 +293,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 	}
 
-	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하지 않은 상태에서 사장님 인증을 요청한다")
+	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하는 상태에서 사장님 인증을 요청한다")
 	void request2() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
 		final UriComponents uriComponents = UriComponentsBuilder
@@ -303,7 +303,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		final CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
-			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1).lessOrEqual(3))
+			.set("cakeShopId", 11L)
 			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11).ofMinLength(1))
 			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
 
@@ -550,9 +550,9 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		assertEquals(7, data.cakeShops().size());
+		assertEquals(8, data.cakeShops().size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.cakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L);
+			assertThat(cakeShop.cakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
 			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
 			assertThat(cakeShop.cakeShopName()).isNotNull();
 		});

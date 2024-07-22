@@ -21,7 +21,10 @@ class BusinessInformationTest extends DomainTest {
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
-			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
+			.set("location", supplyPointBy(
+				Arbitraries.doubles().between(-90, 90).sample(),
+				Arbitraries.doubles().between(-180, 180).sample())
+			)
 			.sample();
 	}
 
