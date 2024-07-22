@@ -34,7 +34,7 @@ public class RedisConfig {
 		int port,
 		@Value("${spring.data.redis.host}")
 		String host,
-		@Value("{spring.data.redis.password}")
+		@Value("${spring.data.redis.password}")
 		String password
 	) {
 		this.port = port;
