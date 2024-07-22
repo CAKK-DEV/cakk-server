@@ -12,6 +12,7 @@ public class RedisTestContainer {
 
 	private static final String REDIS_IMAGE = "redis:7.2-alpine";
 	private static final int REDIS_PORT = 6379;
+	private static final String REDIS_PASSWORD = "test_redis_password";
 
 	@Container
 	public static final GenericContainer<?> REDIS_CONTAINER = new GenericContainer<>(DockerImageName.parse(REDIS_IMAGE))
@@ -23,5 +24,6 @@ public class RedisTestContainer {
 
 		System.setProperty("spring.data.redis.host", REDIS_CONTAINER.getHost());
 		System.setProperty("spring.data.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
+		System.setProperty("spring.data.redis.password", REDIS_PASSWORD);
 	}
 }
