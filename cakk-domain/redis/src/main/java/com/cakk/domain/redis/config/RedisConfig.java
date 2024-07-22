@@ -1,8 +1,11 @@
 package com.cakk.domain.redis.config;
 
+import static java.util.Objects.*;
+
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +48,12 @@ public class RedisConfig {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
 		redisStandaloneConfiguration.setHostName(host);
 		redisStandaloneConfiguration.setPort(port);
-		redisStandaloneConfiguration.setPassword(password);
+
+		final String profile = System.getProperty("spring.profiles.active");
+		if (nonNull(profile) && profile.equals("prod")) {
+			redisStandaloneConfiguration.setPassword(password);
+		}
+
 		return new LettuceConnectionFactory(redisStandaloneConfiguration);
 	}
 
@@ -63,7 +71,15 @@ public class RedisConfig {
 	@Bean
 	public RedissonClient redissonClient() {
 		final Config config = new Config();
-		config.useSingleServer().setAddress(address);
+
+		SingleServerConfig ssc = config.useSingleServer();
+
+		ssc.setAddress(address);
+
+		final String profile = System.getProperty("spring.profiles.active");
+		if (nonNull(profile) && profile.equals("prod")) {
+			ssc.setPassword(password);
+		}
 
 		return Redisson.create(config);
 	}
