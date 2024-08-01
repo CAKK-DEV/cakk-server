@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.cakk.common.enums.ReturnCode;
@@ -31,7 +32,6 @@ public class MailService {
 
 			mailSender.send(emailForm);
 		} catch (RuntimeException e) {
-			e.printStackTrace();
 			throw new CakkException(ReturnCode.SEND_EMAIL_ERROR);
 		}
 	}
@@ -40,9 +40,11 @@ public class MailService {
 		final MimeMessage message = mailSender.createMimeMessage();
 
 		try {
-			message.setFrom(senderEmail);
-			message.setRecipients(MimeMessage.RecipientType.TO, receiverMail);
-			message.setSubject("[케이크크] 이메일 인증");
+			final MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+			helper.setTo(receiverMail);
+			helper.setFrom(senderEmail);
+			helper.setSubject("[케이크크] 이메일 인증");
 
 			String body = """
 				<h3>인증코드를 확인해 주세요.</h3>
@@ -55,7 +57,7 @@ public class MailService {
 
 				감사합니다.
 				""".formatted(code);
-			message.setText(body, "UTF-8", "html");
+			helper.setText(body, true);
 		} catch (MessagingException e) {
 			throw new CakkException(ReturnCode.SEND_EMAIL_ERROR);
 		}
