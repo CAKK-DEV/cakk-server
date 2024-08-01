@@ -56,7 +56,7 @@ public class MailConfig {
 		mailSender.setDefaultEncoding("UTF-8");
 		mailSender.setJavaMailProperties(getMailProperties());
 
-		return new JavaMailSenderImpl();
+		return mailSender;
 	}
 
 	private Properties getMailProperties() {
