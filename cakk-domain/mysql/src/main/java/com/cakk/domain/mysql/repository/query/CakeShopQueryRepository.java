@@ -105,7 +105,9 @@ public class CakeShopQueryRepository {
 			.selectFrom(cakeShop)
 			.leftJoin(cakeShop.businessInformation).fetchJoin()
 			.where(
-				ltCakeShopId(cakeShopId), containKeyword(keyword).and(includeDistance(location))
+				ltCakeShopId(cakeShopId),
+				includeDistance(location),
+				containKeyword(keyword)
 			)
 			.orderBy(cakeShopIdDesc())
 			.limit(pageSize)
