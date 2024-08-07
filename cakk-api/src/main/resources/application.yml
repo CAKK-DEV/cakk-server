@@ -17,6 +17,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         show_sql: false
+        default_batch_fetch_size: 1000
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
