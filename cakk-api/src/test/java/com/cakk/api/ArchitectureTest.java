@@ -3,15 +3,15 @@ package com.cakk.api;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
+
+import com.cakk.api.common.annotation.TestWithDisplayName;
 
 @DisplayName("Application Architecture Test")
 class ArchitectureTest {

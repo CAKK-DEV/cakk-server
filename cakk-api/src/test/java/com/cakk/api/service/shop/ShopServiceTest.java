@@ -14,6 +14,8 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import net.jqwik.api.Arbitraries;
 
+import com.navercorp.fixturemonkey.ArbitraryBuilder;
+
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
@@ -30,18 +32,16 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
-
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
-import com.navercorp.fixturemonkey.ArbitraryBuilder;
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
 public class ShopServiceTest extends ServiceTest {
@@ -95,7 +95,9 @@ public class ShopServiceTest extends ServiceTest {
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
-			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
+			.set("location", supplyPointBy(
+				Arbitraries.doubles().between(-90, 90).sample(),
+				Arbitraries.doubles().between(-180, 180).sample()))
 			.sample();
 	}
 
@@ -207,7 +209,6 @@ public class ShopServiceTest extends ServiceTest {
 		//given
 		PromotionRequest request = getPromotionRequestFixture();
 		BusinessInformation businessInformation = getBusinessInformationFixture();
-
 
 		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReader).findByUserId(request.userId());
 		doReturn(businessInformation).when(cakeShopReader).findBusinessInformationWithShop(request.cakeShopId());

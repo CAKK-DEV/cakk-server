@@ -2,16 +2,17 @@ package com.cakk.domain.entity.user;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import net.jqwik.api.Arbitraries;
 
 import com.cakk.common.enums.Role;
 import com.cakk.domain.base.DomainTest;
-import com.cakk.domain.mysql.entity.user.BusinessInformation;
-import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
 class BusinessInformationTest extends DomainTest {
@@ -63,7 +64,8 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	void 케이크샵이_존재한다면_가게_정보와_함께_서비스에_인증요청을_한다() {
+	@DisplayName("케이크샵이 존재한다면 가게 정보와 함께 서비스에 인증요청을 한다")
+	void getRequestCertificationMessage() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
 		User user = getUserFixture();
@@ -78,7 +80,8 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	void 케이크샵이_존재하지_않는다면_가게_정보_없이_서비스에_인증요청을_한다() {
+	@DisplayName("케이크샵이 존재하지 않는다면 가게 정보 없이 서비스에 인증요청을 한다")
+	void getRequestCertificationMessage2() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixture();
 		User user = getUserFixture();
@@ -92,7 +95,8 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	void 사용자는_케이크샵의_주인으로_승격된다() {
+	@DisplayName("사용자는 케이크샵의 주인으로 승격된다")
+	void promotedByBusinessOwner() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop();
 		User user = getUserFixture();
