@@ -103,11 +103,11 @@ public class CakeShopQueryRepository {
 	) {
 		return queryFactory
 			.selectFrom(cakeShop)
-			.innerJoin(cakeShop.businessInformation).fetchJoin()
-			.leftJoin(cakeShop.cakes).fetchJoin()
-			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
+			.leftJoin(cakeShop.businessInformation).fetchJoin()
 			.where(
-				containKeyword(keyword).and(includeDistance(location)), ltCakeShopId(cakeShopId)
+				ltCakeShopId(cakeShopId),
+				includeDistance(location),
+				containKeyword(keyword)
 			)
 			.orderBy(cakeShopIdDesc())
 			.limit(pageSize)

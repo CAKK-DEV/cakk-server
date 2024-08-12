@@ -1,7 +1,6 @@
 package com.cakk.api.integration.user;
 
 import static org.junit.Assert.*;
-
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
 import org.springframework.http.HttpEntity;
