@@ -9,17 +9,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.api.vo.JsonWebToken;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+
+import com.cakk.api.provider.jwt.JwtProvider;
+import com.cakk.api.vo.JsonWebToken;
+import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")

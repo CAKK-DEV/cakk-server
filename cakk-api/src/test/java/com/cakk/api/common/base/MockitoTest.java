@@ -8,10 +8,10 @@ import org.springframework.test.context.ActiveProfiles;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-
-import com.cakk.domain.mysql.config.JpaConfig;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+
+import com.cakk.domain.mysql.config.JpaConfig;
 
 @Import(JpaConfig.class)
 @ActiveProfiles("test")
