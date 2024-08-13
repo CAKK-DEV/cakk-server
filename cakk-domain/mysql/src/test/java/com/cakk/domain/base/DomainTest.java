@@ -7,14 +7,14 @@ import org.locationtech.jts.geom.PrecisionModel;
 
 import net.jqwik.api.Arbitraries;
 
-import com.cakk.common.enums.Role;
-import com.cakk.domain.mysql.entity.user.User;
-
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+
+import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.entity.user.User;
 
 public abstract class DomainTest {
 
