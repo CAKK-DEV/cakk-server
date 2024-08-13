@@ -5,6 +5,11 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 
+import net.jqwik.api.Arbitraries;
+
+import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.entity.user.User;
+
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
@@ -41,7 +46,7 @@ public abstract class DomainTest {
 			.build();
 	}
 
-	public static Point supplyPointBy(Double latitude, Double longitude) {
+	protected static Point supplyPointBy(Double latitude, Double longitude) {
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }
