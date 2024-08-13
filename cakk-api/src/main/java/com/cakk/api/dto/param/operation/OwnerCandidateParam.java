@@ -1,13 +1,12 @@
 package com.cakk.api.dto.param.operation;
 
+import java.time.LocalDateTime;
 
 public record OwnerCandidateParam(
 	Long userId,
-	Long cakeShopId,
+	String nickname,
+	String profileImageUrl,
 	String email,
-	String businessRegistrationImageUrl,
-	String idCardImageUrl,
-	String emergencyContact
+	LocalDateTime timestamp
 ) {
 }
-

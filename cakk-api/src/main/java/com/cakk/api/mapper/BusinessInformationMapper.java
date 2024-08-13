@@ -18,13 +18,12 @@ public class BusinessInformationMapper {
 		List<OwnerCandidateParam> candidates = businessInformations
 			.stream()
 			.map(businessInformation -> new OwnerCandidateParam(
-			businessInformation.getUser().getId(),
-			businessInformation.getCakeShop().getId(),
-			businessInformation.getUser().getEmail(),
-			businessInformation.getBusinessRegistrationImageUrl(),
-			businessInformation.getIdCardImageUrl(),
-			businessInformation.getEmergencyContact()
-		)).toList();
+				businessInformation.getUser().getId(),
+				businessInformation.getUser().getNickname(),
+				businessInformation.getUser().getProfileImageUrl(),
+				businessInformation.getUser().getEmail(),
+				businessInformation.getUpdatedAt()
+			)).toList();
 
 		return new CakeShopOwnerCandidateResponse(candidates);
 	}
