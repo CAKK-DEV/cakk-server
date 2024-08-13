@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 
@@ -24,4 +25,8 @@ public interface BusinessInformationJpaRepository extends JpaRepository<Business
 
 	@Query("select bi from BusinessInformation as bi join fetch bi.cakeShop where bi.user =:user")
 	List<BusinessInformation> findAllWithCakeShopByUser(User user);
+
+	@Query("select bi from BusinessInformation as bi join fetch bi.user join fetch bi.cakeShop"
+		+ " where bi.verificationStatus =:verificationStatus")
+	List<BusinessInformation> findAllCakeShopBusinessOwnerCandidates(VerificationStatus verificationStatus);
 }
