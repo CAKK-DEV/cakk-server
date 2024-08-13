@@ -14,7 +14,7 @@ public class DefaultVerificationPolicy implements VerificationPolicy {
 	}
 
 	@Override
-	public VerificationStatus approvedBusinessOwner(User user) {
+	public VerificationStatus approveToBusinessOwner(User user) {
 		user.upgradedBusinessOwner();
 		return VerificationStatus.APPROVED;
 	}

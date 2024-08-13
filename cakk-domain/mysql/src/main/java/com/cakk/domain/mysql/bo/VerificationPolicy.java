@@ -7,5 +7,5 @@ public interface VerificationPolicy {
 
 	boolean isCandidate(User user, VerificationStatus verificationStatus);
 
-	VerificationStatus approvedBusinessOwner(User user);
+	VerificationStatus approveToBusinessOwner(User user);
 }
