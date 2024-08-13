@@ -30,6 +30,7 @@ import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.domain.mysql.bo.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
@@ -63,6 +64,9 @@ public class ShopServiceTest extends ServiceTest {
 
 	@Mock
 	private ApplicationEventPublisher publisher;
+
+	@Mock
+	private VerificationPolicy verificationPolicy;
 
 	private CreateShopRequest getCreateShopRequestFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)

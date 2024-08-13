@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
+import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
 import com.cakk.common.enums.ReturnCode;
@@ -73,6 +74,35 @@ public class AdminIntegrationTest extends IntegrationTest  {
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 		final CakeShopOwnerCandidateResponse data = objectMapper.convertValue(response.getData(),
 			CakeShopOwnerCandidateResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("백 오피스 API, 케이크 샵 사장님 인증 완료 처리에 성공한다")
+	void backOfficeCakeShopBusinessOwnerApproved() {
+		//given
+		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.path("/shops/promote")
+			.build();
+
+		final PromotionRequest request = getConstructorMonkey().giveMeBuilder(PromotionRequest.class)
+			.set("userId", 1L)
+			.set("cakeShopId", 1L)
+			.sample();
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+			uriComponents.toUriString(),
+			HttpMethod.PUT,
+			new HttpEntity<>(request),
+			ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
