@@ -49,4 +49,12 @@ public abstract class DomainTest {
 	protected static Point supplyPointBy(Double latitude, Double longitude) {
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
+
+	protected User getUserFixture(Role role) {
+		return getReflectionMonkey().giveMeBuilder(User.class)
+			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
+			.set("role", role)
+			.sample();
+	}
 }
