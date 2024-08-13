@@ -43,14 +43,6 @@ class BusinessInformationTest extends DomainTest {
 			.sample();
 	}
 
-	protected User getUserFixture(Role role) {
-		return getReflectionMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
-			.set("role", role)
-			.sample();
-	}
-
 	private BusinessInformation getBusinessInformationFixtureWithUser(VerificationStatus verificationStatus, Role role) {
 		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
 			.setNotNull("businessNumber")
@@ -121,7 +113,7 @@ class BusinessInformationTest extends DomainTest {
 		User user = getUserFixture(Role.USER);
 
 		//when
-		businessInformation.promotedToBusinessOwner(verificationPolicy, user);
+		businessInformation.updateBusinessOwner(verificationPolicy, user);
 
 		//then
 		assertThat(businessInformation.getUser()).isNotNull();
