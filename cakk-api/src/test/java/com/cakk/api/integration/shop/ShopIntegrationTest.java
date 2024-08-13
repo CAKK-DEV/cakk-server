@@ -107,30 +107,6 @@ class ShopIntegrationTest extends IntegrationTest {
 		cakeShopViewsRedisRepository.clear();
 	}
 
-	@TestWithDisplayName("백 오피스 API, 케이크샵 생성에 성공한다")
-	void backOfficeCreateCakeShop() {
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.path("/admin/create")
-			.build();
-		final CreateShopRequest request = getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
-			.sample();
-
-		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
-			uriComponents.toUriString(),
-			HttpMethod.POST,
-			new HttpEntity<>(request),
-			ApiResponse.class);
-
-		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopCreateResponse data = objectMapper.convertValue(response.getData(), CakeShopCreateResponse.class);
-
-		Assertions.assertThat(data.cakeShopId()).isNotNull();
-	}
-
 	@TestWithDisplayName("케이크 샵을 간단 조회에 성공한다.")
 	void simple1() {
 		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);

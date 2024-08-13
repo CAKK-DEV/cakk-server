@@ -2,8 +2,6 @@ package com.cakk.domain.mysql.entity.user;
 
 import java.util.Objects;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -14,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,9 +44,18 @@ public class BusinessInformation extends AuditEntity {
 	@Column(name = "business_number", length = 20)
 	private String businessNumber;
 
+	@Column(name = "business_registration_image_url", length = 200)
+	private String businessRegistrationImageUrl;
+
+	@Column(name = "id_card_image_url", length = 200)
+	private String idCardImageUrl;
+
+	@Column(name = "emergency_contact", length = 20)
+	private String emergencyContact;
+
 	@ColumnDefault("0")
 	@Convert(converter = VerificationStatusConverter.class)
-	@Column(name = "verification_status", nullable = false, length = 20)
+	@Column(name = "verification_status", nullable = false)
 	private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 
 	@OneToOne

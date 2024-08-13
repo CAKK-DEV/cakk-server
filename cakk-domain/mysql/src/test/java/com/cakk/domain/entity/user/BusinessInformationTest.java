@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import net.jqwik.api.Arbitraries;
 
+import com.navercorp.fixturemonkey.customizer.Values;
+
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.base.DomainTest;
@@ -18,7 +20,6 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
-import com.navercorp.fixturemonkey.customizer.Values;
 
 class BusinessInformationTest extends DomainTest {
 

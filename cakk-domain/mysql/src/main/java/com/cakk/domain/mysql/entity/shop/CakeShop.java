@@ -103,6 +103,7 @@ public class CakeShop extends AuditEntity {
 		this.shopBio = shopBio;
 		this.shopDescription = shopDescription;
 		this.location = location;
+		this.heartCount = 0;
 		this.likeCount = 0;
 		this.linkedFlag = false;
 	}
