@@ -1,6 +1,5 @@
-package com.cakk.domain.mysql.bo;
+package com.cakk.domain.mysql.bo.user;
 
-import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.entity.user.User;
 
 public interface VerificationPolicy {
@@ -9,3 +8,4 @@ public interface VerificationPolicy {
 
 	VerificationStatus approveToBusinessOwner(User user);
 }
+

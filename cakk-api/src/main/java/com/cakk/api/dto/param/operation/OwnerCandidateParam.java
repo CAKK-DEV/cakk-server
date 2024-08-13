@@ -10,3 +10,4 @@ public record OwnerCandidateParam(
 	String emergencyContact
 ) {
 }
+

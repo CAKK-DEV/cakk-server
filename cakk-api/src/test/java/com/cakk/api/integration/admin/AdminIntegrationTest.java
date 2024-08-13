@@ -109,3 +109,4 @@ public class AdminIntegrationTest extends IntegrationTest  {
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 	}
 }
+

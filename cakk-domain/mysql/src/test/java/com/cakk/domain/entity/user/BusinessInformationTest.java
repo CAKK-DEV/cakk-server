@@ -10,10 +10,9 @@ import net.jqwik.api.Arbitraries;
 import com.navercorp.fixturemonkey.customizer.Values;
 
 import com.cakk.common.enums.Role;
-import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.base.DomainTest;
-import com.cakk.domain.mysql.bo.DefaultVerificationPolicy;
-import com.cakk.domain.mysql.bo.VerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
@@ -110,7 +109,7 @@ class BusinessInformationTest extends DomainTest {
 	void promotedByBusinessOwner() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.PENDING);
-		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+		VerificationPolicy verificationPolicy = getVerificationPolicy();
 		User user = getUserFixture(Role.USER);
 
 		//when
@@ -127,7 +126,7 @@ class BusinessInformationTest extends DomainTest {
 	void isPendingVerificationTrue() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.USER);
-		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
 		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isTrue();
@@ -138,7 +137,7 @@ class BusinessInformationTest extends DomainTest {
 	void isPendingVerificationFalse1() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.BUSINESS_OWNER);
-		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
 		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
@@ -149,7 +148,7 @@ class BusinessInformationTest extends DomainTest {
 	void isPendingVerificationFalse2() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.USER);
-		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
 		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
@@ -160,9 +159,10 @@ class BusinessInformationTest extends DomainTest {
 	void isPendingVerificationFalse3() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.BUSINESS_OWNER);
-		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
 		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
 	}
 }
+

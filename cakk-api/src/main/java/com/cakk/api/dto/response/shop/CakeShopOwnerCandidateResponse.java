@@ -8,3 +8,4 @@ public record CakeShopOwnerCandidateResponse(
 	List<OwnerCandidateParam> candidates
 ) {
 }
+

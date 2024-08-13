@@ -1,4 +1,4 @@
-package com.cakk.common.enums;
+package com.cakk.domain.mysql.bo.user;
 
 public enum VerificationStatus {
 	PENDING(0),
@@ -11,11 +11,16 @@ public enum VerificationStatus {
 		this.code = code;
 	}
 
-	public static boolean isCandidate(VerificationStatus verificationStatus) {
-		return verificationStatus == PENDING;
-	}
-
 	public Integer getCode() {
 		return code;
 	}
+
+	public boolean isCandidate() {
+		return code == 0;
+	}
+
+	public static VerificationStatus makeApproved() {
+		return VerificationStatus.APPROVED;
+	}
 }
+

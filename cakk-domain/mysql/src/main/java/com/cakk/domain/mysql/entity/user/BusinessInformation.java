@@ -21,8 +21,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.cakk.common.enums.VerificationStatus;
-import com.cakk.domain.mysql.bo.VerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationStatus;
 import com.cakk.domain.mysql.converter.VerificationStatusConverter;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;

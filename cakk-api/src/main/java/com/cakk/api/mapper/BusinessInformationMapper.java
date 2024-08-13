@@ -29,3 +29,4 @@ public class BusinessInformationMapper {
 		return new CakeShopOwnerCandidateResponse(candidates);
 	}
 }
+

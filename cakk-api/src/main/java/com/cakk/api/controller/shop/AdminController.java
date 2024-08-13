@@ -50,3 +50,4 @@ public class AdminController {
 		return ApiResponse.success();
 	}
 }
+

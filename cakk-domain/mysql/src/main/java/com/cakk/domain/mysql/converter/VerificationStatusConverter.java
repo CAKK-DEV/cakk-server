@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 import jakarta.persistence.AttributeConverter;
 
 import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
+import com.cakk.domain.mysql.bo.user.VerificationStatus;
 
 public class VerificationStatusConverter implements AttributeConverter<VerificationStatus, Integer> {
 	@Override
@@ -30,3 +30,4 @@ public class VerificationStatusConverter implements AttributeConverter<Verificat
 			.orElseThrow(() -> new CakkException(ReturnCode.INTERNAL_SERVER_ERROR));
 	}
 }
+

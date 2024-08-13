@@ -14,6 +14,8 @@ import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntr
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 
 import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.bo.user.DefaultVerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.entity.user.User;
 
 public abstract class DomainTest {
@@ -56,5 +58,9 @@ public abstract class DomainTest {
 			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
 			.set("role", role)
 			.sample();
+	}
+
+	protected VerificationPolicy getVerificationPolicy() {
+		return new DefaultVerificationPolicy();
 	}
 }
