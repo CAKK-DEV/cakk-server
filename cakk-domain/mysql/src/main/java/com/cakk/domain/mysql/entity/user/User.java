@@ -105,7 +105,7 @@ public class User extends AuditEntity {
 		this.role = role;
 	}
 
-	public void upgradedRoleToBusinessOwner() {
+	public void upgradedBusinessOwner() {
 		role = Role.BUSINESS_OWNER;
 	}
 
@@ -115,5 +115,9 @@ public class User extends AuditEntity {
 		this.email = param.email();
 		this.gender = param.gender();
 		this.birthday = param.birthday();
+	}
+
+	public boolean isBusinessOwner() {
+		return role == Role.BUSINESS_OWNER;
 	}
 }
