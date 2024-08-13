@@ -1,5 +1,7 @@
 package com.cakk.domain.mysql.entity.user;
 
+import java.util.Objects;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Column;
@@ -80,6 +82,10 @@ public class BusinessInformation extends AuditEntity {
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
 		verificationStatus = verificationPolicy.approveToBusinessOwner(user);
+	}
+
+	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
+		return verificationPolicy.isCandidate(Objects.requireNonNull(user), Objects.requireNonNull(verificationStatus));
 	}
 
 	private boolean isExistMyCakeShop() {

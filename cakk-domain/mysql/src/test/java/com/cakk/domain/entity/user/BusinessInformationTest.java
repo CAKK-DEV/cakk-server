@@ -120,4 +120,48 @@ class BusinessInformationTest extends DomainTest {
 		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.BUSINESS_OWNER);
 		assertThat(businessInformation.getVerificationStatus()).isEqualTo(VerificationStatus.APPROVED);
 	}
+
+	@Test
+	@DisplayName("예비 사장님 여부 검사에서 인증 요청 상태라면, True를 반환한다")
+	void isPendingVerificationTrue() {
+		//given
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.USER);
+		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+
+		//then
+		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isTrue();
+	}
+
+	@Test
+	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
+	void isPendingVerificationFalse1() {
+		//given
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.BUSINESS_OWNER);
+		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+
+		//then
+		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
+	}
+
+	@Test
+	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
+	void isPendingVerificationFalse2() {
+		//given
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.USER);
+		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+
+		//then
+		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
+	}
+
+	@Test
+	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
+	void isPendingVerificationFalse3() {
+		//given
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.BUSINESS_OWNER);
+		VerificationPolicy verificationPolicy = new DefaultVerificationPolicy();
+
+		//then
+		assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse();
+	}
 }
