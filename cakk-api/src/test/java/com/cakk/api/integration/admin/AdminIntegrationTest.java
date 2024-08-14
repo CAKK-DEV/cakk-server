@@ -19,6 +19,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
 
@@ -72,8 +73,8 @@ public class AdminIntegrationTest extends IntegrationTest  {
 
 		// then
 		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopOwnerCandidateResponse data = objectMapper.convertValue(response.getData(),
-			CakeShopOwnerCandidateResponse.class);
+		final CakeShopOwnerCandidatesResponse data = objectMapper.convertValue(response.getData(),
+			CakeShopOwnerCandidatesResponse.class);
 
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
@@ -107,6 +108,35 @@ public class AdminIntegrationTest extends IntegrationTest  {
 		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+	}
+
+	@TestWithDisplayName("백 오피스 API, 케이크샵 사장님 인증 요청 상세 내용 조회에 성공한다")
+	void backOfficeSearchByCakeShopBusinessOwnerCandidate() {
+		//given
+		final Long userId = 1L;
+		final String url = "%s%d%s/shops/candidates/{userId}".formatted(BASE_URL, port, API_URL);
+		final UriComponents uriComponents = UriComponentsBuilder
+			.fromUriString(url)
+			.buildAndExpand(userId);
+
+		// when
+		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+
+		// then
+		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		final CakeShopOwnerCandidateResponse data = objectMapper.convertValue(response.getData(),
+			CakeShopOwnerCandidateResponse.class);
+
+		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
+		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
+		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+
+		assertEquals(1L, data.userId().longValue());
+		assertEquals(1L, data.cakeShopId().longValue());
+		assertEquals("test1@google.com", data.email());
+		assertEquals("https://business_registration_image_url1", data.businessRegistrationImageUrl());
+		assertEquals("https://id_card_image_url1", data.idCardImageUrl());
+		assertEquals("010-0000-0000", data.emergencyContact());
 	}
 }
 
