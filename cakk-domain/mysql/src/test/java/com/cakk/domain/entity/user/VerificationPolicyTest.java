@@ -6,9 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.cakk.common.enums.Role;
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.base.DomainTest;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
-import com.cakk.domain.mysql.bo.user.VerificationStatus;
 import com.cakk.domain.mysql.entity.user.User;
 
 public class VerificationPolicyTest extends DomainTest {

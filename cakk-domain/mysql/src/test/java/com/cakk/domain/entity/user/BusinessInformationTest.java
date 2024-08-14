@@ -10,9 +10,9 @@ import net.jqwik.api.Arbitraries;
 import com.navercorp.fixturemonkey.customizer.Values;
 
 import com.cakk.common.enums.Role;
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.base.DomainTest;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
-import com.cakk.domain.mysql.bo.user.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;

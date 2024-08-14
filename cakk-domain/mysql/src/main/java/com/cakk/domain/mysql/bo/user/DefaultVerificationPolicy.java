@@ -2,6 +2,7 @@ package com.cakk.domain.mysql.bo.user;
 
 import org.springframework.stereotype.Component;
 
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.entity.user.User;
 
 @Component

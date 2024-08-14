@@ -1,6 +1,7 @@
-package com.cakk.domain.mysql.bo.user;
+package com.cakk.common.enums;
 
 public enum VerificationStatus {
+
 	PENDING(0),
 	APPROVED(1),
 	REJECTED(2);

@@ -17,13 +17,15 @@ public class BusinessInformationMapper {
 	) {
 		List<OwnerCandidateParam> candidates = businessInformations
 			.stream()
-			.map(businessInformation -> new OwnerCandidateParam(
-				businessInformation.getUser().getId(),
-				businessInformation.getUser().getNickname(),
-				businessInformation.getUser().getProfileImageUrl(),
-				businessInformation.getUser().getEmail(),
-				businessInformation.getUpdatedAt()
-			)).toList();
+			.map(businessInformation ->
+				OwnerCandidateParam.builder()
+					.userId(businessInformation.getUser().getId())
+					.nickname(businessInformation.getUser().getNickname())
+					.profileImageUrl(businessInformation.getUser().getProfileImageUrl())
+					.email(businessInformation.getUser().getEmail())
+					.timestamp(businessInformation.getUpdatedAt())
+					.build())
+			.toList();
 
 		return new CakeShopOwnerCandidateResponse(candidates);
 	}

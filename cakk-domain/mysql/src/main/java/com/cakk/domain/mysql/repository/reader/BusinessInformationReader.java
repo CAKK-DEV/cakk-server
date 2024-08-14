@@ -4,8 +4,8 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.annotation.Reader;
-import com.cakk.domain.mysql.bo.user.VerificationStatus;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.jpa.BusinessInformationJpaRepository;
