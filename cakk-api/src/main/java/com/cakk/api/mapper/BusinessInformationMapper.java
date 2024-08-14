@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.param.operation.OwnerCandidateParam;
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BusinessInformationMapper {
 
-	public static CakeShopOwnerCandidateResponse supplyCakeShopOwnerCandidateResponseBy(
+	public static CakeShopOwnerCandidatesResponse supplyCakeShopOwnerCandidatesResponseBy(
 		List<BusinessInformation> businessInformations
 	) {
 		List<OwnerCandidateParam> candidates = businessInformations
@@ -27,7 +28,20 @@ public class BusinessInformationMapper {
 					.build())
 			.toList();
 
-		return new CakeShopOwnerCandidateResponse(candidates);
+		return new CakeShopOwnerCandidatesResponse(candidates);
+	}
+
+	public static CakeShopOwnerCandidateResponse supplyCakeShopOwnerCandidateResponseBy(
+		BusinessInformation businessInformation
+	) {
+		return CakeShopOwnerCandidateResponse.builder()
+			.userId(businessInformation.getUser().getId())
+			.cakeShopId(businessInformation.getCakeShop().getId())
+			.email(businessInformation.getUser().getEmail())
+			.businessRegistrationImageUrl(businessInformation.getBusinessRegistrationImageUrl())
+			.idCardImageUrl(businessInformation.getIdCardImageUrl())
+			.emergencyContact(businessInformation.getEmergencyContact())
+			.build();
 	}
 }
 

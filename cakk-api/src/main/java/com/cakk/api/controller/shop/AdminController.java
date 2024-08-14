@@ -3,7 +3,7 @@ package com.cakk.api.controller.shop;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +16,7 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
 import com.cakk.api.service.shop.ShopService;
 import com.cakk.common.response.ApiResponse;
 
@@ -27,11 +28,19 @@ public class AdminController {
 	private final ShopService shopService;
 
 	@GetMapping("/shops/candidates")
-	public ApiResponse<CakeShopOwnerCandidateResponse> getBusinessOwnerCandidates() {
-		final CakeShopOwnerCandidateResponse response =  shopService.getBusinessOwnerCandidates();
+	public ApiResponse<CakeShopOwnerCandidatesResponse> getBusinessOwnerCandidates() {
+		final CakeShopOwnerCandidatesResponse response =  shopService.getBusinessOwnerCandidates();
 
 		return ApiResponse.success(response);
 	}
+
+	@GetMapping("/shops/candidates/{userId}")
+	public ApiResponse<CakeShopOwnerCandidateResponse> getCandidateSpecificationInformation(@PathVariable Long userId) {
+		final CakeShopOwnerCandidateResponse response = shopService.getCandidateInformation(userId);
+
+		return ApiResponse.success(response);
+	}
+
 
 	@PostMapping("/shops/create")
 	public ApiResponse<CakeShopCreateResponse> createByAdmin(

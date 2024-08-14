@@ -1,11 +1,14 @@
 package com.cakk.api.dto.response.shop;
 
-import java.util.List;
+import lombok.Builder;
 
-import com.cakk.api.dto.param.operation.OwnerCandidateParam;
-
+@Builder
 public record CakeShopOwnerCandidateResponse(
-	List<OwnerCandidateParam> candidates
+	Long userId,
+	Long cakeShopId,
+	String email,
+	String businessRegistrationImageUrl,
+	String idCardImageUrl,
+	String emergencyContact
 ) {
 }
-
