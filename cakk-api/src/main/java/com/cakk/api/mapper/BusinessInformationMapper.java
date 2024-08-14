@@ -34,14 +34,14 @@ public class BusinessInformationMapper {
 	public static CakeShopOwnerCandidateResponse supplyCakeShopOwnerCandidateResponseBy(
 		BusinessInformation businessInformation
 	) {
-		return new CakeShopOwnerCandidateResponse(
-			businessInformation.getUser().getId(),
-			businessInformation.getCakeShop().getId(),
-			businessInformation.getUser().getEmail(),
-			businessInformation.getBusinessRegistrationImageUrl(),
-			businessInformation.getIdCardImageUrl(),
-			businessInformation.getEmergencyContact()
-		);
+		return CakeShopOwnerCandidateResponse.builder()
+			.userId(businessInformation.getUser().getId())
+			.cakeShopId(businessInformation.getCakeShop().getId())
+			.email(businessInformation.getUser().getEmail())
+			.businessRegistrationImageUrl(businessInformation.getBusinessRegistrationImageUrl())
+			.idCardImageUrl(businessInformation.getIdCardImageUrl())
+			.emergencyContact(businessInformation.getEmergencyContact())
+			.build();
 	}
 }
 
