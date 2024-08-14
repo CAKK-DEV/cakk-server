@@ -29,4 +29,8 @@ public interface BusinessInformationJpaRepository extends JpaRepository<Business
 	@Query("select bi from BusinessInformation as bi join fetch bi.user join fetch bi.cakeShop"
 		+ " where bi.verificationStatus =:verificationStatus")
 	List<BusinessInformation> findAllCakeShopBusinessOwnerCandidates(VerificationStatus verificationStatus);
+
+	@Query("select bi from BusinessInformation as bi join fetch bi.user join fetch bi.cakeShop"
+		+ " where bi.user.id =:userId")
+	Optional<BusinessInformation> findBusinessInformationByUserId(final Long userId);
 }
