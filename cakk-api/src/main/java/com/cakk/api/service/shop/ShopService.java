@@ -23,13 +23,17 @@ import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
+import com.cakk.api.mapper.BusinessInformationMapper;
 import com.cakk.api.mapper.LinkMapper;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.domain.mysql.bo.CakeShops;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
@@ -63,7 +67,7 @@ public class ShopService {
 	private final BusinessInformationReader businessInformationReader;
 	private final CakeShopWriter cakeShopWriter;
 	private final CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
-
+	private final VerificationPolicy verificationPolicy;
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
@@ -83,7 +87,7 @@ public class ShopService {
 		final User user = userReader.findByUserId(request.userId());
 		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationWithShop(request.cakeShopId());
 
-		businessInformation.promotedByBusinessOwner(user);
+		businessInformation.updateBusinessOwner(verificationPolicy, user);
 	}
 
 	@Transactional
@@ -204,5 +208,24 @@ public class ShopService {
 		final Boolean isOwned = businessInformationReader.isExistBusinessInformation(owner, cakeShopId);
 
 		return ShopMapper.supplyCakeShopOwnerResponseBy(isOwned);
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopOwnerCandidatesResponse getBusinessOwnerCandidates() {
+		List<BusinessInformation> businessInformations = businessInformationReader.findAllCakeShopBusinessOwnerCandidates();
+
+		businessInformations = businessInformations
+			.stream()
+			.filter(businessInformation -> businessInformation.isBusinessOwnerCandidate(verificationPolicy))
+			.toList();
+
+		return BusinessInformationMapper.supplyCakeShopOwnerCandidatesResponseBy(businessInformations);
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopOwnerCandidateResponse getCandidateInformation(final Long userId) {
+		BusinessInformation businessInformation = businessInformationReader.findByUserId(userId);
+
+		return BusinessInformationMapper.supplyCakeShopOwnerCandidateResponseBy(businessInformation);
 	}
 }

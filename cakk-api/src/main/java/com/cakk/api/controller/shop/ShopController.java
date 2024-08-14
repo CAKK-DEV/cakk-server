@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,8 +19,6 @@ import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
-import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
@@ -29,7 +26,6 @@ import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
-import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -57,23 +53,6 @@ public class ShopController {
 		@SignInUser User user,
 		@Valid @RequestBody CertificationRequest certificationRequest) {
 		shopService.requestCertificationBusinessOwner(certificationRequest.from(user));
-		return ApiResponse.success();
-	}
-
-	@PostMapping("/admin/create")
-	public ApiResponse<CakeShopCreateResponse> createByAdmin(
-		@Valid @RequestBody CreateShopRequest createShopRequest
-	) {
-		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(createShopRequest);
-
-		return ApiResponse.success(response);
-	}
-
-	@PatchMapping("/admin/promote")
-	public ApiResponse<Void> promoteUser(
-		@Valid @RequestBody PromotionRequest promotionRequest
-	) {
-		shopService.promoteUserToBusinessOwner(promotionRequest);
 		return ApiResponse.success();
 	}
 

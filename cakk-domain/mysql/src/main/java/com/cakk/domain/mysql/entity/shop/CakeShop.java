@@ -20,7 +20,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.locationtech.jts.geom.Point;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,6 @@ import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "cake_shop")
@@ -105,8 +103,8 @@ public class CakeShop extends AuditEntity {
 		this.shopBio = shopBio;
 		this.shopDescription = shopDescription;
 		this.location = location;
-		this.likeCount = 0;
 		this.heartCount = 0;
+		this.likeCount = 0;
 		this.linkedFlag = false;
 	}
 

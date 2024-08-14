@@ -5,11 +5,18 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 
+import net.jqwik.api.Arbitraries;
+
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+
+import com.cakk.common.enums.Role;
+import com.cakk.domain.mysql.bo.user.DefaultVerificationPolicy;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
+import com.cakk.domain.mysql.entity.user.User;
 
 public abstract class DomainTest {
 
@@ -41,7 +48,19 @@ public abstract class DomainTest {
 			.build();
 	}
 
-	public static Point supplyPointBy(Double latitude, Double longitude) {
+	protected static Point supplyPointBy(Double latitude, Double longitude) {
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+	}
+
+	protected User getUserFixture(Role role) {
+		return getReflectionMonkey().giveMeBuilder(User.class)
+			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
+			.set("role", role)
+			.sample();
+	}
+
+	protected VerificationPolicy getVerificationPolicy() {
+		return new DefaultVerificationPolicy();
 	}
 }
