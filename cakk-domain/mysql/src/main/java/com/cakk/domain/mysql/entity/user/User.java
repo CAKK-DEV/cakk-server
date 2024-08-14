@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -105,7 +106,7 @@ public class User extends AuditEntity {
 		this.role = role;
 	}
 
-	public void upgradedRoleToBusinessOwner() {
+	public void upgradedBusinessOwner() {
 		role = Role.BUSINESS_OWNER;
 	}
 
@@ -115,5 +116,10 @@ public class User extends AuditEntity {
 		this.email = param.email();
 		this.gender = param.gender();
 		this.birthday = param.birthday();
+	}
+
+	@JsonIgnore
+	public boolean isBusinessOwner() {
+		return role == Role.BUSINESS_OWNER;
 	}
 }

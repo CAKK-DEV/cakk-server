@@ -1,6 +1,9 @@
 package com.cakk.domain.mysql.entity.user;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -10,12 +13,17 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.cakk.common.enums.VerificationStatus;
+import com.cakk.domain.mysql.bo.user.VerificationPolicy;
+import com.cakk.domain.mysql.converter.VerificationStatusConverter;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
@@ -36,6 +44,20 @@ public class BusinessInformation extends AuditEntity {
 	@Column(name = "business_number", length = 20)
 	private String businessNumber;
 
+	@Column(name = "business_registration_image_url", length = 200)
+	private String businessRegistrationImageUrl;
+
+	@Column(name = "id_card_image_url", length = 200)
+	private String idCardImageUrl;
+
+	@Column(name = "emergency_contact", length = 20)
+	private String emergencyContact;
+
+	@ColumnDefault("0")
+	@Convert(converter = VerificationStatusConverter.class)
+	@Column(name = "verification_status", nullable = false)
+	private VerificationStatus verificationStatus = VerificationStatus.PENDING;
+
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "shop_id")
@@ -55,6 +77,7 @@ public class BusinessInformation extends AuditEntity {
 		this.cakeShop = cakeShop;
 		this.businessNumber = businessNumber;
 		this.user = user;
+		this.verificationStatus = VerificationStatus.PENDING;
 	}
 
 	public CertificationEvent getRequestCertificationMessage(final CertificationParam param) {
@@ -65,10 +88,13 @@ public class BusinessInformation extends AuditEntity {
 
 	}
 
-	public void promotedByBusinessOwner(final User businessOwner) {
+	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
-		user.upgradedRoleToBusinessOwner();
-		cakeShop.ownedByUser();
+		verificationStatus = verificationPolicy.approveToBusinessOwner(user);
+	}
+
+	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
+		return verificationPolicy.isCandidate(Objects.requireNonNull(user), Objects.requireNonNull(verificationStatus));
 	}
 
 	private boolean isExistMyCakeShop() {
