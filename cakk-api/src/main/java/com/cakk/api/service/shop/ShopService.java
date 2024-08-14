@@ -24,6 +24,7 @@ import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
@@ -210,7 +211,7 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopOwnerCandidateResponse getBusinessOwnerCandidates() {
+	public CakeShopOwnerCandidatesResponse getBusinessOwnerCandidates() {
 		List<BusinessInformation> businessInformations = businessInformationReader.findAllCakeShopBusinessOwnerCandidates();
 
 		businessInformations = businessInformations
@@ -218,6 +219,13 @@ public class ShopService {
 			.filter(businessInformation -> businessInformation.isBusinessOwnerCandidate(verificationPolicy))
 			.toList();
 
-		return BusinessInformationMapper.supplyCakeShopOwnerCandidateResponseBy(businessInformations);
+		return BusinessInformationMapper.supplyCakeShopOwnerCandidatesResponseBy(businessInformations);
+	}
+
+	@Transactional(readOnly = true)
+	public CakeShopOwnerCandidateResponse getCandidateInformation(final Long userId) {
+		BusinessInformation businessInformation = businessInformationReader.findByUserId(userId);
+
+		return BusinessInformationMapper.supplyCakeShopOwnerCandidateResponseBy(businessInformation);
 	}
 }
