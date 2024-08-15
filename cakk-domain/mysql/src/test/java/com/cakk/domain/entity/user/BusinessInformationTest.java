@@ -2,6 +2,7 @@ package com.cakk.domain.entity.user;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,7 @@ import com.navercorp.fixturemonkey.customizer.Values;
 
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
+import com.cakk.common.exception.CakkException;
 import com.cakk.domain.base.DomainTest;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
@@ -74,8 +76,8 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	@DisplayName("케이크샵이 존재한다면 가게 정보와 함께 서비스에 인증요청을 한다")
-	void getRequestCertificationMessage() {
+	@DisplayName("사장님 인증되지 않은 케이크 샵이 존재할 때, 가게 정보와 함께 서비스에 인증요청을 한다")
+	void registerCertificationInformation1() {
 		//given
 		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.PENDING);
 		User user = getUserFixture(Role.USER);
@@ -83,25 +85,26 @@ class BusinessInformationTest extends DomainTest {
 		String shopName = businessInformation.getCakeShop().getShopName();
 
 		//when
-		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
+		CertificationEvent certificationEvent = businessInformation.registerCertificationInformation(param);
 
 		//then
+		assertThat(businessInformation.getVerificationStatus()).isEqualTo(VerificationStatus.PENDING);
+		assertThat(businessInformation.getBusinessRegistrationImageUrl()).isEqualTo(param.businessRegistrationImageUrl());
+		assertThat(businessInformation.getIdCardImageUrl()).isEqualTo(param.idCardImageUrl());
+		assertThat(businessInformation.getEmergencyContact()).isEqualTo(param.emergencyContact());
 		assertThat(certificationEvent.shopName()).isEqualTo(shopName);
 	}
 
 	@Test
-	@DisplayName("케이크샵이 존재하지 않는다면 가게 정보 없이 서비스에 인증요청을 한다")
-	void getRequestCertificationMessage2() {
+	@DisplayName("사장님 인증된 케이크 샵이 존재할 때, 인증 요청에 실패한다")
+	void registerCertificationInformation2() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixture();
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.APPROVED);
 		User user = getUserFixture(Role.USER);
 		CertificationParam param = getCertificationParamFixtureWithUser(user);
 
-		//when
-		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
-
-		//then
-		assertThat(certificationEvent.shopName()).isNull();
+		//when, then
+		Assertions.assertThrowsExactly(CakkException.class, () -> businessInformation.registerCertificationInformation(param));
 	}
 
 	@Test
