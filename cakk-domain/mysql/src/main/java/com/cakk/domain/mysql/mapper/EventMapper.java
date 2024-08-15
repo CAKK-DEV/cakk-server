@@ -24,17 +24,6 @@ public class EventMapper {
 			.build();
 	}
 
-	public static CertificationEvent supplyCertificationInfo(CertificationParam param) {
-		return CertificationEvent.builder()
-			.idCardImageUrl(param.idCardImageUrl())
-			.businessRegistrationImageUrl(param.businessRegistrationImageUrl())
-			.emergencyContact(param.emergencyContact())
-			.message(param.message())
-			.userId(param.user().getId())
-			.userEmail(param.user().getEmail())
-			.build();
-	}
-
 	public static CakeIncreaseViewsEvent supplyCakeIncreaseViewsEvent(Long cakeId) {
 		return new CakeIncreaseViewsEvent(cakeId);
 	}
