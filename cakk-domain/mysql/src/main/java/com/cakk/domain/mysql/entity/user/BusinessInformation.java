@@ -21,7 +21,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.VerificationStatus;
+import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.converter.VerificationStatusConverter;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
@@ -56,7 +58,7 @@ public class BusinessInformation extends AuditEntity {
 	@ColumnDefault("0")
 	@Convert(converter = VerificationStatusConverter.class)
 	@Column(name = "verification_status", nullable = false)
-	private VerificationStatus verificationStatus = VerificationStatus.PENDING;
+	private VerificationStatus verificationStatus = VerificationStatus.UNREQUESTED;
 
 	@OneToOne
 	@MapsId
@@ -77,15 +79,7 @@ public class BusinessInformation extends AuditEntity {
 		this.cakeShop = cakeShop;
 		this.businessNumber = businessNumber;
 		this.user = user;
-		this.verificationStatus = VerificationStatus.PENDING;
-	}
-
-	public CertificationEvent getRequestCertificationMessage(final CertificationParam param) {
-		if (isExistMyCakeShop()) {
-			return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
-		}
-		return EventMapper.supplyCertificationInfo(param);
-
+		this.verificationStatus = VerificationStatus.UNREQUESTED;
 	}
 
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
@@ -97,8 +91,18 @@ public class BusinessInformation extends AuditEntity {
 		return verificationPolicy.isCandidate(Objects.requireNonNull(user), Objects.requireNonNull(verificationStatus));
 	}
 
-	private boolean isExistMyCakeShop() {
-		return cakeShop != null && user == null;
+	public CertificationEvent registerCertificationInformation(CertificationParam param) {
+		if (isAlreadyApproved()) {
+			throw new CakkException(ReturnCode.ALREADY_CERTIFICATED);
+		}
+		businessRegistrationImageUrl = param.businessRegistrationImageUrl();
+		idCardImageUrl = param.idCardImageUrl();
+		emergencyContact = param.emergencyContact();
+		verificationStatus = VerificationStatus.PENDING;
+		return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
 	}
 
+	private boolean isAlreadyApproved() {
+		return verificationStatus.isApproved();
+	}
 }
