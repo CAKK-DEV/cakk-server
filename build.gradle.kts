@@ -1,4 +1,8 @@
 plugins {
+	kotlin("jvm")
+	kotlin("plugin.spring") apply false
+	kotlin("plugin.jpa") apply false
+
 	id("java")
 	id("org.springframework.boot") apply false
 	id("io.spring.dependency-management")
@@ -22,6 +26,9 @@ subprojects {
 	apply(plugin = "java")
 	apply(plugin = "org.springframework.boot")
 	apply(plugin = "io.spring.dependency-management")
+	apply(plugin = "org.jetbrains.kotlin.jvm")
+	apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+	apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 	apply(plugin = "checkstyle")
 	apply(plugin = "jacoco")
 
@@ -71,7 +78,7 @@ subprojects {
 		finalizedBy(tasks.jacocoTestReport)
 	}
 
-	tasks.withType<JacocoReport>  {
+	tasks.withType<JacocoReport> {
 		reports {
 			html.required.set(true)
 			csv.required.set(false)
@@ -81,7 +88,7 @@ subprojects {
 		finalizedBy("jacocoTestCoverageVerification")
 	}
 
-	tasks.withType<JacocoCoverageVerification>  {
+	tasks.withType<JacocoCoverageVerification> {
 		val excludeList = mutableListOf(
 			"com.cakk.api.Application",
 			"com.cakk.api.service.slack.SlackService",
@@ -92,8 +99,8 @@ subprojects {
 			"com.cakk.domain.**"
 		)
 
-		for (qPattern in 'A' .. 'Z') {
-			excludeList.add("*.Q${qPattern}*")
+		for (qPattern in 'A'..'Z') {
+			excludeList.add("*.Q$qPattern*")
 		}
 
 		violationRules {
@@ -124,5 +131,3 @@ subprojects {
 		}
 	}
 }
-
-
