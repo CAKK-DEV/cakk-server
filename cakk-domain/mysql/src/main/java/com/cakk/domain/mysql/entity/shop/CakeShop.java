@@ -67,10 +67,6 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "heart_count", nullable = false, columnDefinition = "MEDIUMINT")
 	private Integer heartCount;
 
-	@ColumnDefault("false")
-	@Column(name = "linked_flag", nullable = false, columnDefinition = "TINYINT(1)")
-	private Boolean linkedFlag;
-
 	@ColumnDefault("null")
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -105,11 +101,6 @@ public class CakeShop extends AuditEntity {
 		this.location = location;
 		this.heartCount = 0;
 		this.likeCount = 0;
-		this.linkedFlag = false;
-	}
-
-	public void ownedByUser() {
-		linkedFlag = true;
 	}
 
 	public void increaseLikeCount() {
