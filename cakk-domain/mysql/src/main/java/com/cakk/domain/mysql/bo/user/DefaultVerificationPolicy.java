@@ -9,13 +9,12 @@ import com.cakk.domain.mysql.entity.user.User;
 public class DefaultVerificationPolicy implements VerificationPolicy {
 
 	@Override
-	public boolean isCandidate(User user, VerificationStatus verificationStatus) {
-		return !user.isBusinessOwner() && verificationStatus.isCandidate();
+	public boolean isCandidate(VerificationStatus verificationStatus) {
+		return verificationStatus.isCandidate();
 	}
 
 	@Override
-	public VerificationStatus approveToBusinessOwner(User user) {
-		user.upgradedBusinessOwner();
+	public VerificationStatus approveToBusinessOwner() {
 		return VerificationStatus.makeApproved();
 	}
 }

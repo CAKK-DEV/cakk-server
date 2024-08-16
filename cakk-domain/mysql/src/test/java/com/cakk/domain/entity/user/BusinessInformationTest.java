@@ -120,7 +120,7 @@ class BusinessInformationTest extends DomainTest {
 
 		//then
 		assertThat(businessInformation.getUser()).isNotNull();
-		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.BUSINESS_OWNER);
+		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.USER);
 		assertThat(businessInformation.getVerificationStatus()).isEqualTo(VerificationStatus.APPROVED);
 	}
 
@@ -139,7 +139,7 @@ class BusinessInformationTest extends DomainTest {
 	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
 	void isPendingVerificationFalse1() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.BUSINESS_OWNER);
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.USER);
 		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
@@ -158,10 +158,10 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
+	@DisplayName("예비 사장님 여부 검사에서 인증 요청 상태도 아니라면, False를 반환한다")
 	void isPendingVerificationFalse3() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.BUSINESS_OWNER);
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.UNREQUESTED, Role.USER);
 		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then

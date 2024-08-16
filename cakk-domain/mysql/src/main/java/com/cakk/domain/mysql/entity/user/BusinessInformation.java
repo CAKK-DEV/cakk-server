@@ -84,11 +84,11 @@ public class BusinessInformation extends AuditEntity {
 
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
-		verificationStatus = verificationPolicy.approveToBusinessOwner(user);
+		verificationStatus = verificationPolicy.approveToBusinessOwner();
 	}
 
 	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
-		return verificationPolicy.isCandidate(Objects.requireNonNull(user), Objects.requireNonNull(verificationStatus));
+		return verificationPolicy.isCandidate(Objects.requireNonNull(verificationStatus));
 	}
 
 	public CertificationEvent registerCertificationInformation(CertificationParam param) {
