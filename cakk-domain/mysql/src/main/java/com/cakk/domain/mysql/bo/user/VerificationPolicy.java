@@ -8,7 +8,9 @@ import com.cakk.domain.mysql.event.shop.CertificationEvent;
 public interface VerificationPolicy {
 
 	boolean isCandidate(VerificationStatus verificationStatus);
+
 	VerificationStatus approveToBusinessOwner();
+
 	CertificationEvent requestCertificationBusinessOwner(BusinessInformation businessInformation, CertificationParam param);
 }
 

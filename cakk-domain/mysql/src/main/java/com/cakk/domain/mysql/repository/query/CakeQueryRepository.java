@@ -16,7 +16,6 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
-import com.cakk.common.enums.VerificationStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -29,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.Role;
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.tag.TagParam;
