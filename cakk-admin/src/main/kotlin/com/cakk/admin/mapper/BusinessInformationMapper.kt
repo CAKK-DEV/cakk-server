@@ -1,8 +1,10 @@
 package com.cakk.admin.mapper
 
 import com.cakk.admin.dto.param.OwnerCandidateParam
+import com.cakk.admin.dto.request.CreateShopRequest
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
+import com.cakk.domain.mysql.entity.shop.CakeShop
 import com.cakk.domain.mysql.entity.user.BusinessInformation
 
 fun supplyCakeShopOwnerCandidatesResponseBy(businessInformationList: List<BusinessInformation>): CakeShopOwnerCandidatesResponse {
@@ -29,4 +31,11 @@ fun supplyCakeShopOwnerCandidateResponseBy(businessInformation: BusinessInformat
         idCardImageUrl = businessInformation.idCardImageUrl,
         emergencyContact = businessInformation.emergencyContact
     )
+}
+
+fun supplyBusinessInformationBy(businessNumber: String, cakeShop: CakeShop): BusinessInformation {
+    return BusinessInformation.builder()
+        .businessNumber(businessNumber)
+        .cakeShop(cakeShop)
+        .build()
 }
