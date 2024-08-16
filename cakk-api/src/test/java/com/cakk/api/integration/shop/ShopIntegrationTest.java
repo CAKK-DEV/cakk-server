@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -27,14 +26,12 @@ import com.cakk.api.common.base.IntegrationTest;
 import com.cakk.api.dto.param.operation.ShopOperationParam;
 import com.cakk.api.dto.request.link.UpdateLinkRequest;
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
-import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
-import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
@@ -242,31 +239,6 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage(), response.getReturnMessage());
-	}
-
-	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하지 않은 상태에서 사장님 인증을 요청한다")
-	void request1() {
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.path("/certification")
-			.build();
-		CertificationRequest request = getConstructorMonkey().giveMeBuilder(CertificationRequest.class)
-			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
-			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40).ofMinLength(1))
-			.setNull("cakeShopId")
-			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(11).ofMinLength(1))
-			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20)).sample();
-
-		HttpEntity<CertificationRequest> entity = new HttpEntity<>(request, getAuthHeader());
-
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.postForEntity(uriComponents.toUriString(), entity,
-			ApiResponse.class);
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 	}
 
 	@TestWithDisplayName("로그인한 사용자는 자신의 케이크샵이 존재하는 상태에서 사장님 인증을 요청한다")

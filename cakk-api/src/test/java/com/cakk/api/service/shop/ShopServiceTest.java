@@ -240,19 +240,6 @@ public class ShopServiceTest extends ServiceTest {
 		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
 	}
 
-	@TestWithDisplayName("cakeShopId가 존재하지 않는다면, 요청 정보로만 이벤트를 발행한다")
-	void requestCertificationEventWithParam() {
-		//given
-		CertificationParam param = getCertificationParamFixture(true);
-
-		//when
-		shopService.requestCertificationBusinessOwner(param);
-
-		//verify
-		verify(cakeShopReader, times(0)).findBusinessInformationByCakeShopId(any());
-		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
-	}
-
 	@TestWithDisplayName("id로 케이크 샵을 상세정보를 조회한다.")
 	void searchInfoById1() {
 		// given

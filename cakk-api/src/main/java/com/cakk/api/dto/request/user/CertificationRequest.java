@@ -1,6 +1,7 @@
 package com.cakk.api.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.user.User;
@@ -10,6 +11,7 @@ public record CertificationRequest(
 	String businessRegistrationImageUrl,
 	@NotBlank
 	String idCardImageUrl,
+	@NotNull
 	Long cakeShopId,
 	@NotBlank
 	String emergencyContact,
