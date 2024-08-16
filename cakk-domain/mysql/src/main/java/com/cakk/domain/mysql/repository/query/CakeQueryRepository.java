@@ -16,6 +16,7 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import com.cakk.common.enums.VerificationStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -128,7 +129,8 @@ public class CakeQueryRepository {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner);
+			userCondition = businessInformation.user.eq(owner)
+				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
 		JPQLQuery<Cake> query = queryFactory

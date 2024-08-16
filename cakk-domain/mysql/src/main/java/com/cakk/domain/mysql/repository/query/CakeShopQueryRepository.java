@@ -5,7 +5,6 @@ import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopLink.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShopOperation.*;
 import static com.cakk.domain.mysql.entity.user.QBusinessInformation.*;
-import static com.cakk.domain.mysql.entity.user.QUser.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
@@ -15,6 +14,7 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import com.cakk.common.enums.VerificationStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -115,16 +115,20 @@ public class CakeShopQueryRepository {
 	}
 
 	public Optional<CakeShop> searchWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
-		JPQLQuery<CakeShop> query = queryFactory
-			.selectFrom(cakeShop)
-			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin();
+		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			query.innerJoin(businessInformation.user, user)
-				.where(businessInformation.user.eq(owner));
+			userCondition = businessInformation.user.eq(owner)
+				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
+		JPQLQuery<CakeShop> query = queryFactory
+			.selectFrom(cakeShop)
+			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin()
+			.where(cakeShop.id.eq(cakeShopId));
 
-		query.where(cakeShop.id.eq(cakeShopId));
+		if (nonNull(userCondition)) {
+			query.where(userCondition);
+		}
 
 		return Optional.ofNullable(query.fetchOne());
 	}
@@ -133,7 +137,8 @@ public class CakeShopQueryRepository {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner);
+			userCondition = businessInformation.user.eq(owner)
+				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
 		JPQLQuery<CakeShop> query = queryFactory
@@ -153,7 +158,8 @@ public class CakeShopQueryRepository {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner);
+			userCondition = businessInformation.user.eq(owner)
+				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
 		JPQLQuery<CakeShop> query = queryFactory
