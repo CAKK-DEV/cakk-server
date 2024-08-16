@@ -25,6 +25,10 @@ public enum VerificationStatus {
 		return code == 1;
 	}
 
+	public boolean isRejected() {
+		return code == 2;
+	}
+
 	public static VerificationStatus makeApproved() {
 		return VerificationStatus.APPROVED;
 	}

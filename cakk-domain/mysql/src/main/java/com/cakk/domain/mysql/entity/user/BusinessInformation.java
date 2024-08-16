@@ -92,9 +92,6 @@ public class BusinessInformation extends AuditEntity {
 	}
 
 	public CertificationEvent registerCertificationInformation(CertificationParam param) {
-		if (isAlreadyApproved()) {
-			throw new CakkException(ReturnCode.ALREADY_CERTIFICATED);
-		}
 		businessRegistrationImageUrl = param.businessRegistrationImageUrl();
 		idCardImageUrl = param.idCardImageUrl();
 		emergencyContact = param.emergencyContact();
@@ -104,5 +101,17 @@ public class BusinessInformation extends AuditEntity {
 
 	private boolean isAlreadyApproved() {
 		return verificationStatus.isApproved();
+	}
+
+	private boolean isProcessingVerification() {
+		return verificationStatus.isCandidate();
+	}
+
+	private boolean isRejectVerification() {
+		return verificationStatus.isRejected();
+	}
+
+	public boolean isImPossibleRequestCertification() {
+		return isAlreadyApproved() || isProcessingVerification() || isRejectVerification();
 	}
 }

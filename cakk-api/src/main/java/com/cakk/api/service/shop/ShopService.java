@@ -124,7 +124,9 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public void requestCertificationBusinessOwner(final CertificationParam param) {
 		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
-		final CertificationEvent certificationEvent = businessInformation.registerCertificationInformation(param);
+		final CertificationEvent certificationEvent = verificationPolicy
+			.requestCertificationBusinessOwner(businessInformation, param);
+
 		publisher.publishEvent(certificationEvent);
 	}
 
