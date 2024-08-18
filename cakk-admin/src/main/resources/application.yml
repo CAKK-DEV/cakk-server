@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /api/v1/admin
+
+spring:
+  application:
+    title: Cakk Admin
+    version: 1.0.0
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        show_sql: false
+        default_batch_fetch_size: 1000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+jwt:
+  access-header: Authorization
+  refresh-header: Refresh
+  grant-type: Bearer
+  user-key: USER
