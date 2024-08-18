@@ -22,7 +22,7 @@ public class VerificationPolicyTest extends DomainTest {
 	void approveToBusinessOwner() {
 		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
-		VerificationStatus verificationStatus = verificationPolicy.approveToBusinessOwner();
+		VerificationStatus verificationStatus = verificationPolicy.approveToBusinessOwner(VerificationStatus.PENDING);
 
 		assertThat(verificationStatus).isEqualTo(VerificationStatus.APPROVED);
 	}
