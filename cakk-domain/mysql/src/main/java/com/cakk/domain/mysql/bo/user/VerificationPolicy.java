@@ -9,7 +9,7 @@ public interface VerificationPolicy {
 
 	boolean isCandidate(VerificationStatus verificationStatus);
 
-	VerificationStatus approveToBusinessOwner();
+	VerificationStatus approveToBusinessOwner(VerificationStatus verificationStatus);
 
 	CertificationEvent requestCertificationBusinessOwner(BusinessInformation businessInformation, CertificationParam param);
 }

@@ -21,6 +21,10 @@ public enum VerificationStatus {
 		return code == 3;
 	}
 
+	public boolean isNotCandidate() {
+		return  code != 3;
+	}
+
 	public boolean isApproved() {
 		return code == 1;
 	}
@@ -29,8 +33,12 @@ public enum VerificationStatus {
 		return code == 2;
 	}
 
-	public static VerificationStatus makeApproved() {
+	public VerificationStatus makeApproved() {
 		return VerificationStatus.APPROVED;
+	}
+
+	public VerificationStatus makePending() {
+		return VerificationStatus.PENDING;
 	}
 }
 

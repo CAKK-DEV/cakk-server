@@ -82,7 +82,7 @@ public class BusinessInformation extends AuditEntity {
 
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
-		verificationStatus = verificationPolicy.approveToBusinessOwner();
+		verificationStatus = verificationPolicy.approveToBusinessOwner(verificationStatus);
 	}
 
 	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
@@ -93,8 +93,12 @@ public class BusinessInformation extends AuditEntity {
 		businessRegistrationImageUrl = param.businessRegistrationImageUrl();
 		idCardImageUrl = param.idCardImageUrl();
 		emergencyContact = param.emergencyContact();
-		verificationStatus = VerificationStatus.PENDING;
+		verificationStatus = verificationStatus.makePending();
 		return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
+	}
+
+	public boolean isImPossibleRequestCertification() {
+		return isAlreadyApproved() || isProcessingVerification() || isRejectVerification();
 	}
 
 	private boolean isAlreadyApproved() {
@@ -108,8 +112,5 @@ public class BusinessInformation extends AuditEntity {
 	private boolean isRejectVerification() {
 		return verificationStatus.isRejected();
 	}
-
-	public boolean isImPossibleRequestCertification() {
-		return isAlreadyApproved() || isProcessingVerification() || isRejectVerification();
-	}
 }
+

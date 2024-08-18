@@ -18,8 +18,9 @@ public class DefaultVerificationPolicy implements VerificationPolicy {
 	}
 
 	@Override
-	public VerificationStatus approveToBusinessOwner() {
-		return VerificationStatus.makeApproved();
+	public VerificationStatus approveToBusinessOwner(VerificationStatus verificationStatus) {
+		validateVerificationStatusPending(verificationStatus);
+		return verificationStatus.makeApproved();
 	}
 
 	@Override
@@ -33,7 +34,13 @@ public class DefaultVerificationPolicy implements VerificationPolicy {
 
 	private void validateRequestCertificationBusinessOwner(BusinessInformation businessInformation) {
 		if (businessInformation.isImPossibleRequestCertification()) {
-			throw new CakkException(ReturnCode.ALREADY_CERTIFICATED);
+			throw new CakkException(ReturnCode.CAKE_SHOP_CERTIFICATED_ISSUE);
+		}
+	}
+
+	private void validateVerificationStatusPending(VerificationStatus verificationStatus) {
+		if (verificationStatus.isNotCandidate()) {
+			throw new CakkException(ReturnCode.CAKE_SHOP_CERTIFICATED_ISSUE);
 		}
 	}
 }
