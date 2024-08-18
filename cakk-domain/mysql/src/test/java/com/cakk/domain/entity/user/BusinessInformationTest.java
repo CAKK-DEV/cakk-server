@@ -14,34 +14,12 @@ import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.base.DomainTest;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
-import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 
 
 class BusinessInformationTest extends DomainTest {
-
-
-	private CakeShop getCakeShopFixture() {
-		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
-			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
-			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
-			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
-			.set("location", supplyPointBy(
-				Arbitraries.doubles().between(-90, 90).sample(),
-				Arbitraries.doubles().between(-180, 180).sample())
-			)
-			.sample();
-	}
-
-	private BusinessInformation getBusinessInformationFixture() {
-		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
-			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
-			.setNull("cakeShop")
-			.setNull("user")
-			.sample();
-	}
 
 	private BusinessInformation getBusinessInformationFixtureWithUser(VerificationStatus verificationStatus, Role role) {
 		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
@@ -53,55 +31,24 @@ class BusinessInformationTest extends DomainTest {
 			.sample();
 	}
 
-	private BusinessInformation getBusinessInformationFixtureWithCakeShop(VerificationStatus verificationStatus) {
-		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
-			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
-			.set("cakeShop", Values.just(getCakeShopFixture()))
-			.set("verificationStatus", verificationStatus)
-			.setNull("user")
-			.sample();
-	}
-
-	private CertificationParam getCertificationParamFixtureWithUser(User user) {
-		return getBuilderMonkey().giveMeBuilder(CertificationParam.class)
-			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
-			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
-			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(0))
-			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
-			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
-			.set("user", user)
-			.sample();
-	}
-
 	@Test
-	@DisplayName("케이크샵이 존재한다면 가게 정보와 함께 서비스에 인증요청을 한다")
-	void getRequestCertificationMessage() {
+	@DisplayName("사장님 인증되지 않은 케이크 샵이 존재할 때, 가게 정보와 함께 서비스에 인증요청을 한다")
+	void registerCertificationInformation1() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.PENDING);
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.UNREQUESTED);
 		User user = getUserFixture(Role.USER);
 		CertificationParam param = getCertificationParamFixtureWithUser(user);
 		String shopName = businessInformation.getCakeShop().getShopName();
 
 		//when
-		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
+		CertificationEvent certificationEvent = businessInformation.registerCertificationInformation(param);
 
 		//then
+		assertThat(businessInformation.getVerificationStatus()).isEqualTo(VerificationStatus.PENDING);
+		assertThat(businessInformation.getBusinessRegistrationImageUrl()).isEqualTo(param.businessRegistrationImageUrl());
+		assertThat(businessInformation.getIdCardImageUrl()).isEqualTo(param.idCardImageUrl());
+		assertThat(businessInformation.getEmergencyContact()).isEqualTo(param.emergencyContact());
 		assertThat(certificationEvent.shopName()).isEqualTo(shopName);
-	}
-
-	@Test
-	@DisplayName("케이크샵이 존재하지 않는다면 가게 정보 없이 서비스에 인증요청을 한다")
-	void getRequestCertificationMessage2() {
-		//given
-		BusinessInformation businessInformation = getBusinessInformationFixture();
-		User user = getUserFixture(Role.USER);
-		CertificationParam param = getCertificationParamFixtureWithUser(user);
-
-		//when
-		CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
-
-		//then
-		assertThat(certificationEvent.shopName()).isNull();
 	}
 
 	@Test
@@ -117,7 +64,7 @@ class BusinessInformationTest extends DomainTest {
 
 		//then
 		assertThat(businessInformation.getUser()).isNotNull();
-		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.BUSINESS_OWNER);
+		assertThat(businessInformation.getUser().getRole()).isEqualTo(Role.USER);
 		assertThat(businessInformation.getVerificationStatus()).isEqualTo(VerificationStatus.APPROVED);
 	}
 
@@ -136,7 +83,7 @@ class BusinessInformationTest extends DomainTest {
 	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
 	void isPendingVerificationFalse1() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.BUSINESS_OWNER);
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.APPROVED, Role.USER);
 		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then
@@ -155,10 +102,10 @@ class BusinessInformationTest extends DomainTest {
 	}
 
 	@Test
-	@DisplayName("예비 사장님 여부 검사에서 인증 완료 상태라면, False를 반환한다")
+	@DisplayName("예비 사장님 여부 검사에서 인증 요청 상태도 아니라면, False를 반환한다")
 	void isPendingVerificationFalse3() {
 		//given
-		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.PENDING, Role.BUSINESS_OWNER);
+		BusinessInformation businessInformation = getBusinessInformationFixtureWithUser(VerificationStatus.UNREQUESTED, Role.USER);
 		VerificationPolicy verificationPolicy = getVerificationPolicy();
 
 		//then

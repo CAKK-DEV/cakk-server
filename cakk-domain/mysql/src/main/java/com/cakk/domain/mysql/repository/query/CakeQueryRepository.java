@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.Role;
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.tag.TagParam;
@@ -128,7 +129,8 @@ public class CakeQueryRepository {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner);
+			userCondition = businessInformation.user.eq(owner)
+				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
 		JPQLQuery<Cake> query = queryFactory

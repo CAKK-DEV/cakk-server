@@ -29,6 +29,7 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
+import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
@@ -109,6 +110,12 @@ public class ShopServiceTest extends ServiceTest {
 		return getConstructorMonkey().giveMeBuilder(BusinessInformation.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("cakeShop", getCakeShopFixture())
+			.set("verificationStatus", VerificationStatus.UNREQUESTED)
+			.sample();
+	}
+
+	private CertificationEvent getCertificationEventFixture() {
+		return getConstructorMonkey().giveMeBuilder(CertificationEvent.class)
 			.sample();
 	}
 
@@ -229,27 +236,15 @@ public class ShopServiceTest extends ServiceTest {
 	void requestCertificationEventWithInfo() {
 		//given
 		CertificationParam param = getCertificationParamFixture(false);
-		doReturn(getBusinessInformationFixture())
-			.when(cakeShopReader).findBusinessInformationByCakeShopId(param.cakeShopId());
+		doReturn(getBusinessInformationFixture()).when(cakeShopReader).findBusinessInformationByCakeShopId(param.cakeShopId());
+		when(verificationPolicy.requestCertificationBusinessOwner(any(BusinessInformation.class), any(CertificationParam.class)))
+			.thenReturn(getCertificationEventFixture());
 
 		//when
 		shopService.requestCertificationBusinessOwner(param);
 
 		//verify
 		verify(cakeShopReader, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId());
-		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
-	}
-
-	@TestWithDisplayName("cakeShopId가 존재하지 않는다면, 요청 정보로만 이벤트를 발행한다")
-	void requestCertificationEventWithParam() {
-		//given
-		CertificationParam param = getCertificationParamFixture(true);
-
-		//when
-		shopService.requestCertificationBusinessOwner(param);
-
-		//verify
-		verify(cakeShopReader, times(0)).findBusinessInformationByCakeShopId(any());
 		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
 	}
 

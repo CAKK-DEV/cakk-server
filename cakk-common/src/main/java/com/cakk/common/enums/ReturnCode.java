@@ -30,6 +30,7 @@ public enum ReturnCode {
 	// 케이크 샵 에러 (1300 ~ 1350)
 	NOT_EXIST_CAKE_SHOP("1300", "존재하지 않는 케이크 샵 입니다"),
 	NOT_CAKE_SHOP_OWNER("1301", "케이크샵 주인이 아닙니다"),
+	CAKE_SHOP_CERTIFICATED_ISSUE("1302", "케이크 샵 인증 요청에 문제가 있습니다"),
 
 	// 케이크 에러 (1350 ~ 1400)
 	NOT_EXIST_CAKE("1350", "존재하지 않는 케이크 입니다"),
