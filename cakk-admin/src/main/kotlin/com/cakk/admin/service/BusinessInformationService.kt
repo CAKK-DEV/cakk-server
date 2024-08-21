@@ -53,14 +53,14 @@ class BusinessInformationService(
         var businessInformationList = businessInformationReader.findAllCakeShopBusinessOwnerCandidates()
 
         businessInformationList = businessInformationList
-            .filter { bi -> bi.isBusinessOwnerCandidate(verificationPolicy) }
+            .filter { it.isBusinessOwnerCandidate(verificationPolicy) }
             .toList()
 
         return supplyCakeShopOwnerCandidatesResponseBy(businessInformationList)
     }
 
     @Transactional(readOnly = true)
-    fun getCandidateInformation(userId: Long?): CakeShopOwnerCandidateResponse {
+    fun getCandidateInformation(userId: Long): CakeShopOwnerCandidateResponse {
         val businessInformation = businessInformationReader.findByUserId(userId)
 
         return supplyCakeShopOwnerCandidateResponseBy(businessInformation)
