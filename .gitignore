@@ -42,3 +42,4 @@ out/
 ### generated ###
 src/main/generated/
 **/.jqwik-database
+.kotlin/**
