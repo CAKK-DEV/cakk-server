@@ -8,14 +8,14 @@ import com.cakk.domain.mysql.entity.shop.CakeShopLink
 fun supplyCakeShopLinksBy(cakeShop: CakeShop, links: List<ShopLinkParam>): List<CakeShopLink> {
     return links.map {
         when (it.linkKind) {
-            LinkKind.WEB -> supplyCakeShopLinkByWeb(cakeShop, it.linkPath)
-            LinkKind.INSTAGRAM -> supplyCakeShopLinkByInstagram(cakeShop, it.linkPath)
-            LinkKind.KAKAOTALK -> supplyCakeShopLinkByKakao(cakeShop, it.linkPath)
+            LinkKind.WEB -> supplyCakeShopLinkByWeb(it.linkPath, cakeShop)
+            LinkKind.INSTAGRAM -> supplyCakeShopLinkByInstagram(it.linkPath, cakeShop)
+            LinkKind.KAKAOTALK -> supplyCakeShopLinkByKakao(it.linkPath, cakeShop)
         }
     }.toList()
 }
 
-private fun supplyCakeShopLinkByWeb(cakeShop: CakeShop, web: String): CakeShopLink {
+fun supplyCakeShopLinkByWeb(web: String, cakeShop: CakeShop? = null): CakeShopLink {
     return CakeShopLink.builder()
         .linkKind(LinkKind.WEB)
         .linkPath(web)
@@ -23,7 +23,7 @@ private fun supplyCakeShopLinkByWeb(cakeShop: CakeShop, web: String): CakeShopLi
         .build()
 }
 
-private fun supplyCakeShopLinkByInstagram(cakeShop: CakeShop, instagram: String): CakeShopLink {
+fun supplyCakeShopLinkByInstagram(instagram: String, cakeShop: CakeShop? = null): CakeShopLink {
     return CakeShopLink.builder()
         .linkKind(LinkKind.INSTAGRAM)
         .linkPath(instagram)
@@ -31,7 +31,7 @@ private fun supplyCakeShopLinkByInstagram(cakeShop: CakeShop, instagram: String)
         .build()
 }
 
-private fun supplyCakeShopLinkByKakao(cakeShop: CakeShop, kakao: String): CakeShopLink {
+fun supplyCakeShopLinkByKakao(kakao: String, cakeShop: CakeShop? = null): CakeShopLink {
     return CakeShopLink.builder()
         .linkKind(LinkKind.KAKAOTALK)
         .linkPath(kakao)
