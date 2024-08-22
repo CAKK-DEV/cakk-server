@@ -1,12 +1,12 @@
 package com.cakk.admin.mapper
 
-import com.cakk.admin.dto.request.CreateShopRequest
+import com.cakk.admin.dto.request.CakeShopCreateByAdminRequest
 import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam
 import com.cakk.domain.mysql.entity.shop.CakeShop
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation
 
-fun supplyCakeShopBy(dto: CreateShopRequest): CakeShop {
+fun supplyCakeShopBy(dto: CakeShopCreateByAdminRequest): CakeShop {
     return CakeShop.builder()
         .shopName(dto.shopName)
         .shopBio(dto.shopBio)

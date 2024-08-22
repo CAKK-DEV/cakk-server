@@ -1,7 +1,6 @@
 package com.cakk.admin.mapper
 
 import com.cakk.admin.dto.param.OwnerCandidateParam
-import com.cakk.admin.dto.request.CreateShopRequest
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
 import com.cakk.domain.mysql.entity.shop.CakeShop

@@ -1,6 +1,6 @@
 package com.cakk.admin.service
 
-import com.cakk.admin.dto.request.CreateShopRequest
+import com.cakk.admin.dto.param.CakeShopCreateByAdminParam
 import com.cakk.admin.dto.request.PromotionRequest
 import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
@@ -8,8 +8,6 @@ import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
 import com.cakk.admin.mapper.*
 import com.cakk.domain.mysql.bo.user.VerificationPolicy
 import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.shop.CakeShopLink
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation
 import com.cakk.domain.mysql.entity.user.BusinessInformation
 import com.cakk.domain.mysql.entity.user.User
 import com.cakk.domain.mysql.repository.reader.BusinessInformationReader
@@ -29,13 +27,13 @@ class BusinessInformationService(
 ) {
 
     @Transactional
-    fun createCakeShopByCertification(dto: CreateShopRequest): CakeShopCreateResponse {
-        val cakeShop: CakeShop = supplyCakeShopBy(dto)
-        val businessInformation: BusinessInformation = supplyBusinessInformationBy(dto.businessNumber, cakeShop)
-        val cakeShopOperations: List<CakeShopOperation> = supplyCakeShopOperationsBy(cakeShop, dto.operationDays)
-        val cakeShopLinks: List<CakeShopLink> = supplyCakeShopLinksBy(cakeShop, dto.links)
-
-        val result: CakeShop = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks)
+    fun createCakeShopByCertification(dto: CakeShopCreateByAdminParam): CakeShopCreateResponse {
+        val result: CakeShop = cakeShopWriter.createCakeShop(
+            dto.cakeShop,
+            dto.cakeShopOperations,
+            dto.businessInformation,
+            dto.cakeShopLinks
+        )
 
         return supplyCakeShopCreateResponseBy(result)
     }
@@ -53,14 +51,14 @@ class BusinessInformationService(
         var businessInformationList = businessInformationReader.findAllCakeShopBusinessOwnerCandidates()
 
         businessInformationList = businessInformationList
-            .filter { bi -> bi.isBusinessOwnerCandidate(verificationPolicy) }
+            .filter { it.isBusinessOwnerCandidate(verificationPolicy) }
             .toList()
 
         return supplyCakeShopOwnerCandidatesResponseBy(businessInformationList)
     }
 
     @Transactional(readOnly = true)
-    fun getCandidateInformation(userId: Long?): CakeShopOwnerCandidateResponse {
+    fun getCandidateInformation(userId: Long): CakeShopOwnerCandidateResponse {
         val businessInformation = businessInformationReader.findByUserId(userId)
 
         return supplyCakeShopOwnerCandidateResponseBy(businessInformation)

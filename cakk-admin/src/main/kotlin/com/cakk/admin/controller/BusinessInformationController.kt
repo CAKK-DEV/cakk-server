@@ -1,6 +1,6 @@
 package com.cakk.admin.controller
 
-import com.cakk.admin.dto.request.CreateShopRequest
+import com.cakk.admin.dto.request.CakeShopCreateByAdminRequest
 import com.cakk.admin.dto.request.PromotionRequest
 import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
@@ -32,9 +32,9 @@ class BusinessInformationController(
 
     @PostMapping("/create")
     fun createByAdmin(
-        @RequestBody @Valid request: CreateShopRequest
+        @RequestBody @Valid request: CakeShopCreateByAdminRequest
     ): ApiResponse<CakeShopCreateResponse> {
-        val response = businessInformationService.createCakeShopByCertification(request)
+        val response = businessInformationService.createCakeShopByCertification(request.toParam())
         return ApiResponse.success(response)
     }
 
