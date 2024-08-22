@@ -2,7 +2,6 @@ package com.cakk.admin.controller
 
 import com.cakk.admin.dto.request.CakeCreateByAdminRequest
 import com.cakk.admin.dto.request.CakeUpdateByAdminRequest
-import com.cakk.admin.dto.response.CakeDetailResponse
 import com.cakk.admin.service.CakeService
 import com.cakk.common.response.ApiResponse
 import jakarta.validation.Valid
@@ -13,16 +12,6 @@ import org.springframework.web.bind.annotation.*
 class CakeController(
     private val cakeService: CakeService
 ) {
-
-    @GetMapping("/{cakeId}")
-    fun details(
-        @PathVariable cakeShopId: Long,
-        @PathVariable cakeId: Long
-    ): ApiResponse<CakeDetailResponse> {
-        val result = cakeService.searchCakeDetailById(cakeId)
-
-        return ApiResponse.success(result)
-    }
 
     @PostMapping
     fun create(

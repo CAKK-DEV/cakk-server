@@ -2,9 +2,6 @@ package com.cakk.admin.service
 
 import com.cakk.admin.dto.param.CakeCreateByAdminParam
 import com.cakk.admin.dto.param.CakeUpdateByAdminParam
-import com.cakk.admin.dto.response.CakeDetailResponse
-import com.cakk.admin.mapper.supplyCakeDetailResponseBy
-import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
 import com.cakk.domain.mysql.repository.reader.CakeReader
 import com.cakk.domain.mysql.repository.reader.CakeShopReader
 import com.cakk.domain.mysql.repository.reader.TagReader
@@ -56,12 +53,5 @@ class CakeService(
         cake.removeCakeCategories()
         cake.removeCakeTags()
         cakeWriter.deleteCake(cake)
-    }
-
-    @Transactional(readOnly = true)
-    fun searchCakeDetailById(cakeId: Long): CakeDetailResponse {
-        val result: CakeDetailParam = cakeReader.searchCakeDetailById(cakeId)
-
-        return supplyCakeDetailResponseBy(result)
     }
 }
