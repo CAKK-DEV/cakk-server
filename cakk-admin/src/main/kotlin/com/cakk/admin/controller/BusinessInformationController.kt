@@ -1,8 +1,6 @@
 package com.cakk.admin.controller
 
-import com.cakk.admin.dto.request.CakeShopCreateByAdminRequest
 import com.cakk.admin.dto.request.PromotionRequest
-import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
 import com.cakk.admin.service.BusinessInformationService
@@ -11,7 +9,7 @@ import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/shops")
+@RequestMapping("/business-information")
 class BusinessInformationController(
     private val businessInformationService: BusinessInformationService
 ) {
@@ -30,15 +28,7 @@ class BusinessInformationController(
         return ApiResponse.success(response)
     }
 
-    @PostMapping("/create")
-    fun createByAdmin(
-        @RequestBody @Valid request: CakeShopCreateByAdminRequest
-    ): ApiResponse<CakeShopCreateResponse> {
-        val response = businessInformationService.createCakeShopByCertification(request.toParam())
-        return ApiResponse.success(response)
-    }
-
-    @PutMapping("/shops/promote")
+    @PutMapping("/promote")
     fun promoteUser(
         @RequestBody @Valid promotionRequest: PromotionRequest
     ): ApiResponse<Unit> {
