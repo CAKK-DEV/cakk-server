@@ -71,7 +71,7 @@ public class CakeShopReader {
 	}
 
 	public BusinessInformation findBusinessInformationByCakeShopId(final Long cakeShopId) {
-		return businessInformationJpaRepository.findBusinessInformationByCakeShopId(cakeShopId)
+		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
 			.orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 

@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring") apply false
@@ -38,12 +41,28 @@ subprojects {
 		}
 	}
 
-	dependencies {
-		// lombok
-		compileOnly("org.projectlombok:lombok")
-		annotationProcessor("org.projectlombok:lombok")
+	if (project.name == "cakk-admin") {
+		apply(plugin = "org.jetbrains.kotlin.jvm")
+		apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+		apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 
-		testImplementation("junit:junit:4.13.1")
+		dependencies {
+			implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+			implementation("org.jetbrains.kotlin:kotlin-reflect")
+		}
+
+		tasks.withType<KotlinCompile> {
+			compilerOptions {
+				freeCompilerArgs.add("-Xjsr305=strict")
+				jvmTarget.set(JvmTarget.JVM_21)
+			}
+		}
+	} else {
+		dependencies {
+			compileOnly("org.projectlombok:lombok")
+			annotationProcessor("org.projectlombok:lombok")
+		}
 	}
 
 	checkstyle {

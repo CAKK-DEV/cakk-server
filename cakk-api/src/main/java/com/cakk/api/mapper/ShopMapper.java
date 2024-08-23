@@ -55,12 +55,6 @@ public class ShopMapper {
 			.build();
 	}
 
-	public static BusinessInformation supplyBusinessInformationBy() {
-		return BusinessInformation.builder()
-			.cakeShop(CakeShop.builder().build())
-			.build();
-	}
-
 	public static List<CakeShopOperation> supplyCakeShopOperationsBy(
 		final CakeShop cakeShop,
 		final List<ShopOperationParam> operationDays

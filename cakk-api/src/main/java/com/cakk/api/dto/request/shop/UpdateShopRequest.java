@@ -18,13 +18,13 @@ public record UpdateShopRequest(
 ) {
 
 	public CakeShopUpdateParam toParam(User user, Long cakeShopId) {
-		return new CakeShopUpdateParam(
-			thumbnailUrl,
-			shopName,
-			shopBio,
-			shopDescription,
-			user,
-			cakeShopId
-		);
+		return CakeShopUpdateParam.builder()
+			.user(user)
+			.cakeShopId(cakeShopId)
+			.thumbnailUrl(thumbnailUrl())
+			.shopName(shopName())
+			.shopBio(shopBio())
+			.shopDescription(shopDescription())
+			.build();
 	}
 }

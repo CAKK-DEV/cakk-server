@@ -56,7 +56,7 @@ public class BusinessInformation extends AuditEntity {
 	@ColumnDefault("0")
 	@Convert(converter = VerificationStatusConverter.class)
 	@Column(name = "verification_status", nullable = false)
-	private VerificationStatus verificationStatus = VerificationStatus.PENDING;
+	private VerificationStatus verificationStatus = VerificationStatus.UNREQUESTED;
 
 	@OneToOne
 	@MapsId
@@ -77,28 +77,40 @@ public class BusinessInformation extends AuditEntity {
 		this.cakeShop = cakeShop;
 		this.businessNumber = businessNumber;
 		this.user = user;
-		this.verificationStatus = VerificationStatus.PENDING;
-	}
-
-	public CertificationEvent getRequestCertificationMessage(final CertificationParam param) {
-		if (isExistMyCakeShop()) {
-			return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
-		}
-		return EventMapper.supplyCertificationInfo(param);
-
+		this.verificationStatus = VerificationStatus.UNREQUESTED;
 	}
 
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
-		verificationStatus = verificationPolicy.approveToBusinessOwner(user);
+		verificationStatus = verificationPolicy.approveToBusinessOwner(verificationStatus);
 	}
 
 	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
-		return verificationPolicy.isCandidate(Objects.requireNonNull(user), Objects.requireNonNull(verificationStatus));
+		return verificationPolicy.isCandidate(Objects.requireNonNull(verificationStatus));
 	}
 
-	private boolean isExistMyCakeShop() {
-		return cakeShop != null && user == null;
+	public CertificationEvent registerCertificationInformation(CertificationParam param) {
+		businessRegistrationImageUrl = param.businessRegistrationImageUrl();
+		idCardImageUrl = param.idCardImageUrl();
+		emergencyContact = param.emergencyContact();
+		verificationStatus = verificationStatus.makePending();
+		return EventMapper.supplyCertificationInfoWithCakeShopInfo(param, cakeShop);
 	}
 
+	public boolean isImPossibleRequestCertification() {
+		return isAlreadyApproved() || isProcessingVerification() || isRejectVerification();
+	}
+
+	private boolean isAlreadyApproved() {
+		return verificationStatus.isApproved();
+	}
+
+	private boolean isProcessingVerification() {
+		return verificationStatus.isCandidate();
+	}
+
+	private boolean isRejectVerification() {
+		return verificationStatus.isRejected();
+	}
 }
+

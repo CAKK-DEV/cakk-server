@@ -123,15 +123,10 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public void requestCertificationBusinessOwner(final CertificationParam param) {
-		BusinessInformation businessInformation;
+		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
+		final CertificationEvent certificationEvent = verificationPolicy
+			.requestCertificationBusinessOwner(businessInformation, param);
 
-		if (nonNull(param.cakeShopId())) {
-			businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
-		} else {
-			businessInformation = ShopMapper.supplyBusinessInformationBy();
-		}
-
-		final CertificationEvent certificationEvent = businessInformation.getRequestCertificationMessage(param);
 		publisher.publishEvent(certificationEvent);
 	}
 
