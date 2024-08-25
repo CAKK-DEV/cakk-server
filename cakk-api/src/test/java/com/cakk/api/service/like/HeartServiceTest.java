@@ -161,7 +161,6 @@ class HeartServiceTest extends ServiceTest {
 		// given
 		final User user = getUser();
 		final Long cakeId = 1L;
-		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 
 		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE)).when(cakeReader).findById(cakeId);
 
@@ -172,7 +171,6 @@ class HeartServiceTest extends ServiceTest {
 			ReturnCode.NOT_EXIST_CAKE.getMessage());
 
 		verify(cakeReader, times(1)).findById(cakeId);
-		verify(cakeHeartReader, times(0)).findOrNullByUserAndCake(user, cake);
 	}
 
 	@TestWithDisplayName("케이크 샵에 대하여 하트를 동작한다.")
