@@ -26,7 +26,9 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
+import com.cakk.domain.mysql.mapper.CakeHeartMapper;
 import com.cakk.domain.mysql.mapper.CakeTagMapper;
 import com.cakk.domain.mysql.mapper.EventMapper;
 
@@ -57,6 +59,9 @@ public class Cake extends AuditEntity {
 	@OneToMany(mappedBy = "cake", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private Set<CakeTag> cakeTags = new HashSet<>();
 
+	@OneToMany(mappedBy = "cake", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private Set<CakeHeart> cakeHearts = new HashSet<>();
+
 	@ColumnDefault("null")
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -68,12 +73,18 @@ public class Cake extends AuditEntity {
 		this.heartCount = 0;
 	}
 
-	public void increaseHeartCount() {
-		this.heartCount++;
+	public void heart(final User user) {
+		cakeHearts.add(CakeHeartMapper.supplyCakeHeartBy(this, user));
+		this.increaseHeartCount();
 	}
 
-	public void decreaseHeartCount() {
-		this.heartCount--;
+	public void unHeart(final User user) {
+		cakeHearts.removeIf(it -> it.getUser().equals(user));
+		this.decreaseHeartCount();
+	}
+
+	public boolean isHeartedBy(final User user) {
+		return cakeHearts.stream().anyMatch(it -> it.getUser().equals(user));
 	}
 
 	public void updateCakeImageUrl(final String cakeImageUrl) {
@@ -120,5 +131,13 @@ public class Cake extends AuditEntity {
 
 	public CakeIncreaseViewsEvent getInCreaseViewsEvent() {
 		return EventMapper.supplyCakeIncreaseViewsEvent(this.id);
+	}
+
+	private void increaseHeartCount() {
+		this.heartCount++;
+	}
+
+	private void decreaseHeartCount() {
+		this.heartCount--;
 	}
 }
