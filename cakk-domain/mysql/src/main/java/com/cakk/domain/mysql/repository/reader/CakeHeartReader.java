@@ -6,9 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.domain.mysql.annotation.Reader;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
-import com.cakk.domain.mysql.entity.cake.Cake;
-import com.cakk.domain.mysql.entity.cake.CakeHeart;
-import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.jpa.CakeHeartJpaRepository;
 import com.cakk.domain.mysql.repository.query.CakeHeartQueryRepository;
 
@@ -25,13 +22,5 @@ public class CakeHeartReader {
 		final int pageSize
 	) {
 		return cakeHeartQueryRepository.searchCakeImagesByCursorAndHeart(cakeHeartId, userId, pageSize);
-	}
-
-	public CakeHeart findOrNullByUserAndCake(final User user, final Cake cake) {
-		return cakeHeartJpaRepository.findByUserAndCake(user, cake).orElse(null);
-	}
-
-	public boolean existsByUserAndCake(final User user, final Cake cake) {
-		return cakeHeartJpaRepository.existsByUserAndCake(user, cake);
 	}
 }
