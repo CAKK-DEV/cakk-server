@@ -2,6 +2,7 @@ package com.cakk.domain.mysql.entity.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -120,5 +121,21 @@ public class User extends AuditEntity {
 
 	public void unHeartCake(final Cake cake) {
 		cake.unHeart(this);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (!(object instanceof User that)) {
+			return false;
+		}
+		return this.getId() != null && Objects.equals(this.getId(), that.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
 	}
 }
