@@ -27,11 +27,10 @@ import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
 import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
 
 @DisplayName("하트 기능 관련 비즈니스 로직 테스트")
-public class HeartServiceTest extends ServiceTest {
+class HeartServiceTest extends ServiceTest {
 
 	@InjectMocks
 	private HeartService heartService;
@@ -46,13 +45,11 @@ public class HeartServiceTest extends ServiceTest {
 	private CakeHeartReader cakeHeartReader;
 
 	@Mock
-	private CakeHeartWriter cakeHeartWriter;
-
-	@Mock
 	private CakeShopHeartReader cakeShopHeartReader;
 
 	@Mock
 	private CakeShopHeartWriter cakeShopHeartWriter;
+
 
 	@TestWithDisplayName("하트 한 케이크 목록을 조회한다.")
 	void findCakeImagesByCursorAndHeart() {
@@ -136,17 +133,31 @@ public class HeartServiceTest extends ServiceTest {
 		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 
 		doReturn(cake).when(cakeReader).findById(cakeId);
-		doReturn(null).when(cakeHeartReader).findOrNullByUserAndCake(user, cake);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
 
 		verify(cakeReader, times(1)).findById(cakeId);
-		verify(cakeHeartReader, times(1)).findOrNullByUserAndCake(user, cake);
+	}
+
+	@TestWithDisplayName("케이크에 대하여 하트 취소를 동작한다.")
+	void heartCake2() {
+		// given
+		final User user = getUser();
+		final Long cakeId = 1L;
+		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
+		cake.heart(user);
+
+		doReturn(cake).when(cakeReader).findById(cakeId);
+
+		// when & then
+		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
+
+		verify(cakeReader, times(1)).findById(cakeId);
 	}
 
 	@TestWithDisplayName("해당 케이크가 없으면 하트 동작을 실패한다.")
-	void heartCake2() {
+	void heartCake3() {
 		// given
 		final User user = getUser();
 		final Long cakeId = 1L;
