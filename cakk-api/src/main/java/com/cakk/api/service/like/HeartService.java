@@ -68,8 +68,8 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
-		final boolean isHeart = cakeHeartReader.existsByUserAndCake(user, cake);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
+		final boolean isHeart = cake.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}

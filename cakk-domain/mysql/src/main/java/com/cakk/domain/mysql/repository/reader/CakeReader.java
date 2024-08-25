@@ -29,6 +29,16 @@ public class CakeReader {
 		return cakeJpaRepository.findById(cakeId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE));
 	}
 
+	public Cake findByIdWithHeart(final Long cakeId) {
+		final Cake cake = cakeQueryRepository.searchByIdWithHeart(cakeId);
+
+		if (isNull(cake)) {
+			throw new CakkException(ReturnCode.NOT_EXIST_CAKE);
+		}
+
+		return cake;
+	}
+
 	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(
 		final Long cakeId,
 		final CakeDesignCategory category,
