@@ -84,7 +84,7 @@ public class HeartService {
 
 	@DistributedLock(key = "#cakeId")
 	public void heartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
 
 		if (!cake.isHeartedBy(user)) {
 			user.heartCake(cake);

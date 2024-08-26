@@ -132,12 +132,12 @@ class HeartServiceTest extends ServiceTest {
 		final Long cakeId = 1L;
 		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 
-		doReturn(cake).when(cakeReader).findById(cakeId);
+		doReturn(cake).when(cakeReader).findByIdWithHeart(cakeId);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
 
-		verify(cakeReader, times(1)).findById(cakeId);
+		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
 	}
 
 	@TestWithDisplayName("케이크에 대하여 하트 취소를 동작한다.")
@@ -148,12 +148,12 @@ class HeartServiceTest extends ServiceTest {
 		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 		cake.heart(user);
 
-		doReturn(cake).when(cakeReader).findById(cakeId);
+		doReturn(cake).when(cakeReader).findByIdWithHeart(cakeId);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
 
-		verify(cakeReader, times(1)).findById(cakeId);
+		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
 	}
 
 	@TestWithDisplayName("해당 케이크가 없으면 하트 동작을 실패한다.")
@@ -162,7 +162,7 @@ class HeartServiceTest extends ServiceTest {
 		final User user = getUser();
 		final Long cakeId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE)).when(cakeReader).findById(cakeId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE)).when(cakeReader).findByIdWithHeart(cakeId);
 
 		// when & then
 		assertThrows(
@@ -170,7 +170,7 @@ class HeartServiceTest extends ServiceTest {
 			() -> heartService.heartCake(user, cakeId),
 			ReturnCode.NOT_EXIST_CAKE.getMessage());
 
-		verify(cakeReader, times(1)).findById(cakeId);
+		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
 	}
 
 	@TestWithDisplayName("케이크 샵에 대하여 하트를 동작한다.")

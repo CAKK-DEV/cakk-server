@@ -24,6 +24,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.cakk.common.enums.ReturnCode;
+import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
@@ -138,6 +140,10 @@ public class Cake extends AuditEntity {
 	}
 
 	private void decreaseHeartCount() {
+		if (this.heartCount == 0) {
+			throw new CakkException(ReturnCode.INTERNAL_SERVER_ERROR);
+		}
+
 		this.heartCount--;
 	}
 }
