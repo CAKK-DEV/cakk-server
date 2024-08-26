@@ -16,11 +16,9 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
-import com.cakk.domain.mysql.entity.cake.CakeHeart;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopHeart;
 import com.cakk.domain.mysql.entity.user.User;
@@ -28,9 +26,7 @@ import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
 import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
-import com.cakk.domain.redis.repository.LockRedisRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -39,7 +35,6 @@ public class HeartService {
 	private final CakeReader cakeReader;
 	private final CakeShopReader cakeShopReader;
 	private final CakeHeartReader cakeHeartReader;
-	private final CakeHeartWriter cakeHeartWriter;
 	private final CakeShopHeartReader cakeShopHeartReader;
 	private final CakeShopHeartWriter cakeShopHeartWriter;
 
@@ -73,8 +68,8 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
-		final boolean isHeart = cakeHeartReader.existsByUserAndCake(user, cake);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
+		final boolean isHeart = cake.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}
@@ -89,10 +84,13 @@ public class HeartService {
 
 	@DistributedLock(key = "#cakeId")
 	public void heartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
-		final CakeHeart cakeHeart = cakeHeartReader.findOrNullByUserAndCake(user, cake);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
 
-		cakeHeartWriter.heartOrCancel(cakeHeart, user, cake);
+		if (!cake.isHeartedBy(user)) {
+			user.heartCake(cake);
+		} else {
+			user.unHeartCake(cake);
+		}
 	}
 
 	@DistributedLock(key = "#cakeShopId")

@@ -2,6 +2,7 @@ package com.cakk.domain.mysql.repository.query;
 
 import static com.cakk.domain.mysql.entity.cake.QCake.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeCategory.*;
+import static com.cakk.domain.mysql.entity.cake.QCakeHeart.*;
 import static com.cakk.domain.mysql.entity.cake.QCakeTag.*;
 import static com.cakk.domain.mysql.entity.cake.QTag.*;
 import static com.cakk.domain.mysql.entity.shop.QCakeShop.*;
@@ -168,7 +169,15 @@ public class CakeQueryRepository {
 						tag.tagName)
 					)
 				)));
-		return results.isEmpty() ? null : results.get(0);
+		return results.isEmpty() ? null : results.getFirst();
+	}
+
+	public Cake searchByIdWithHeart(final Long cakeId) {
+		return queryFactory
+			.selectFrom(cake)
+			.leftJoin(cake.cakeHearts, cakeHeart).fetchJoin()
+			.where(cake.id.eq(cakeId))
+			.fetchOne();
 	}
 
 	private BooleanExpression ltCakeId(final Long cakeId) {
