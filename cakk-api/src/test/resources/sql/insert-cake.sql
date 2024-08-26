@@ -42,7 +42,7 @@ values (1, 1, 0, '10:00:00', '22:00:00', now(), now()),
 insert into cake (cake_id, shop_id, cake_image_url, heart_count, created_at, updated_at)
 values (1, 1, 'cake_image_url1', 0, now(), now()),
        (2, 1, 'cake_image_url2', 0, now(), now()),
-       (3, 1, 'cake_image_url3', 0, now(), now()),
+       (3, 1, 'cake_image_url3', 1, now(), now()),
        (4, 2, 'cake_image_url4', 0, now(), now()),
        (5, 2, 'cake_image_url5', 0, now(), now()),
        (6, 2, 'cake_image_url6', 0, now(), now()),
