@@ -23,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
@@ -34,6 +35,7 @@ import com.cakk.domain.mysql.mapper.CakeHeartMapper;
 import com.cakk.domain.mysql.mapper.CakeTagMapper;
 import com.cakk.domain.mysql.mapper.EventMapper;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
