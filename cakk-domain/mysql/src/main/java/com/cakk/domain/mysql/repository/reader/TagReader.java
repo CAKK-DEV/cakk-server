@@ -26,4 +26,16 @@ public class TagReader {
 				.orElse(tagJpaRepository.save(TagMapper.supplyTagBy(tagName))))
 			.toList();
 	}
+
+	public List<Tag> getTagsByTagName(final List<String> tagNames) {
+		List<Tag> tags = tagJpaRepository.findTagsByTagNameIsIn(tagNames);
+
+		return tagNames.stream()
+			.map(tagName -> tags
+				.stream()
+				.filter(tag -> tag.getTagName().equals(tagName))
+				.findAny()
+				.orElse(tagJpaRepository.save(TagMapper.supplyTagBy(tagName))))
+			.toList();
+	}
 }
