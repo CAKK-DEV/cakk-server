@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +27,12 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.common.response.ApiResponse;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @SqlGroup({
 	@Sql(scripts = {
-		"/sql/insert-test-user.sql"
+		"/sql/insert-test-user.sql",
+		"/sql/insert-cake-shop.sql",
+		"/sql/insert-heart.sql",
 	}, executionPhase = BEFORE_TEST_METHOD),
 	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
 })
