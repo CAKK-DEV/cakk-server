@@ -16,21 +16,16 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
-import com.cakk.domain.mysql.entity.cake.CakeHeart;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
-import com.cakk.domain.mysql.entity.shop.CakeShopHeart;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.facade.user.UserHeartFacade;
 import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
-import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
-import com.cakk.domain.redis.repository.LockRedisRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -39,9 +34,8 @@ public class HeartService {
 	private final CakeReader cakeReader;
 	private final CakeShopReader cakeShopReader;
 	private final CakeHeartReader cakeHeartReader;
-	private final CakeHeartWriter cakeHeartWriter;
 	private final CakeShopHeartReader cakeShopHeartReader;
-	private final CakeShopHeartWriter cakeShopHeartWriter;
+	private final UserHeartFacade userHeartFacade;
 
 	@Transactional(readOnly = true)
 	public HeartCakeImageListResponse searchCakeImagesByCursorAndHeart(
@@ -73,33 +67,31 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
-		final boolean isHeart = cakeHeartReader.existsByUserAndCake(user, cake);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
+		final boolean isHeart = cake.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCakeShop(final User user, final Long cakeShopId) {
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
-		final boolean isHeart = cakeShopHeartReader.existsByUserAndCakeShop(user, cakeShop);
+		final CakeShop cakeShop = cakeShopReader.findByIdWithHeart(cakeShopId);
+		final boolean isHeart = cakeShop.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
 	}
 
 	@DistributedLock(key = "#cakeId")
 	public void heartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findById(cakeId);
-		final CakeHeart cakeHeart = cakeHeartReader.findOrNullByUserAndCake(user, cake);
+		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
 
-		cakeHeartWriter.heartOrCancel(cakeHeart, user, cake);
+		userHeartFacade.heartCake(user, cake);
 	}
 
 	@DistributedLock(key = "#cakeShopId")
 	public void heartCakeShop(final User user, final Long cakeShopId) {
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
-		final CakeShopHeart cakeShopHeart = cakeShopHeartReader.findOrNullByUserAndCakeShop(user, cakeShop);
+		final CakeShop cakeShop = cakeShopReader.findByIdWithHeart(cakeShopId);
 
-		cakeShopHeartWriter.heartOrCancel(cakeShopHeart, user, cakeShop);
+		userHeartFacade.heartCakeShop(user, cakeShop);
 	}
 }

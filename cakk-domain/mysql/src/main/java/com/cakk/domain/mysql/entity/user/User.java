@@ -2,6 +2,7 @@ package com.cakk.domain.mysql.entity.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,8 @@ import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
+import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -111,5 +114,41 @@ public class User extends AuditEntity {
 		this.email = param.email();
 		this.gender = param.gender();
 		this.birthday = param.birthday();
+	}
+
+	public void heartCake(final Cake cake) {
+		cake.heart(this);
+	}
+
+	public void unHeartCake(final Cake cake) {
+		cake.unHeart(this);
+	}
+
+	public void likeCakeShop(final CakeShop cakeShop) {
+		cakeShop.like(this);
+	}
+
+	public void heartCakeShop(final CakeShop cakeShop) {
+		cakeShop.heart(this);
+	}
+
+	public void unHeartCakeShop(final CakeShop cakeShop) {
+		cakeShop.unHeart(this);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (!(object instanceof User that)) {
+			return false;
+		}
+		return this.getId() != null && Objects.equals(this.getId(), that.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
 	}
 }

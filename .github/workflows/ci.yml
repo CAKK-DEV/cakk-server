@@ -55,7 +55,9 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: ./cakk-api/build/test-results/**/*.xml
+          files: |
+            ./cakk-api/build/test-results/**/*.xml
+            ./cakk-domain/mysql/build/test-results/**/*.xml
 
       - name: Upload test coverage
         id: jacoco

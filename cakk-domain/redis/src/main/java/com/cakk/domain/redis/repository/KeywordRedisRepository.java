@@ -6,34 +6,34 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.redis.annotation.RedisRepository;
-import com.cakk.domain.redis.template.impl.RedisStringZSetTemplate;
+import com.cakk.domain.redis.template.RedisZSetTemplate;
 
 @RedisRepository
 @RequiredArgsConstructor
 public class KeywordRedisRepository {
 
-	private final RedisStringZSetTemplate redisStringZSetTemplate;
+	private final RedisZSetTemplate<String> redisZSetTemplate;
 
 	private final String key = RedisKey.SEARCH_KEYWORD.getValue();
 
 	public void saveOrIncreaseSearchCount(final String value) {
-		redisStringZSetTemplate.save(key, value);
-		redisStringZSetTemplate.increaseScore(key, value, 1);
+		redisZSetTemplate.save(key, value);
+		redisZSetTemplate.increaseScore(key, value, 1);
 	}
 
 	public List<String> findTopSearchedLimitCount(final long count) {
-		return redisStringZSetTemplate.findAllReverseScore(key, count);
+		return redisZSetTemplate.findAllReverseScore(key, count);
 	}
 
 	public List<String> findAll() {
-		return redisStringZSetTemplate.findAll(key);
+		return redisZSetTemplate.findAll(key);
 	}
 
 	public void deleteByValue(final String value) {
-		redisStringZSetTemplate.remove(key, value);
+		redisZSetTemplate.remove(key, value);
 	}
 
 	public void clear() {
-		redisStringZSetTemplate.removeAll(key);
+		redisZSetTemplate.removeAll(key);
 	}
 }

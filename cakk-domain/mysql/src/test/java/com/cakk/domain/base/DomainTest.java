@@ -19,6 +19,7 @@ import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.bo.user.DefaultVerificationPolicy;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
+import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
@@ -74,6 +75,8 @@ public abstract class DomainTest {
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
+			.set("likeCount", 0)
+			.set("heartCount", 0)
 			.set("location", supplyPointBy(
 				Arbitraries.doubles().between(-90, 90).sample(),
 				Arbitraries.doubles().between(-180, 180).sample())
@@ -98,6 +101,13 @@ public abstract class DomainTest {
 			.set("emergencyContact", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("message", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("user", user)
+			.sample();
+	}
+
+	protected Cake getCakeFixture() {
+		return getConstructorMonkey().giveMeBuilder(Cake.class)
+			.set("cakeImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
+			.set("cakeShop", Values.just(getCakeShopFixture()))
 			.sample();
 	}
 }

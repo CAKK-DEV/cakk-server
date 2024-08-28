@@ -35,6 +35,26 @@ public class CakeShopReader {
 		return cakeShopJpaRepository.findById(cakeShopId).orElseThrow(() -> new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP));
 	}
 
+	public CakeShop findByIdWithHeart(final Long cakeShopId) {
+		final CakeShop cakeShop = cakeShopQueryRepository.searchByIdWithHeart(cakeShopId);
+
+		if (isNull(cakeShop)) {
+			throw new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP);
+		}
+
+		return cakeShop;
+	}
+
+	public CakeShop findByIdWithLike(final Long cakeShopId) {
+		final CakeShop cakeShop = cakeShopQueryRepository.searchByIdWithLike(cakeShopId);
+
+		if (isNull(cakeShop)) {
+			throw new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP);
+		}
+
+		return cakeShop;
+	}
+
 	public CakeShopSimpleParam searchSimpleById(final Long cakeShopId) {
 		final CakeShopSimpleParam response = cakeShopQueryRepository.searchSimpleById(cakeShopId);
 
