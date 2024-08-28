@@ -24,16 +24,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.mapper.CakeShopHeartMapper;
-import com.cakk.domain.mysql.mapper.CakeShopLikeMapper;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -88,12 +83,6 @@ public class CakeShop extends AuditEntity {
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
 	private Set<Cake> cakes = new HashSet<>();
 
-	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopHeart> shopHearts = new HashSet<>();
-
-	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopLike> shopLikes = new HashSet<>();
-
 	@Builder
 	public CakeShop(
 		String shopName,
@@ -114,48 +103,15 @@ public class CakeShop extends AuditEntity {
 		this.likeCount = 0;
 	}
 
-	public void like(final User user) {
-		if (isLikedOverMaxBy(user)) {
-			throw new CakkException(ReturnCode.MAX_CAKE_SHOP_LIKE);
-		}
-
-		shopLikes.add(CakeShopLikeMapper.supplyCakeShopLikeBy(this, user));
-		this.increaseLikeCount();
-	}
-
-	public void heart(final User user) {
-		shopHearts.add(CakeShopHeartMapper.supplyCakeShopHeartBy(this, user));
-		this.increaseHeartCount();
-	}
-
-	public void unHeart(final User user) {
-		shopHearts.removeIf(it -> it.getUser().equals(user));
-		this.decreaseHeartCount();
-	}
-
-	public boolean isLikedOverMaxBy(final User user) {
-		long count = shopLikes.stream().map(it -> it.getUser().equals(user)).count();
-
-		return count >= 50;
-	}
-
-	public boolean isHeartedBy(final User user) {
-		return shopHearts.stream().anyMatch(it -> it.getUser().equals(user));
-	}
-
-	private void increaseLikeCount() {
+	public void increaseLikeCount() {
 		this.likeCount++;
 	}
 
-	private void increaseHeartCount() {
+	public void increaseHeartCount() {
 		this.heartCount++;
 	}
 
-	private void decreaseHeartCount() {
-		if (this.heartCount == 0) {
-			throw new CakkException(ReturnCode.INTERNAL_SERVER_ERROR);
-		}
-
+	public void decreaseHeartCount() {
 		this.heartCount--;
 	}
 

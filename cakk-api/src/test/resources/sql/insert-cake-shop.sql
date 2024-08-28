@@ -10,7 +10,7 @@ SET @g9 = 'Point(37.543343 127.052609)';
 SET @g10 = 'Point(37.541530 127.054164)';
 
 insert into cake_shop (shop_id, thumbnail_url, shop_name, shop_address, shop_bio, shop_description, location, like_count, heart_count, created_at, updated_at)
-values (1, 'thumbnail_url1', '케이크 맛집1', '케이크 맛집입니다.', '서울시 강남구 어쩌고로1', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, 1, now(), now()),
+values (1, 'thumbnail_url1', '케이크 맛집1', '케이크 맛집입니다.', '서울시 강남구 어쩌고로1', '케이크 맛집입니다.', ST_GeomFromText(@g1, 4326), 0, 0, now(), now()),
        (2, 'thumbnail_url2', '케이크 맛집2', '케이크 맛집입니다.', '서울시 강남구 어쩌고로2', '케이크 맛집입니다.', ST_GeomFromText(@g2, 4326), 0, 0, now(), now()),
        (3, 'thumbnail_url3', '케이크 맛집3', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g3, 4326), 0, 0, now(), now()),
        (4, 'thumbnail_url4', '케이크 맛집4', '케이크 맛집입니다.', '서울시 강남구 어쩌고로3', '케이크 맛집입니다.', ST_GeomFromText(@g4, 4326), 0, 0, now(), now()),
