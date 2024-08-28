@@ -2,8 +2,11 @@ package com.cakk.domain.mysql.entity.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,10 +14,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -31,7 +36,10 @@ import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.cake.CakeHeart;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopHeart;
+import com.cakk.domain.mysql.entity.shop.CakeShopLike;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -82,6 +90,22 @@ public class User extends AuditEntity {
 	@ColumnDefault("null")
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+	private Set<BusinessInformation> businessInformationSet = new HashSet<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private Set<CakeHeart> cakeHearts = new HashSet<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private Set<CakeShopHeart> cakeShopHearts = new HashSet<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private Set<CakeShopLike> cakeShopLikes = new HashSet<>();
 
 	@Builder
 	public User(
@@ -134,6 +158,12 @@ public class User extends AuditEntity {
 
 	public void unHeartCakeShop(final CakeShop cakeShop) {
 		cakeShop.unHeart(this);
+	}
+
+	public void unHeartAndLikeAll() {
+		cakeHearts.clear();
+		cakeShopHearts.clear();
+		cakeShopLikes.clear();
 	}
 
 	@Override
