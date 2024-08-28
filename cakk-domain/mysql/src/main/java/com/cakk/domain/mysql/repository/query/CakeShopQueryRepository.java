@@ -202,6 +202,22 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
+	public CakeShop searchByIdWithHeart(Long cakeShopId) {
+		return queryFactory
+			.selectFrom(cakeShop)
+			.leftJoin(cakeShop.shopHearts).fetchJoin()
+			.where(cakeShop.id.eq(cakeShopId))
+			.fetchOne();
+	}
+
+	public CakeShop searchByIdWithLike(Long cakeShopId) {
+		return queryFactory
+			.selectFrom(cakeShop)
+			.leftJoin(cakeShop.shopLikes).fetchJoin()
+			.where(cakeShop.id.eq(cakeShopId))
+			.fetchOne();
+	}
+
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
 		return cakeShop.id.eq(cakeShopId);
 	}

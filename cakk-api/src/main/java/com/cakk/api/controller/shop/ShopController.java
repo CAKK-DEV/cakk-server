@@ -123,7 +123,6 @@ public class ShopController {
 		@SignInUser User user,
 		@PathVariable Long cakeShopId
 	) {
-		likeService.validateLikeCount(user, cakeShopId);
 		likeService.likeCakeShop(user, cakeShopId);
 
 		return ApiResponse.success();

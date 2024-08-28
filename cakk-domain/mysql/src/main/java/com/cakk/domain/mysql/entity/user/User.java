@@ -31,6 +31,7 @@ import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -121,6 +122,18 @@ public class User extends AuditEntity {
 
 	public void unHeartCake(final Cake cake) {
 		cake.unHeart(this);
+	}
+
+	public void likeCakeShop(final CakeShop cakeShop) {
+		cakeShop.like(this);
+	}
+
+	public void heartCakeShop(final CakeShop cakeShop) {
+		cakeShop.heart(this);
+	}
+
+	public void unHeartCakeShop(final CakeShop cakeShop) {
+		cakeShop.unHeart(this);
 	}
 
 	@Override
