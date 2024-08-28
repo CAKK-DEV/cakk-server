@@ -31,6 +31,7 @@ import com.cakk.domain.mysql.facade.cake.CakeManagerFacade;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.TagReader;
+import com.cakk.domain.mysql.repository.writer.CakeWriter;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @Transactional(readOnly = true)
@@ -95,7 +96,7 @@ public class CakeService {
 		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cakeManagerFacade.create(cakeShop, cake, tags, cakeCategories);
+		cakeManagerFacade.createCake(cakeShop, cake, tags, cakeCategories);
 	}
 
 	@Transactional
@@ -105,13 +106,13 @@ public class CakeService {
 		final String cakeImageUrl = param.cakeImageUrl();
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cakeManagerFacade.update(cake, cakeImageUrl, tags, cakeCategories);
+		cakeManagerFacade.updateCake(cake, cakeImageUrl, tags, cakeCategories);
 	}
 
 	@Transactional
 	public void deleteCake(User owner, Long cakeId) {
 		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(cakeId, owner);
 
-		cakeManagerFacade.delete(cake);
+		cakeWriter.deleteCake(cake);
 	}
 }
