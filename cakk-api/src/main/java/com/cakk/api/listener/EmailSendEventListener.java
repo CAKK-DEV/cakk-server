@@ -8,24 +8,26 @@ import org.springframework.scheduling.annotation.Async;
 
 import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
-import com.cakk.external.sender.MessageSender;
+import com.cakk.api.mapper.EventMapper;
+import com.cakk.external.template.VerificationCodeSendTemplate;
+import com.cakk.external.vo.VerificationMessage;
 
 @ApplicationEventListener
 public class EmailSendEventListener {
 
 
-	private final MessageSender messageSender;
+	private final VerificationCodeSendTemplate verificationCodeSendTemplate;
 
 	public EmailSendEventListener(
-		@Qualifier("emailSender")
-		MessageSender messageSender
+		VerificationCodeSendTemplate verificationCodeSendTemplate
 	) {
-		this.messageSender = messageSender;
+		this.verificationCodeSendTemplate = verificationCodeSendTemplate;
 	}
 
 	@Async
 	@EventListener
 	public void sendEmailIncludeVerificationCode(EmailWithVerificationCodeSendEvent event) {
-		messageSender.send(Objects.requireNonNull(event.email()), Objects.requireNonNull(event.code()));
+		final VerificationMessage verificationMessage = EventMapper.supplyVerificationMessageBy(event);
+		verificationCodeSendTemplate.sendMessageForVerificationCode(verificationMessage);
 	}
 }

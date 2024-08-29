@@ -9,6 +9,7 @@ import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
 import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.external.vo.CertificationMessage;
+import com.cakk.external.vo.VerificationMessage;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -41,5 +42,9 @@ public class EventMapper {
 			latitude,
 			longitude
 		);
+	}
+
+	public static VerificationMessage supplyVerificationMessageBy(final EmailWithVerificationCodeSendEvent event) {
+		return new VerificationMessage(event.email(), event.code());
 	}
 }
