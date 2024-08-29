@@ -2,24 +2,30 @@ package com.cakk.api.listener;
 
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
-import lombok.RequiredArgsConstructor;
-
 import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
-import com.cakk.external.service.MailService;
+import com.cakk.external.sender.MessageSender;
 
-@RequiredArgsConstructor
 @ApplicationEventListener
 public class EmailSendEventListener {
 
-	private final MailService mailService;
+
+	private final MessageSender messageSender;
+
+	public EmailSendEventListener(
+		@Qualifier("emailSender")
+		MessageSender messageSender
+	) {
+		this.messageSender = messageSender;
+	}
 
 	@Async
 	@EventListener
 	public void sendEmailIncludeVerificationCode(EmailWithVerificationCodeSendEvent event) {
-		mailService.sendEmail(Objects.requireNonNull(event.email()), Objects.requireNonNull(event.code()));
+		messageSender.send(Objects.requireNonNull(event.email()), Objects.requireNonNull(event.code()));
 	}
 }
