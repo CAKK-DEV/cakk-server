@@ -9,12 +9,8 @@ class CertificationTemplate<T>(
 	private val certificationMessageExtractor: CertificationMessageExtractor<T>
 ) {
 
-	fun sendMessageForCertification(
-		receiver: String,
-		certificationMessage: CertificationMessage
-	) {
+	fun sendMessageForCertification(certificationMessage: CertificationMessage) {
 		this.sendMessageForCertification(
-			receiver = receiver,
 			certificationMessage = certificationMessage,
 			certificationMessageExtractor = certificationMessageExtractor,
 			messageSender = messageSender
@@ -22,12 +18,11 @@ class CertificationTemplate<T>(
 	}
 
 	private fun <T> sendMessageForCertification(
-		receiver: String,
 		certificationMessage: CertificationMessage,
 		certificationMessageExtractor: CertificationMessageExtractor<T>,
 		messageSender: MessageSender<T>
 	) {
-		val extractMessage: T = certificationMessageExtractor.extract(certificationMessage) as T
-		messageSender.send(receiver, extractMessage)
+		val extractMessage: T = certificationMessageExtractor.extract(certificationMessage)
+		messageSender.send(extractMessage)
 	}
 }

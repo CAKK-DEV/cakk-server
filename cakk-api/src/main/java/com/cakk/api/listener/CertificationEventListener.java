@@ -22,6 +22,6 @@ public class CertificationEventListener {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void sendMessageToSlack(CertificationEvent certificationEvent) {
 		CertificationMessage certificationMessage = EventMapper.supplyCertificationMessageBy(certificationEvent);
-		certificationTemplate.sendMessageForCertification("#cs_사장님인증", certificationMessage);
+		certificationTemplate.sendMessageForCertification(certificationMessage);
 	}
 }

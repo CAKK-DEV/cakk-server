@@ -13,12 +13,11 @@ class SlackMessageSender(
 	private val isEnable: Boolean
 ): MessageSender<SlackMessage> {
 
-	override fun send(receiver: String, message: SlackMessage) {
+	override fun send(message: SlackMessage) {
 		if (!isEnable) {
 			return
 		}
 
-		message.setChannel(receiver)
 		slackApi.call(message)
 	}
 }
