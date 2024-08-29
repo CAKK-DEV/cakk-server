@@ -1,73 +1,61 @@
-package com.cakk.external.config;
+package com.cakk.external.config
 
-import java.util.Properties;
+import java.util.*
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
-public class MailConfig {
-
-	private final String host;
-	private final int port;
-	private final String username;
-	private final String password;
-	private final boolean auth;
-	private final boolean starttlsEnable;
-	private final boolean starttlsRequired;
-	private final int connectionTimeout;
-	private final int timeout;
-	private final int writeTimeout;
-
-	public MailConfig(
-		@Value("${spring.mail.host}") String host,
-		@Value("${spring.mail.port}") int port,
-		@Value("${spring.mail.username}") String username,
-		@Value("${spring.mail.password}") String password,
-		@Value("${spring.mail.properties.mail.smtp.auth}") boolean auth,
-		@Value("${spring.mail.properties.mail.smtp.starttls.enable}") boolean starttlsEnable,
-		@Value("${spring.mail.properties.mail.smtp.starttls.required}") boolean starttlsRequired,
-		@Value("${spring.mail.properties.mail.smtp.connectiontimeout}") int connectionTimeout,
-		@Value("${spring.mail.properties.mail.smtp.timeout}") int timeout,
-		@Value("${spring.mail.properties.mail.smtp.writetimeout}") int writeTimeout
-	) {
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.auth = auth;
-		this.starttlsEnable = starttlsEnable;
-		this.starttlsRequired = starttlsRequired;
-		this.connectionTimeout = connectionTimeout;
-		this.timeout = timeout;
-		this.writeTimeout = writeTimeout;
-	}
+class EmailConfig(
+	@Value("\${spring.mail.host}")
+	private val host: String,
+	@Value("\${spring.mail.port}")
+	private val port: Int,
+	@Value("\${spring.mail.username}")
+	private val username: String,
+	@Value("\${spring.mail.password}")
+	private val password: String,
+	@Value("\${spring.mail.properties.mail.smtp.auth}")
+	private val auth: Boolean,
+	@Value("\${spring.mail.properties.mail.smtp.starttls.enable}")
+	private val starttlsEnable: Boolean,
+	@Value("\${spring.mail.properties.mail.smtp.starttls.required}")
+	private val starttlsRequired: Boolean,
+	@Value("\${spring.mail.properties.mail.smtp.connectiontimeout}")
+	private val connectionTimeout: Int,
+	@Value("\${spring.mail.properties.mail.smtp.timeout}")
+	private val timeout: Int,
+	@Value("\${spring.mail.properties.mail.smtp.writetimeout}")
+	private val writeTimeout: Int
+) {
 
 	@Bean
-	public JavaMailSender javaMailSender() {
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost(host);
-		mailSender.setPort(port);
-		mailSender.setUsername(username);
-		mailSender.setPassword(password);
-		mailSender.setDefaultEncoding("UTF-8");
-		mailSender.setJavaMailProperties(getMailProperties());
+	fun javaMailSender(): JavaMailSender {
+		val mailSender = JavaMailSenderImpl()
 
-		return mailSender;
+		mailSender.host = host
+		mailSender.port = port
+		mailSender.username = username
+		mailSender.password = password
+		mailSender.defaultEncoding = "UTF-8"
+		mailSender.javaMailProperties = mailProperties()
+
+		return mailSender
 	}
 
-	private Properties getMailProperties() {
-		Properties properties = new Properties();
-		properties.put("mail.smtp.auth", auth);
-		properties.put("mail.smtp.starttls.enable", starttlsEnable);
-		properties.put("mail.smtp.starttls.required", starttlsRequired);
-		properties.put("mail.smtp.connectiontimeout", connectionTimeout);
-		properties.put("mail.smtp.timeout", timeout);
-		properties.put("mail.smtp.writetimeout", writeTimeout);
+	private fun mailProperties(): Properties {
+		val properties = Properties()
 
-		return properties;
+		properties["mail.smtp.auth"] = auth
+		properties["mail.smtp.starttls.enable"] = starttlsEnable
+		properties["mail.smtp.starttls.required"] = starttlsRequired
+		properties["mail.smtp.connectiontimeout"] = connectionTimeout
+		properties["mail.smtp.timeout"] = timeout
+		properties["mail.smtp.writetimeout"] = writeTimeout
+
+		return properties
 	}
 }
