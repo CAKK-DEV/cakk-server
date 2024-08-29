@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.mapper.EventMapper;
-import com.cakk.api.template.CertificationTemplate;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.external.template.CertificationTemplate;
 import com.cakk.external.vo.CertificationMessage;
 
 @RequiredArgsConstructor
@@ -22,6 +22,6 @@ public class CertificationEventListener {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void sendMessageToSlack(CertificationEvent certificationEvent) {
 		CertificationMessage certificationMessage = EventMapper.supplyCertificationMessageBy(certificationEvent);
-		certificationTemplate.sendMessageForCertification(certificationMessage);
+		certificationTemplate.sendMessageForCertification("#cs_사장님인증", certificationMessage);
 	}
 }
