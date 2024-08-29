@@ -4,17 +4,19 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 
 import com.cakk.common.enums.Role;
-import com.cakk.domain.base.DomainTest;
+import com.cakk.domain.base.FacadeTest;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.facade.user.UserHeartFacade;
 
-class UserHeartFacadeTest extends DomainTest {
+class UserHeartFacadeTest extends FacadeTest {
 
-	private final UserHeartFacade userHeartFacade = new UserHeartFacade();
+	@InjectMocks
+	private UserHeartFacade userHeartFacade;
 
 	@Test
 	@DisplayName("케이크 하트를 성공한다")

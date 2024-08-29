@@ -7,18 +7,20 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.Role;
 import com.cakk.common.exception.CakkException;
-import com.cakk.domain.base.DomainTest;
+import com.cakk.domain.base.FacadeTest;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.facade.user.UserLikeFacade;
 
-class UserLikeFacadeTest extends DomainTest {
+class UserLikeFacadeTest extends FacadeTest {
 
-	private final UserLikeFacade userLikeFacade = new UserLikeFacade();
+	@InjectMocks
+	private UserLikeFacade userLikeFacade;
 
 	@Test
 	@DisplayName("케이크 샵 기대돼요 동작을 성공한다")

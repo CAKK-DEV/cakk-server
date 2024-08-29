@@ -59,7 +59,7 @@ public abstract class DomainTest {
 	}
 
 	protected User getUserFixture(Role role) {
-		return getReflectionMonkey().giveMeBuilder(User.class)
+		return getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
 			.set("role", role)
@@ -94,7 +94,7 @@ public abstract class DomainTest {
 	}
 
 	protected CertificationParam getCertificationParamFixtureWithUser(User user) {
-		return getBuilderMonkey().giveMeBuilder(CertificationParam.class)
+		return getConstructorMonkey().giveMeBuilder(CertificationParam.class)
 			.set("businessRegistrationImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("idCardImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
 			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(0))

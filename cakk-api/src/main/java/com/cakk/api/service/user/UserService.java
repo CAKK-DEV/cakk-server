@@ -11,21 +11,15 @@ import com.cakk.api.mapper.UserMapper;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.entity.user.UserWithdrawal;
+import com.cakk.domain.mysql.facade.user.UserCommandFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.mysql.repository.writer.BusinessInformationWriter;
-import com.cakk.domain.mysql.repository.writer.CakeHeartWriter;
-import com.cakk.domain.mysql.repository.writer.CakeShopHeartWriter;
-import com.cakk.domain.mysql.repository.writer.UserWriter;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
 	private final UserReader userReader;
-	private final UserWriter userWriter;
-	private final CakeShopHeartWriter cakeShopHeartWriter;
-	private final CakeHeartWriter cakeHeartWriter;
-	private final BusinessInformationWriter businessInformationWriter;
+	private final UserCommandFacade userCommandFacade;
 
 	@Transactional(readOnly = true)
 	public ProfileInformationResponse findProfile(final User signInUser) {
@@ -39,18 +33,14 @@ public class UserService {
 		final User user = userReader.findByUserId(signInUser.getId());
 		final ProfileUpdateParam param = UserMapper.supplyProfileUpdateParamBy(dto);
 
-		user.updateProfile(param);
+		userCommandFacade.updateProfile(user, param);
 	}
 
 	@Transactional
 	public void withdraw(final User signInUser) {
-		final User user = userReader.findByUserId(signInUser.getId());
+		final User user = userReader.findByIdWithAll(signInUser.getId());
 		final UserWithdrawal withdrawal = UserMapper.supplyUserWithdrawalBy(user);
 
-		cakeHeartWriter.deleteAllByUser(user);
-		cakeShopHeartWriter.deleteAllByUser(user);
-		businessInformationWriter.deleteAllByUser(user);
-
-		userWriter.delete(user, withdrawal);
+		userCommandFacade.withdraw(user, withdrawal);
 	}
 }
