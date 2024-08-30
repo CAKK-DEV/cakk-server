@@ -23,7 +23,7 @@ public class EmailSendEventListener {
 	public EmailSendEventListener(
 		MessageTemplate messageTemplate,
 		@Qualifier("verificationCodeMimeMessageExtractor") MessageExtractor messageExtractor,
-		@Qualifier("emailSender") MessageSender messageSender
+		@Qualifier("emailMessageSender") MessageSender messageSender
 	) {
 		this.messageTemplate = messageTemplate;
 		this.messageExtractor = messageExtractor;
