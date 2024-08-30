@@ -114,6 +114,7 @@ subprojects {
 			"com.cakk.api.provider.oauth.PublicKeyProvider",
 			"com.cakk.api.dto.**",
 			"com.cakk.api.mapper.**",
+			"com.cakk.api.listener.**",
 			"com.cakk.api.vo.**",
 			"com.cakk.domain.**"
 		)

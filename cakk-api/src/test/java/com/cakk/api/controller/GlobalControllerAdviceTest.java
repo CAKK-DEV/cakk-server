@@ -32,7 +32,7 @@ public class GlobalControllerAdviceTest extends MockMvcTest {
 		final ReturnCode returnCode = ReturnCode.INTERNAL_SERVER_ERROR;
 
 		doThrow(new CakkException(returnCode)).when(shopService).searchDetailById(1L);
-		doNothing().when(slackService).sendSlackForError(any(CakkException.class), any());
+		doNothing().when(errorAlertEventListener).sendMessageToSlack(any());
 
 		// when & then
 		mockMvc.perform(get("/shops/1"))
@@ -40,7 +40,7 @@ public class GlobalControllerAdviceTest extends MockMvcTest {
 			.andExpect(jsonPath("$.returnCode").value(returnCode.getCode()))
 			.andExpect(jsonPath("$.returnMessage").value(returnCode.getMessage()));
 
-		verify(slackService, times(1)).sendSlackForError(any(CakkException.class), any());
+		verify(errorAlertEventListener, times(1)).sendMessageToSlack(any());
 	}
 
 	@TestWithDisplayName("CakkException이 발생했고 EXTERNAL_SERVER_ERROR 일 때 BAD_REQUEST를 반환한다.")
@@ -49,7 +49,7 @@ public class GlobalControllerAdviceTest extends MockMvcTest {
 		final ReturnCode returnCode = ReturnCode.EXTERNAL_SERVER_ERROR;
 
 		doThrow(new CakkException(returnCode)).when(shopService).searchDetailById(1L);
-		doNothing().when(slackService).sendSlackForError(any(CakkException.class), any());
+		doNothing().when(errorAlertEventListener).sendMessageToSlack(any());
 
 		// when & then
 		mockMvc.perform(get("/shops/1"))
@@ -57,7 +57,7 @@ public class GlobalControllerAdviceTest extends MockMvcTest {
 			.andExpect(jsonPath("$.returnCode").value(returnCode.getCode()))
 			.andExpect(jsonPath("$.returnMessage").value(returnCode.getMessage()));
 
-		verify(slackService, times(1)).sendSlackForError(any(CakkException.class), any());
+		verify(errorAlertEventListener, times(1)).sendMessageToSlack(any());
 	}
 
 	@TestWithDisplayName("HttpMessageNotReadableException이 발생하면 BAD_REQUEST를 반환한다.")

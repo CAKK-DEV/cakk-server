@@ -9,7 +9,7 @@ import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 
 @Component
-class EmailSender(
+class EmailMessageSender(
 	private val mailSender: JavaMailSender
 ) : MessageSender<MimeMessage> {
 

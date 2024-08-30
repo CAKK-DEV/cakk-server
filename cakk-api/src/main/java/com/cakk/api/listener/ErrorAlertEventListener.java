@@ -6,23 +6,23 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.cakk.api.annotation.ApplicationEventListener;
+import com.cakk.api.dto.event.ErrorAlertEvent;
 import com.cakk.api.mapper.EventMapper;
-import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.external.extractor.MessageExtractor;
 import com.cakk.external.sender.MessageSender;
 import com.cakk.external.template.MessageTemplate;
-import com.cakk.external.vo.CertificationMessage;
+import com.cakk.external.vo.ErrorAlertMessage;
 
 @ApplicationEventListener
-public class CertificationEventListener {
+public class ErrorAlertEventListener {
 
 	private final MessageTemplate messageTemplate;
 	private final MessageExtractor messageExtractor;
 	private final MessageSender messageSender;
 
-	public CertificationEventListener(
+	public ErrorAlertEventListener(
 		MessageTemplate messageTemplate,
-		@Qualifier("certificationMessageExtractor") MessageExtractor messageExtractor,
+		@Qualifier("errorAlertMessageExtractor") MessageExtractor messageExtractor,
 		@Qualifier("slackMessageSender") MessageSender messageSender
 	) {
 		this.messageTemplate = messageTemplate;
@@ -32,8 +32,8 @@ public class CertificationEventListener {
 
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void sendMessageToSlack(CertificationEvent certificationEvent) {
-		CertificationMessage certificationMessage = EventMapper.supplyCertificationMessageBy(certificationEvent);
+	public void sendMessageToSlack(ErrorAlertEvent errorAlertEvent) {
+		ErrorAlertMessage certificationMessage = EventMapper.supplyErrorAlertMessageBy(errorAlertEvent);
 		messageTemplate.sendMessage(certificationMessage, messageExtractor, messageSender);
 	}
 }
