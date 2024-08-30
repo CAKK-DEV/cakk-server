@@ -3,9 +3,9 @@ package com.cakk.external.template
 import com.cakk.external.extractor.MessageExtractor
 import com.cakk.external.sender.MessageSender
 
-class MessageTemplate<T, U> {
+class MessageTemplate {
 
-	fun sendMessage(
+	fun <T, U> sendMessage(
 		message: T,
 		messageExtractor: MessageExtractor<T, U>,
 		messageSender: MessageSender<U>,
