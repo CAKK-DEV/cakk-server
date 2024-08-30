@@ -9,6 +9,8 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,27 +22,37 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.cakk.api.service.slack.SlackService;
+import com.cakk.api.mapper.EventMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.common.response.ApiResponse;
 
 @Slf4j
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalControllerAdvice {
 
-	private final SlackService slackService;
+	private final ApplicationEventPublisher applicationEventPublisher;
+
+	private final String profile;
+
+	public GlobalControllerAdvice(
+		ApplicationEventPublisher applicationEventPublisher,
+		@Value("${spring.profiles.active}") String profile
+	) {
+		this.applicationEventPublisher = applicationEventPublisher;
+		this.profile = profile;
+	}
 
 	@ExceptionHandler(CakkException.class)
 	public ResponseEntity<ApiResponse<Void>> handleCakkException(CakkException exception, HttpServletRequest request) {
 		final ReturnCode returnCode = exception.getReturnCode();
+
 		if (returnCode.equals(ReturnCode.INTERNAL_SERVER_ERROR) || returnCode.equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
-			slackService.sendSlackForError(exception, request);
+			applicationEventPublisher.publishEvent(EventMapper.supplyErrorAlertEventBy(exception, request, profile));
 		}
+
 		log.error(exception.getMessage());
 		return getResponseEntity(BAD_REQUEST, ApiResponse.fail(exception.getReturnCode()));
 	}
@@ -79,8 +91,9 @@ public class GlobalControllerAdvice {
 		RuntimeException.class
 	})
 	public ResponseEntity<ApiResponse<String>> handleServerException(Exception exception, HttpServletRequest request) {
-		slackService.sendSlackForError(exception, request);
+		applicationEventPublisher.publishEvent(EventMapper.supplyErrorAlertEventBy(exception, request, profile));
 		log.error(exception.getMessage());
+
 		return getResponseEntity(INTERNAL_SERVER_ERROR, ApiResponse.error(ReturnCode.INTERNAL_SERVER_ERROR, exception.getMessage()));
 	}
 
