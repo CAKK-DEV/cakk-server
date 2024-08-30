@@ -1,14 +1,20 @@
 package com.cakk.api.mapper;
 
+import java.util.Arrays;
 import java.util.Objects;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
+import com.cakk.api.dto.event.ErrorAlertEvent;
 import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.external.vo.CertificationMessage;
+import com.cakk.external.vo.ErrorAlertMessage;
+import com.cakk.external.vo.VerificationMessage;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -19,6 +25,14 @@ public class EventMapper {
 
 	public static IncreaseSearchCountEvent supplyIncreaseSearchCountEventBy(final String keyword) {
 		return new IncreaseSearchCountEvent(keyword);
+	}
+
+	public static ErrorAlertEvent supplyErrorAlertEventBy(
+		final Exception exception,
+		final HttpServletRequest request,
+		final String profile
+	) {
+		return new ErrorAlertEvent(exception, request, profile);
 	}
 
 	public static CertificationMessage supplyCertificationMessageBy(final CertificationEvent certificationEvent) {
@@ -40,6 +54,27 @@ public class EventMapper {
 			certificationEvent.shopName(),
 			latitude,
 			longitude
+		);
+	}
+
+	public static VerificationMessage supplyVerificationMessageBy(final EmailWithVerificationCodeSendEvent event) {
+		return new VerificationMessage(event.email(), event.code());
+	}
+
+	public static ErrorAlertMessage supplyErrorAlertMessageBy(final ErrorAlertEvent event) {
+		final String profile = event.profile();
+		final String stackTrace = Arrays.toString(event.exception().getStackTrace());
+		final HttpServletRequest request = event.request();
+
+		return new ErrorAlertMessage(
+			profile,
+			stackTrace,
+			request.getContextPath(),
+			request.getRequestURL().toString(),
+			request.getMethod(),
+			request.getParameterMap(),
+			request.getRemoteAddr(),
+			request.getHeader("User-Agent")
 		);
 	}
 }

@@ -1,4 +1,4 @@
-package com.cakk.api.common.base;
+package com.cakk.domain.base;
 
 import java.time.LocalDate;
 
@@ -8,8 +8,6 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
 import net.jqwik.api.Arbitraries;
 
@@ -17,17 +15,17 @@ import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
+import com.navercorp.fixturemonkey.customizer.Values;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.Role;
-import com.cakk.domain.mysql.config.JpaConfig;
+import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
 
-@Import(JpaConfig.class)
-@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public abstract class ServiceTest {
+public abstract class FacadeTest {
 
 	private static final int SPATIAL_REFERENCE_IDENTIFIER_NUMBER = 4326;
 
@@ -57,7 +55,7 @@ public abstract class ServiceTest {
 			.build();
 	}
 
-	protected User getUser() {
+	protected User getUserFixture(final Role role) {
 		return getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", Arbitraries.of(Provider.class))
@@ -65,7 +63,28 @@ public abstract class ServiceTest {
 			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.set("birthday", LocalDate.now())
-			.set("role", Arbitraries.of(Role.class))
+			.set("role", role)
+			.sample();
+	}
+
+	protected Cake getCakeFixture() {
+		return getConstructorMonkey().giveMeBuilder(Cake.class)
+			.set("cakeImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
+			.set("cakeShop", Values.just(getCakeShopFixture()))
+			.sample();
+	}
+
+	protected CakeShop getCakeShopFixture() {
+		return getConstructorMonkey().giveMeBuilder(CakeShop.class)
+			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
+			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
+			.set("likeCount", 0)
+			.set("heartCount", 0)
+			.set("location", supplyPointBy(
+				Arbitraries.doubles().between(-90, 90).sample(),
+				Arbitraries.doubles().between(-180, 180).sample())
+			)
 			.sample();
 	}
 

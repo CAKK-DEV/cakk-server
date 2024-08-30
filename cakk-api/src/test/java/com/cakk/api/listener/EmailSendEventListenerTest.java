@@ -11,7 +11,7 @@ import net.jqwik.api.Arbitraries;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
 import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
-import com.cakk.external.service.MailService;
+import com.cakk.external.template.MessageTemplate;
 
 class EmailSendEventListenerTest extends MockitoTest {
 
@@ -19,7 +19,7 @@ class EmailSendEventListenerTest extends MockitoTest {
 	private EmailSendEventListener emailSendEventListener;
 
 	@Mock
-	private MailService mailService;
+	private MessageTemplate messageTemplate;
 
 	private EmailWithVerificationCodeSendEvent eventFixture() {
 		return getConstructorMonkey().giveMeBuilder(EmailWithVerificationCodeSendEvent.class)
@@ -33,13 +33,13 @@ class EmailSendEventListenerTest extends MockitoTest {
 		// given
 		EmailWithVerificationCodeSendEvent event = eventFixture();
 
-		doNothing().when(mailService).sendEmail(event.email(), event.code());
+		doNothing().when(messageTemplate).sendMessage(any(), any(), any());
 
 		// when
 		assertDoesNotThrow(() -> emailSendEventListener.sendEmailIncludeVerificationCode(event));
 
 		// then
-		verify(mailService, times(1)).sendEmail(event.email(), event.code());
+		verify(messageTemplate, times(1)).sendMessage(any(), any(), any());
 	}
 
 	@TestWithDisplayName("이벤트에 null 데이터가 포함돼 있으면, 메일 전송 메서드가 호출 시, 에러를 반환한다.")
@@ -54,6 +54,6 @@ class EmailSendEventListenerTest extends MockitoTest {
 		);
 
 		// then
-		verify(mailService, times(0)).sendEmail(event.email(), event.code());
+		verify(messageTemplate, never()).sendMessage(any(), any(), any());
 	}
 }

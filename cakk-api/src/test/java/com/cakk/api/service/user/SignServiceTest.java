@@ -22,8 +22,8 @@ import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.facade.user.UserCommandFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.mysql.repository.writer.UserWriter;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @DisplayName("Sign 관련 비즈니스 로직 테스트")
@@ -42,7 +42,7 @@ class SignServiceTest extends ServiceTest {
 	private UserReader userReader;
 
 	@Mock
-	private UserWriter userWriter;
+	private UserCommandFacade userCommandFacade;
 
 	@Mock
 	private TokenRedisRepository tokenRedisRepository;
@@ -51,7 +51,7 @@ class SignServiceTest extends ServiceTest {
 	void signUp1() {
 		// given
 		UserSignUpRequest dto = getConstructorMonkey().giveMeOne(UserSignUpRequest.class);
-		User user = getReflectionMonkey().giveMeBuilder(User.class)
+		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", dto.provider())
 			.set("providerId", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
@@ -63,7 +63,7 @@ class SignServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(user.getProviderId()).when(oidcProviderFactory).getProviderId(dto.provider(), dto.idToken());
-		doReturn(user).when(userWriter).create(any(User.class));
+		doReturn(user).when(userCommandFacade).create(any(User.class));
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
@@ -75,7 +75,7 @@ class SignServiceTest extends ServiceTest {
 		Assertions.assertNotNull(result.grantType());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userWriter, times(1)).create(any(User.class));
+		verify(userCommandFacade, times(1)).create(any(User.class));
 		verify(jwtProvider, times(1)).generateToken(user);
 	}
 
@@ -83,7 +83,7 @@ class SignServiceTest extends ServiceTest {
 	void signUp2() {
 		// given
 		UserSignUpRequest dto = getConstructorMonkey().giveMeOne(UserSignUpRequest.class);
-		User user = getReflectionMonkey().giveMeBuilder(User.class)
+		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", dto.provider())
 			.set("providerId", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
@@ -98,7 +98,7 @@ class SignServiceTest extends ServiceTest {
 			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userWriter, times(0)).create(any(User.class));
+		verify(userCommandFacade, times(0)).create(any(User.class));
 		verify(jwtProvider, times(0)).generateToken(user);
 	}
 
@@ -107,7 +107,7 @@ class SignServiceTest extends ServiceTest {
 		// given
 		UserSignInRequest dto = getConstructorMonkey().giveMeOne(UserSignInRequest.class);
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
-		User user = getReflectionMonkey().giveMeBuilder(User.class)
+		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", dto.provider())
 			.set("providerId", providerId)
@@ -140,7 +140,7 @@ class SignServiceTest extends ServiceTest {
 		// given
 		UserSignInRequest dto = getConstructorMonkey().giveMeOne(UserSignInRequest.class);
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
-		User user = getReflectionMonkey().giveMeBuilder(User.class)
+		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", dto.provider())
 			.set("providerId", providerId)
@@ -164,7 +164,7 @@ class SignServiceTest extends ServiceTest {
 	void recreateToken() {
 		// given
 		final String refreshToken = "refresh token";
-		final User user = getReflectionMonkey().giveMeBuilder(User.class)
+		final User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("providerId", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.set("createdAt", LocalDateTime.now())

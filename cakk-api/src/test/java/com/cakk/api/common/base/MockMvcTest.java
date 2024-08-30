@@ -25,10 +25,10 @@ import com.cakk.api.controller.s3.AwsS3Controller;
 import com.cakk.api.controller.shop.ShopController;
 import com.cakk.api.controller.user.SignController;
 import com.cakk.api.filter.JwtAuthenticationFilter;
+import com.cakk.api.listener.ErrorAlertEventListener;
 import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.like.LikeService;
 import com.cakk.api.service.shop.ShopService;
-import com.cakk.api.service.slack.SlackService;
 import com.cakk.api.service.user.EmailVerificationService;
 import com.cakk.api.service.user.SignService;
 import com.cakk.api.service.views.ViewsService;
@@ -57,9 +57,6 @@ public abstract class MockMvcTest {
 	protected JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@MockBean
-	protected SlackService slackService;
-
-	@MockBean
 	protected S3Service s3Service;
 
 	@MockBean
@@ -79,6 +76,9 @@ public abstract class MockMvcTest {
 
 	@MockBean
 	protected ViewsService viewsService;
+
+	@MockBean
+	protected ErrorAlertEventListener errorAlertEventListener;
 
 	@BeforeEach
 	void setup(WebApplicationContext webApplicationContext) {

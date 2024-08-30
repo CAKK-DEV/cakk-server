@@ -56,7 +56,7 @@ public class BusinessInformation extends AuditEntity {
 	@ColumnDefault("0")
 	@Convert(converter = VerificationStatusConverter.class)
 	@Column(name = "verification_status", nullable = false)
-	private VerificationStatus verificationStatus = VerificationStatus.UNREQUESTED;
+	private VerificationStatus verificationStatus;
 
 	@OneToOne
 	@MapsId
@@ -83,6 +83,11 @@ public class BusinessInformation extends AuditEntity {
 	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
 		user = businessOwner;
 		verificationStatus = verificationPolicy.approveToBusinessOwner(verificationStatus);
+	}
+
+	public void unLinkBusinessOwner() {
+		user = null;
+		verificationStatus = VerificationStatus.UNREQUESTED;
 	}
 
 	public boolean isBusinessOwnerCandidate(VerificationPolicy verificationPolicy) {
