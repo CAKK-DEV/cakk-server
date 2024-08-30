@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.mapper.EventMapper;
-import com.cakk.api.template.CertificationTemplate;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.external.template.CertificationTemplate;
 import com.cakk.external.vo.CertificationMessage;
 
 @RequiredArgsConstructor

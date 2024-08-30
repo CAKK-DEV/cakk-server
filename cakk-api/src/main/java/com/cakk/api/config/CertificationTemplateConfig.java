@@ -1,43 +1,33 @@
 package com.cakk.api.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.gpedro.integrations.slack.SlackApi;
-
-import com.cakk.api.template.CertificationTemplate;
-import com.cakk.external.executor.CertificationApiExecutor;
-import com.cakk.external.executor.CertificationSlackApiExecutor;
 import com.cakk.external.extractor.CertificationMessageExtractor;
 import com.cakk.external.extractor.CertificationSlackMessageExtractor;
+import com.cakk.external.sender.MessageSender;
+import com.cakk.external.template.CertificationTemplate;
 
 @Configuration
 public class CertificationTemplateConfig {
 
-	private final SlackApi slackApi;
-	private final boolean isEnable;
+	private final MessageSender messageSender;
 
 	public CertificationTemplateConfig(
-		SlackApi slackApi,
-		@Value("${slack.webhook.is-enable}")
-		boolean isEnable) {
-		this.slackApi = slackApi;
-		this.isEnable = isEnable;
+		@Qualifier("slackMessageSender")
+		MessageSender messageSender
+	) {
+		this.messageSender = messageSender;
 	}
 
 	@Bean
 	public CertificationTemplate certificationTemplate() {
-		return new CertificationTemplate(certificationApiExecutor(), certificationMessageExtractor());
+		return new CertificationTemplate(messageSender, certificationMessageExtractor());
 	}
 
 	@Bean
-	public CertificationApiExecutor certificationApiExecutor() {
-		return new CertificationSlackApiExecutor(slackApi, isEnable);
-	}
-
-	@Bean
-	CertificationMessageExtractor certificationMessageExtractor() {
+	public CertificationMessageExtractor certificationMessageExtractor() {
 		return new CertificationSlackMessageExtractor();
 	}
 }

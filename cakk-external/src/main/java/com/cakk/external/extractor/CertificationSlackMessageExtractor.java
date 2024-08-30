@@ -31,8 +31,8 @@ public class CertificationSlackMessageExtractor implements CertificationMessageE
 
 		SlackMessage slackMessage = new SlackMessage();
 		slackMessage.setAttachments(List.of(slackAttachment));
-		slackMessage.setChannel("#cs_사장님인증");
 		slackMessage.setText("사장님 인증 요청");
+		slackMessage.setChannel("#cs_사장님인증");
 
 		return slackMessage;
 	}
