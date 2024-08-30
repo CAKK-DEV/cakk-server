@@ -8,9 +8,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.cakk.api.annotation.ApplicationEventListener;
 import com.cakk.api.mapper.EventMapper;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.external.extractor.MessageExtractor;
-import com.cakk.external.sender.MessageSender;
-import com.cakk.external.template.MessageTemplate;
+import com.cakk.external.template.CertificationTemplate;
 import com.cakk.external.vo.CertificationMessage;
 
 @ApplicationEventListener

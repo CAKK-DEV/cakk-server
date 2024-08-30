@@ -4,7 +4,9 @@ import net.gpedro.integrations.slack.SlackApi
 import net.gpedro.integrations.slack.SlackMessage
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 
+@Component
 class SlackMessageSender(
 	private val slackApi: SlackApi,
 	@Value("\${slack.webhook.is-enable}")

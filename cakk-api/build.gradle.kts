@@ -35,14 +35,11 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter:1.19.7")
 	testImplementation("org.testcontainers:mysql:1.19.7")
 
+	// slack 설정
+	implementation("net.gpedro.integrations.slack:slack-webhook:1.4.0")
+
 	// Point
 	implementation("org.locationtech.jts:jts-core:1.18.2")
-
-	// Mail
-	implementation("org.springframework.boot:spring-boot-starter-mail")
-
-	// Slack
-	implementation("net.gpedro.integrations.slack:slack-webhook:1.4.0")
 }
 
 tasks.bootJar {
