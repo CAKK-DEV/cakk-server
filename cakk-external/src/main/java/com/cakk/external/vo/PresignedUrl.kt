@@ -1,8 +1,7 @@
-package com.cakk.external.vo;
+package com.cakk.external.vo
 
-public record PresignedUrl(
-	String imagePath,
-	String imageUrl,
-	String presignedUrl
-) {
-}
+data class PresignedUrl(
+	val imagePath: String,
+	val imageUrl: String,
+	val presignedUrl: String
+)
