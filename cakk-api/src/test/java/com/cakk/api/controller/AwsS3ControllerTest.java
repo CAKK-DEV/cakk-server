@@ -26,8 +26,8 @@ public class AwsS3ControllerTest extends MockMvcTest {
 		// when & then
 		mockMvc.perform(get("/aws/img"))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.data.imagePath").value(presignedUrl.imagePath()))
-			.andExpect(jsonPath("$.data.imageUrl").value(presignedUrl.imageUrl()))
-			.andExpect(jsonPath("$.data.presignedUrl").value(presignedUrl.presignedUrl()));
+			.andExpect(jsonPath("$.data.imagePath").value(presignedUrl.getImagePath()))
+			.andExpect(jsonPath("$.data.imageUrl").value(presignedUrl.getImageUrl()))
+			.andExpect(jsonPath("$.data.presignedUrl").value(presignedUrl.getPresignedUrl()));
 	}
 }
