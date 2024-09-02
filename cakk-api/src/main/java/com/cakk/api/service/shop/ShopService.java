@@ -121,7 +121,7 @@ public class ShopService {
 		return ShopMapper.supplyCakeShopByMineResponseBy(result);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void requestCertificationBusinessOwner(final CertificationParam param) {
 		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
 		final CertificationEvent certificationEvent = verificationPolicy
