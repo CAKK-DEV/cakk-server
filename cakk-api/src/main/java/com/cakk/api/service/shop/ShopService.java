@@ -51,11 +51,11 @@ import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
+import com.cakk.domain.mysql.facade.shop.CakeShopManagerFacade;
 import com.cakk.domain.mysql.mapper.EventMapper;
 import com.cakk.domain.mysql.repository.reader.BusinessInformationReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @Service
@@ -65,8 +65,9 @@ public class ShopService {
 	private final UserReader userReader;
 	private final CakeShopReader cakeShopReader;
 	private final BusinessInformationReader businessInformationReader;
-	private final CakeShopWriter cakeShopWriter;
+	private final CakeShopManagerFacade cakeShopManagerFacade;
 	private final CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
+
 	private final VerificationPolicy verificationPolicy;
 	private final ApplicationEventPublisher publisher;
 
@@ -77,7 +78,7 @@ public class ShopService {
 		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, request.operationDays());
 		final List<CakeShopLink> cakeShopLinks = LinkMapper.supplyCakeShopLinksBy(cakeShop, request.links());
 
-		final CakeShop result = cakeShopWriter.createCakeShop(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks);
+		final CakeShop result = cakeShopManagerFacade.createCakeShop(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks);
 
 		return ShopMapper.supplyCakeShopCreateResponseBy(result);
 	}

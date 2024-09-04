@@ -1,5 +1,8 @@
 package com.cakk.admin.service
 
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
 import com.cakk.admin.dto.param.CakeShopCreateByAdminParam
 import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.admin.mapper.supplyCakeShopCreateResponseBy
@@ -8,20 +11,18 @@ import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
 import com.cakk.domain.mysql.entity.shop.CakeShop
+import com.cakk.domain.mysql.facade.shop.CakeShopManagerFacade
 import com.cakk.domain.mysql.repository.reader.CakeShopReader
-import com.cakk.domain.mysql.repository.writer.CakeShopWriter
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ShopService(
     private val cakeShopReader: CakeShopReader,
-    private val cakeShopWriter: CakeShopWriter
+	private val cakeShopManagerFacade: CakeShopManagerFacade
 ) {
 
     @Transactional
     fun createCakeShopByCertification(dto: CakeShopCreateByAdminParam): CakeShopCreateResponse {
-        val result: CakeShop = cakeShopWriter.createCakeShop(
+        val result: CakeShop = cakeShopManagerFacade.createCakeShop(
             dto.cakeShop,
             dto.cakeShopOperations,
             dto.businessInformation,
