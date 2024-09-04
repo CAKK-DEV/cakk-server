@@ -21,14 +21,14 @@ import com.cakk.domain.base.FacadeTest;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.entity.user.UserWithdrawal;
-import com.cakk.domain.mysql.facade.user.UserCommandFacade;
+import com.cakk.domain.mysql.facade.user.UserManagerFacade;
 import com.cakk.domain.mysql.repository.jpa.UserJpaRepository;
 import com.cakk.domain.mysql.repository.jpa.UserWithdrawalJpaRepository;
 
-class UserCommandFacadeTest extends FacadeTest {
+class UserManagerFacadeTest extends FacadeTest {
 
 	@InjectMocks
-	private UserCommandFacade userCommandFacade;
+	private UserManagerFacade userManagerFacade;
 
 	@Mock
 	private UserJpaRepository userJpaRepository;
@@ -42,7 +42,7 @@ class UserCommandFacadeTest extends FacadeTest {
 		final User user = getUserFixture(Role.USER);
 
 		// when
-		userCommandFacade.create(user);
+		userManagerFacade.create(user);
 
 		// then
 		verify(userJpaRepository, times(1)).findByProviderId(user.getProviderId());
@@ -59,7 +59,7 @@ class UserCommandFacadeTest extends FacadeTest {
 		// when
 		assertThrows(
 			CakkException.class,
-			() -> userCommandFacade.create(user),
+			() -> userManagerFacade.create(user),
 			ReturnCode.ALREADY_EXIST_USER.getMessage()
 		);
 
@@ -81,7 +81,7 @@ class UserCommandFacadeTest extends FacadeTest {
 			.sample();
 
 		// when
-		userCommandFacade.updateProfile(user, param);
+		userManagerFacade.updateProfile(user, param);
 
 		// then
 		assertEquals(param.profileImageUrl(), user.getProfileImageUrl());
@@ -104,7 +104,7 @@ class UserCommandFacadeTest extends FacadeTest {
 			.sample();
 
 		// when
-		userCommandFacade.withdraw(user, withdrawal);
+		userManagerFacade.withdraw(user, withdrawal);
 
 		// then
 		verify(userWithdrawalJpaRepository, times(1)).save(any());

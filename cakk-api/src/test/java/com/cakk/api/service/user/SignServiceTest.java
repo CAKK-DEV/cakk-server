@@ -22,7 +22,7 @@ import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserCommandFacade;
+import com.cakk.domain.mysql.facade.user.UserManagerFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
@@ -42,7 +42,7 @@ class SignServiceTest extends ServiceTest {
 	private UserReader userReader;
 
 	@Mock
-	private UserCommandFacade userCommandFacade;
+	private UserManagerFacade userManagerFacade;
 
 	@Mock
 	private TokenRedisRepository tokenRedisRepository;
@@ -63,7 +63,7 @@ class SignServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(user.getProviderId()).when(oidcProviderFactory).getProviderId(dto.provider(), dto.idToken());
-		doReturn(user).when(userCommandFacade).create(any(User.class));
+		doReturn(user).when(userManagerFacade).create(any(User.class));
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
@@ -75,7 +75,7 @@ class SignServiceTest extends ServiceTest {
 		Assertions.assertNotNull(result.grantType());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userCommandFacade, times(1)).create(any(User.class));
+		verify(userManagerFacade, times(1)).create(any(User.class));
 		verify(jwtProvider, times(1)).generateToken(user);
 	}
 
@@ -98,7 +98,7 @@ class SignServiceTest extends ServiceTest {
 			ReturnCode.EXPIRED_JWT_TOKEN.getMessage());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userCommandFacade, times(0)).create(any(User.class));
+		verify(userManagerFacade, times(0)).create(any(User.class));
 		verify(jwtProvider, times(0)).generateToken(user);
 	}
 
