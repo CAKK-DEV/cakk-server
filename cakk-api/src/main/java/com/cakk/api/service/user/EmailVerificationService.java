@@ -1,5 +1,6 @@
 package com.cakk.api.service.user;
 
+import static com.cakk.common.utils.RandomUtilsKt.*;
 import static java.util.Objects.*;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,7 +14,6 @@ import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.mapper.EventMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
-import com.cakk.common.utils.RandomUtils;
 import com.cakk.domain.redis.repository.EmailVerificationRedisRepository;
 
 @Service
@@ -26,7 +26,7 @@ public class EmailVerificationService {
 
 	public void sendEmailForVerification(final GenerateCodeRequest dto) {
 		final String email = dto.email();
-		final String code = RandomUtils.generateRandomStringOnlyNumber(6);
+		final String code = generateRandomStringOnlyNumber(6);
 		emailVerificationRedisRepository.save(email, code);
 
 		final EmailWithVerificationCodeSendEvent emailEvent = EventMapper.supplyEmailWithVerificationCodeSendEventBy(email, code);

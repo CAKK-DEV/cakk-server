@@ -1,7 +1,7 @@
 package com.cakk.api.provider.oauth;
 
 import static com.cakk.common.enums.ReturnCode.*;
-import static com.cakk.common.utils.DecodeUtils.*;
+import static com.cakk.common.utils.DecodeUtilsKt.*;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;

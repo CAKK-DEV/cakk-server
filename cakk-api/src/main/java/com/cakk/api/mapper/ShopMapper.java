@@ -1,5 +1,6 @@
 package com.cakk.api.mapper;
 
+import static com.cakk.common.utils.SetUtilsKt.*;
 import static java.util.Objects.*;
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
 import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
-import com.cakk.common.utils.SetUtils;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
@@ -157,7 +157,7 @@ public class ShopMapper {
 
 	public static HeartCakeShopListResponse supplyHeartCakeShopListResponseBy(final List<HeartCakeShopResponseParam> cakeShops) {
 		final int size = cakeShops.size();
-		cakeShops.forEach(it -> SetUtils.keepOnlyNElements(it.cakeImageUrls(), 4));
+		cakeShops.forEach(it -> keepOnlyNElements(it.cakeImageUrls(), 4));
 
 		return HeartCakeShopListResponse.builder()
 			.cakeShops(cakeShops)
