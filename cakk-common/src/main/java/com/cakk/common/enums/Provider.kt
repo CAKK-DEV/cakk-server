@@ -1,6 +1,8 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-public enum Provider {
+enum class Provider {
 
-	APPLE, GOOGLE, KAKAO
+	APPLE,
+	GOOGLE,
+	KAKAO
 }

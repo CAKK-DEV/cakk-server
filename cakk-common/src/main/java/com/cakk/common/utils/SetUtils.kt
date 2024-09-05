@@ -1,28 +1,18 @@
-package com.cakk.common.utils;
+package com.cakk.common.utils
 
-import java.util.Iterator;
-import java.util.Set;
-
-public class SetUtils {
-
-	private SetUtils() {
-		throw new IllegalStateException("util class");
+fun <T> keepOnlyNElements(set: MutableSet<T>?, max: Int) {
+	if (set == null || set.size <= max) {
+		return
 	}
 
-	public static <T> void keepOnlyNElements(final Set<T> set, final int max) {
-		if (set == null || set.size() <= max) {
-			return;
-		}
+	val iterator = set.iterator()
+	var count = 0
 
-		final Iterator<T> iterator = set.iterator();
-		int count = 0;
-
-		while (iterator.hasNext()) {
-			iterator.next();
-			count++;
-			if (count > max) {
-				iterator.remove();
-			}
+	while (iterator.hasNext()) {
+		iterator.next()
+		count++
+		if (count > max) {
+			iterator.remove()
 		}
 	}
 }

@@ -1,10 +1,10 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-public enum Role {
+enum class Role {
 
-	ADMIN, USER;
+    ADMIN,
+	USER;
 
-	public String getSecurityRole() {
-		return "ROLE_" + this;
-	}
+    val securityRole: String
+        get() = "ROLE_$this"
 }

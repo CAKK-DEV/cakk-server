@@ -1,18 +1,11 @@
-package com.cakk.common.utils;
+package com.cakk.common.utils
 
-public class RandomUtils {
+fun generateRandomStringOnlyNumber(length: Int): String {
+    val sb = StringBuilder()
 
-	private RandomUtils() {
-		throw new IllegalStateException("util class");
-	}
+    for (i in 0 until length) {
+        sb.append((Math.random() * 10).toInt())
+    }
 
-	public static String generateRandomStringOnlyNumber(int length) {
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < length; i++) {
-			sb.append((int) (Math.random() * 10));
-		}
-
-		return sb.toString();
-	}
+    return sb.toString()
 }

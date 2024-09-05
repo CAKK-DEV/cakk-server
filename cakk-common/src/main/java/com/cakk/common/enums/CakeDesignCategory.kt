@@ -1,15 +1,15 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-public enum CakeDesignCategory {
+enum class CakeDesignCategory {
 
-	THREE_DIMENSIONAL,
-	CHARACTER,
-	PHOTO,
-	LUNCHBOX,
-	FIGURE,
-	FLOWER,
-	LETTERING,
-	RICE_CAKE,
-	TIARA,
-	ETC
+    THREE_DIMENSIONAL,
+    CHARACTER,
+    PHOTO,
+    LUNCHBOX,
+    FIGURE,
+    FLOWER,
+    LETTERING,
+    RICE_CAKE,
+    TIARA,
+    ETC
 }

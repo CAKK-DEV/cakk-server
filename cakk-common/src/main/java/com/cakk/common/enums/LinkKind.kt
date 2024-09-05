@@ -1,13 +1,10 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+enum class LinkKind(
+	val value: String
+) {
 
-@Getter
-@RequiredArgsConstructor
-public enum LinkKind {
-
-	WEB("web"), KAKAOTALK("kakaotalk"), INSTAGRAM("instagram");
-
-	private final String value;
+    WEB("web"),
+	KAKAOTALK("kakaotalk"),
+	INSTAGRAM("instagram");
 }

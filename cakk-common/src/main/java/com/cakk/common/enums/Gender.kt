@@ -1,6 +1,8 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-public enum Gender {
+enum class Gender {
 
-	MALE, FEMALE, UNKNOWN
+    MALE,
+	FEMALE,
+	UNKNOWN
 }

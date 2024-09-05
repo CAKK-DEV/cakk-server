@@ -1,44 +1,29 @@
-package com.cakk.common.enums;
+package com.cakk.common.enums
 
-public enum VerificationStatus {
+enum class VerificationStatus(@JvmField val code: Int) {
+    UNREQUESTED(0),
+    APPROVED(1),
+    REJECTED(2),
+    PENDING(3);
 
-	UNREQUESTED(0),
-	APPROVED(1),
-	REJECTED(2),
-	PENDING(3);
+    val isCandidate: Boolean
+        get() = code == 3
 
-	private final Integer code;
+    val isNotCandidate: Boolean
+        get() = code != 3
 
-	VerificationStatus(Integer code) {
-		this.code = code;
-	}
+    val isApproved: Boolean
+        get() = code == 1
 
-	public Integer getCode() {
-		return code;
-	}
+    val isRejected: Boolean
+        get() = code == 2
 
-	public boolean isCandidate() {
-		return code == 3;
-	}
+    fun makeApproved(): VerificationStatus {
+        return APPROVED
+    }
 
-	public boolean isNotCandidate() {
-		return  code != 3;
-	}
-
-	public boolean isApproved() {
-		return code == 1;
-	}
-
-	public boolean isRejected() {
-		return code == 2;
-	}
-
-	public VerificationStatus makeApproved() {
-		return VerificationStatus.APPROVED;
-	}
-
-	public VerificationStatus makePending() {
-		return VerificationStatus.PENDING;
-	}
+    fun makePending(): VerificationStatus {
+        return PENDING
+    }
 }
 
