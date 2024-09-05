@@ -1,10 +1,7 @@
 package com.cakk.common.response;
 
-import lombok.Getter;
-
 import com.cakk.common.enums.ReturnCode;
 
-@Getter
 public class ApiResponse<T> {
 
 	private String returnCode;
@@ -59,5 +56,17 @@ public class ApiResponse<T> {
 		response.data = errorMessage;
 
 		return response;
+	}
+
+	public String getReturnCode() {
+		return returnCode;
+	}
+
+	public String getReturnMessage() {
+		return returnMessage;
+	}
+
+	public T getData() {
+		return data;
 	}
 }
