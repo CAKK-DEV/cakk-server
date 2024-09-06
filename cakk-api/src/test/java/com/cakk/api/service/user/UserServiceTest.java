@@ -17,7 +17,7 @@ import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserCommandFacade;
+import com.cakk.domain.mysql.facade.user.UserManagerFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
@@ -30,7 +30,7 @@ class UserServiceTest extends ServiceTest {
 	private UserReader userReader;
 
 	@Mock
-	private UserCommandFacade userCommandFacade;
+	private UserManagerFacade userManagerFacade;
 
 	@TestWithDisplayName("유저 프로필을 조회한다.")
 	void findProfile1() {
@@ -100,7 +100,7 @@ class UserServiceTest extends ServiceTest {
 		Assertions.assertDoesNotThrow(() -> userService.withdraw(user));
 
 		verify(userReader, times(1)).findByIdWithAll(user.getId());
-		verify(userCommandFacade, times(1)).withdraw(any(), any());
+		verify(userManagerFacade, times(1)).withdraw(any(), any());
 	}
 
 	@TestWithDisplayName("유저가 없는 경우, 탈퇴에 실패한다.")
@@ -116,6 +116,6 @@ class UserServiceTest extends ServiceTest {
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
 		verify(userReader, times(1)).findByIdWithAll(user.getId());
-		verify(userCommandFacade, never()).withdraw(any(), any());
+		verify(userManagerFacade, never()).withdraw(any(), any());
 	}
 }

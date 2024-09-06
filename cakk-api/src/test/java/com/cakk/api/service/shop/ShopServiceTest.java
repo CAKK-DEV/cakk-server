@@ -40,9 +40,9 @@ import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
+import com.cakk.domain.mysql.facade.shop.CakeShopManagerFacade;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
-import com.cakk.domain.mysql.repository.writer.CakeShopWriter;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
@@ -58,7 +58,7 @@ public class ShopServiceTest extends ServiceTest {
 	private CakeShopReader cakeShopReader;
 
 	@Mock
-	private CakeShopWriter cakeShopWriter;
+	private CakeShopManagerFacade cakeShopManagerFacade;
 
 	@Mock
 	private CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
@@ -203,7 +203,7 @@ public class ShopServiceTest extends ServiceTest {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
 		CakeShop cakeShop = getCakeShopFixture();
-		when(cakeShopWriter.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
+		when(cakeShopManagerFacade.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
 			.thenReturn(cakeShop);
 
 		//when
@@ -211,7 +211,7 @@ public class ShopServiceTest extends ServiceTest {
 
 		//verify
 		assertEquals(response.cakeShopId(), cakeShop.getId());
-		verify(cakeShopWriter, times(1))
+		verify(cakeShopManagerFacade, times(1))
 			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList());
 	}
 

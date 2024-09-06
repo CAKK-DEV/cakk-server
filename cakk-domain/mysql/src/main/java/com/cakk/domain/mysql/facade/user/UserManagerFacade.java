@@ -14,7 +14,7 @@ import com.cakk.domain.mysql.repository.jpa.UserWithdrawalJpaRepository;
 
 @RequiredArgsConstructor
 @DomainFacade
-public class UserCommandFacade {
+public class UserManagerFacade {
 
 	private final UserJpaRepository userJpaRepository;
 	private final UserWithdrawalJpaRepository userWithdrawalJpaRepository;
