@@ -76,7 +76,7 @@ public class CakeShop extends AuditEntity {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
-	@OneToOne(mappedBy = "cakeShop")
+	@OneToOne(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
 	private BusinessInformation businessInformation;
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -143,27 +143,19 @@ public class CakeShop extends AuditEntity {
 		return shopHearts.stream().anyMatch(it -> it.getUser().equals(user));
 	}
 
-	private void increaseLikeCount() {
-		this.likeCount++;
-	}
-
-	private void increaseHeartCount() {
-		this.heartCount++;
-	}
-
-	private void decreaseHeartCount() {
-		if (this.heartCount == 0) {
-			throw new CakkException(ReturnCode.INTERNAL_SERVER_ERROR);
-		}
-
-		this.heartCount--;
-	}
-
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
 		thumbnailUrl = param.thumbnailUrl();
 		shopName = param.shopName();
 		shopBio = param.shopBio();
 		shopDescription = param.shopDescription();
+	}
+
+	public void registerBusinessInformation(final BusinessInformation businessInformation) {
+		this.businessInformation = businessInformation;
+	}
+
+	public void addShopLinks(final List<CakeShopLink> cakeShopLinks) {
+		this.cakeShopLinks.addAll(cakeShopLinks);
 	}
 
 	public void updateShopLinks(final List<CakeShopLink> cakeShopLinks) {
@@ -180,6 +172,10 @@ public class CakeShop extends AuditEntity {
 		location = param.location();
 	}
 
+	public void addShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {
+		this.cakeShopOperations.addAll(cakeShopOperations);
+	}
+
 	public void updateShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {
 		this.cakeShopOperations.clear();
 
@@ -192,5 +188,21 @@ public class CakeShop extends AuditEntity {
 	public void registerCake(final Cake cake) {
 		cake.updateCakeShop(this);
 		this.cakes.add(cake);
+	}
+
+	private void increaseLikeCount() {
+		this.likeCount++;
+	}
+
+	private void increaseHeartCount() {
+		this.heartCount++;
+	}
+
+	private void decreaseHeartCount() {
+		if (this.heartCount == 0) {
+			throw new CakkException(ReturnCode.INTERNAL_SERVER_ERROR);
+		}
+
+		this.heartCount--;
 	}
 }

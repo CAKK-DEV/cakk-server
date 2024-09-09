@@ -15,7 +15,7 @@ public class VerificationStatusConverter implements AttributeConverter<Verificat
 			return null;
 		}
 
-		return verificationStatus.getCode();
+		return verificationStatus.code;
 	}
 
 	@Override
@@ -25,9 +25,8 @@ public class VerificationStatusConverter implements AttributeConverter<Verificat
 		}
 
 		return Stream.of(VerificationStatus.values())
-			.filter(verificationStatus -> verificationStatus.getCode().equals(code))
+			.filter(verificationStatus -> verificationStatus.code == code)
 			.findFirst()
 			.orElseThrow(() -> new CakkException(ReturnCode.INTERNAL_SERVER_ERROR));
 	}
 }
-

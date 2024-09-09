@@ -8,28 +8,26 @@ import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * Indicates that an annotated class is a "Service" (e.g. a domain service object).
  *
- * <p>This annotation serves as a specialization of {@link Service @Service},
+ * <p>This annotation serves as a specialization of {@link Component @Component},
  * allowing for implementation classes to be autodetected through classpath scanning.
  *
  * @author komment
  * @see Component
- * @see Service
  */
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Service
+@Component
 public @interface DomainFacade {
 
 	/**
-	 * Alias for {@link Service#value}.
+	 * Alias for {@link Component#value}.
 	 */
-	@AliasFor(annotation = Service.class)
+	@AliasFor(annotation = Component.class)
 	String value() default "";
 }

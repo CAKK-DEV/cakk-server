@@ -23,14 +23,14 @@ import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeUpdateParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
+import com.cakk.domain.mysql.entity.cake.CakeCategory;
 import com.cakk.domain.mysql.entity.cake.Tag;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.domain.mysql.facade.cake.CakeManagerFacade;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.TagReader;
-import com.cakk.domain.mysql.repository.writer.CakeWriter;
-import com.cakk.domain.mysql.repository.writer.TagWriter;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @Transactional(readOnly = true)
@@ -39,12 +39,10 @@ import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 public class CakeService {
 
 	private final CakeReader cakeReader;
-	private final CakeWriter cakeWriter;
 	private final TagReader tagReader;
-	private final TagWriter tagWriter;
 	private final CakeShopReader cakeShopReader;
 	private final CakeViewsRedisRepository cakeViewsRedisRepository;
-
+	private final CakeManagerFacade cakeManagerFacade;
 	private final ApplicationEventPublisher publisher;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
@@ -92,37 +90,28 @@ public class CakeService {
 
 	@Transactional
 	public void createCake(CakeCreateParam param) {
-		CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.owner());
-		Cake cake = param.cake();
-		List<Tag> tags = param.tagNames()
-			.stream()
-			.map(tagName -> tagReader.findByTagName(tagName).orElseGet(() -> tagWriter.saveTag(tagName)))
-			.toList();
+		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.owner());
+		final Cake cake = param.cake();
+		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
+		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cake.registerTags(tags);
-		cake.registerCategories(param.cakeCategories());
-		cakeShop.registerCake(cake);
+		cakeManagerFacade.create(cakeShop, cake, tags, cakeCategories);
 	}
 
 	@Transactional
 	public void updateCake(CakeUpdateParam param) {
 		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(param.cakeId(), param.owner());
-		List<Tag> tags = param.tagNames()
-			.stream()
-			.map(tagName -> tagReader.findByTagName(tagName).orElseGet(() -> tagWriter.saveTag(tagName)))
-			.toList();
+		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
+		final String cakeImageUrl = param.cakeImageUrl();
+		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cake.updateCakeImageUrl(param.cakeImageUrl());
-		cake.updateCakeCategories(param.cakeCategories());
-		cake.updateCakeTags(tags);
+		cakeManagerFacade.update(cake, cakeImageUrl, tags, cakeCategories);
 	}
 
 	@Transactional
 	public void deleteCake(User owner, Long cakeId) {
 		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(cakeId, owner);
 
-		cake.removeCakeCategories();
-		cake.removeCakeTags();
-		cakeWriter.deleteCake(cake);
+		cakeManagerFacade.delete(cake);
 	}
 }
