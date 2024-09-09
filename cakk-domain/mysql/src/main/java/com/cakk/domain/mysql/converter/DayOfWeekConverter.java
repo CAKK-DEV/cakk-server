@@ -26,7 +26,7 @@ public class DayOfWeekConverter implements AttributeConverter<Days, Integer> {
 		}
 
 		return Stream.of(Days.values())
-			.filter(days -> days.getCode().equals(code))
+			.filter(days -> days.getCode() == code)
 			.findFirst()
 			.orElseThrow(() -> new CakkException(ReturnCode.INTERNAL_SERVER_ERROR));
 	}
