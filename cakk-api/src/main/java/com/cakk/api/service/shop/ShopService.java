@@ -33,7 +33,6 @@ import com.cakk.api.mapper.BusinessInformationMapper;
 import com.cakk.api.mapper.LinkMapper;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
-import com.cakk.common.enums.RedisKey;
 import com.cakk.domain.mysql.bo.CakeShops;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
@@ -72,8 +71,6 @@ public class ShopService {
 
 	private final VerificationPolicy verificationPolicy;
 	private final ApplicationEventPublisher publisher;
-
-	private final String SEARCH_BEST_CAKE_SHOP = RedisKey.SEARCH_BEST_CAKE_SHOP.getValue();
 
 	@Transactional
 	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopRequest request) {
@@ -186,7 +183,7 @@ public class ShopService {
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}
 
-	@Cacheable(cacheNames = "SEARCH::best-cake-shop", key = "'::' + #dto.offset + '_' + #dto.pageSize", cacheManager = "redisCacheManager")
+	@Cacheable(cacheNames = "SEARCH::best-cake-shop", key = "'::' + #dto.offset + '_' + #dto.pageSize")
 	@Transactional(readOnly = true)
 	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(final CakeShopSearchByViewsRequest dto) {
 		final long offset = isNull(dto.offset()) ? 0 : dto.offset();

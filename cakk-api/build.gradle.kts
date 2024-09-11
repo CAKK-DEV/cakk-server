@@ -43,6 +43,8 @@ dependencies {
 
 	// Slack
 	implementation("net.gpedro.integrations.slack:slack-webhook:1.4.0")
+
+	implementation("org.springframework.data:spring-data-redis:3.3.3")
 }
 
 tasks.bootJar {
