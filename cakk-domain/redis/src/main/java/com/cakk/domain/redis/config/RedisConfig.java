@@ -2,6 +2,7 @@ package com.cakk.domain.redis.config;
 
 import static java.util.Objects.*;
 
+import java.time.Duration;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -73,7 +74,6 @@ public class RedisConfig {
 		final Config config = new Config();
 
 		SingleServerConfig ssc = config.useSingleServer();
-
 		ssc.setAddress(address);
 
 		final String profile = System.getProperty("spring.profiles.active");
@@ -87,15 +87,11 @@ public class RedisConfig {
 	@Bean
 	public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
 		RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-			.serializeKeysWith(
-				RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-			)
-			.serializeValuesWith(
-				RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())
-			);
+			.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+			.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+			.entryTtl(Duration.ofMinutes(15L));
 
-		return RedisCacheManager
-			.RedisCacheManagerBuilder
+		return RedisCacheManager.RedisCacheManagerBuilder
 			.fromConnectionFactory(redisConnectionFactory)
 			.cacheDefaults(redisCacheConfiguration)
 			.build();

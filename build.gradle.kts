@@ -61,7 +61,27 @@ subprojects {
 				jvmTarget.set(JvmTarget.JVM_21)
 			}
 		}
-	} else {
+	} else if(project.name == "cakk-api") {
+		apply(plugin = "org.jetbrains.kotlin.jvm")
+		apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+		apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
+
+		dependencies {
+			implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+			implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+			compileOnly("org.projectlombok:lombok")
+			annotationProcessor("org.projectlombok:lombok")
+		}
+
+		tasks.withType<KotlinCompile> {
+			compilerOptions {
+				freeCompilerArgs.add("-Xjsr305=strict")
+				jvmTarget.set(JvmTarget.JVM_21)
+			}
+		}
+	}else {
 		dependencies {
 			compileOnly("org.projectlombok:lombok")
 			annotationProcessor("org.projectlombok:lombok")
