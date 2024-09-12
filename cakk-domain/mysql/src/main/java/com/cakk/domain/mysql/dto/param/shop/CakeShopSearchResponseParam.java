@@ -10,5 +10,4 @@ public record CakeShopSearchResponseParam(
 	Set<String> cakeImageUrls,
 	Set<CakeShopOperationParam> operationDays
 ) {
-
 }

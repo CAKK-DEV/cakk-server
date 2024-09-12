@@ -148,11 +148,11 @@ public class ShopMapper {
 			.map(ShopMapper::supplyCakeShopSearchResponseParamListBy)
 			.toList();
 
-		return CakeShopSearchResponse.builder()
-			.cakeShops(cakeShopSearchResponseParams)
-			.lastCakeShopId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId())
-			.size(cakeShops.size())
-			.build();
+		return new CakeShopSearchResponse(
+			cakeShopSearchResponseParams,
+			cakeShops.isEmpty() ? null : cakeShops.get(size - 1).getCakeShopId(),
+			cakeShops.size()
+		);
 	}
 
 	public static HeartCakeShopListResponse supplyHeartCakeShopListResponseBy(final List<HeartCakeShopResponseParam> cakeShops) {

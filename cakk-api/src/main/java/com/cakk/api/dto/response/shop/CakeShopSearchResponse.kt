@@ -1,15 +1,12 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.api.dto.response.shop
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 
-import lombok.Builder;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam
 
-import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
-
-@Builder
-public record CakeShopSearchResponse(
-	List<CakeShopSearchResponseParam> cakeShops,
-	Long lastCakeShopId,
-	int size
-) {
-}
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+data class CakeShopSearchResponse(
+	val cakeShops: List<CakeShopSearchResponseParam>,
+	val lastCakeShopId: Long?,
+	val size: Int
+)
