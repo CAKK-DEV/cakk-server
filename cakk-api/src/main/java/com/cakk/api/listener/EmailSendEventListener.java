@@ -10,7 +10,7 @@ import com.cakk.api.mapper.EventMapper;
 import com.cakk.external.extractor.MessageExtractor;
 import com.cakk.external.sender.MessageSender;
 import com.cakk.external.template.MessageTemplate;
-import com.cakk.external.vo.VerificationMessage;
+import com.cakk.external.vo.message.VerificationMessage;
 
 @ApplicationEventListener
 public class EmailSendEventListener {

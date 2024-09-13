@@ -11,7 +11,7 @@ import com.cakk.api.mapper.EventMapper;
 import com.cakk.external.extractor.MessageExtractor;
 import com.cakk.external.sender.MessageSender;
 import com.cakk.external.template.MessageTemplate;
-import com.cakk.external.vo.ErrorAlertMessage;
+import com.cakk.external.vo.message.ErrorAlertMessage;
 
 @ApplicationEventListener
 public class ErrorAlertEventListener {

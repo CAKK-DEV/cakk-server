@@ -4,7 +4,6 @@ dependencies {
 	implementation(project(":cakk-common"))
 	implementation(project(":cakk-domain:mysql"))
 	implementation(project(":cakk-domain:redis"))
-	implementation(project(":cakk-client"))
 	implementation(project(":cakk-external"))
 	implementation(project(":cakk-core"))
 

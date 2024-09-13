@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
-import com.cakk.external.vo.VerificationMessage
+import com.cakk.external.vo.message.VerificationMessage
 
 @Component
 class VerificationCodeMimeMessageExtractor(

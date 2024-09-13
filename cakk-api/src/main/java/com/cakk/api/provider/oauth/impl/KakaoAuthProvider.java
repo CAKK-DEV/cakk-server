@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.provider.oauth.OidcProvider;
 import com.cakk.api.provider.oauth.PublicKeyProvider;
-import com.cakk.client.vo.OidcPublicKeyList;
-import com.cakk.client.web.KakaoAuthClient;
+import com.cakk.external.client.KakaoAuthClient;
+import com.cakk.external.vo.key.OidcPublicKeyList;
 
 @Component
 @RequiredArgsConstructor

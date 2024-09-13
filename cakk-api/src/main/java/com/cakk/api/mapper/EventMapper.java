@@ -12,9 +12,9 @@ import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
 import com.cakk.api.dto.event.ErrorAlertEvent;
 import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.external.vo.CertificationMessage;
-import com.cakk.external.vo.ErrorAlertMessage;
-import com.cakk.external.vo.VerificationMessage;
+import com.cakk.external.vo.message.CertificationMessage;
+import com.cakk.external.vo.message.ErrorAlertMessage;
+import com.cakk.external.vo.message.VerificationMessage;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {

@@ -1,4 +1,4 @@
-package com.cakk.external.vo
+package com.cakk.external.vo.message
 
 data class CertificationMessage(
     val businessRegistrationImageUrl: String,

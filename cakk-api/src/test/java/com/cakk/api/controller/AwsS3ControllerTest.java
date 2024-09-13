@@ -8,7 +8,7 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockMvcTest;
-import com.cakk.external.vo.PresignedUrl;
+import com.cakk.external.vo.s3.PresignedUrl;
 
 public class AwsS3ControllerTest extends MockMvcTest {
 

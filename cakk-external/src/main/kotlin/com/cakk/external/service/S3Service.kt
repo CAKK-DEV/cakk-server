@@ -13,7 +13,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
-import com.cakk.external.vo.PresignedUrl
+import com.cakk.external.vo.s3.PresignedUrl
 
 @Service
 class S3Service(
