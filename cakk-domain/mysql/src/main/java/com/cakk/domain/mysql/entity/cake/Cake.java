@@ -97,25 +97,12 @@ public class Cake extends AuditEntity {
 
 	public void updateCakeCategories(final List<CakeCategory> cakeCategories) {
 		this.cakeCategories.clear();
-
-		cakeCategories.forEach(cakeCategory -> {
-			cakeCategory.updateCake(this);
-			this.cakeCategories.add(cakeCategory);
-		});
+		registerCategories(cakeCategories);
 	}
 
 	public void updateCakeTags(final List<Tag> tags) {
 		this.cakeTags.clear();
-
-		tags.forEach(tag -> this.cakeTags.add(CakeTagMapper.supplyCakeTagBy(this, tag)));
-	}
-
-	public void removeCakeCategories() {
-		this.cakeCategories.clear();
-	}
-
-	public void removeCakeTags() {
-		this.cakeTags.clear();
+		registerTags(tags);
 	}
 
 	public void registerTags(final List<Tag> tags) {

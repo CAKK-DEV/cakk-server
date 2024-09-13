@@ -180,6 +180,14 @@ public class CakeQueryRepository {
 			.fetchOne();
 	}
 
+	public Cake searchByIdWithCategories(final Long cakeId) {
+		return queryFactory
+			.selectFrom(cake)
+			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
+			.where(cake.id.eq(cakeId))
+			.fetchOne();
+	}
+
 	private BooleanExpression ltCakeId(final Long cakeId) {
 		if (isNull(cakeId)) {
 			return null;
