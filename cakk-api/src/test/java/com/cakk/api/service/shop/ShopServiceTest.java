@@ -31,6 +31,7 @@ import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.shop.CakeShopManageFacade;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -40,7 +41,6 @@ import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.domain.mysql.facade.shop.CakeShopManagerFacade;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
@@ -58,7 +58,7 @@ public class ShopServiceTest extends ServiceTest {
 	private CakeShopReader cakeShopReader;
 
 	@Mock
-	private CakeShopManagerFacade cakeShopManagerFacade;
+	private CakeShopManageFacade cakeShopManageFacade;
 
 	@Mock
 	private CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
@@ -203,7 +203,7 @@ public class ShopServiceTest extends ServiceTest {
 		//given
 		CreateShopRequest request = getCreateShopRequestFixture();
 		CakeShop cakeShop = getCakeShopFixture();
-		when(cakeShopManagerFacade.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
+		when(cakeShopManageFacade.create(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
 			.thenReturn(cakeShop);
 
 		//when
@@ -211,8 +211,8 @@ public class ShopServiceTest extends ServiceTest {
 
 		//verify
 		assertEquals(response.cakeShopId(), cakeShop.getId());
-		verify(cakeShopManagerFacade, times(1))
-			.createCakeShop(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList());
+		verify(cakeShopManageFacade, times(1))
+			.create(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList());
 	}
 
 	@TestWithDisplayName("userId와 cakeShopId가 존재한다면, 해당 userId의 사용자는 Owner로 승격된다")

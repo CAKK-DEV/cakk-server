@@ -11,9 +11,9 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
+import com.cakk.core.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 @DisplayName("좋아요 기능 관련 비즈니스 로직 테스트")
 public class LikeServiceTest extends ServiceTest {

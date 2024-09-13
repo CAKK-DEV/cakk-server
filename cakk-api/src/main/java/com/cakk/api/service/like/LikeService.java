@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.DistributedLock;
+import com.cakk.core.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 
 @Service

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ComponentScan(basePackages = [
 	"com.cakk.domain",
+	"com.cakk.core",
 	"com.cakk.admin"
 ])
 class ComponentScanConfig

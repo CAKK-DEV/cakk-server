@@ -16,8 +16,8 @@ import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserManagerFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
@@ -30,7 +30,7 @@ class UserServiceTest extends ServiceTest {
 	private UserReader userReader;
 
 	@Mock
-	private UserManagerFacade userManagerFacade;
+	private UserManageFacade userManagerFacade;
 
 	@TestWithDisplayName("유저 프로필을 조회한다.")
 	void findProfile1() {

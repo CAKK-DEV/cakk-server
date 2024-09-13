@@ -6,23 +6,23 @@ import org.springframework.transaction.annotation.Transactional
 import com.cakk.admin.dto.param.CakeShopCreateByAdminParam
 import com.cakk.admin.dto.response.CakeShopCreateResponse
 import com.cakk.admin.mapper.supplyCakeShopCreateResponseBy
+import com.cakk.core.facade.shop.CakeShopManageFacade
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
 import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.facade.shop.CakeShopManagerFacade
 import com.cakk.domain.mysql.repository.reader.CakeShopReader
 
 @Service
 class ShopService(
     private val cakeShopReader: CakeShopReader,
-	private val cakeShopManagerFacade: CakeShopManagerFacade
+	private val cakeShopManageFacade: CakeShopManageFacade
 ) {
 
     @Transactional
     fun createCakeShopByCertification(dto: CakeShopCreateByAdminParam): CakeShopCreateResponse {
-        val result: CakeShop = cakeShopManagerFacade.createCakeShop(
+        val result: CakeShop = cakeShopManageFacade.create(
             dto.cakeShop,
             dto.cakeShopOperations,
             dto.businessInformation,

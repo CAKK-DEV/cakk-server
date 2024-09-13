@@ -18,6 +18,7 @@ import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.core.facade.cake.CakeManageFacade;
 import com.cakk.domain.mysql.dto.param.cake.CakeCreateParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
@@ -27,7 +28,6 @@ import com.cakk.domain.mysql.entity.cake.CakeCategory;
 import com.cakk.domain.mysql.entity.cake.Tag;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.cake.CakeManagerFacade;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.mysql.repository.reader.TagReader;
@@ -42,7 +42,7 @@ public class CakeService {
 	private final TagReader tagReader;
 	private final CakeShopReader cakeShopReader;
 	private final CakeViewsRedisRepository cakeViewsRedisRepository;
-	private final CakeManagerFacade cakeManagerFacade;
+	private final CakeManageFacade cakeManageFacade;
 	private final ApplicationEventPublisher publisher;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
@@ -95,7 +95,7 @@ public class CakeService {
 		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cakeManagerFacade.create(cakeShop, cake, tags, cakeCategories);
+		cakeManageFacade.create(cakeShop, cake, tags, cakeCategories);
 	}
 
 	@Transactional
@@ -105,13 +105,13 @@ public class CakeService {
 		final String cakeImageUrl = param.cakeImageUrl();
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
-		cakeManagerFacade.update(cake, cakeImageUrl, tags, cakeCategories);
+		cakeManageFacade.update(cake, cakeImageUrl, tags, cakeCategories);
 	}
 
 	@Transactional
 	public void deleteCake(User owner, Long cakeId) {
 		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(cakeId, owner);
 
-		cakeManagerFacade.delete(cake);
+		cakeManageFacade.delete(cake);
 	}
 }
