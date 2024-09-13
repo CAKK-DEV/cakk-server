@@ -43,6 +43,7 @@ subprojects {
 
 	if (project.name == "cakk-admin" ||
 		project.name == "cakk-external" ||
+		project.name == "cakk-core" ||
 		project.name == "cakk-common"
 	) {
 		apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -119,6 +120,7 @@ subprojects {
 			"com.cakk.api.mapper.**",
 			"com.cakk.api.listener.**",
 			"com.cakk.api.vo.**",
+			"com.cakk.core.**",
 			"com.cakk.domain.**"
 		)
 

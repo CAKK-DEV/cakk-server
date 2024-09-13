@@ -57,6 +57,7 @@ jobs:
         with:
           files: |
             ./cakk-api/build/test-results/**/*.xml
+            ./cakk-core/build/test-results/**/*.xml
             ./cakk-domain/mysql/build/test-results/**/*.xml
 
       - name: Upload test coverage

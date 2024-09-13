@@ -13,8 +13,8 @@ import com.cakk.api.mapper.UserMapper;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserManagerFacade;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
@@ -26,13 +26,13 @@ public class SignService {
 	private final JwtProvider jwtProvider;
 
 	private final UserReader userReader;
-	private final UserManagerFacade userManagerFacade;
+	private final UserManageFacade userManageFacade;
 	private final TokenRedisRepository tokenRedisRepository;
 
 	@Transactional
 	public JwtResponse signUp(final UserSignUpRequest dto) {
 		final String providerId = oidcProviderFactory.getProviderId(dto.provider(), dto.idToken());
-		final User user = userManagerFacade.create(UserMapper.supplyUserBy(dto, providerId));
+		final User user = userManageFacade.create(UserMapper.supplyUserBy(dto, providerId));
 
 		return JwtResponse.from(jwtProvider.generateToken(user));
 	}

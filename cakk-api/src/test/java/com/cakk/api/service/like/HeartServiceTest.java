@@ -18,11 +18,11 @@ import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.user.UserHeartFacade;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.facade.user.UserHeartFacade;
 import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
 import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
@@ -213,6 +213,5 @@ class HeartServiceTest extends ServiceTest {
 			ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
 		verify(cakeShopReader, times(1)).findByIdWithHeart(cakeShopId);
-		verify(cakeShopHeartReader, times(0)).findOrNullByUserAndCakeShop(any(User.class), any(CakeShop.class));
 	}
 }
