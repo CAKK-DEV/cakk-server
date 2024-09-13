@@ -42,7 +42,9 @@ public class AppleAuthProviderTest extends MockitoTest {
 	@TestWithDisplayName("id token으로 제공자 id를 가져온다.")
 	void getProviderId() {
 		// given
-		OidcPublicKeyList oidcPublicKeyList = getConstructorMonkey().giveMeOne(OidcPublicKeyList.class);
+		OidcPublicKeyList oidcPublicKeyList = getConstructorMonkey().giveMeBuilder(OidcPublicKeyList.class)
+			.set("keys", Arbitraries.of(getOidcPublicKeyFixture()).list().ofMinSize(1).ofMaxSize(10))
+			.sample();
 		PublicKey publicKey = getConstructorMonkey().giveMeOne(PublicKey.class);
 		DefaultClaims claims = getConstructorMonkey().giveMeBuilder(DefaultClaims.class)
 			.set("sub", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample())

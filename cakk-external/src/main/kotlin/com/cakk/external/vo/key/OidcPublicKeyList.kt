@@ -3,7 +3,6 @@ package com.cakk.external.vo.key
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 
-@JvmRecord
 data class OidcPublicKeyList(
 	val keys: List<OidcPublicKey>
 ) {
