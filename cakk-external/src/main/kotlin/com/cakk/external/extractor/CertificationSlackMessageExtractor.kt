@@ -4,7 +4,7 @@ import net.gpedro.integrations.slack.SlackAttachment
 import net.gpedro.integrations.slack.SlackField
 import net.gpedro.integrations.slack.SlackMessage
 
-import com.cakk.external.vo.CertificationMessage
+import com.cakk.external.vo.message.CertificationMessage
 
 class CertificationSlackMessageExtractor : SlackMessageExtractor<CertificationMessage> {
 

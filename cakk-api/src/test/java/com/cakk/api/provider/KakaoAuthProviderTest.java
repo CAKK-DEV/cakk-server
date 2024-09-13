@@ -17,10 +17,10 @@ import com.cakk.api.common.base.MockitoTest;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.provider.oauth.PublicKeyProvider;
 import com.cakk.api.provider.oauth.impl.KakaoAuthProvider;
-import com.cakk.client.vo.OidcPublicKeyList;
-import com.cakk.client.web.KakaoAuthClient;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.external.client.KakaoAuthClient;
+import com.cakk.external.vo.key.OidcPublicKeyList;
 
 class KakaoAuthProviderTest extends MockitoTest {
 

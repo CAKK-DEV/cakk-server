@@ -11,7 +11,7 @@ import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.external.extractor.MessageExtractor;
 import com.cakk.external.sender.MessageSender;
 import com.cakk.external.template.MessageTemplate;
-import com.cakk.external.vo.CertificationMessage;
+import com.cakk.external.vo.message.CertificationMessage;
 
 @ApplicationEventListener
 public class CertificationEventListener {

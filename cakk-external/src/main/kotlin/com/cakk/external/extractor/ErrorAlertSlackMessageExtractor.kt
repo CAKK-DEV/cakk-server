@@ -1,6 +1,6 @@
 package com.cakk.external.extractor
 
-import com.cakk.external.vo.ErrorAlertMessage
+import com.cakk.external.vo.message.ErrorAlertMessage
 import net.gpedro.integrations.slack.SlackAttachment
 import net.gpedro.integrations.slack.SlackField
 import net.gpedro.integrations.slack.SlackMessage

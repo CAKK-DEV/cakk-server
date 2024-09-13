@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper
 
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
-import com.cakk.external.vo.VerificationMessage
+import com.cakk.external.vo.message.VerificationMessage
 
 class VerificationCodeMimeMessageExtractor(
 	private val mailSender: JavaMailSender,
