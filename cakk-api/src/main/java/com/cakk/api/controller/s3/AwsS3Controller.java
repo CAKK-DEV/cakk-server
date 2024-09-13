@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.response.ApiResponse;
 import com.cakk.external.service.S3Service;
-import com.cakk.external.vo.PresignedUrl;
+import com.cakk.external.vo.s3.PresignedUrl;
 
 @RestController
 @RequiredArgsConstructor

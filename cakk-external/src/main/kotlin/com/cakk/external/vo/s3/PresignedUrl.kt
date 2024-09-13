@@ -1,4 +1,4 @@
-package com.cakk.external.vo
+package com.cakk.external.vo.s3
 
 data class PresignedUrl(
 	val imagePath: String,
