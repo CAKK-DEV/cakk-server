@@ -14,6 +14,7 @@ import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
@@ -25,7 +26,7 @@ public class SignService {
 	private final OidcProviderFactory oidcProviderFactory;
 	private final JwtProvider jwtProvider;
 
-	private final UserReader userReader;
+	private final UserReadFacade userReadFacade;
 	private final UserManageFacade userManageFacade;
 	private final TokenRedisRepository tokenRedisRepository;
 
@@ -40,7 +41,7 @@ public class SignService {
 	@Transactional(readOnly = true)
 	public JwtResponse signIn(final UserSignInRequest dto) {
 		final String providerId = oidcProviderFactory.getProviderId(dto.provider(), dto.idToken());
-		final User user = userReader.findByProviderId(providerId);
+		final User user = userReadFacade.findByProviderId(providerId);
 
 		return JwtResponse.from(jwtProvider.generateToken(user));
 	}
