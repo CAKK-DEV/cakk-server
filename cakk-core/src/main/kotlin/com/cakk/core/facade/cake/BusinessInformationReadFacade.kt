@@ -1,16 +1,22 @@
 package com.cakk.core.facade.cake
 
-import com.cakk.domain.mysql.annotation.Reader
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.enums.VerificationStatus
+import com.cakk.common.exception.CakkException
+import com.cakk.core.annotation.DomainFacade
+import com.cakk.domain.mysql.entity.user.BusinessInformation
 import com.cakk.domain.mysql.entity.user.User
-import java.util.function.Supplier
+import com.cakk.domain.mysql.repository.jpa.BusinessInformationJpaRepository
 
-class BusinessInformationReader {
-    private val businessInformationJpaRepository: BusinessInformationJpaRepository? = null
-    fun isExistBusinessInformation(owner: User?, cakeShopId: Long?): Boolean {
+@DomainFacade
+class BusinessInformationReadFacade(
+	private val businessInformationJpaRepository: BusinessInformationJpaRepository
+) {
+    fun isExistBusinessInformation(owner: User, cakeShopId: Long): Boolean {
         return businessInformationJpaRepository.existsBusinessInformationByUserAndCakeShop_Id(owner, cakeShopId)
     }
 
-    fun findAllWithCakeShopByUser(owner: User?): List<BusinessInformation> {
+    fun findAllWithCakeShopByUser(owner: User): List<BusinessInformation> {
         return businessInformationJpaRepository.findAllWithCakeShopByUser(owner)
     }
 
@@ -18,8 +24,7 @@ class BusinessInformationReader {
         return businessInformationJpaRepository.findAllCakeShopBusinessOwnerCandidates(VerificationStatus.PENDING)
     }
 
-    fun findByUserId(userId: Long?): BusinessInformation {
-        return businessInformationJpaRepository.findBusinessInformationByUserId(userId)
-                .orElseThrow<CakkException>(Supplier<CakkException> { CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP) })
+    fun findByUserId(userId: Long): BusinessInformation {
+        return businessInformationJpaRepository.findBusinessInformationByUserId(userId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
     }
 }

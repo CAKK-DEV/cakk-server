@@ -1,16 +1,30 @@
 package com.cakk.core.facade.cake
 
-import com.cakk.domain.mysql.annotation.Reader
+import com.cakk.common.enums.CakeDesignCategory
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.core.annotation.DomainFacade
+import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
+import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam
+import com.cakk.domain.mysql.entity.cake.Cake
+import com.cakk.domain.mysql.entity.cake.CakeCategory
 import com.cakk.domain.mysql.entity.user.User
+import com.cakk.domain.mysql.repository.jpa.CakeCategoryJpaRepository
+import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository
+import com.cakk.domain.mysql.repository.query.CakeQueryRepository
 import java.util.*
 import java.util.function.Supplier
 
-class CakeReader {
-    private val cakeJpaRepository: CakeJpaRepository? = null
-    private val cakeQueryRepository: CakeQueryRepository? = null
-    fun findById(cakeId: Long?): Cake {
-        return cakeJpaRepository.findById(cakeId).orElseThrow<CakkException>(Supplier<CakkException> { CakkException(ReturnCode.NOT_EXIST_CAKE) })
-    }
+@DomainFacade
+class CakeReadFacade(
+	private val cakeJpaRepository: CakeJpaRepository,
+	private val cakeCategoryJpaRepository: CakeCategoryJpaRepository,
+	private val cakeQueryRepository: CakeQueryRepository
+) {
+    fun findById(cakeId: Long): Cake {
+        return cakeJpaRepository.findById(cakeId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE) }
+	}
 
     fun findByIdWithHeart(cakeId: Long?): Cake {
         val cake: Cake = cakeQueryRepository.searchByIdWithHeart(cakeId)
@@ -21,9 +35,9 @@ class CakeReader {
     }
 
     fun searchCakeImagesByCursorAndCategory(
-            cakeId: Long?,
-            category: CakeDesignCategory?,
-            pageSize: Int
+		cakeId: Long?,
+		category: CakeDesignCategory,
+		pageSize: Int
     ): List<CakeImageResponseParam> {
         return cakeQueryRepository.searchCakeImagesByCursorAndCategory(cakeId, category, pageSize)
     }
@@ -51,8 +65,8 @@ class CakeReader {
 
     fun findWithCakeTagsAndCakeCategories(cakeId: Long?, owner: User?): Cake {
         return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
-                .orElseThrow<CakkException>(Supplier<CakkException> { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) })
-    }
+                .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	}
 
     fun searchCakeDetailById(cakeId: Long?): CakeDetailParam {
         val param: CakeDetailParam = cakeQueryRepository.searchCakeDetailById(cakeId)
@@ -61,4 +75,8 @@ class CakeReader {
         }
         return param
     }
+
+	fun findByCakeId(cakeId: Long?): CakeCategory {
+		return cakeCategoryJpaRepository.findByCakeId(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY)
+	}
 }
