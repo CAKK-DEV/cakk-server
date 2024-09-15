@@ -101,7 +101,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(5, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId);
 			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
 		});
 	}
@@ -132,7 +132,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(5, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId);
 			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
 		});
 	}
@@ -189,7 +189,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(3, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId());
+			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId);
 		});
 	}
 
@@ -219,7 +219,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(3, data.size());
 		data.cakeImages().forEach(cakeImage ->
-			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId())
+			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId)
 		);
 	}
 

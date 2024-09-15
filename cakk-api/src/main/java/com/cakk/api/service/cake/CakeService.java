@@ -90,20 +90,20 @@ public class CakeService {
 
 	@Transactional
 	public void createCake(CakeCreateParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.owner());
-		final Cake cake = param.cake();
-		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
-		final List<CakeCategory> cakeCategories = param.cakeCategories();
+		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId, param.owner);
+		final Cake cake = param.cake;
+		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames);
+		final List<CakeCategory> cakeCategories = param.cakeCategories;
 
 		cakeManageFacade.create(cakeShop, cake, tags, cakeCategories);
 	}
 
 	@Transactional
 	public void updateCake(CakeUpdateParam param) {
-		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(param.cakeId(), param.owner());
-		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
-		final String cakeImageUrl = param.cakeImageUrl();
-		final List<CakeCategory> cakeCategories = param.cakeCategories();
+		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(param.cakeId, param.owner);
+		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames);
+		final String cakeImageUrl = param.cakeImageUrl;
+		final List<CakeCategory> cakeCategories = param.cakeCategories;
 
 		cakeManageFacade.update(cake, cakeImageUrl, tags, cakeCategories);
 	}

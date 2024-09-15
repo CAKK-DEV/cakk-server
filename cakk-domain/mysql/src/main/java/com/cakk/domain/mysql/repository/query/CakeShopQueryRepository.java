@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
+import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
@@ -66,11 +66,11 @@ public class CakeShopQueryRepository {
 
 	public CakeShopSimpleParam searchSimpleById(Long cakeShopId) {
 		return queryFactory.select(Projections.constructor(CakeShopSimpleParam.class,
-				cakeShop.id,
-				cakeShop.thumbnailUrl,
-				cakeShop.shopName,
-				cakeShop.shopBio
-			))
+			cakeShop.id,
+			cakeShop.thumbnailUrl,
+			cakeShop.shopName,
+			cakeShop.shopBio
+		))
 			.from(cakeShop)
 			.where(eqCakeShopId(cakeShopId))
 			.fetchOne();
