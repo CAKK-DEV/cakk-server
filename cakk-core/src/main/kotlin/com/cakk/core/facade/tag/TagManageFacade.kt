@@ -11,9 +11,7 @@ class TagManageFacade(
 ) {
 
 	fun create(tagName: String): Tag {
-		return tagJpaRepository.findTagByTagName(tagName).orElseGet {
-			tagJpaRepository.save(TagMapper.supplyTagBy(tagName))
-		}
+		return tagJpaRepository.findTagByTagName(tagName) ?: tagJpaRepository.save(TagMapper.supplyTagBy(tagName))
 	}
 
 	fun createAll(tagNames: List<String>): List<Tag> {

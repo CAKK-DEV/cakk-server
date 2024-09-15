@@ -16,7 +16,6 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @Service
