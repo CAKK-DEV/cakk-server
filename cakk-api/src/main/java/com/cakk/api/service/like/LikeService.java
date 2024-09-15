@@ -9,7 +9,6 @@ import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 
 @Service
 @RequiredArgsConstructor

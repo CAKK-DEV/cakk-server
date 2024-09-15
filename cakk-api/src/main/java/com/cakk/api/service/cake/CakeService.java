@@ -31,9 +31,6 @@ import com.cakk.domain.mysql.entity.cake.CakeCategory;
 import com.cakk.domain.mysql.entity.cake.Tag;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.TagReader;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @Transactional(readOnly = true)
