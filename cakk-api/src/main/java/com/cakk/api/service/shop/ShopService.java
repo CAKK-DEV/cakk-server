@@ -93,15 +93,15 @@ public class ShopService {
 
 	@Transactional
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.user());
+		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId, param.user);
 
 		cakeShop.updateBasicInformation(param);
 	}
 
 	@Transactional
 	public void updateShopLinks(final UpdateLinkParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchWithShopLinks(param.user(), param.cakeShopId());
-		cakeShop.updateShopLinks(param.cakeShopLinks());
+		final CakeShop cakeShop = cakeShopReader.searchWithShopLinks(param.user, param.cakeShopId);
+		cakeShop.updateShopLinks(param.cakeShopLinks);
 	}
 
 	@Transactional
@@ -112,8 +112,8 @@ public class ShopService {
 
 	@Transactional
 	public void updateShopOperationDays(final UpdateShopOperationParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchWithOperations(param.user(), param.cakeShopId());
-		cakeShop.updateShopOperationDays(param.cakeShopOperations());
+		final CakeShop cakeShop = cakeShopReader.searchWithOperations(param.user, param.cakeShopId);
+		cakeShop.updateShopOperationDays(param.cakeShopOperations);
 	}
 
 	@Transactional(readOnly = true)
@@ -124,7 +124,8 @@ public class ShopService {
 
 	@Transactional
 	public void requestCertificationBusinessOwner(final CertificationParam param) {
-		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(param.cakeShopId());
+		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(
+			param.cakeShopId);
 		final CertificationEvent certificationEvent = verificationPolicy
 			.requestCertificationBusinessOwner(businessInformation, param);
 

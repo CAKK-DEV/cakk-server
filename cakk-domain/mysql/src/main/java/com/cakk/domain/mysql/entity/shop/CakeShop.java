@@ -144,10 +144,10 @@ public class CakeShop extends AuditEntity {
 	}
 
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
-		thumbnailUrl = param.thumbnailUrl();
-		shopName = param.shopName();
-		shopBio = param.shopBio();
-		shopDescription = param.shopDescription();
+		thumbnailUrl = param.getThumbnailUrl();
+		shopName = param.getShopName();
+		shopBio = param.getShopBio();
+		shopDescription = param.getShopDescription();
 	}
 
 	public void registerBusinessInformation(final BusinessInformation businessInformation) {
@@ -168,8 +168,8 @@ public class CakeShop extends AuditEntity {
 	}
 
 	public void updateShopAddress(final UpdateShopAddressParam param) {
-		shopAddress = param.shopAddress();
-		location = param.location();
+		shopAddress = param.getShopAddress();
+		location = param.getLocation();
 	}
 
 	public void addShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {

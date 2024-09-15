@@ -236,7 +236,8 @@ public class ShopServiceTest extends ServiceTest {
 	void requestCertificationEventWithInfo() {
 		//given
 		CertificationParam param = getCertificationParamFixture(false);
-		doReturn(getBusinessInformationFixture()).when(cakeShopReader).findBusinessInformationByCakeShopId(param.cakeShopId());
+		doReturn(getBusinessInformationFixture()).when(cakeShopReader).findBusinessInformationByCakeShopId(
+			param.cakeShopId);
 		when(verificationPolicy.requestCertificationBusinessOwner(any(BusinessInformation.class), any(CertificationParam.class)))
 			.thenReturn(getCertificationEventFixture());
 
@@ -244,7 +245,7 @@ public class ShopServiceTest extends ServiceTest {
 		shopService.requestCertificationBusinessOwner(param);
 
 		//verify
-		verify(cakeShopReader, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId());
+		verify(cakeShopReader, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId);
 		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
 	}
 

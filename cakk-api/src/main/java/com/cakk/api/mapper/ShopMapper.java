@@ -74,10 +74,10 @@ public class ShopMapper {
 
 	public static CakeShopSimpleResponse cakeShopSimpleResponseFromParam(final CakeShopSimpleParam param) {
 		return CakeShopSimpleResponse.builder()
-			.cakeShopId(param.cakeShopId())
-			.thumbnailUrl(param.thumbnailUrl())
-			.cakeShopName(param.cakeShopName())
-			.cakeShopBio(param.cakeShopBio())
+			.cakeShopId(param.cakeShopId)
+			.thumbnailUrl(param.thumbnailUrl)
+			.cakeShopName(param.cakeShopName)
+			.cakeShopBio(param.cakeShopBio)
 			.build();
 	}
 
@@ -157,11 +157,11 @@ public class ShopMapper {
 
 	public static HeartCakeShopListResponse supplyHeartCakeShopListResponseBy(final List<HeartCakeShopResponseParam> cakeShops) {
 		final int size = cakeShops.size();
-		cakeShops.forEach(it -> keepOnlyNElements(it.cakeImageUrls(), 4));
+		cakeShops.forEach(it -> keepOnlyNElements(it.cakeImageUrls, 4));
 
 		return HeartCakeShopListResponse.builder()
 			.cakeShops(cakeShops)
-			.lastCakeShopHeartId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId())
+			.lastCakeShopHeartId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId)
 			.size(size)
 			.build();
 	}
@@ -208,8 +208,8 @@ public class ShopMapper {
 	}
 
 	private static boolean isEmptyCakeShopOperation(final CakeShopOperationParam cakeShopOperationParam) {
-		return isNull(cakeShopOperationParam.operationDay())
-			|| isNull(cakeShopOperationParam.operationStartTime())
-			|| isNull(cakeShopOperationParam.operationEndTime());
+		return isNull(cakeShopOperationParam.operationDay)
+			|| isNull(cakeShopOperationParam.operationStartTime)
+			|| isNull(cakeShopOperationParam.operationEndTime);
 	}
 }
