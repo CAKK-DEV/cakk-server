@@ -4,34 +4,34 @@ import com.cakk.admin.dto.request.PromotionRequest
 import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
 import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
 import com.cakk.admin.mapper.*
+import com.cakk.core.facade.cake.BusinessInformationReadFacade
+import com.cakk.core.facade.cake.CakeShopReadFacade
+import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.domain.mysql.bo.user.VerificationPolicy
 import com.cakk.domain.mysql.entity.user.BusinessInformation
 import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.mysql.repository.reader.BusinessInformationReader
-import com.cakk.domain.mysql.repository.reader.CakeShopReader
-import com.cakk.domain.mysql.repository.reader.UserReader
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BusinessInformationService(
-    private val businessInformationReader: BusinessInformationReader,
-    private val userReader: UserReader,
-    private val cakeShopReader: CakeShopReader,
+    private val businessInformationReadFacade: BusinessInformationReadFacade,
+    private val userReadFacade: UserReadFacade,
+    private val cakeShopReadFacade: CakeShopReadFacade,
     private val verificationPolicy: VerificationPolicy,
 ) {
 
     @Transactional
     fun promoteUserToBusinessOwner(dto: PromotionRequest) {
-        val user: User = userReader.findByUserId(dto.userId)
-        val businessInformation: BusinessInformation = cakeShopReader.findBusinessInformationWithShop(dto.cakeShopId)
+        val user: User = userReadFacade.findByUserId(dto.userId)
+        val businessInformation: BusinessInformation = cakeShopReadFacade.findBusinessInformationWithShop(dto.cakeShopId)
 
         businessInformation.updateBusinessOwner(verificationPolicy, user)
     }
 
     @Transactional(readOnly = true)
     fun getBusinessOwnerCandidates(): CakeShopOwnerCandidatesResponse {
-        var businessInformationList = businessInformationReader.findAllCakeShopBusinessOwnerCandidates()
+        var businessInformationList = businessInformationReadFacade.findAllCakeShopBusinessOwnerCandidates()
 
         businessInformationList = businessInformationList
             .filter { it.isBusinessOwnerCandidate(verificationPolicy) }
@@ -42,7 +42,7 @@ class BusinessInformationService(
 
     @Transactional(readOnly = true)
     fun getCandidateInformation(userId: Long): CakeShopOwnerCandidateResponse {
-        val businessInformation = businessInformationReader.findByUserId(userId)
+        val businessInformation = businessInformationReadFacade.findByUserId(userId)
 
         return supplyCakeShopOwnerCandidateResponseBy(businessInformation)
     }

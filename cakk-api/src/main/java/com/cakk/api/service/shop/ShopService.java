@@ -32,13 +32,16 @@ import com.cakk.api.mapper.BusinessInformationMapper;
 import com.cakk.api.mapper.LinkMapper;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.core.facade.cake.BusinessInformationReadFacade;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
-import com.cakk.domain.mysql.bo.CakeShops;
+import com.cakk.core.facade.user.UserReadFacade;
+import com.cakk.domain.mysql.bo.shop.CakeShops;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopByLocationParam;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopBySearchParam;
+import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
+import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
@@ -53,18 +56,15 @@ import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
 import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
 import com.cakk.domain.mysql.mapper.EventMapper;
-import com.cakk.domain.mysql.repository.reader.BusinessInformationReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ShopService {
 
-	private final UserReader userReader;
-	private final CakeShopReader cakeShopReader;
-	private final BusinessInformationReader businessInformationReader;
+	private final UserReadFacade userReadFacade;
+	private final CakeShopReadFacade cakeShopReadFacade;
+	private final BusinessInformationReadFacade businessInformationReadFacade;
 	private final CakeShopManageFacade cakeShopManageFacade;
 	private final CakeShopViewsRedisRepository cakeShopViewsRedisRepository;
 
@@ -85,47 +85,47 @@ public class ShopService {
 
 	@Transactional
 	public void promoteUserToBusinessOwner(final PromotionRequest request) {
-		final User user = userReader.findByUserId(request.userId());
-		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationWithShop(request.cakeShopId());
+		final User user = userReadFacade.findByUserId(request.userId());
+		final BusinessInformation businessInformation = cakeShopReadFacade.findBusinessInformationWithShop(request.cakeShopId());
 
 		businessInformation.updateBusinessOwner(verificationPolicy, user);
 	}
 
 	@Transactional
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId, param.user);
+		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.getCakeShopId(), param.getUser());
 
 		cakeShop.updateBasicInformation(param);
 	}
 
 	@Transactional
 	public void updateShopLinks(final UpdateLinkParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchWithShopLinks(param.user, param.cakeShopId);
-		cakeShop.updateShopLinks(param.cakeShopLinks);
+		final CakeShop cakeShop = cakeShopReadFacade.searchWithShopLinks(param.getUser(), param.getCakeShopId());
+		cakeShop.updateShopLinks(param.getCakeShopLinks());
 	}
 
 	@Transactional
 	public void updateShopAddress(final UpdateShopAddressParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.user());
+		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.getCakeShopId(), param.getUser());
 		cakeShop.updateShopAddress(param);
 	}
 
 	@Transactional
 	public void updateShopOperationDays(final UpdateShopOperationParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchWithOperations(param.user, param.cakeShopId);
-		cakeShop.updateShopOperationDays(param.cakeShopOperations);
+		final CakeShop cakeShop = cakeShopReadFacade.searchWithOperations(param.getUser(), param.getCakeShopId());
+		cakeShop.updateShopOperationDays(param.getCakeShopOperations());
 	}
 
 	@Transactional(readOnly = true)
 	public CakeShopByMineResponse getMyBusinessId(final User user) {
-		final List<BusinessInformation> result = businessInformationReader.findAllWithCakeShopByUser(user);
+		final List<BusinessInformation> result = businessInformationReadFacade.findAllWithCakeShopByUser(user);
 		return ShopMapper.supplyCakeShopByMineResponseBy(result);
 	}
 
 	@Transactional
 	public void requestCertificationBusinessOwner(final CertificationParam param) {
-		final BusinessInformation businessInformation = cakeShopReader.findBusinessInformationByCakeShopId(
-			param.cakeShopId);
+		final BusinessInformation businessInformation = cakeShopReadFacade.findBusinessInformationByCakeShopId(
+			param.cakeShopId());
 		final CertificationEvent certificationEvent = verificationPolicy
 			.requestCertificationBusinessOwner(businessInformation, param);
 
@@ -134,14 +134,14 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopSimpleResponse searchSimpleById(final Long cakeShopId) {
-		final CakeShopSimpleParam cakeShop = cakeShopReader.searchSimpleById(cakeShopId);
+		final CakeShopSimpleParam cakeShop = cakeShopReadFacade.searchSimpleById(cakeShopId);
 
 		return ShopMapper.cakeShopSimpleResponseFromParam(cakeShop);
 	}
 
 	@Transactional(readOnly = true)
 	public CakeShopDetailResponse searchDetailById(final Long cakeShopId) {
-		final CakeShopDetailParam cakeShop = cakeShopReader.searchDetailById(cakeShopId);
+		final CakeShopDetailParam cakeShop = cakeShopReadFacade.searchDetailById(cakeShopId);
 		final CakeShopIncreaseViewsEvent event = EventMapper.supplyCakeShopIncreaseViewsEvent(cakeShopId);
 
 		publisher.publishEvent(event);
@@ -150,7 +150,7 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopInfoResponse searchInfoById(final Long cakeShopId) {
-		final CakeShopInfoParam cakeShopInfo = cakeShopReader.searchInfoById(cakeShopId);
+		final CakeShopInfoParam cakeShopInfo = cakeShopReadFacade.searchInfoById(cakeShopId);
 
 		return ShopMapper.supplyCakeShopInfoResponseBy(cakeShopInfo);
 	}
@@ -162,7 +162,7 @@ public class ShopService {
 		final Double distance = request.distance();
 		final Point point = PointMapper.supplyPointBy(latitude, longitude);
 
-		final List<CakeShopByLocationParam> result = cakeShopReader
+		final List<CakeShopByLocationParam> result = cakeShopReadFacade
 			.searchShopByLocationBased(point, Objects.requireNonNullElse(distance, 1000.0));
 		final CakeShops<CakeShopByLocationParam> cakeShops = new CakeShops<>(result, 4);
 
@@ -172,7 +172,7 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public CakeShopSearchResponse searchShopByKeyword(final CakeShopSearchRequest dto) {
 		final int pageSize = dto.pageSize();
-		final List<CakeShop> result = cakeShopReader.searchShopBySearch(dto.toParam());
+		final List<CakeShop> result = cakeShopReadFacade.searchShopBySearch(dto.toParam());
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 4, pageSize);
@@ -193,7 +193,7 @@ public class ShopService {
 			return ShopMapper.supplyCakeShopSearchResponseBy(List.of());
 		}
 
-		final List<CakeShop> result = cakeShopReader.searchShopsByShopIds(cakeShopIds);
+		final List<CakeShop> result = cakeShopReadFacade.searchShopsByShopIds(cakeShopIds);
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 6, pageSize);
 
@@ -202,14 +202,14 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopOwnerResponse isExistBusinessInformation(final User owner, final Long cakeShopId) {
-		final Boolean isOwned = businessInformationReader.isExistBusinessInformation(owner, cakeShopId);
+		final Boolean isOwned = businessInformationReadFacade.isExistBusinessInformation(owner, cakeShopId);
 
 		return ShopMapper.supplyCakeShopOwnerResponseBy(isOwned);
 	}
 
 	@Transactional(readOnly = true)
 	public CakeShopOwnerCandidatesResponse getBusinessOwnerCandidates() {
-		List<BusinessInformation> businessInformations = businessInformationReader.findAllCakeShopBusinessOwnerCandidates();
+		List<BusinessInformation> businessInformations = businessInformationReadFacade.findAllCakeShopBusinessOwnerCandidates();
 
 		businessInformations = businessInformations
 			.stream()
@@ -221,7 +221,7 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopOwnerCandidateResponse getCandidateInformation(final Long userId) {
-		BusinessInformation businessInformation = businessInformationReader.findByUserId(userId);
+		BusinessInformation businessInformation = businessInformationReadFacade.findByUserId(userId);
 
 		return BusinessInformationMapper.supplyCakeShopOwnerCandidateResponseBy(businessInformation);
 	}
