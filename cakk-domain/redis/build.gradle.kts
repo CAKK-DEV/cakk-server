@@ -1,16 +1,16 @@
 description = "redis module"
 
 dependencies {
-	implementation project(':cakk-common')
+	implementation(project(":cakk-common"))
 
-	implementation('org.springframework.boot:spring-boot-starter-data-redis')
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.31.0")
 }
 
-bootJar {
+tasks.bootJar {
     enabled = false
 }
 
-jar {
+tasks.jar {
     enabled = true
 }
