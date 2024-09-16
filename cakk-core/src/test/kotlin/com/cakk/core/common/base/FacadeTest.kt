@@ -51,7 +51,7 @@ abstract class FacadeTest {
 			.instantiate(
 				User::class.java,
 				Instantiator.constructor<Any>()
-					.parameter(Long::class.javaPrimitiveType)
+					.parameter(Long::class.java)
 					.parameter(Provider::class.java)
 					.parameter(String::class.java)
 					.parameter(String::class.java)
