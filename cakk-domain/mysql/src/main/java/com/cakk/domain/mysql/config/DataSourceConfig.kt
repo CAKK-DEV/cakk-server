@@ -22,3 +22,4 @@ class DataSourceConfig {
         return HikariDataSource(hikariConfig())
     }
 }
+

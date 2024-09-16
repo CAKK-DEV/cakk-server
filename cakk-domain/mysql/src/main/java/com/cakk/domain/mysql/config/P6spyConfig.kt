@@ -11,3 +11,4 @@ class P6spyConfig {
         P6SpyOptions.getActiveInstance().logMessageFormat = P6spySqlFormatterConfig::class.java.name
     }
 }
+

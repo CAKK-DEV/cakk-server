@@ -12,6 +12,7 @@ class CakeShopUserReadFacade(
 	private val cakeShopHeartQueryRepository: CakeShopHeartQueryRepository,
 	private val cakeHeartQueryRepository: CakeHeartQueryRepository
 ) {
+
     fun searchAllCakeShopsByCursorAndHeart(
             cakeShopHeartId: Long?,
             userId: Long?,
@@ -29,3 +30,4 @@ class CakeShopUserReadFacade(
 		return cakeHeartQueryRepository.searchCakeImagesByCursorAndHeart(cakeHeartId, userId, pageSize)
 	}
 }
+

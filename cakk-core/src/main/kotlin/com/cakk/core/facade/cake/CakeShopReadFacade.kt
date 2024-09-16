@@ -28,6 +28,7 @@ class CakeShopReadFacade(
 	private val cakeShopLinkJpaRepository: CakeShopLinkJpaRepository,
 	private val businessInformationJpaRepository: BusinessInformationJpaRepository
 ) {
+
     fun findById(cakeShopId: Long): CakeShop {
         return cakeShopJpaRepository.findById(cakeShopId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP) }
 	}
@@ -100,3 +101,4 @@ class CakeShopReadFacade(
 		return cakeShopLinkJpaRepository.findAllByCakeShopId(cakeShopId)
 	}
 }
+

@@ -9,7 +9,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class VerificationPolicyTest : DomainTest() {
-    @Test
+
+	@Test
     @DisplayName("인증 정책은 사용자를 케이크샵 주인으로 승격시켜준다")
     fun approveToBusinessOwner() {
         val verificationPolicy = verificationPolicy
@@ -67,3 +68,4 @@ class VerificationPolicyTest : DomainTest() {
         ) { verificationPolicy.requestCertificationBusinessOwner(businessInformation, param) }
     }
 }
+

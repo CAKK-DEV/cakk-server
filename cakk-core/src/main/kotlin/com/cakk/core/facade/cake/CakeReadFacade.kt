@@ -21,6 +21,7 @@ class CakeReadFacade(
 	private val cakeCategoryJpaRepository: CakeCategoryJpaRepository,
 	private val cakeQueryRepository: CakeQueryRepository
 ) {
+
     fun findById(cakeId: Long): Cake {
         return cakeJpaRepository.findById(cakeId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE) }
 	}
@@ -79,3 +80,4 @@ class CakeReadFacade(
 		return cakeCategoryJpaRepository.findByCakeId(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY)
 	}
 }
+

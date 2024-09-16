@@ -22,7 +22,8 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.PrecisionModel
 
 abstract class DomainTest {
-    protected val reflectionMonkey: FixtureMonkey
+
+	protected val reflectionMonkey: FixtureMonkey
         protected get() = FixtureMonkey.builder()
                 .plugin(JakartaValidationPlugin())
                 .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
@@ -99,3 +100,4 @@ abstract class DomainTest {
         }
     }
 }
+

@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface CakeHeartJpaRepository : JpaRepository<CakeHeart, Long> {
-    fun findAllByUser(user: User): List<CakeHeart>
+
+	fun findAllByUser(user: User): List<CakeHeart>
     fun findByUserAndCake(user: User, cake: Cake): CakeHeart?
     fun existsByUserAndCake(user: User, cake: Cake): Boolean
 }
+

@@ -8,7 +8,8 @@ import java.util.*
 import java.util.function.Predicate
 
 class P6spySqlFormatterConfig : MessageFormattingStrategy {
-    override fun formatMessage(
+
+	override fun formatMessage(
 		connectionId: Int,
 		now: String,
 		elapsed: Long,
@@ -96,3 +97,4 @@ class P6spySqlFormatterConfig : MessageFormattingStrategy {
         private const val COMMENT = "comment"
     }
 }
+

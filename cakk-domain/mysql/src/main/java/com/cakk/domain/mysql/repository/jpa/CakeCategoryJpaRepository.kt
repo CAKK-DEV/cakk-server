@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface CakeCategoryJpaRepository : JpaRepository<CakeCategory, Long> {
-    fun findByCakeId(cakeId: Long?): CakeCategory?
+
+	fun findByCakeId(cakeId: Long?): CakeCategory?
 }
+

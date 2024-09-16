@@ -4,5 +4,7 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface CakeShopOperationJpaRepository : JpaRepository<CakeShopOperation, Long> {
-    fun findAllByCakeShopId(cakeShopId: Long): List<CakeShopOperation>
+
+	fun findAllByCakeShopId(cakeShopId: Long): List<CakeShopOperation>
 }
+

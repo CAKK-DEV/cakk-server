@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param
 import java.util.*
 
 interface BusinessInformationJpaRepository : JpaRepository<BusinessInformation, Long> {
-    @Query("select bi from BusinessInformation as bi join fetch bi.cakeShop "
+
+	@Query("select bi from BusinessInformation as bi join fetch bi.cakeShop "
             + "where bi.cakeShop.id =:cakeShopId")
     fun findBusinessInformationWithCakeShop(@Param("cakeShopId") cakeShopId: Long): BusinessInformation?
 
@@ -28,3 +29,4 @@ interface BusinessInformationJpaRepository : JpaRepository<BusinessInformation, 
             + " where bi.user.id =:userId")
     fun findBusinessInformationByUserId(userId: Long): BusinessInformation?
 }
+
