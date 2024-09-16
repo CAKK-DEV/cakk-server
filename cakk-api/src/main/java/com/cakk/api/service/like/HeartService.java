@@ -54,7 +54,7 @@ public class HeartService {
 		final HeartCakeShopSearchRequest dto,
 		final User signInUser
 	) {
-		final List<HeartCakeShopResponseParam> cakeShops = cakeShopUserReadFacade.searchAllByCursorAndHeart(
+		final List<HeartCakeShopResponseParam> cakeShops = cakeShopUserReadFacade.searchAllCakeShopsByCursorAndHeart(
 			dto.cakeShopHeartId(),
 			signInUser.getId(),
 			dto.pageSize()
