@@ -24,11 +24,7 @@ class UserReadFacade(
 	}
 
     fun findByIdWithAll(userId: Long): User {
-        val user: User = userQueryRepository.searchByIdWithAll(userId)
-        if (Objects.isNull(user)) {
-            throw CakkException(ReturnCode.NOT_EXIST_USER)
-        }
-        return user
+		return userQueryRepository.searchByIdWithAll(userId) ?: throw CakkException(ReturnCode.NOT_EXIST_USER)
     }
 
     fun findAll(): List<User> {

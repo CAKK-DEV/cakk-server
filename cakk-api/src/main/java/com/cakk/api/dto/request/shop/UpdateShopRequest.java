@@ -17,14 +17,14 @@ public record UpdateShopRequest(
 	String shopDescription
 ) {
 
-	// public CakeShopUpdateParam toParam(User user, Long cakeShopId) {
-	// 	return CakeShopUpdateParam.builder()
-	// 		.user(user)
-	// 		.cakeShopId(cakeShopId)
-	// 		.thumbnailUrl(thumbnailUrl())
-	// 		.shopName(shopName())
-	// 		.shopBio(shopBio())
-	// 		.shopDescription(shopDescription())
-	// 		.build();
-	// }
+	public CakeShopUpdateParam toParam(User user, Long cakeShopId) {
+		return CakeShopUpdateParam.builder()
+			.user(user)
+			.cakeShopId(cakeShopId)
+			.thumbnailUrl(thumbnailUrl())
+			.shopName(shopName())
+			.shopBio(shopBio())
+			.shopDescription(shopDescription())
+			.build();
+	}
 }
