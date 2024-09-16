@@ -38,6 +38,7 @@ import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
@@ -338,5 +339,25 @@ public class ShopServiceTest extends ServiceTest {
 
 		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize);
 		verify(cakeShopReadFacade, times(0)).searchShopsByShopIds(cakeShopIds);
+	}
+
+	@TestWithDisplayName("케이크샵 기본 정보 수정을 한다")
+	void updateCakeShopBasicInformation() {
+		//given
+		CakeShopUpdateParam cakeShopUpdateParam = getConstructorMonkey().giveMeBuilder(CakeShopUpdateParam.class)
+			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
+			.set("user", getUser())
+			.sample();
+		CakeShop cakeShopFixture = getCakeShopFixture();
+
+		doReturn(cakeShopFixture)
+			.when(cakeShopReadFacade).searchByIdAndOwner(cakeShopUpdateParam.cakeShopId(), cakeShopUpdateParam.user());
+
+		//when, then
+		shopService.updateBasicInformation(cakeShopUpdateParam);
+
+		//verify
+		verify(cakeShopReadFacade, times(1))
+			.searchByIdAndOwner(cakeShopUpdateParam.cakeShopId(), cakeShopUpdateParam.user());
 	}
 }
