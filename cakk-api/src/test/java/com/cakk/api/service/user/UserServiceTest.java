@@ -35,11 +35,7 @@ class UserServiceTest extends ServiceTest {
 	@TestWithDisplayName("유저 프로필을 조회한다.")
 	void findProfile1() {
 		// given
-		final User user = getConstructorMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("provider", Arbitraries.of(Provider.class))
-			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.sample();
+		final User user = getUser();
 
 		doReturn(user).when(userReadFacade).findByUserId(user.getId());
 

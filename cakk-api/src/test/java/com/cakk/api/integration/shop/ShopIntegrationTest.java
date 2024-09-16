@@ -335,8 +335,8 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertThat(data.cakeShops().size()).isGreaterThanOrEqualTo(0);
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopName()).isNotNull();
 		});
 	}
 
@@ -492,9 +492,9 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(8, data.cakeShops().size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
+			assertThat(cakeShop.cakeShopId()).isIn(4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L);
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopName()).isNotNull();
 		});
 	}
 
@@ -522,10 +522,10 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(7, data.size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopId()).isNotNull();
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
-			assertThat(cakeShop.getOperationDays()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
 		});
 	}
 
@@ -553,10 +553,10 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertThat(data.size()).isGreaterThanOrEqualTo(0);
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopId()).isNotNull();
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
-			assertThat(cakeShop.getOperationDays()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
 		});
 	}
 
@@ -583,10 +583,10 @@ class ShopIntegrationTest extends IntegrationTest {
 
 		assertEquals(4, data.size());
 		data.cakeShops().forEach(cakeShop -> {
-			assertThat(cakeShop.getCakeImageUrls().size()).isLessThanOrEqualTo(4);
-			assertThat(cakeShop.getCakeShopId()).isNotNull();
-			assertThat(cakeShop.getCakeShopName()).isNotNull();
-			assertThat(cakeShop.getOperationDays()).isNotNull();
+			assertThat(cakeShop.cakeImageUrls().size()).isLessThanOrEqualTo(4);
+			assertThat(cakeShop.cakeShopId()).isNotNull();
+			assertThat(cakeShop.cakeShopName()).isNotNull();
+			assertThat(cakeShop.operationDays()).isNotNull();
 		});
 	}
 

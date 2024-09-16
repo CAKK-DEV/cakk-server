@@ -14,10 +14,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @SpringBootTest(properties = "spring.profiles.active=test")
 @SqlGroup({
@@ -32,16 +32,16 @@ public class LikeConcurrencyTest {
 	private LikeService likeService;
 
 	@Autowired
-	private CakeShopReader cakeShopReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Autowired
-	private UserReader userReader;
+	private UserReadFacade userReadFacade;
 
 	private User user;
 
 	@BeforeEach
 	void initUser() {
-		user = userReader.findByUserId(1L);
+		user = userReadFacade.findByUserId(1L);
 	}
 
 	@TestWithDisplayName("케이크샵 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
@@ -67,7 +67,7 @@ public class LikeConcurrencyTest {
 		latch.await();
 
 		// then
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		assertEquals(50, cakeShop.getLikeCount().intValue());
 	}
 }

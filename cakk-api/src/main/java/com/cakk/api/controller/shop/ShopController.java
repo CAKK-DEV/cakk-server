@@ -142,7 +142,7 @@ public class ShopController {
 		@PathVariable Long cakeShopId,
 		@Valid @RequestBody UpdateShopRequest request
 	) {
-		shopService.updateBasicInformation(request.toParam(user, cakeShopId));
+		//shopService.updateBasicInformation(request.toParam(user, cakeShopId));
 
 		return ApiResponse.success();
 	}

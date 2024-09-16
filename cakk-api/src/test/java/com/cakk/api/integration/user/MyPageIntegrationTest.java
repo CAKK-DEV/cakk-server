@@ -63,7 +63,7 @@ class MyPageIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final User user = userReader.findByUserId(getUserId());
+		final User user = userReadFacade.findByUserId(getUserId());
 		assertEquals(body.nickname(), user.getNickname());
 		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
 		assertEquals(body.email(), user.getEmail());
@@ -128,7 +128,7 @@ class MyPageIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final User user = userReader.findByUserId(1L);
+		final User user = userReadFacade.findByUserId(1L);
 		assertEquals(body.nickname(), user.getNickname());
 		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
 		assertEquals(body.email(), user.getEmail());
@@ -157,6 +157,6 @@ class MyPageIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		assertThrows(CakkException.class, () -> userReader.findByUserId(1L));
+		assertThrows(CakkException.class, () -> userReadFacade.findByUserId(1L));
 	}
 }

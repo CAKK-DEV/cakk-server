@@ -36,12 +36,12 @@ import com.cakk.core.facade.cake.BusinessInformationReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
+import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
+import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.bo.shop.CakeShops;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
-import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
-import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
@@ -93,27 +93,27 @@ public class ShopService {
 
 	@Transactional
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
-		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.getCakeShopId(), param.getUser());
+		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId(), param.user());
 
 		cakeShop.updateBasicInformation(param);
 	}
 
 	@Transactional
 	public void updateShopLinks(final UpdateLinkParam param) {
-		final CakeShop cakeShop = cakeShopReadFacade.searchWithShopLinks(param.getUser(), param.getCakeShopId());
-		cakeShop.updateShopLinks(param.getCakeShopLinks());
+		final CakeShop cakeShop = cakeShopReadFacade.searchWithShopLinks(param.user(), param.cakeShopId());
+		cakeShop.updateShopLinks(param.cakeShopLinks());
 	}
 
 	@Transactional
 	public void updateShopAddress(final UpdateShopAddressParam param) {
-		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.getCakeShopId(), param.getUser());
+		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId(), param.user());
 		cakeShop.updateShopAddress(param);
 	}
 
 	@Transactional
 	public void updateShopOperationDays(final UpdateShopOperationParam param) {
-		final CakeShop cakeShop = cakeShopReadFacade.searchWithOperations(param.getUser(), param.getCakeShopId());
-		cakeShop.updateShopOperationDays(param.getCakeShopOperations());
+		final CakeShop cakeShop = cakeShopReadFacade.searchWithOperations(param.user(), param.cakeShopId());
+		cakeShop.updateShopOperationDays(param.cakeShopOperations());
 	}
 
 	@Transactional(readOnly = true)
