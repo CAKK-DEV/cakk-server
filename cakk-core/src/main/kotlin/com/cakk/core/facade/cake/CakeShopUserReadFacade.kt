@@ -3,7 +3,6 @@ package com.cakk.core.facade.cake
 import com.cakk.core.annotation.DomainFacade
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam
-import com.cakk.domain.mysql.repository.jpa.CakeShopHeartJpaRepository
 import com.cakk.domain.mysql.repository.query.CakeHeartQueryRepository
 import com.cakk.domain.mysql.repository.query.CakeShopHeartQueryRepository
 
@@ -11,10 +10,9 @@ import com.cakk.domain.mysql.repository.query.CakeShopHeartQueryRepository
 @DomainFacade
 class CakeShopUserReadFacade(
 	private val cakeShopHeartQueryRepository: CakeShopHeartQueryRepository,
-	private val cakeShopHeartJpaRepository: CakeShopHeartJpaRepository,
 	private val cakeHeartQueryRepository: CakeHeartQueryRepository
 ) {
-    fun searchAllByCursorAndHeart(
+    fun searchAllCakeShopsByCursorAndHeart(
             cakeShopHeartId: Long?,
             userId: Long?,
             pageSize: Int
