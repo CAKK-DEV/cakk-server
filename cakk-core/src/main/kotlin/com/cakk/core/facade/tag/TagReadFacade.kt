@@ -12,13 +12,10 @@ class TagReadFacade(
 
     fun getTagsByTagName(tagNames: List<String>): List<Tag> {
         val tags: List<Tag> = tagJpaRepository.findTagsByTagNameIsIn(tagNames)
-        return tagNames.stream()
-                .map { tagName: String ->
-                    tags
-						.stream()
-						.filter { tag: Tag -> tag.tagName == tagName }
-						.findAny()
-						.orElse(tagJpaRepository.save(TagMapper.supplyTagBy(tagName)))
-                }.toList()
+		return tagNames.map {
+			tags.find {
+				tag: Tag -> tag.tagName == it
+			} ?: tagJpaRepository.save(TagMapper.supplyTagBy(it))
+		}.toList()
     }
 }
