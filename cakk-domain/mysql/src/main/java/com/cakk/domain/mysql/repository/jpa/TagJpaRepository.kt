@@ -7,6 +7,8 @@ import java.util.*
 
 @Repository
 interface TagJpaRepository : JpaRepository<Tag, Long> {
-    fun findTagByTagName(tagName: String?): Tag?
+
+	fun findTagByTagName(tagName: String?): Tag?
     fun findTagsByTagNameIsIn(tagNames: List<String>): List<Tag>
 }
+

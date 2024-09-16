@@ -12,6 +12,7 @@ import com.cakk.domain.mysql.repository.jpa.BusinessInformationJpaRepository
 class BusinessInformationReadFacade(
 	private val businessInformationJpaRepository: BusinessInformationJpaRepository
 ) {
+
     fun isExistBusinessInformation(owner: User, cakeShopId: Long): Boolean {
         return businessInformationJpaRepository.existsBusinessInformationByUserAndCakeShop_Id(owner, cakeShopId)
     }
@@ -28,3 +29,4 @@ class BusinessInformationReadFacade(
         return businessInformationJpaRepository.findBusinessInformationByUserId(userId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
     }
 }
+

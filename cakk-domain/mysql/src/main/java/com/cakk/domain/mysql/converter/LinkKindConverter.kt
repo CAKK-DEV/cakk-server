@@ -7,7 +7,8 @@ import jakarta.persistence.AttributeConverter
 import java.util.stream.Stream
 
 class LinkKindConverter : AttributeConverter<LinkKind?, String?> {
-    override fun convertToDatabaseColumn(linkKind: LinkKind?): String? {
+
+	override fun convertToDatabaseColumn(linkKind: LinkKind?): String? {
         return linkKind?.value
     }
 
@@ -20,3 +21,4 @@ class LinkKindConverter : AttributeConverter<LinkKind?, String?> {
                 .orElseThrow { CakkException(ReturnCode.INTERNAL_SERVER_ERROR) }
     }
 }
+

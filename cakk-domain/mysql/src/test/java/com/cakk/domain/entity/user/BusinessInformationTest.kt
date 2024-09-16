@@ -11,7 +11,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 internal class BusinessInformationTest : DomainTest() {
-    private fun getBusinessInformationFixtureWithUser(verificationStatus: VerificationStatus, role: Role): BusinessInformation {
+
+	private fun getBusinessInformationFixtureWithUser(verificationStatus: VerificationStatus, role: Role): BusinessInformation {
         return constructorMonkey.giveMeBuilder(BusinessInformation::class.java)
                 .setNotNull("businessNumber")
                 .set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
@@ -102,3 +103,4 @@ internal class BusinessInformationTest : DomainTest() {
             Assertions.assertThat(businessInformation.isBusinessOwnerCandidate(verificationPolicy)).isFalse
         }
 }
+

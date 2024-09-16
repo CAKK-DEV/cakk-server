@@ -15,6 +15,7 @@ class UserReadFacade(
 	private val userJpaRepository: UserJpaRepository,
 	private val userQueryRepository: UserQueryRepository
 ) {
+
     fun findByUserId(userId: Long): User {
         return userJpaRepository.findById(userId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_USER) }
 	}
@@ -31,3 +32,4 @@ class UserReadFacade(
         return userJpaRepository.findAll()
     }
 }
+

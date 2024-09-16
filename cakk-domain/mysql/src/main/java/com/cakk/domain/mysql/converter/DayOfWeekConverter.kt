@@ -7,7 +7,8 @@ import jakarta.persistence.AttributeConverter
 import java.util.stream.Stream
 
 class DayOfWeekConverter : AttributeConverter<Days?, Int?> {
-    override fun convertToDatabaseColumn(days: Days?): Int? {
+
+	override fun convertToDatabaseColumn(days: Days?): Int? {
         return days?.code
     }
 
@@ -20,3 +21,4 @@ class DayOfWeekConverter : AttributeConverter<Days?, Int?> {
                 .orElseThrow { CakkException(ReturnCode.INTERNAL_SERVER_ERROR) }
     }
 }
+

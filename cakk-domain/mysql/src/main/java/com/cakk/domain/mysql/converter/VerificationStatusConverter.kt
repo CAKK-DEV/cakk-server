@@ -7,7 +7,8 @@ import jakarta.persistence.AttributeConverter
 import java.util.stream.Stream
 
 class VerificationStatusConverter : AttributeConverter<VerificationStatus?, Int?> {
-    override fun convertToDatabaseColumn(verificationStatus: VerificationStatus?): Int? {
+
+	override fun convertToDatabaseColumn(verificationStatus: VerificationStatus?): Int? {
         return verificationStatus?.code
     }
 
@@ -20,3 +21,4 @@ class VerificationStatusConverter : AttributeConverter<VerificationStatus?, Int?
                 .orElseThrow { CakkException(ReturnCode.INTERNAL_SERVER_ERROR) }
     }
 }
+
