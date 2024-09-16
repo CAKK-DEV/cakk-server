@@ -27,7 +27,7 @@ public class CakeMapper {
 
 		return CakeImageListResponse.builder()
 			.cakeImages(cakeImages)
-			.lastCakeId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeId)
+			.lastCakeId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeId())
 			.size(cakeImages.size())
 			.build();
 	}
@@ -40,7 +40,7 @@ public class CakeMapper {
 
 		for (long cakeId : cakeIds) {
 			cakeImages.stream()
-				.filter(cakeImage -> cakeImage.cakeId == cakeId)
+				.filter(cakeImage -> cakeImage.cakeId() == cakeId)
 				.findFirst()
 				.ifPresent(sortedCakeImages::add);
 		}
@@ -57,13 +57,13 @@ public class CakeMapper {
 
 		return HeartCakeImageListResponse.builder()
 			.cakeImages(cakeImages)
-			.lastCakeHeartId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeHeartId)
+			.lastCakeHeartId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeHeartId())
 			.size(cakeImages.size())
 			.build();
 	}
 
 	public static CakeDetailResponse cakeDetailResponseFromParam(final CakeDetailParam param) {
-		Set<TagParam> tags = param.tags;
+		Set<TagParam> tags = param.tags();
 
 		for (TagParam tagParam : tags) {
 			if (isEmptyTag(tagParam)) {
@@ -73,11 +73,11 @@ public class CakeMapper {
 		}
 
 		return CakeDetailResponse.builder()
-			.cakeShopId(param.cakeShopId)
-			.cakeShopName(param.cakeShopName)
-			.cakeImageUrl(param.cakeImageUrl)
-			.shopBio(param.shopBio)
-			.cakeCategories(param.cakeCategories)
+			.cakeShopId(param.cakeShopId())
+			.cakeShopName(param.cakeShopName())
+			.cakeImageUrl(param.cakeImageUrl())
+			.shopBio(param.shopBio())
+			.cakeCategories(param.cakeCategories())
 			.tags(tags)
 			.build();
 	}
@@ -89,6 +89,6 @@ public class CakeMapper {
 	}
 
 	private static boolean isEmptyTag(TagParam tagParam) {
-		return isNull(tagParam.tagId()) || isNull(tagParam.tagName() );
+		return isNull(tagParam.tagId()) || isNull(tagParam.tagName());
 	}
 }

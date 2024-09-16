@@ -18,8 +18,8 @@ import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPl
 
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -42,7 +42,7 @@ public abstract class IntegrationTest {
 	private JwtProvider jwtProvider;
 
 	@Autowired
-	protected UserReader userReader;
+	protected UserReadFacade userReadFacade;
 
 	protected static final String BASE_URL = "http://localhost:";
 
@@ -82,13 +82,13 @@ public abstract class IntegrationTest {
 	}
 
 	protected JsonWebToken getAuthToken() {
-		final User user = userReader.findByUserId(1L);
+		final User user = userReadFacade.findByUserId(1L);
 
 		return jwtProvider.generateToken(user);
 	}
 
 	private JsonWebToken getAuthTokenById(Long id) {
-		final User user = userReader.findByUserId(id);
+		final User user = userReadFacade.findByUserId(id);
 
 		return jwtProvider.generateToken(user);
 	}
