@@ -16,9 +16,8 @@ class UserManageFacade(
 ) {
 
 	fun create(user: User): User {
-		userJpaRepository.findByProviderId(user.providerId) ?: throw CakkException(ReturnCode.ALREADY_EXIST_USER)
-
-		return userJpaRepository.save(user)
+		userJpaRepository.findByProviderId(user.providerId) ?: return userJpaRepository.save(user)
+		throw CakkException(ReturnCode.ALREADY_EXIST_USER)
 	}
 
 	fun updateProfile(user: User, param: ProfileUpdateParam) {

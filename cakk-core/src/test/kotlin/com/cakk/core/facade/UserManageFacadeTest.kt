@@ -3,7 +3,6 @@ package com.cakk.core.facade
 import org.mockito.Mockito.*
 
 import java.time.LocalDateTime
-import java.util.Optional
 
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -41,7 +40,7 @@ internal class UserManageFacadeTest : FacadeTest() {
         // given
         val user = getUserFixture(Role.USER)
 
-		doReturn(Optional.ofNullable(null)).`when`(userJpaRepository).findByProviderId(user.providerId)
+		doReturn(null).`when`(userJpaRepository).findByProviderId(user.providerId)
 		doReturn(user).`when`(userJpaRepository).save(user)
 
         // when
@@ -57,7 +56,7 @@ internal class UserManageFacadeTest : FacadeTest() {
         // given
         val user = getUserFixture(Role.USER)
 
-		doReturn(Optional.of(user)).`when`(userJpaRepository).findByProviderId(user.providerId)
+		doReturn(user).`when`(userJpaRepository).findByProviderId(user.providerId)
 
         // when
 		val exception = shouldThrow<CakkException> {
