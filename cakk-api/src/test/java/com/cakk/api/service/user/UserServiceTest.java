@@ -17,8 +17,8 @@ import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
 class UserServiceTest extends ServiceTest {
@@ -27,7 +27,7 @@ class UserServiceTest extends ServiceTest {
 	private UserService userService;
 
 	@Mock
-	private UserReader userReader;
+	private UserReadFacade userReadFacade;
 
 	@Mock
 	private UserManageFacade userManagerFacade;
@@ -41,7 +41,7 @@ class UserServiceTest extends ServiceTest {
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.sample();
 
-		doReturn(user).when(userReader).findByUserId(user.getId());
+		doReturn(user).when(userReadFacade).findByUserId(user.getId());
 
 		// when
 		final ProfileInformationResponse response = userService.findProfile(user);
@@ -49,7 +49,7 @@ class UserServiceTest extends ServiceTest {
 		// then
 		Assertions.assertNotNull(response);
 
-		verify(userReader, times(1)).findByUserId(user.getId());
+		verify(userReadFacade, times(1)).findByUserId(user.getId());
 	}
 
 	@TestWithDisplayName("유저가 존재하지 않으면 유저 프로필 조회에 실패한다.")
@@ -61,14 +61,14 @@ class UserServiceTest extends ServiceTest {
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.sample();
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReader).findByUserId(user.getId());
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReadFacade).findByUserId(user.getId());
 
 		// when
 		Assertions.assertThrows(CakkException.class,
 			() -> userService.findProfile(user),
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
-		verify(userReader, times(1)).findByUserId(user.getId());
+		verify(userReadFacade, times(1)).findByUserId(user.getId());
 	}
 
 	@TestWithDisplayName("유저 프로필을 수정한다.")
@@ -81,12 +81,12 @@ class UserServiceTest extends ServiceTest {
 			.sample();
 		final ProfileUpdateRequest request = getConstructorMonkey().giveMeOne(ProfileUpdateRequest.class);
 
-		doReturn(user).when(userReader).findByUserId(user.getId());
+		doReturn(user).when(userReadFacade).findByUserId(user.getId());
 
 		// when & then
 		Assertions.assertDoesNotThrow(() -> userService.updateInformation(user, request));
 
-		verify(userReader, times(1)).findByUserId(user.getId());
+		verify(userReadFacade, times(1)).findByUserId(user.getId());
 	}
 
 	@TestWithDisplayName("유저를 탈퇴한다.")
@@ -94,12 +94,12 @@ class UserServiceTest extends ServiceTest {
 		// given
 		final User user = getUser();
 
-		doReturn(user).when(userReader).findByIdWithAll(user.getId());
+		doReturn(user).when(userReadFacade).findByIdWithAll(user.getId());
 
 		// when & then
 		Assertions.assertDoesNotThrow(() -> userService.withdraw(user));
 
-		verify(userReader, times(1)).findByIdWithAll(user.getId());
+		verify(userReadFacade, times(1)).findByIdWithAll(user.getId());
 		verify(userManagerFacade, times(1)).withdraw(any(), any());
 	}
 
@@ -108,14 +108,14 @@ class UserServiceTest extends ServiceTest {
 		// given
 		final User user = getUser();
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReader).findByIdWithAll(user.getId());
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReadFacade).findByIdWithAll(user.getId());
 
 		// when & then
 		Assertions.assertThrows(CakkException.class,
 			() -> userService.withdraw(user),
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
-		verify(userReader, times(1)).findByIdWithAll(user.getId());
+		verify(userReadFacade, times(1)).findByIdWithAll(user.getId());
 		verify(userManagerFacade, never()).withdraw(any(), any());
 	}
 }

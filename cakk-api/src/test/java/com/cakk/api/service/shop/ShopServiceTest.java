@@ -31,7 +31,9 @@ import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.bo.user.VerificationPolicy;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
@@ -41,8 +43,6 @@ import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
@@ -52,10 +52,10 @@ public class ShopServiceTest extends ServiceTest {
 	private ShopService shopService;
 
 	@Mock
-	private UserReader userReader;
+	private UserReadFacade userReadFacade;
 
 	@Mock
-	private CakeShopReader cakeShopReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Mock
 	private CakeShopManageFacade cakeShopManageFacade;
@@ -130,7 +130,7 @@ public class ShopServiceTest extends ServiceTest {
 			.set("cakeShopBio", Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(40))
 			.sample();
 
-		doReturn(response).when(cakeShopReader).searchSimpleById(cakeShopId);
+		doReturn(response).when(cakeShopReadFacade).searchSimpleById(cakeShopId);
 
 		// when
 		CakeShopSimpleResponse result = shopService.searchSimpleById(cakeShopId);
@@ -138,7 +138,7 @@ public class ShopServiceTest extends ServiceTest {
 		// then
 		assertEquals(ShopMapper.cakeShopSimpleResponseFromParam(response), result);
 
-		verify(cakeShopReader, times(1)).searchSimpleById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchSimpleById(cakeShopId);
 	}
 
 	@TestWithDisplayName("id에 해당하는 케이크 샵이 없으면 간단조회 시, 에러를 반환한다.")
@@ -146,7 +146,7 @@ public class ShopServiceTest extends ServiceTest {
 		// given
 		Long cakeShopId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReader).searchSimpleById(cakeShopId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReadFacade).searchSimpleById(cakeShopId);
 
 		// then
 		assertThatThrownBy(
@@ -154,7 +154,7 @@ public class ShopServiceTest extends ServiceTest {
 			.isInstanceOf(CakkException.class)
 			.hasMessageContaining(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
-		verify(cakeShopReader, times(1)).searchSimpleById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchSimpleById(cakeShopId);
 	}
 
 	@TestWithDisplayName("id로 케이크 샵을 상세조회 한다.")
@@ -171,7 +171,7 @@ public class ShopServiceTest extends ServiceTest {
 			.set("links", Set.of())
 			.sample();
 
-		doReturn(param).when(cakeShopReader).searchDetailById(cakeShopId);
+		doReturn(param).when(cakeShopReadFacade).searchDetailById(cakeShopId);
 
 		// when
 		CakeShopDetailResponse result = shopService.searchDetailById(cakeShopId);
@@ -179,7 +179,7 @@ public class ShopServiceTest extends ServiceTest {
 		// then
 		assertEquals(ShopMapper.cakeShopDetailResponseFromParam(param), result);
 
-		verify(cakeShopReader, times(1)).searchDetailById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchDetailById(cakeShopId);
 	}
 
 	@TestWithDisplayName("id에 해당하는 케이크 샵이 없으면 상세조회 시, 에러를 반환한다.")
@@ -187,7 +187,7 @@ public class ShopServiceTest extends ServiceTest {
 		// given
 		Long cakeShopId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReader).searchDetailById(cakeShopId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReadFacade).searchDetailById(cakeShopId);
 
 		// then
 		assertThatThrownBy(
@@ -195,7 +195,7 @@ public class ShopServiceTest extends ServiceTest {
 			.isInstanceOf(CakkException.class)
 			.hasMessageContaining(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
-		verify(cakeShopReader, times(1)).searchDetailById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchDetailById(cakeShopId);
 	}
 
 	@TestWithDisplayName("Admin에 의해 케이크 샵을 생성하는데 성공한다")
@@ -221,23 +221,23 @@ public class ShopServiceTest extends ServiceTest {
 		PromotionRequest request = getPromotionRequestFixture();
 		BusinessInformation businessInformation = getBusinessInformationFixture();
 
-		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReader).findByUserId(request.userId());
-		doReturn(businessInformation).when(cakeShopReader).findBusinessInformationWithShop(request.cakeShopId());
+		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReadFacade).findByUserId(request.userId());
+		doReturn(businessInformation).when(cakeShopReadFacade).findBusinessInformationWithShop(request.cakeShopId());
 
 		//when,then
 		shopService.promoteUserToBusinessOwner(request);
 
 		//verify
-		verify(userReader, times(1)).findByUserId(request.userId());
-		verify(cakeShopReader, times(1)).findBusinessInformationWithShop(request.cakeShopId());
+		verify(userReadFacade, times(1)).findByUserId(request.userId());
+		verify(cakeShopReadFacade, times(1)).findBusinessInformationWithShop(request.cakeShopId());
 	}
 
 	@TestWithDisplayName("cakeShopId가 존재한다면, 정보를 찾아서 이벤트를 발행한다")
 	void requestCertificationEventWithInfo() {
 		//given
 		CertificationParam param = getCertificationParamFixture(false);
-		doReturn(getBusinessInformationFixture()).when(cakeShopReader).findBusinessInformationByCakeShopId(
-			param.cakeShopId);
+		doReturn(getBusinessInformationFixture()).when(cakeShopReadFacade).findBusinessInformationByCakeShopId(
+			param.cakeShopId());
 		when(verificationPolicy.requestCertificationBusinessOwner(any(BusinessInformation.class), any(CertificationParam.class)))
 			.thenReturn(getCertificationEventFixture());
 
@@ -245,7 +245,7 @@ public class ShopServiceTest extends ServiceTest {
 		shopService.requestCertificationBusinessOwner(param);
 
 		//verify
-		verify(cakeShopReader, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId);
+		verify(cakeShopReadFacade, times(1)).findBusinessInformationByCakeShopId(param.cakeShopId());
 		verify(publisher, times(1)).publishEvent(any(CertificationEvent.class));
 	}
 
@@ -264,7 +264,7 @@ public class ShopServiceTest extends ServiceTest {
 			.set("operationDays", List.of())
 			.sample();
 
-		doReturn(param).when(cakeShopReader).searchInfoById(cakeShopId);
+		doReturn(param).when(cakeShopReadFacade).searchInfoById(cakeShopId);
 
 		// when
 		CakeShopInfoResponse result = shopService.searchInfoById(cakeShopId);
@@ -272,7 +272,7 @@ public class ShopServiceTest extends ServiceTest {
 		// then
 		assertEquals(ShopMapper.supplyCakeShopInfoResponseBy(param), result);
 
-		verify(cakeShopReader, times(1)).searchInfoById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchInfoById(cakeShopId);
 	}
 
 	@TestWithDisplayName("id에 해당하는 케이크 샵이 없으면 상세조회 시, 에러를 반환한다.")
@@ -280,7 +280,7 @@ public class ShopServiceTest extends ServiceTest {
 		// given
 		Long cakeShopId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReader).searchInfoById(cakeShopId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReadFacade).searchInfoById(cakeShopId);
 
 		// then
 		assertThatThrownBy(
@@ -288,7 +288,7 @@ public class ShopServiceTest extends ServiceTest {
 			.isInstanceOf(CakkException.class)
 			.hasMessageContaining(ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
-		verify(cakeShopReader, times(1)).searchInfoById(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).searchInfoById(cakeShopId);
 	}
 
 	@TestWithDisplayName("인기 케이크 샵 목록을 조회한다.")
@@ -306,7 +306,7 @@ public class ShopServiceTest extends ServiceTest {
 			.sampleList(3);
 
 		doReturn(cakeShopIds).when(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize);
-		doReturn(cakeShops).when(cakeShopReader).searchShopsByShopIds(cakeShopIds);
+		doReturn(cakeShops).when(cakeShopReadFacade).searchShopsByShopIds(cakeShopIds);
 
 		// when
 		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(dto);
@@ -316,7 +316,7 @@ public class ShopServiceTest extends ServiceTest {
 		assertEquals(cakeShops.size(), result.size());
 
 		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize);
-		verify(cakeShopReader, times(1)).searchShopsByShopIds(cakeShopIds);
+		verify(cakeShopReadFacade, times(1)).searchShopsByShopIds(cakeShopIds);
 	}
 
 	@TestWithDisplayName("인기 케이크 샵 목록이 없는 경우, 빈 배열을 조회한다.")
@@ -337,6 +337,6 @@ public class ShopServiceTest extends ServiceTest {
 		assertThat(result.cakeShops()).isEmpty();
 
 		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize);
-		verify(cakeShopReader, times(0)).searchShopsByShopIds(cakeShopIds);
+		verify(cakeShopReadFacade, times(0)).searchShopsByShopIds(cakeShopIds);
 	}
 }

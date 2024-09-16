@@ -18,8 +18,8 @@ import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.common.enums.CakeDesignCategory;
+import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
@@ -29,7 +29,7 @@ class CakeServiceTest extends ServiceTest {
 	private CakeService cakeService;
 
 	@Mock
-	private CakeReader cakeReader;
+	private CakeReadFacade cakeReadFacade;
 
 	@Mock
 	private CakeViewsRedisRepository cakeViewsRedisRepository;
@@ -44,7 +44,7 @@ class CakeServiceTest extends ServiceTest {
 			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.sampleList(3);
 
-		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCategory(dto);
@@ -53,7 +53,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNotNull(result.lastCakeId());
 
-		verify(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		verify(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 	}
 
 	@TestWithDisplayName("카테고리에 해당하는 케이크가 없을 시 빈 배열을 리턴한다.")
@@ -62,7 +62,7 @@ class CakeServiceTest extends ServiceTest {
 		CakeSearchByCategoryRequest dto = new CakeSearchByCategoryRequest(null, CakeDesignCategory.FLOWER, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 0);
 
-		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCategory(dto);
@@ -71,7 +71,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeId());
 
-		verify(cakeReader).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+		verify(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 	}
 
 	@TestWithDisplayName("케이크 샵에 속한 케이크 목록을 조회한다")
@@ -84,7 +84,7 @@ class CakeServiceTest extends ServiceTest {
 			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.sampleList(3);
 
-		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReadFacade).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCakeShopId(dto);
@@ -93,7 +93,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNotNull(result.lastCakeId());
 
-		verify(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+		verify(cakeReadFacade).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 	}
 
 	@TestWithDisplayName("케이크 샵에 속한 케이크가 없을 시 빈 배열을 리턴한다.")
@@ -102,7 +102,7 @@ class CakeServiceTest extends ServiceTest {
 		CakeSearchByShopRequest dto = new CakeSearchByShopRequest(null, 1L, 3);
 		List<CakeImageResponseParam> cakeImages = getConstructorMonkey().giveMe(CakeImageResponseParam.class, 0);
 
-		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+		doReturn(cakeImages).when(cakeReadFacade).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 
 		// when
 		CakeImageListResponse result = cakeService.findCakeImagesByCursorAndCakeShopId(dto);
@@ -111,7 +111,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages.size(), result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeId());
 
-		verify(cakeReader).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+		verify(cakeReadFacade).searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 	}
 
 	@TestWithDisplayName("인기 케이크 목록을 조회한다")
@@ -128,7 +128,7 @@ class CakeServiceTest extends ServiceTest {
 			.sampleList(3);
 
 		doReturn(cakeIds).when(cakeViewsRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
-		doReturn(cakeImages).when(cakeReader).searchCakeImagesByCakeIds(cakeIds);
+		doReturn(cakeImages).when(cakeReadFacade).searchCakeImagesByCakeIds(cakeIds);
 
 		// when
 		CakeImageListResponse result = cakeService.searchCakeImagesByCursorAndViews(dto);
@@ -138,7 +138,7 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertNull(result.lastCakeId());
 
 		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
-		verify(cakeReader, times(1)).searchCakeImagesByCakeIds(cakeIds);
+		verify(cakeReadFacade, times(1)).searchCakeImagesByCakeIds(cakeIds);
 	}
 
 	@TestWithDisplayName("인기 케이크 목록이 없을 시 빈 배열을 조회한다")
@@ -158,6 +158,6 @@ class CakeServiceTest extends ServiceTest {
 		Assertions.assertNull(result.lastCakeId());
 
 		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize);
-		verify(cakeReader, times(0)).searchCakeImagesByCakeIds(anyList());
+		verify(cakeReadFacade, times(0)).searchCakeImagesByCakeIds(anyList());
 	}
 }

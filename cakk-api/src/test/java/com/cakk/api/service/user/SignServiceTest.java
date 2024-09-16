@@ -22,8 +22,8 @@ import com.cakk.api.vo.JsonWebToken;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @DisplayName("Sign 관련 비즈니스 로직 테스트")
@@ -39,7 +39,7 @@ class SignServiceTest extends ServiceTest {
 	private JwtProvider jwtProvider;
 
 	@Mock
-	private UserReader userReader;
+	private UserReadFacade userReadFacade;
 
 	@Mock
 	private UserManageFacade userManagerFacade;
@@ -119,7 +119,7 @@ class SignServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(providerId).when(oidcProviderFactory).getProviderId(dto.provider(), dto.idToken());
-		doReturn(user).when(userReader).findByProviderId(providerId);
+		doReturn(user).when(userReadFacade).findByProviderId(providerId);
 		doReturn(jwt).when(jwtProvider).generateToken(user);
 
 		// when
@@ -131,7 +131,7 @@ class SignServiceTest extends ServiceTest {
 		Assertions.assertNotNull(result.grantType());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userReader, times(1)).findByProviderId(providerId);
+		verify(userReadFacade, times(1)).findByProviderId(providerId);
 		verify(jwtProvider, times(1)).generateToken(user);
 	}
 
@@ -147,7 +147,7 @@ class SignServiceTest extends ServiceTest {
 			.sample();
 
 		doReturn(providerId).when(oidcProviderFactory).getProviderId(dto.provider(), dto.idToken());
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReader).findByProviderId(providerId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_USER)).when(userReadFacade).findByProviderId(providerId);
 
 		// when
 		Assertions.assertThrows(
@@ -156,7 +156,7 @@ class SignServiceTest extends ServiceTest {
 			ReturnCode.NOT_EXIST_USER.getMessage());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(dto.provider(), dto.idToken());
-		verify(userReader, times(1)).findByProviderId(providerId);
+		verify(userReadFacade, times(1)).findByProviderId(providerId);
 		verify(jwtProvider, times(0)).generateToken(user);
 	}
 
