@@ -14,7 +14,6 @@ import com.cakk.domain.mysql.repository.jpa.CakeCategoryJpaRepository
 import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository
 import com.cakk.domain.mysql.repository.query.CakeQueryRepository
 import java.util.*
-import java.util.function.Supplier
 
 @DomainFacade
 class CakeReadFacade(
@@ -76,7 +75,7 @@ class CakeReadFacade(
         return param
     }
 
-	fun findByCakeId(cakeId: Long?): CakeCategory {
+	fun findCakeCategoryByCakeId(cakeId: Long?): CakeCategory {
 		return cakeCategoryJpaRepository.findByCakeId(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY)
 	}
 }
