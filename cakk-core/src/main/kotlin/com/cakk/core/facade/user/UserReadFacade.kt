@@ -6,9 +6,6 @@ import com.cakk.core.annotation.DomainFacade
 import com.cakk.domain.mysql.entity.user.User
 import com.cakk.domain.mysql.repository.jpa.UserJpaRepository
 import com.cakk.domain.mysql.repository.query.UserQueryRepository
-import java.util.*
-
-
 
 @DomainFacade
 class UserReadFacade(

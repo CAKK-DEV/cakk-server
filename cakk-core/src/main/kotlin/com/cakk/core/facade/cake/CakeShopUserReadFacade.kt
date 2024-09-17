@@ -6,7 +6,6 @@ import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam
 import com.cakk.domain.mysql.repository.query.CakeHeartQueryRepository
 import com.cakk.domain.mysql.repository.query.CakeShopHeartQueryRepository
 
-
 @DomainFacade
 class CakeShopUserReadFacade(
 	private val cakeShopHeartQueryRepository: CakeShopHeartQueryRepository,
