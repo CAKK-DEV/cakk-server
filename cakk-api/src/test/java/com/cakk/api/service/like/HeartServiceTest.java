@@ -18,15 +18,14 @@ import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.cake.CakeReadFacade;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
+import com.cakk.core.facade.cake.CakeShopUserReadFacade;
 import com.cakk.core.facade.user.UserHeartFacade;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 
 @DisplayName("하트 기능 관련 비즈니스 로직 테스트")
 class HeartServiceTest extends ServiceTest {
@@ -35,16 +34,13 @@ class HeartServiceTest extends ServiceTest {
 	private HeartService heartService;
 
 	@Mock
-	private CakeReader cakeReader;
+	private CakeReadFacade cakeReadFacade;
 
 	@Mock
-	private CakeShopReader cakeShopReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Mock
-	private CakeHeartReader cakeHeartReader;
-
-	@Mock
-	private CakeShopHeartReader cakeShopHeartReader;
+	private CakeShopUserReadFacade cakeShopUserReadFacade;
 
 	@Mock
 	private UserHeartFacade userHeartFacade;
@@ -63,7 +59,7 @@ class HeartServiceTest extends ServiceTest {
 				.sampleList(5);
 
 		doReturn(cakeImages)
-			.when(cakeHeartReader)
+			.when(cakeShopUserReadFacade)
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
@@ -73,7 +69,7 @@ class HeartServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages, result.cakeImages());
 		Assertions.assertNotNull(result.lastCakeHeartId());
 
-		verify(cakeHeartReader, times(1))
+		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 	}
 
@@ -90,7 +86,7 @@ class HeartServiceTest extends ServiceTest {
 				.sampleList(5);
 
 		doReturn(cakeImages)
-			.when(cakeHeartReader)
+			.when(cakeShopUserReadFacade)
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
@@ -100,7 +96,7 @@ class HeartServiceTest extends ServiceTest {
 		Assertions.assertEquals(cakeImages, result.cakeImages());
 		Assertions.assertNotNull(result.lastCakeHeartId());
 
-		verify(cakeHeartReader, times(1))
+		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 	}
 
@@ -110,7 +106,7 @@ class HeartServiceTest extends ServiceTest {
 		final User user = getUser();
 
 		doReturn(List.of())
-			.when(cakeHeartReader)
+			.when(cakeShopUserReadFacade)
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 
 		// when
@@ -120,7 +116,7 @@ class HeartServiceTest extends ServiceTest {
 		Assertions.assertEquals(0, result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeHeartId());
 
-		verify(cakeHeartReader, times(1))
+		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
 	}
 
@@ -131,13 +127,13 @@ class HeartServiceTest extends ServiceTest {
 		final Long cakeId = 1L;
 		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 
-		doReturn(cake).when(cakeReader).findByIdWithHeart(cakeId);
+		doReturn(cake).when(cakeReadFacade).findByIdWithHeart(cakeId);
 		doNothing().when(userHeartFacade).heartCake(user, cake);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
 
-		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
+		verify(cakeReadFacade, times(1)).findByIdWithHeart(cakeId);
 		verify(userHeartFacade, times(1)).heartCake(user, cake);
 	}
 
@@ -149,13 +145,13 @@ class HeartServiceTest extends ServiceTest {
 		final Cake cake = getConstructorMonkey().giveMeOne(Cake.class);
 		cake.heart(user);
 
-		doReturn(cake).when(cakeReader).findByIdWithHeart(cakeId);
+		doReturn(cake).when(cakeReadFacade).findByIdWithHeart(cakeId);
 		doNothing().when(userHeartFacade).heartCake(user, cake);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCake(user, cakeId));
 
-		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
+		verify(cakeReadFacade, times(1)).findByIdWithHeart(cakeId);
 		verify(userHeartFacade, times(1)).heartCake(user, cake);
 	}
 
@@ -165,7 +161,7 @@ class HeartServiceTest extends ServiceTest {
 		final User user = getUser();
 		final Long cakeId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE)).when(cakeReader).findByIdWithHeart(cakeId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE)).when(cakeReadFacade).findByIdWithHeart(cakeId);
 
 		// when & then
 		assertThrows(
@@ -173,7 +169,7 @@ class HeartServiceTest extends ServiceTest {
 			() -> heartService.heartCake(user, cakeId),
 			ReturnCode.NOT_EXIST_CAKE.getMessage());
 
-		verify(cakeReader, times(1)).findByIdWithHeart(cakeId);
+		verify(cakeReadFacade, times(1)).findByIdWithHeart(cakeId);
 	}
 
 	@TestWithDisplayName("케이크 샵에 대하여 하트를 동작한다.")
@@ -188,13 +184,13 @@ class HeartServiceTest extends ServiceTest {
 			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
 			.sample();
 
-		doReturn(cakeShop).when(cakeShopReader).findByIdWithHeart(cakeShopId);
+		doReturn(cakeShop).when(cakeShopReadFacade).findByIdWithHeart(cakeShopId);
 		doNothing().when(userHeartFacade).heartCakeShop(user, cakeShop);
 
 		// when & then
 		assertDoesNotThrow(() -> heartService.heartCakeShop(user, cakeShopId));
 
-		verify(cakeShopReader, times(1)).findByIdWithHeart(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).findByIdWithHeart(cakeShopId);
 		verify(userHeartFacade, times(1)).heartCakeShop(user, cakeShop);
 	}
 
@@ -204,7 +200,7 @@ class HeartServiceTest extends ServiceTest {
 		final User user = getUser();
 		final Long cakeShopId = 1L;
 
-		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReader).findByIdWithHeart(cakeShopId);
+		doThrow(new CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)).when(cakeShopReadFacade).findByIdWithHeart(cakeShopId);
 
 		// when & then
 		assertThrows(
@@ -212,6 +208,6 @@ class HeartServiceTest extends ServiceTest {
 			() -> heartService.heartCakeShop(user, cakeShopId),
 			ReturnCode.NOT_EXIST_CAKE_SHOP.getMessage());
 
-		verify(cakeShopReader, times(1)).findByIdWithHeart(cakeShopId);
+		verify(cakeShopReadFacade, times(1)).findByIdWithHeart(cakeShopId);
 	}
 }

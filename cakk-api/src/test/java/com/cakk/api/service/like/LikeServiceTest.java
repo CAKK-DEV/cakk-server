@@ -11,10 +11,10 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.user.UserLikeFacade;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 @DisplayName("좋아요 기능 관련 비즈니스 로직 테스트")
 public class LikeServiceTest extends ServiceTest {
 
@@ -22,7 +22,7 @@ public class LikeServiceTest extends ServiceTest {
 	private LikeService likeService;
 
 	@Mock
-	private CakeShopReader cakeShopReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Mock
 	private UserLikeFacade userLikeFacade;
@@ -39,7 +39,7 @@ public class LikeServiceTest extends ServiceTest {
 			.set("location", supplyPointBy(Arbitraries.doubles().sample(), Arbitraries.doubles().sample()))
 			.sample();
 
-		doReturn(cakeShop).when(cakeShopReader).findByIdWithLike(cakeShopId);
+		doReturn(cakeShop).when(cakeShopReadFacade).findByIdWithLike(cakeShopId);
 		doNothing().when(userLikeFacade).likeCakeShop(user, cakeShop);
 
 		// when

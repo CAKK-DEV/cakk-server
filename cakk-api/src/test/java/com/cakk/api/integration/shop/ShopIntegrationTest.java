@@ -40,13 +40,11 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.common.enums.Days;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
-import com.cakk.domain.mysql.repository.reader.CakeShopLinkReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopOperationReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
@@ -63,13 +61,7 @@ class ShopIntegrationTest extends IntegrationTest {
 	private static final String API_URL = "/api/v1/shops";
 
 	@Autowired
-	private CakeShopReader cakeShopReader;
-
-	@Autowired
-	private CakeShopOperationReader cakeShopOperationReader;
-
-	@Autowired
-	private CakeShopLinkReader cakeShopLinkReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Autowired
 	private CakeViewsRedisRepository cakeViewsRedisRepository;
@@ -124,7 +116,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		assertEquals(cakeShop.getId(), data.cakeShopId());
 		assertEquals(cakeShop.getThumbnailUrl(), data.thumbnailUrl());
 		assertEquals(cakeShop.getShopName(), data.cakeShopName());
@@ -153,7 +145,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		assertEquals(cakeShop.getId(), data.cakeShopId());
 		assertEquals(cakeShop.getThumbnailUrl(), data.thumbnailUrl());
 		assertEquals(cakeShop.getShopName(), data.cakeShopName());
@@ -203,19 +195,19 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		assertEquals(cakeShop.getId(), data.cakeShopId());
 		assertEquals(cakeShop.getThumbnailUrl(), data.thumbnailUrl());
 		assertEquals(cakeShop.getShopName(), data.cakeShopName());
 		assertEquals(cakeShop.getShopBio(), data.cakeShopBio());
 		assertEquals(cakeShop.getShopDescription(), data.cakeShopDescription());
 
-		final Set<Days> cakeShopOperations = cakeShopOperationReader.findAllByCakeShopId(cakeShopId).stream()
+		final Set<Days> cakeShopOperations = cakeShopReadFacade.findCakeShopOperationsByCakeShopId(cakeShopId).stream()
 			.map(CakeShopOperation::getOperationDay)
 			.collect(Collectors.toSet());
 		assertEquals(cakeShopOperations, data.operationDays());
 
-		final Set<CakeShopLinkParam> cakeShopLinks = cakeShopLinkReader.findAllByCakeShopId(cakeShopId).stream()
+		final Set<CakeShopLinkParam> cakeShopLinks = cakeShopReadFacade.findCakeShopLinksByCakeShopId(cakeShopId).stream()
 			.map((it) -> new CakeShopLinkParam(it.getLinkKind(), it.getLinkPath()))
 			.collect(Collectors.toSet());
 		assertEquals(cakeShopLinks, data.links());
@@ -286,7 +278,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
 		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
 
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		Double longitude = cakeShop.getLocation().getX();
 		Double latitude = cakeShop.getLocation().getY();
 
@@ -294,7 +286,7 @@ class ShopIntegrationTest extends IntegrationTest {
 		assertEquals(latitude, data.latitude());
 		assertEquals(longitude, data.longitude());
 
-		List<CakeShopOperationParam> cakeShopOperations = cakeShopOperationReader.findAllByCakeShopId(cakeShopId).stream()
+		List<CakeShopOperationParam> cakeShopOperations = cakeShopReadFacade.findCakeShopOperationsByCakeShopId(cakeShopId).stream()
 			.map((it) -> new CakeShopOperationParam(it.getOperationDay(), it.getOperationStartTime(), it.getOperationEndTime()))
 			.toList();
 		assertEquals(cakeShopOperations, data.shopOperationDays());

@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
 
 @RequiredArgsConstructor
 @Service
 public class ViewsService {
 
-	private final CakeReader cakeReader;
+	private final CakeReadFacade cakeReadFacade;
 
 	private final ApplicationEventPublisher publisher;
 
@@ -28,7 +28,7 @@ public class ViewsService {
 		}
 
 		try {
-			final Cake cake = cakeReader.findById(cakeId);
+			final Cake cake = cakeReadFacade.findById(cakeId);
 			final CakeIncreaseViewsEvent event = cake.getInCreaseViewsEvent();
 
 			publisher.publishEvent(event);

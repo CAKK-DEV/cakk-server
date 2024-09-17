@@ -14,11 +14,13 @@ import org.springframework.test.context.ActiveProfiles;
 import net.jqwik.api.Arbitraries;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
+import com.navercorp.fixturemonkey.api.instantiator.Instantiator;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 
+import com.cakk.common.enums.Gender;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.Role;
 import com.cakk.domain.mysql.config.JpaConfig;
@@ -59,14 +61,21 @@ public abstract class ServiceTest {
 
 	protected User getUser() {
 		return getConstructorMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("provider", Arbitraries.of(Provider.class))
-			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("birthday", LocalDate.now())
-			.set("role", Arbitraries.of(Role.class))
-			.sample();
+			.instantiate(
+				User.class,
+				Instantiator.constructor()
+					.parameter(long.class)
+					.parameter(Provider.class)
+					.parameter(String.class)
+					.parameter(String.class)
+					.parameter(String.class)
+					.parameter(String.class)
+					.parameter(Gender.class)
+					.parameter(LocalDate.class)
+					.parameter(String.class)
+					.parameter(String.class)
+					.parameter(Role.class)
+			).sample();
 	}
 
 	public static Point supplyPointBy(Double latitude, Double longitude) {

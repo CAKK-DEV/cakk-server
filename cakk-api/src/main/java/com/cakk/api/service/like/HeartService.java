@@ -16,25 +16,23 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.core.facade.cake.CakeReadFacade;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
+import com.cakk.core.facade.cake.CakeShopUserReadFacade;
 import com.cakk.core.facade.user.UserHeartFacade;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeHeartReader;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopHeartReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
 
 @RequiredArgsConstructor
 @Service
 public class HeartService {
 
-	private final CakeReader cakeReader;
-	private final CakeShopReader cakeShopReader;
-	private final CakeHeartReader cakeHeartReader;
-	private final CakeShopHeartReader cakeShopHeartReader;
+	private final CakeReadFacade cakeReadFacade;
+	private final CakeShopReadFacade cakeShopReadFacade;
+	private final CakeShopUserReadFacade cakeShopUserReadFacade;
 	private final UserHeartFacade userHeartFacade;
 
 	@Transactional(readOnly = true)
@@ -42,7 +40,7 @@ public class HeartService {
 		final HeartCakeSearchRequest dto,
 		final User signInUser
 	) {
-		final List<HeartCakeImageResponseParam> cakeImages = cakeHeartReader.searchCakeImagesByCursorAndHeart(
+		final List<HeartCakeImageResponseParam> cakeImages = cakeShopUserReadFacade.searchCakeImagesByCursorAndHeart(
 			dto.cakeHeartId(),
 			signInUser.getId(),
 			dto.pageSize()
@@ -56,7 +54,7 @@ public class HeartService {
 		final HeartCakeShopSearchRequest dto,
 		final User signInUser
 	) {
-		final List<HeartCakeShopResponseParam> cakeShops = cakeShopHeartReader.searchAllByCursorAndHeart(
+		final List<HeartCakeShopResponseParam> cakeShops = cakeShopUserReadFacade.searchAllCakeShopsByCursorAndHeart(
 			dto.cakeShopHeartId(),
 			signInUser.getId(),
 			dto.pageSize()
@@ -67,7 +65,7 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
+		final Cake cake = cakeReadFacade.findByIdWithHeart(cakeId);
 		final boolean isHeart = cake.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
@@ -75,7 +73,7 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartResponse isHeartCakeShop(final User user, final Long cakeShopId) {
-		final CakeShop cakeShop = cakeShopReader.findByIdWithHeart(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId);
 		final boolean isHeart = cakeShop.isHeartedBy(user);
 
 		return HeartMapper.supplyHeartResponseBy(isHeart);
@@ -83,14 +81,14 @@ public class HeartService {
 
 	@DistributedLock(key = "#cakeId")
 	public void heartCake(final User user, final Long cakeId) {
-		final Cake cake = cakeReader.findByIdWithHeart(cakeId);
+		final Cake cake = cakeReadFacade.findByIdWithHeart(cakeId);
 
 		userHeartFacade.heartCake(user, cake);
 	}
 
 	@DistributedLock(key = "#cakeShopId")
 	public void heartCakeShop(final User user, final Long cakeShopId) {
-		final CakeShop cakeShop = cakeShopReader.findByIdWithHeart(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId);
 
 		userHeartFacade.heartCakeShop(user, cakeShop);
 	}

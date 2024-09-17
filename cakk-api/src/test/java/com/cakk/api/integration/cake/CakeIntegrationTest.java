@@ -27,9 +27,9 @@ import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.entity.cake.CakeCategory;
-import com.cakk.domain.mysql.repository.reader.CakeCategoryReader;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @SqlGroup({
@@ -45,7 +45,7 @@ class CakeIntegrationTest extends IntegrationTest {
 	private static final String API_URL = "/api/v1/cakes";
 
 	@Autowired
-	private CakeCategoryReader cakeCategoryReader;
+	private CakeReadFacade cakeReadFacade;
 
 	@Autowired
 	private CakeViewsRedisRepository cakeViewsRedisRepository;
@@ -101,7 +101,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(5, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			CakeCategory cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(cakeImage.cakeId());
 			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
 		});
 	}
@@ -132,7 +132,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(5, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeCategoryReader.findByCakeId(cakeImage.cakeId());
+			CakeCategory cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(cakeImage.cakeId());
 			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
 		});
 	}
@@ -189,7 +189,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(3, data.size());
 		data.cakeImages().forEach(cakeImage -> {
-			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId());
+			assertEquals(Long.valueOf(1), cakeImage.cakeShopId());
 		});
 	}
 
@@ -219,7 +219,7 @@ class CakeIntegrationTest extends IntegrationTest {
 		assertEquals(lastCakeId, data.lastCakeId());
 		assertEquals(3, data.size());
 		data.cakeImages().forEach(cakeImage ->
-			assertEquals(Long.valueOf(1L), cakeImage.cakeShopId())
+			assertEquals(Long.valueOf(1), cakeImage.cakeShopId())
 		);
 	}
 

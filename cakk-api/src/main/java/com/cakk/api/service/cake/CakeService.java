@@ -19,6 +19,9 @@ import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.core.facade.cake.CakeManageFacade;
+import com.cakk.core.facade.cake.CakeReadFacade;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
+import com.cakk.core.facade.tag.TagReadFacade;
 import com.cakk.domain.mysql.dto.param.cake.CakeCreateParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
@@ -28,9 +31,6 @@ import com.cakk.domain.mysql.entity.cake.CakeCategory;
 import com.cakk.domain.mysql.entity.cake.Tag;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.TagReader;
 import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 
 @Transactional(readOnly = true)
@@ -38,30 +38,30 @@ import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
 @RequiredArgsConstructor
 public class CakeService {
 
-	private final CakeReader cakeReader;
-	private final TagReader tagReader;
-	private final CakeShopReader cakeShopReader;
+	private final CakeReadFacade cakeReadFacade;
+	private final TagReadFacade tagReadFacade;
+	private final CakeShopReadFacade cakeShopReadFacade;
 	private final CakeViewsRedisRepository cakeViewsRedisRepository;
 	private final CakeManageFacade cakeManageFacade;
 	private final ApplicationEventPublisher publisher;
 
 	public CakeImageListResponse findCakeImagesByCursorAndCategory(final CakeSearchByCategoryRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
-			= cakeReader.searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
+			= cakeReadFacade.searchCakeImagesByCursorAndCategory(dto.cakeId(), dto.category(), dto.pageSize());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}
 
 	public CakeImageListResponse findCakeImagesByCursorAndCakeShopId(final CakeSearchByShopRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
-			= cakeReader.searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
+			= cakeReadFacade.searchCakeImagesByCursorAndCakeShopId(dto.cakeId(), dto.cakeShopId(), dto.pageSize());
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}
 
 	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeSearchByLocationRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
-			= cakeReader.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
+			= cakeReadFacade.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
 		final IncreaseSearchCountEvent event = new IncreaseSearchCountEvent(dto.keyword());
 
 		publisher.publishEvent(event);
@@ -78,21 +78,21 @@ public class CakeService {
 			return CakeMapper.supplyCakeImageListResponse(List.of(), cakeIds);
 		}
 
-		final List<CakeImageResponseParam> cakeImages = cakeReader.searchCakeImagesByCakeIds(cakeIds);
+		final List<CakeImageResponseParam> cakeImages = cakeReadFacade.searchCakeImagesByCakeIds(cakeIds);
 		return CakeMapper.supplyCakeImageListResponse(cakeImages, cakeIds);
 	}
 
 	public CakeDetailResponse findCakeDetailById(Long cakeId) {
-		final CakeDetailParam cake = cakeReader.searchCakeDetailById(cakeId);
+		final CakeDetailParam cake = cakeReadFacade.searchCakeDetailById(cakeId);
 
 		return CakeMapper.cakeDetailResponseFromParam(cake);
 	}
 
 	@Transactional
 	public void createCake(CakeCreateParam param) {
-		final CakeShop cakeShop = cakeShopReader.searchByIdAndOwner(param.cakeShopId(), param.owner());
+		final CakeShop cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId(), param.owner());
 		final Cake cake = param.cake();
-		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
+		final List<Tag> tags = tagReadFacade.getTagsByTagName(param.tagNames());
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
 		cakeManageFacade.create(cakeShop, cake, tags, cakeCategories);
@@ -100,8 +100,8 @@ public class CakeService {
 
 	@Transactional
 	public void updateCake(CakeUpdateParam param) {
-		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(param.cakeId(), param.owner());
-		final List<Tag> tags = tagReader.getTagsByTagName(param.tagNames());
+		final Cake cake = cakeReadFacade.findWithCakeTagsAndCakeCategories(param.cakeId(), param.owner());
+		final List<Tag> tags = tagReadFacade.getTagsByTagName(param.tagNames());
 		final String cakeImageUrl = param.cakeImageUrl();
 		final List<CakeCategory> cakeCategories = param.cakeCategories();
 
@@ -110,7 +110,7 @@ public class CakeService {
 
 	@Transactional
 	public void deleteCake(User owner, Long cakeId) {
-		final Cake cake = cakeReader.findWithCakeTagsAndCakeCategories(cakeId, owner);
+		final Cake cake = cakeReadFacade.findWithCakeTagsAndCakeCategories(cakeId, owner);
 
 		cakeManageFacade.delete(cake);
 	}

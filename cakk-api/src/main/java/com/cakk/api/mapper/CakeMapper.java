@@ -89,6 +89,6 @@ public class CakeMapper {
 	}
 
 	private static boolean isEmptyTag(TagParam tagParam) {
-		return isNull(tagParam.tagId()) || isNull(tagParam.tagName() );
+		return isNull(tagParam.tagId()) || isNull(tagParam.tagName());
 	}
 }

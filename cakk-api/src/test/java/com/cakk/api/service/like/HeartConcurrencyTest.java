@@ -15,12 +15,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
+import com.cakk.core.facade.cake.CakeReadFacade;
+import com.cakk.core.facade.cake.CakeShopReadFacade;
+import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.repository.reader.CakeReader;
-import com.cakk.domain.mysql.repository.reader.CakeShopReader;
-import com.cakk.domain.mysql.repository.reader.UserReader;
 
 @SpringBootTest(properties = "spring.profiles.active=test")
 @SqlGroup({
@@ -35,19 +35,19 @@ class HeartConcurrencyTest {
 	private HeartService heartService;
 
 	@Autowired
-	private CakeReader cakeReader;
+	private CakeReadFacade cakeReadFacade;
 
 	@Autowired
-	private CakeShopReader cakeShopReader;
+	private CakeShopReadFacade cakeShopReadFacade;
 
 	@Autowired
-	private UserReader userReader;
+	private UserReadFacade userReadFacade;
 
 	private List<User> userList;
 
 	@BeforeEach
 	void initUserList() {
-		userList = userReader.findAll();
+		userList = userReadFacade.findAll();
 	}
 
 	@TestWithDisplayName("케이크 하트 동작 시, 동시성 문제가 발생하지 않는다.")
@@ -75,7 +75,7 @@ class HeartConcurrencyTest {
 		latch.await();
 
 		// then
-		final Cake cake = cakeReader.findById(cakeId);
+		final Cake cake = cakeReadFacade.findById(cakeId);
 		assertEquals(100, cake.getHeartCount().intValue());
 	}
 
@@ -104,7 +104,7 @@ class HeartConcurrencyTest {
 		latch.await();
 
 		// then
-		final CakeShop cakeShop = cakeShopReader.findById(cakeShopId);
+		final CakeShop cakeShop = cakeShopReadFacade.findById(cakeShopId);
 		assertEquals(100, cakeShop.getHeartCount().intValue());
 	}
 }

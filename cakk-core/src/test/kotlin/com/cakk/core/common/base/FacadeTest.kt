@@ -1,11 +1,13 @@
 package com.cakk.core.common.base
 
+import com.cakk.common.enums.Gender
 import com.cakk.common.enums.Provider
 import com.cakk.common.enums.Role
 import com.cakk.domain.mysql.entity.cake.Cake
 import com.cakk.domain.mysql.entity.shop.CakeShop
 import com.cakk.domain.mysql.entity.user.User
 import com.navercorp.fixturemonkey.FixtureMonkey
+import com.navercorp.fixturemonkey.api.instantiator.Instantiator
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
@@ -46,14 +48,21 @@ abstract class FacadeTest {
 
 	protected fun getUserFixture(role: Role): User {
 		return getConstructorMonkey().giveMeBuilder(User::class.java)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("provider", Arbitraries.of(Provider::class.java))
-			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("birthday", LocalDate.now())
-			.set("role", role)
-			.sample()
+			.instantiate(
+				User::class.java,
+				Instantiator.constructor<Any>()
+					.parameter(Long::class.java)
+					.parameter(Provider::class.java)
+					.parameter(String::class.java)
+					.parameter(String::class.java)
+					.parameter(String::class.java)
+					.parameter(String::class.java)
+					.parameter(Gender::class.java)
+					.parameter(LocalDate::class.java)
+					.parameter(String::class.java)
+					.parameter(String::class.java)
+					.parameter(role.javaClass)
+			).sample()
 	}
 
 	protected fun getCakeFixture(): Cake {
