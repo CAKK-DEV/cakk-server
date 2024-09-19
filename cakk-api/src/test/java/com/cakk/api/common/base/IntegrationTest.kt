@@ -1,107 +1,118 @@
-package com.cakk.api.common.base;
+package com.cakk.api.common.base
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.cakk.api.provider.jwt.JwtProvider
+import com.cakk.api.vo.JsonWebToken
+import com.cakk.core.facade.user.UserReadFacade
+import com.cakk.domain.mysql.entity.user.User
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.*
+import com.navercorp.fixturemonkey.FixtureMonkey
+import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
+import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
+import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
+import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpHeaders
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
-import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
-
-import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.api.vo.JsonWebToken;
-import com.cakk.core.facade.user.UserReadFacade;
-import com.cakk.domain.mysql.entity.user.User;
-
-@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
-@SpringBootTest(
-	properties = "spring.profiles.active=test",
-	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-public abstract class IntegrationTest {
+@SpringBootTest(properties = ["spring.profiles.active=test"], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+abstract class IntegrationTest {
 
 	@Autowired
-	protected TestRestTemplate restTemplate;
-
-	@LocalServerPort
-	protected int port;
+    protected lateinit var restTemplate: TestRestTemplate
 
 	@Autowired
-	protected ObjectMapper objectMapper = new ObjectMapper();
+    protected lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    private lateinit var jwtProvider: JwtProvider
 
 	@Autowired
-	private JwtProvider jwtProvider;
+    protected lateinit var userReadFacade: UserReadFacade
 
-	@Autowired
-	protected UserReadFacade userReadFacade;
+	@BeforeEach
+	fun globalSetUp() {
+		objectMapper = jsonMapper { addModule(kotlinModule()) }
+	}
 
-	protected static final String BASE_URL = "http://localhost:";
-
-	protected final FixtureMonkey getConstructorMonkey() {
+	protected fun getConstructorMonkey(): FixtureMonkey {
 		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
+			.plugin(JakartaValidationPlugin())
 			.objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
-			.build();
+			.build()
 	}
 
-	protected final FixtureMonkey getReflectionMonkey() {
+	protected fun getReflectionMonkey(): FixtureMonkey {
 		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
+			.plugin(JakartaValidationPlugin())
 			.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-			.build();
+			.build()
 	}
 
-	protected final FixtureMonkey getBuilderMonkey() {
+	protected fun getBuilderMonkey(): FixtureMonkey {
 		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
+			.plugin(JakartaValidationPlugin())
 			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
-			.build();
+			.build()
 	}
 
-	protected HttpHeaders getAuthHeader() {
-		final HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthToken().accessToken());
+    protected val authHeader: HttpHeaders
+        get() {
+            val headers: HttpHeaders = HttpHeaders()
+            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + authToken.accessToken)
 
-		return headers;
-	}
+            return headers
+        }
 
-	protected HttpHeaders getAuthHeaderById(Long id) {
-		final HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthTokenById(id).accessToken());
+    protected fun getAuthHeaderById(id: Long): HttpHeaders {
+        val headers: HttpHeaders = HttpHeaders()
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthTokenById(id).accessToken)
 
-		return headers;
-	}
+        return headers
+    }
 
-	protected JsonWebToken getAuthToken() {
-		final User user = userReadFacade.findByUserId(1L);
+    protected val authToken: JsonWebToken
+        get() {
+            val user: User = userReadFacade.findByUserId(1L)
 
-		return jwtProvider.generateToken(user);
-	}
+            return jwtProvider.generateToken(user)
+        }
 
-	private JsonWebToken getAuthTokenById(Long id) {
-		final User user = userReadFacade.findByUserId(id);
+    private fun getAuthTokenById(id: Long): JsonWebToken {
+        val user: User = userReadFacade.findByUserId(id)
 
-		return jwtProvider.generateToken(user);
-	}
+        return jwtProvider.generateToken(user)
+    }
 
-	protected Long getUserId() {
-		return 1L;
-	}
+    protected val userId: Long
+        get() {
+            return 1L
+        }
 
-	protected long getAccessTokenExpiredSecond() {
-		return jwtProvider.getAccessTokenExpiredSecond();
-	}
+    protected val accessTokenExpiredSecond: Long
+        get() {
+            return jwtProvider.accessTokenExpiredSecond
+        }
 
-	protected long getRefreshTokenExpiredSecond() {
-		return jwtProvider.getRefreshTokenExpiredSecond();
-	}
+    protected val refreshTokenExpiredSecond: Long
+        get() {
+            return jwtProvider.refreshTokenExpiredSecond
+        }
+
+	protected final val localhost: String
+		get() {
+			return "http://localhost:"
+		}
 }
