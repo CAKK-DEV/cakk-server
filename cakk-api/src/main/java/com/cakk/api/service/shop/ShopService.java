@@ -176,9 +176,11 @@ public class ShopService {
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 4, pageSize);
-		final IncreaseSearchCountEvent event = com.cakk.api.mapper.EventMapper.supplyIncreaseSearchCountEventBy(dto.keyword());
 
-		publisher.publishEvent(event);
+		if (nonNull(dto.keyword())) {
+			final IncreaseSearchCountEvent event = com.cakk.api.mapper.EventMapper.supplyIncreaseSearchCountEventBy(dto.keyword());
+			publisher.publishEvent(event);
+		}
 
 		return ShopMapper.supplyCakeShopSearchResponseBy(cakeShops.getCakeShops());
 	}

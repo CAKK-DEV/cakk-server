@@ -15,6 +15,7 @@ import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
+import net.jqwik.api.Arbitraries
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,20 +32,23 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 abstract class IntegrationTest {
 
 	@Autowired
-    protected lateinit var restTemplate: TestRestTemplate
+	protected lateinit var restTemplate: TestRestTemplate
 
 	@Autowired
-    protected lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var jwtProvider: JwtProvider
+	protected lateinit var objectMapper: ObjectMapper
 
 	@Autowired
-    protected lateinit var userReadFacade: UserReadFacade
+	private lateinit var jwtProvider: JwtProvider
+
+	@Autowired
+	protected lateinit var userReadFacade: UserReadFacade
 
 	@BeforeEach
 	fun globalSetUp() {
-		objectMapper = jsonMapper { addModule(kotlinModule()) }
+		objectMapper = jsonMapper {
+			addModule(kotlinModule())
+			addModule(JavaTimeModule())
+		}
 	}
 
 	protected fun getConstructorMonkey(): FixtureMonkey {
@@ -68,48 +72,52 @@ abstract class IntegrationTest {
 			.build()
 	}
 
-    protected val authHeader: HttpHeaders
-        get() {
-            val headers: HttpHeaders = HttpHeaders()
-            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + authToken.accessToken)
+	protected val authHeader: HttpHeaders
+		get() {
+			val headers: HttpHeaders = HttpHeaders()
+			headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + authToken.accessToken)
 
-            return headers
-        }
+			return headers
+		}
 
-    protected fun getAuthHeaderById(id: Long): HttpHeaders {
-        val headers: HttpHeaders = HttpHeaders()
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthTokenById(id).accessToken)
+	protected fun getAuthHeaderById(id: Long): HttpHeaders {
+		val headers: HttpHeaders = HttpHeaders()
+		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + getAuthTokenById(id).accessToken)
 
-        return headers
-    }
+		return headers
+	}
 
-    protected val authToken: JsonWebToken
-        get() {
-            val user: User = userReadFacade.findByUserId(1L)
+	protected val authToken: JsonWebToken
+		get() {
+			val user: User = userReadFacade.findByUserId(1L)
 
-            return jwtProvider.generateToken(user)
-        }
+			return jwtProvider.generateToken(user)
+		}
 
-    private fun getAuthTokenById(id: Long): JsonWebToken {
-        val user: User = userReadFacade.findByUserId(id)
+	private fun getAuthTokenById(id: Long): JsonWebToken {
+		val user: User = userReadFacade.findByUserId(id)
 
-        return jwtProvider.generateToken(user)
-    }
+		return jwtProvider.generateToken(user)
+	}
 
-    protected val userId: Long
-        get() {
-            return 1L
-        }
+	protected val userId: Long
+		get() {
+			return 1L
+		}
 
-    protected val accessTokenExpiredSecond: Long
-        get() {
-            return jwtProvider.accessTokenExpiredSecond
-        }
+	protected val accessTokenExpiredSecond: Long
+		get() {
+			return jwtProvider.accessTokenExpiredSecond
+		}
 
-    protected val refreshTokenExpiredSecond: Long
-        get() {
-            return jwtProvider.refreshTokenExpiredSecond
-        }
+	protected val refreshTokenExpiredSecond: Long
+		get() {
+			return jwtProvider.refreshTokenExpiredSecond
+		}
+
+	protected fun getRandomAlpha(min: Int, max: Int): String {
+		return Arbitraries.strings().alpha().withCharRange('a', 'z').ofMinLength(min).ofMaxLength(max).sample()
+	}
 
 	protected final val localhost: String
 		get() {

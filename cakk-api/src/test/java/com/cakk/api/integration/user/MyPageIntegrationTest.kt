@@ -1,162 +1,160 @@
-package com.cakk.api.integration.user;
+package com.cakk.api.integration.user
 
-import static org.junit.Assert.*;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
+import java.time.LocalDate
 
-import java.time.LocalDate;
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import net.jqwik.api.Arbitraries
 
-import net.jqwik.api.Arbitraries;
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.*
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase
+import org.springframework.test.context.jdbc.SqlGroup
+import org.springframework.web.util.UriComponentsBuilder
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.IntegrationTest;
-import com.cakk.api.dto.request.user.ProfileUpdateRequest;
-import com.cakk.api.dto.response.user.ProfileInformationResponse;
-import com.cakk.api.vo.JsonWebToken;
-import com.cakk.common.enums.Gender;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
-import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.dto.request.user.ProfileUpdateRequest
+import com.cakk.api.dto.response.user.ProfileInformationResponse
+import com.cakk.common.enums.Gender
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.response.ApiResponse
 
-@SqlGroup({
-	@Sql(scripts = {
-		"/sql/insert-test-user.sql",
-		"/sql/insert-cake-shop.sql",
-		"/sql/insert-heart.sql",
-	}, executionPhase = BEFORE_TEST_METHOD),
-	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
-})
-class MyPageIntegrationTest extends IntegrationTest {
+@SqlGroup(
+	Sql(
+		scripts = ["/sql/insert-test-user.sql", "/sql/insert-cake-shop.sql", "/sql/insert-heart.sql"],
+		executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+	),
+	Sql(
+		scripts = ["/sql/delete-all.sql"],
+		executionPhase = ExecutionPhase.AFTER_TEST_METHOD
+	)
+)
+internal class MyPageIntegrationTest(
+	@LocalServerPort private val port: Int
+) : IntegrationTest() {
 
-	private static final String API_URL = "/api/v1/me";
+	protected val baseUrl = "$localhost$port/api/v1/me"
 
 	@TestWithDisplayName("프로필 조회에 성공한다.")
-	void profile() {
+	fun profile() {
 		// given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.build();
+		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.GET,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final ProfileInformationResponse body = objectMapper.convertValue(response.getData(), ProfileInformationResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val body = objectMapper.convertValue(response.data, ProfileInformationResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		final User user = userReadFacade.findByUserId(getUserId());
-		assertEquals(body.nickname(), user.getNickname());
-		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
-		assertEquals(body.email(), user.getEmail());
-		assertEquals(body.gender(), user.getGender());
-		assertEquals(body.role(), user.getRole());
+		val user = userReadFacade.findByUserId(userId)
+		body.nickname shouldBe user.nickname
+		body.profileImageUrl shouldBe user.profileImageUrl
+		body.email shouldBe user.email
+		body.gender shouldBe user.gender
+		body.role shouldBe user.role
 	}
 
 	@TestWithDisplayName("토큰에 Bearer가 붙어있지 않으면 Filter에서 에러를 반환한다.")
-	void profile2() {
+	fun profile2() {
 		// given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.build();
+		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
+			.build()
 
-		final HttpHeaders headers = new HttpHeaders();
-		final JsonWebToken jsonWebToken = getAuthToken();
-		headers.set(HttpHeaders.AUTHORIZATION, jsonWebToken.accessToken());
-		headers.set("Refresh", jsonWebToken.refreshToken());
+		val headers = HttpHeaders()
+		val jsonWebToken = authToken
+		headers[HttpHeaders.AUTHORIZATION] = jsonWebToken.accessToken
+		headers["Refresh"] = jsonWebToken.refreshToken
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.GET,
-			new HttpEntity<>(headers),
-			ApiResponse.class);
+			HttpEntity<Any>(headers),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(401), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.NOT_EXIST_BEARER_SUFFIX.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.NOT_EXIST_BEARER_SUFFIX.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(401)
+		response.returnCode shouldBe ReturnCode.NOT_EXIST_BEARER_SUFFIX.code
+		response.returnMessage shouldBe ReturnCode.NOT_EXIST_BEARER_SUFFIX.message
 	}
 
 	@TestWithDisplayName("프로필 수정에 성공한다.")
-	void modify() {
+	fun modify() {
 		// given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.build();
-		final ProfileUpdateRequest body = getConstructorMonkey().giveMeBuilder(ProfileUpdateRequest.class)
-			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
-			.set("profileImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(200))
-			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("gender", Arbitraries.of(Gender.class))
+		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
+			.build()
+		val body = getConstructorMonkey().giveMeBuilder(ProfileUpdateRequest::class.java)
+			.set("nickname", getRandomAlpha(1, 20))
+			.set("profileImageUrl", getRandomAlpha(1, 200))
+			.set("email", getRandomAlpha(1, 50))
+			.set("gender", Arbitraries.of(Gender::class.java))
 			.set("birthday", LocalDate.now())
-			.sample();
+			.sample()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(body, getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity(body, authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		final User user = userReadFacade.findByUserId(1L);
-		assertEquals(body.nickname(), user.getNickname());
-		assertEquals(body.profileImageUrl(), user.getProfileImageUrl());
-		assertEquals(body.email(), user.getEmail());
-		assertEquals(body.gender(), user.getGender());
+		val user = userReadFacade.findByUserId(1L)
+		body.nickname shouldBe user.nickname
+		body.profileImageUrl shouldBe user.profileImageUrl
+		body.email shouldBe user.email
+		body.gender shouldBe user.gender
 	}
 
 	@TestWithDisplayName("회원 탈퇴에 성공한다.")
-	void withdraw() {
+	fun withdraw() {
 		// given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.build();
+		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.DELETE,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertThrows(CakkException.class, () -> userReadFacade.findByUserId(1L));
+		val exception = shouldThrow<CakkException> {
+			userReadFacade.findByUserId(1L)
+		}
+		exception.getReturnCode() shouldBe ReturnCode.NOT_EXIST_USER
 	}
 }
