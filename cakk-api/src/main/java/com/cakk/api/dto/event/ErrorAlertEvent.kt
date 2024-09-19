@@ -1,10 +1,9 @@
-package com.cakk.api.dto.event;
+package com.cakk.api.dto.event
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest
 
-public record ErrorAlertEvent(
-	Exception exception,
-	HttpServletRequest request,
-	String profile
-) {
-}
+data class ErrorAlertEvent(
+	val exception: Exception,
+	val request: HttpServletRequest,
+	val profile: String
+)

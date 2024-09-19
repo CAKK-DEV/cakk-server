@@ -1,7 +1,6 @@
-package com.cakk.api.dto.event;
+package com.cakk.api.dto.event
 
-public record EmailWithVerificationCodeSendEvent(
-	String email,
-	String code
-) {
-}
+data class EmailWithVerificationCodeSendEvent(
+    val email: String,
+    val code: String
+)

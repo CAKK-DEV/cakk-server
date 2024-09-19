@@ -32,13 +32,13 @@ class SearchEventListenerTest extends MockitoTest {
 		// given
 		IncreaseSearchCountEvent event = eventFixture();
 
-		doNothing().when(keywordRedisRepository).saveOrIncreaseSearchCount(event.keyword());
+		doNothing().when(keywordRedisRepository).saveOrIncreaseSearchCount(event.getKeyword());
 
 		// when
 		assertDoesNotThrow(() -> searchEventListener.increaseSearchCount(event));
 
 		// then
-		verify(keywordRedisRepository, times(1)).saveOrIncreaseSearchCount(event.keyword());
+		verify(keywordRedisRepository, times(1)).saveOrIncreaseSearchCount(event.getKeyword());
 	}
 
 	@TestWithDisplayName("이벤트에 null 데이터가 포함돼 있으면, increaseSearchCount 메서드가 호출 시, 에러를 반환한다.")
@@ -53,6 +53,6 @@ class SearchEventListenerTest extends MockitoTest {
 		);
 
 		// then
-		verify(keywordRedisRepository, times(0)).saveOrIncreaseSearchCount(event.keyword());
+		verify(keywordRedisRepository, times(0)).saveOrIncreaseSearchCount(event.getKeyword());
 	}
 }

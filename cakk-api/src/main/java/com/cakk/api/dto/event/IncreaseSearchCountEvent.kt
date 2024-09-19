@@ -1,6 +1,5 @@
-package com.cakk.api.dto.event;
+package com.cakk.api.dto.event
 
-public record IncreaseSearchCountEvent(
-	String keyword
-) {
-}
+data class IncreaseSearchCountEvent(
+    val keyword: String
+)
