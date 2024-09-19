@@ -1,661 +1,720 @@
-package com.cakk.api.integration.cake;
+package com.cakk.api.integration.cake
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.ints.shouldNotBeLessThan
+import io.kotest.matchers.shouldBe
 
-import java.util.List;
+import org.junit.jupiter.api.AfterEach
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatusCode
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase
+import org.springframework.test.context.jdbc.SqlGroup
+import org.springframework.web.util.UriComponentsBuilder
 
-import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.dto.request.cake.CakeCreateRequest
+import com.cakk.api.dto.request.cake.CakeUpdateRequest
+import com.cakk.api.dto.response.cake.CakeDetailResponse
+import com.cakk.api.dto.response.cake.CakeImageListResponse
+import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.common.enums.CakeDesignCategory
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.response.ApiResponse
+import com.cakk.core.facade.cake.CakeReadFacade
+import com.cakk.domain.redis.repository.CakeViewsRedisRepository
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.IntegrationTest;
-import com.cakk.api.dto.request.cake.CakeCreateRequest;
-import com.cakk.api.dto.request.cake.CakeUpdateRequest;
-import com.cakk.api.dto.response.cake.CakeDetailResponse;
-import com.cakk.api.dto.response.cake.CakeImageListResponse;
-import com.cakk.api.dto.response.like.HeartResponse;
-import com.cakk.common.enums.CakeDesignCategory;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.response.ApiResponse;
-import com.cakk.core.facade.cake.CakeReadFacade;
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
-import com.cakk.domain.mysql.entity.cake.CakeCategory;
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
+@SqlGroup(
+	Sql(
+		scripts = ["/sql/insert-test-user.sql", "/sql/insert-cake.sql", "/sql/insert-heart.sql"],
+		executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+	), Sql(
+		scripts = ["/sql/delete-all.sql"],
+		executionPhase = ExecutionPhase.AFTER_TEST_METHOD
+	)
+)
+internal class CakeIntegrationTest(
+	@LocalServerPort private val port: Int
+) : IntegrationTest() {
 
-@SqlGroup({
-	@Sql(scripts = {
-		"/sql/insert-test-user.sql",
-		"/sql/insert-cake.sql",
-		"/sql/insert-heart.sql"
-	}, executionPhase = BEFORE_TEST_METHOD),
-	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
-})
-class CakeIntegrationTest extends IntegrationTest {
-
-	private static final String API_URL = "/api/v1/cakes";
-
-	@Autowired
-	private CakeReadFacade cakeReadFacade;
+	protected val baseUrl = "$localhost$port/api/v1/cakes"
 
 	@Autowired
-	private CakeViewsRedisRepository cakeViewsRedisRepository;
+	private lateinit var cakeReadFacade: CakeReadFacade
 
-	private void initializeViews() {
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(4L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(5L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(6L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(8L);
-		cakeViewsRedisRepository.saveOrIncreaseSearchCount(9L);
+	@Autowired
+	private lateinit var cakeViewsRedisRepository: CakeViewsRedisRepository
+
+	private fun initializeViews() {
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(2L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(3L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(4L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(5L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(6L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(1L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(7L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(8L)
+		cakeViewsRedisRepository.saveOrIncreaseSearchCount(9L)
 	}
 
 	@AfterEach
-	void setUp() {
-		cakeViewsRedisRepository.clear();
+	fun cleanUp() {
+		cakeViewsRedisRepository.clear()
 	}
 
 	@TestWithDisplayName("카테고리로 첫 페이지 케이크 이미지 조회에 성공한다")
-	void searchByCategory1() {
+	fun searchByCategory1() {
 		// given
-		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/categories"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("category", CakeDesignCategory.FLOWER)
 			.queryParam("pageSize", 5)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
-		assertEquals(lastCakeId, data.lastCakeId());
-		assertEquals(5, data.size());
-		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(cakeImage.cakeId());
-			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
-		});
+		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
+		data.size shouldBe 5
+		data.cakeImages.forEach {
+			val cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(it.cakeId)
+			cakeCategory.cakeDesignCategory shouldBe CakeDesignCategory.FLOWER
+		}
 	}
 
 	@TestWithDisplayName("카테고리로 첫 페이지가 아닌 케이크 이미지 조회에 성공한다")
-	void searchByCategory2() {
+	fun searchByCategory2() {
 		// given
-		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/categories"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeId", 6)
 			.queryParam("category", CakeDesignCategory.FLOWER)
 			.queryParam("pageSize", 5)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
-		assertEquals(lastCakeId, data.lastCakeId());
-		assertEquals(5, data.size());
-		data.cakeImages().forEach(cakeImage -> {
-			CakeCategory cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(cakeImage.cakeId());
-			assertEquals(CakeDesignCategory.FLOWER, cakeCategory.getCakeDesignCategory());
-		});
+		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
+		data.size shouldBe 5
+		data.cakeImages.forEach {
+			val cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(it.cakeId)
+			cakeCategory.cakeDesignCategory shouldBe CakeDesignCategory.FLOWER
+		}
 	}
 
 	@TestWithDisplayName("카테고리로 케이크 이미지 조회 시 데이터가 없으면 빈 배열을 반환한다")
-	void searchByCategory3() {
+	fun searchByCategory3() {
 		// given
-		final String url = "%s%d%s/search/categories".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/categories"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeId", 1)
 			.queryParam("category", CakeDesignCategory.FLOWER)
 			.queryParam("pageSize", 5)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(0, data.cakeImages().size());
-		assertNull(data.lastCakeId());
-		assertEquals(0, data.size());
+		data.cakeImages shouldHaveSize 0
+		data.lastCakeId shouldBe null
+		data.size shouldBe 0
 	}
 
 	@TestWithDisplayName("케이크 샵으로 첫 페이지 케이크 이미지 조회에 성공한다")
-	void searchByShopId1() {
+	fun searchByShopId1() {
 		// given
-		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/shops"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeShopId", 1L)
 			.queryParam("pageSize", 4)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
-		assertEquals(lastCakeId, data.lastCakeId());
-		assertEquals(3, data.size());
-		data.cakeImages().forEach(cakeImage -> {
-			assertEquals(Long.valueOf(1), cakeImage.cakeShopId());
-		});
+		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
+		data.size shouldBe 3
+		data.cakeImages.forEach { it.cakeShopId shouldBe 1 }
 	}
 
 	@TestWithDisplayName("케이크 샵으로 첫 페이지가 아닌 케이크 이미지 조회에 성공한다")
-	void searchByShopId2() {
+	fun searchByShopId2() {
 		// given
-		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/shops"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeId", 5)
 			.queryParam("cakeShopId", 1L)
 			.queryParam("pageSize", 4)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Long lastCakeId = data.cakeImages().stream().map(CakeImageResponseParam::cakeId).min(Long::compareTo).orElse(null);
-		assertEquals(lastCakeId, data.lastCakeId());
-		assertEquals(3, data.size());
-		data.cakeImages().forEach(cakeImage ->
-			assertEquals(Long.valueOf(1), cakeImage.cakeShopId())
-		);
+		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
+		data.size shouldBe 3
+		data.cakeImages.forEach { it.cakeShopId shouldBe 1 }
 	}
 
 	@TestWithDisplayName("케이크 샵으로 케이크 이미지 조회 시 데이터가 없으면 빈 배열을 반환한다")
-	void searchByShopId3() {
+	fun searchByShopId3() {
 		// given
-		final String url = "%s%d%s/search/shops".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/shops"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeId", 1)
 			.queryParam("cakeShopId", 1L)
 			.queryParam("pageSize", 4)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(0, data.cakeImages().size());
-		assertNull(data.lastCakeId());
-		assertEquals(0, data.size());
+		data.cakeImages shouldHaveSize 0
+		data.lastCakeId shouldBe null
+		data.size shouldBe 0
 	}
 
 	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색에 성공한다")
-	void searchCakeImagesByKeywordAndLocation1() {
-		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+	fun searchCakeImagesByKeywordAndLocation1() {
+		val url = "$baseUrl/search/cakes"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("keyword", "tag")
 			.queryParam("latitude", 37.2096575)
 			.queryParam("longitude", 127.0998228)
 			.queryParam("pageSize", 10)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertThat(data.cakeImages().size()).isNotNegative();
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeImages.size shouldNotBeLessThan 0
 	}
 
 	@TestWithDisplayName("검색어, 태그명, 케이크 카테고리, 사용자 위치를 포함한 동적 검색에 성공한다")
-	void searchCakeImagesByKeywordAndLocation2() {
-		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+	fun searchCakeImagesByKeywordAndLocation2() {
+		val url = "$baseUrl/search/cakes"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("keyword", "tag")
 			.queryParam("latitude", 37.543343)
 			.queryParam("longitude", 127.052609)
 			.queryParam("pageSize", 10)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertThat(data.cakeImages().size()).isNotNegative();
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeImages.size shouldNotBeLessThan 0
 	}
 
 	@TestWithDisplayName("사용자 위치를 포함한 동적 검색에 성공한다")
-	void searchCakeImagesByKeywordAndLocation3() {
-		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+	fun searchCakeImagesByKeywordAndLocation3() {
+		val url = "$baseUrl/search/cakes"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("latitude", 37.2096575)
 			.queryParam("longitude", 127.0998228)
 			.queryParam("pageSize", 10)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		println(response.data.toString())
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertThat(data.cakeImages().size()).isNotNegative();
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeImages.size shouldNotBeLessThan 0
 	}
 
 	@TestWithDisplayName("검색어와 커서 아이디로 동적 검색, 위치 정보 없이 4개가 조회된다")
-	void searchCakeImagesByKeyword() {
-		final String url = "%s%d%s/search/cakes".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+	fun searchCakeImagesByKeyword() {
+		val url = "$baseUrl/search/cakes"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("cakeId", 5)
 			.queryParam("keyword", "tag")
 			.queryParam("pageSize", 10)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(4, data.cakeImages().size());
+		data.cakeImages shouldHaveSize 4
 	}
 
 	@TestWithDisplayName("조회수로 케이크 이미지 조회에 성공한다")
-	void searchByViews1() {
+	fun searchByViews1() {
 		// given
-		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/views"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("offset", 0L)
 			.queryParam("pageSize", 4)
-			.build();
+			.build()
 
-		initializeViews();
+		initializeViews()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(4, data.size());
+		data.cakeImages shouldHaveSize 4
 	}
 
 	@TestWithDisplayName("조회한 케이크가 없을 시, 인기 케이크 이미지 조회에 빈 배열을 리턴한다")
-	void searchByViews2() {
+	fun searchByViews2() {
 		// given
-		final String url = "%s%d%s/search/views".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val url = "$baseUrl/search/views"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.queryParam("pageSize", 4)
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeImageListResponse data = objectMapper.convertValue(response.getData(), CakeImageListResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(0, data.size());
+		data.cakeImages shouldHaveSize 0
 	}
 
 	@TestWithDisplayName("해당 id의 이전에 하트 누른 케이크에 대하여 하트 상태인지 조회에 성공한다.")
-	void isHeartCake1() {
+	fun isHeartCake1() {
 		// given
-		final Long cakeId = 3L;
-		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 3L
+		val url = "$baseUrl/{cakeId}/heart"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.GET,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final HeartResponse data = objectMapper.convertValue(response.getData(), HeartResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, HeartResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(true, data.isHeart());
+		data.isHeart shouldBe true
 	}
 
 	@TestWithDisplayName("해당 id의 이전에 하트 누르지 않은 케이크에 대하여 하트 상태인지 조회에 성공한다.")
-	void isHeartCake2() {
+	fun isHeartCake2() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}/heart"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.GET,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final HeartResponse data = objectMapper.convertValue(response.getData(), HeartResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, HeartResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(false, data.isHeart());
+		data.isHeart shouldBe false
 	}
 
 	@TestWithDisplayName("해당 id의 케이크 하트에 성공한다.")
-	void heartCake() {
+	fun heartCake() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}/heart"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 
 	@TestWithDisplayName("해당 id의 케이크 하트 취소에 성공한다.")
-	void heartCancelCake() {
+	fun heartCancelCake() {
 		// given
-		final Long cakeId = 3L;
-		final String url = "%s%d%s/{cakeId}/heart".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 3L
+		val url = "$baseUrl/{cakeId}/heart"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 
 	@TestWithDisplayName("케이크 정보 업데이트에 성공한다")
-	void updateCake() {
+	fun updateCake() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
-		final CakeUpdateRequest request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest.class)
-			.set("tagNames", List.of("tag_name1", "new_tag"))
-			.sample();
+			.buildAndExpand(cakeId)
+		val request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest::class.java)
+			.set("tagNames", listOf("tag_name1", "new_tag"))
+			.sample()
 
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(request, getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity(request, authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 
 	@TestWithDisplayName("어드민에 의해 케이크 정보 업데이트에 성공한다")
-	void updateCakeByAdmin() {
+	fun updateCakeByAdmin() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
-		final CakeUpdateRequest request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest.class)
-			.set("tagNames", List.of("tag_name1", "new_tag"))
-			.sample();
+			.buildAndExpand(cakeId)
+		val request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest::class.java)
+			.set("tagNames", listOf("tag_name1", "new_tag"))
+			.sample()
 
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(request, getAuthHeaderById(10L)),
-			ApiResponse.class);
+			HttpEntity(request, getAuthHeaderById(10L)),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 
 	@TestWithDisplayName("케이크 삭제에 성공한다")
-	void deleteCake() {
+	fun deleteCake() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.DELETE,
-			new HttpEntity<>(getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity<Any>(authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 
 	@TestWithDisplayName("케이크 상세 조회에 성공한다")
-	void getDetailCake() {
+	fun detailCake() {
 		// given
-		final Long cakeId = 1L;
-		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 1L
+		val url = "$baseUrl/{cakeId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeDetailResponse data = objectMapper.convertValue(response.getData(), CakeDetailResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeDetailResponse::class.java)
 
-		assertEquals("cake_image_url1", data.cakeImageUrl());
-		assertEquals("케이크 맛집1", data.cakeShopName());
-		assertEquals("케이크 맛집입니다.", data.shopBio());
-		assertEquals(1L, data.cakeShopId().longValue());
-		assertEquals(1, data.cakeCategories().size());
-		assertEquals(5, data.tags().size());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeImageUrl shouldBe "cake_image_url1"
+		data.cakeShopName shouldBe "케이크 맛집1"
+		data.shopBio shouldBe "케이크 맛집입니다."
+		data.cakeShopId shouldBe 1L
+		data.cakeCategories shouldHaveSize 1
+		data.tags shouldHaveSize 5
 	}
 
 	@TestWithDisplayName("케이크 상세 조회에서 카테고리가 없는 경우, 태그가 없는 경우에 성공한다")
-	void getDetailCakeWithNoCategoriesAndNoTags() {
+	fun detailCakeWithNoCategoriesAndNoTags() {
 		// given
-		final Long cakeId = 19L;
-		final String url = "%s%d%s/{cakeId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeId = 19L
+		val url = "$baseUrl/{cakeId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeId);
+			.buildAndExpand(cakeId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeDetailResponse data = objectMapper.convertValue(response.getData(), CakeDetailResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeDetailResponse::class.java)
 
-		assertEquals("cake_image_url19", data.cakeImageUrl());
-		assertEquals("케이크 맛집10", data.cakeShopName());
-		assertEquals("케이크 맛집입니다.", data.shopBio());
-		assertEquals(10L, data.cakeShopId().longValue());
-		assertEquals(0, data.cakeCategories().size());
-		assertEquals(0, data.tags().size());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeImageUrl shouldBe "cake_image_url19"
+		data.cakeShopName shouldBe "케이크 맛집10"
+		data.shopBio shouldBe "케이크 맛집입니다."
+		data.cakeShopId shouldBe 10
+		data.cakeCategories shouldHaveSize 0
+		data.tags shouldHaveSize 0
 	}
 
 	@TestWithDisplayName("케이크 추가에 성공한다")
-	void createCake() {
+	fun createCake() {
 		// given
-		final Long cakeShopId = 1L;
-		final String url = "%s%d%s/{cakeShopId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val cakeShopId = 1L
+		val url = "$baseUrl/{cakeShopId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(cakeShopId);
-		final CakeCreateRequest request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest.class)
-			.set("tagNames", List.of("tag_name1", "new_tag1", "new_tag2"))
-			.sample();
+			.buildAndExpand(cakeShopId)
+		val request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest::class.java)
+			.set("tagNames", listOf("tag_name1", "new_tag1", "new_tag2"))
+			.sample()
 
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.POST,
-			new HttpEntity<>(request, getAuthHeader()),
-			ApiResponse.class);
+			HttpEntity(request, authHeader),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-		assertNull(response.getData());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		response.data shouldBe null
 	}
 }

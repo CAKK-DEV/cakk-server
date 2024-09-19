@@ -1,142 +1,156 @@
-package com.cakk.api.integration.admin;
+package com.cakk.api.integration.admin
 
-import static org.junit.Assert.*;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
-import org.assertj.core.api.Assertions;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatusCode
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase
+import org.springframework.test.context.jdbc.SqlGroup
+import org.springframework.web.util.UriComponentsBuilder
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.IntegrationTest;
-import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.PromotionRequest;
-import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.response.ApiResponse;
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.dto.request.shop.CreateShopRequest
+import com.cakk.api.dto.request.shop.PromotionRequest
+import com.cakk.api.dto.response.shop.CakeShopCreateResponse
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse
+import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.response.ApiResponse
 
-@SqlGroup({
-	@Sql(scripts = {
-		"/sql/insert-test-user.sql",
-		"/sql/insert-business-information.sql"
-	}, executionPhase = BEFORE_TEST_METHOD),
-	@Sql(scripts = "/sql/delete-all.sql", executionPhase = AFTER_TEST_METHOD)
-})
-public class AdminIntegrationTest extends IntegrationTest  {
+@SqlGroup(
+	Sql(
+		scripts = ["/sql/insert-test-user.sql", "/sql/insert-business-information.sql"],
+		executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+	),
+	Sql(
+		scripts = ["/sql/delete-all.sql"],
+		executionPhase = ExecutionPhase.AFTER_TEST_METHOD
+	)
+)
+class AdminIntegrationTest(
+	@LocalServerPort private val port: Int
+) : IntegrationTest() {
 
-	private static final String API_URL = "/api/v1/admin";
-
+	protected val baseUrl = "$localhost$port/api/v1/admin"
 
 	@TestWithDisplayName("백 오피스 API, 케이크샵 생성에 성공한다")
-	void backOfficeCreateCakeShop() {
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
+	fun backOfficeCreateCakeShop() {
+		val uriComponents = UriComponentsBuilder
+			.fromUriString(baseUrl)
 			.path("/shops/create")
-			.build();
-		final CreateShopRequest request = getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
-			.sample();
+			.build()
+		val request = getConstructorMonkey().giveMeBuilder(CreateShopRequest::class.java)
+			.sample()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.POST,
-			new HttpEntity<>(request),
-			ApiResponse.class);
+			HttpEntity(request),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopCreateResponse data = objectMapper.convertValue(response.getData(), CakeShopCreateResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeShopCreateResponse::class.java)
 
-		Assertions.assertThat(data.cakeShopId()).isNotNull();
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data.cakeShopId shouldNotBe null
 	}
 
 	@TestWithDisplayName("백 오피스 API, 케이크샵 사장님 인증 요청 리스트 조회에 성공한다")
-	void backOfficeSearchByCakeShopBusinessOwnerCandidates() {
+	fun backOfficeSearchByCakeShopBusinessOwnerCandidates() {
 		//given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
+		val uriComponents = UriComponentsBuilder
+			.fromUriString(baseUrl)
 			.path("/shops/candidates")
-			.build();
+			.build()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopOwnerCandidatesResponse data = objectMapper.convertValue(response.getData(),
-			CakeShopOwnerCandidatesResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeShopOwnerCandidatesResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
+
+		data shouldNotBe null
 	}
 
 	@TestWithDisplayName("백 오피스 API, 케이크 샵 사장님 인증 완료 처리에 성공한다")
-	void backOfficeCakeShopBusinessOwnerApproved() {
+	fun backOfficeCakeShopBusinessOwnerApproved() {
 		//given
-		final String url = "%s%d%s".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
+		val uriComponents = UriComponentsBuilder
+			.fromUriString(baseUrl)
 			.path("/shops/promote")
-			.build();
+			.build()
 
-		final PromotionRequest request = getConstructorMonkey().giveMeBuilder(PromotionRequest.class)
+		val request = getConstructorMonkey().giveMeBuilder(
+			PromotionRequest::class.java
+		)
 			.set("userId", 1L)
 			.set("cakeShopId", 1L)
-			.sample();
+			.sample()
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+		val responseEntity = restTemplate.exchange(
 			uriComponents.toUriString(),
 			HttpMethod.PUT,
-			new HttpEntity<>(request),
-			ApiResponse.class);
+			HttpEntity(request),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 	}
 
 	@TestWithDisplayName("백 오피스 API, 케이크샵 사장님 인증 요청 상세 내용 조회에 성공한다")
-	void backOfficeSearchByCakeShopBusinessOwnerCandidate() {
+	fun backOfficeSearchByCakeShopBusinessOwnerCandidate() {
 		//given
-		final Long userId = 1L;
-		final String url = "%s%d%s/shops/candidates/{userId}".formatted(BASE_URL, port, API_URL);
-		final UriComponents uriComponents = UriComponentsBuilder
+		val userId = 1L
+		val url = "$baseUrl/shops/candidates/{userId}"
+		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
-			.buildAndExpand(userId);
+			.buildAndExpand(userId)
 
 		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+		val responseEntity = restTemplate.getForEntity(
+			uriComponents.toUriString(),
+			ApiResponse::class.java
+		)
 
 		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final CakeShopOwnerCandidateResponse data = objectMapper.convertValue(response.getData(),
-			CakeShopOwnerCandidateResponse.class);
+		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeShopOwnerCandidateResponse::class.java)
 
-		assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		assertEquals(1L, data.userId().longValue());
-		assertEquals(1L, data.cakeShopId().longValue());
-		assertEquals("test1@google.com", data.email());
-		assertEquals("https://business_registration_image_url1", data.businessRegistrationImageUrl());
-		assertEquals("https://id_card_image_url1", data.idCardImageUrl());
-		assertEquals("010-0000-0000", data.emergencyContact());
+		data.userId shouldBe 1L
+		data.cakeShopId shouldBe 1L
+		data.email shouldBe "test1@google.com"
+		data.businessRegistrationImageUrl shouldBe "https://business_registration_image_url1"
+		data.idCardImageUrl shouldBe "https://id_card_image_url1"
+		data.emergencyContact shouldBe "010-0000-0000"
 	}
 }
 

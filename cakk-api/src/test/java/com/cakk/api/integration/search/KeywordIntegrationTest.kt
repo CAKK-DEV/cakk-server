@@ -1,94 +1,96 @@
-package com.cakk.api.integration.search;
+package com.cakk.api.integration.search
 
-import static org.assertj.core.api.Assertions.*;
+import java.util.stream.IntStream
 
-import java.util.stream.IntStream;
+import org.junit.jupiter.api.BeforeEach
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatusCode
+import org.springframework.web.util.UriComponentsBuilder
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.dto.response.search.TopSearchedListResponse
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.response.ApiResponse
+import com.cakk.domain.redis.repository.KeywordRedisRepository
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import org.springframework.boot.test.web.server.LocalServerPort
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.IntegrationTest;
-import com.cakk.api.dto.response.search.TopSearchedListResponse;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.redis.repository.KeywordRedisRepository;
+class KeywordIntegrationTest(
+	@LocalServerPort private val port: Int
+) : IntegrationTest() {
 
-public class KeywordIntegrationTest extends IntegrationTest {
+	protected val baseUrl = "$localhost$port/api/v1/search"
 
-	private static final String API_URL = "/api/v1/search";
+    @Autowired
+    private lateinit var keywordRedisRepository: KeywordRedisRepository
 
-	@Autowired
-	private KeywordRedisRepository keywordRedisRepository;
+    @BeforeEach
+    fun setUp() {
+        IntStream.range(0, 10).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("1위 검색어") }
+        IntStream.range(0, 8).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("2위 검색어") }
+        IntStream.range(0, 6).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("3위 검색어") }
+        IntStream.range(0, 4).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("4위 검색어") }
+        IntStream.range(0, 3).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("5위 검색어") }
+        IntStream.range(0, 2).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("6위 검색어") }
+        IntStream.range(0, 1).forEach { keywordRedisRepository.saveOrIncreaseSearchCount("7위 검색어") }
+    }
 
-	@BeforeEach
-	void setUp() {
-		IntStream.range(0, 10).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("1위 검색어"));
-		IntStream.range(0, 8).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("2위 검색어"));
-		IntStream.range(0, 6).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("3위 검색어"));
-		IntStream.range(0, 4).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("4위 검색어"));
-		IntStream.range(0, 3).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("5위 검색어"));
-		IntStream.range(0, 2).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("6위 검색어"));
-		IntStream.range(0, 1).forEach(i -> keywordRedisRepository.saveOrIncreaseSearchCount("7위 검색어"));
-	}
+    @TestWithDisplayName("인기 검색어를 조회한다.")
+    fun topSearched() {
+        // given
+        val url = "$baseUrl/top-searched"
+        val count = 5
+        val uriComponents = UriComponentsBuilder
+            .fromUriString(url)
+            .queryParam("count", count)
+            .build()
 
-	@TestWithDisplayName("인기 검색어를 조회한다.")
-	void topSearched() {
-		// given
-		final String url = "%s%d%s/top-searched".formatted(BASE_URL, port, API_URL);
-		final int count = 5;
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.queryParam("count", count)
-			.build();
+        // when
+        val responseEntity = restTemplate.getForEntity(
+            uriComponents.toUriString(),
+            ApiResponse::class.java
+        )
 
-		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+        // then
+        val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+        val data = objectMapper.convertValue(response.data, TopSearchedListResponse::class.java)
 
-		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final TopSearchedListResponse data = objectMapper.convertValue(response.getData(), TopSearchedListResponse.class);
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Assertions.assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
+		data.keywordList shouldHaveSize count
+        data.keywordList.forEachIndexed { index, keyword -> keyword shouldBe "${index + 1}위 검색어" }
+    }
 
-		assertThat(data.keywordList()).hasSizeLessThanOrEqualTo(count);
-		assertThat(data.keywordList().get(0)).isEqualTo("1위 검색어");
-		assertThat(data.keywordList().get(1)).isEqualTo("2위 검색어");
-		assertThat(data.keywordList().get(2)).isEqualTo("3위 검색어");
-		assertThat(data.keywordList().get(3)).isEqualTo("4위 검색어");
-		assertThat(data.keywordList().get(4)).isEqualTo("5위 검색어");
-	}
+    @TestWithDisplayName("검색 기록이 없을 경우, 인기 검색어 조회 시 빈 배열을 반환한다.")
+    fun topSearched2() {
+        // given
+        keywordRedisRepository.clear()
 
-	@TestWithDisplayName("검색 기록이 없을 경우, 인기 검색어 조회 시 빈 배열을 반환한다.")
-	void topSearched2() {
-		// given
-		keywordRedisRepository.clear();
+        val url = "$baseUrl/top-searched"
+        val count = 10
+        val uriComponents = UriComponentsBuilder
+            .fromUriString(url)
+            .queryParam("count", count)
+            .build()
 
-		final String url = "%s%d%s/top-searched".formatted(BASE_URL, port, API_URL);
-		final int count = 10;
-		final UriComponents uriComponents = UriComponentsBuilder
-			.fromUriString(url)
-			.queryParam("count", count)
-			.build();
+        // when
+        val responseEntity = restTemplate.getForEntity(
+            uriComponents.toUriString(),
+            ApiResponse::class.java
+        )
 
-		// when
-		final ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(uriComponents.toUriString(), ApiResponse.class);
+        // then
+        val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
+        val data = objectMapper.convertValue(response.data, TopSearchedListResponse::class.java)
 
-		// then
-		final ApiResponse response = objectMapper.convertValue(responseEntity.getBody(), ApiResponse.class);
-		final TopSearchedListResponse data = objectMapper.convertValue(response.getData(), TopSearchedListResponse.class);
+		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
+		response.returnCode shouldBe ReturnCode.SUCCESS.code
+		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
-		Assertions.assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getCode(), response.getReturnCode());
-		Assertions.assertEquals(ReturnCode.SUCCESS.getMessage(), response.getReturnMessage());
-
-		assertThat(data.keywordList()).isEmpty();
-	}
+		data.keywordList shouldHaveSize 0
+    }
 }
