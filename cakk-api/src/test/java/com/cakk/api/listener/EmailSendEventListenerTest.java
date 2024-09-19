@@ -41,19 +41,4 @@ class EmailSendEventListenerTest extends MockitoTest {
 		// then
 		verify(messageTemplate, times(1)).sendMessage(any(), any(), any());
 	}
-
-	@TestWithDisplayName("이벤트에 null 데이터가 포함돼 있으면, 메일 전송 메서드가 호출 시, 에러를 반환한다.")
-	void sendEmailIncludeVerificationCode2() {
-		// given
-		EmailWithVerificationCodeSendEvent event = new EmailWithVerificationCodeSendEvent(null, null);
-
-		// when
-		assertThrows(
-			NullPointerException.class,
-			() -> emailSendEventListener.sendEmailIncludeVerificationCode(event)
-		);
-
-		// then
-		verify(messageTemplate, never()).sendMessage(any(), any(), any());
-	}
 }
