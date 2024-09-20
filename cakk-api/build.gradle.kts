@@ -12,6 +12,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.3.0")
 	implementation("org.springframework:spring-tx")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	// Security & OAuth
@@ -30,6 +31,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.23")
+	testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
+	testImplementation("io.mockk:mockk:${property("mockKVersion")}")
 
 	// test container
 	testImplementation("org.testcontainers:junit-jupiter:1.19.7")

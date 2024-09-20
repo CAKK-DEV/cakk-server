@@ -58,13 +58,13 @@ public class EventMapper {
 	}
 
 	public static VerificationMessage supplyVerificationMessageBy(final EmailWithVerificationCodeSendEvent event) {
-		return new VerificationMessage(event.email(), event.code());
+		return new VerificationMessage(event.getEmail(), event.getCode());
 	}
 
 	public static ErrorAlertMessage supplyErrorAlertMessageBy(final ErrorAlertEvent event) {
-		final String profile = event.profile();
-		final String stackTrace = Arrays.toString(event.exception().getStackTrace());
-		final HttpServletRequest request = event.request();
+		final String profile = event.getProfile();
+		final String stackTrace = Arrays.toString(event.getException().getStackTrace());
+		final HttpServletRequest request = event.getRequest();
 
 		return new ErrorAlertMessage(
 			profile,
