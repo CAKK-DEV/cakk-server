@@ -62,9 +62,11 @@ public class CakeService {
 	public CakeImageListResponse findCakeImagesByCursorAndSearch(final CakeSearchByLocationRequest dto) {
 		final List<CakeImageResponseParam> cakeImages
 			= cakeReadFacade.searchCakeImagesByCursorAndSearchKeyword(dto.toParam());
-		final IncreaseSearchCountEvent event = new IncreaseSearchCountEvent(dto.keyword());
 
-		publisher.publishEvent(event);
+		if (nonNull(dto.keyword())) {
+			final IncreaseSearchCountEvent event = new IncreaseSearchCountEvent(dto.keyword());
+			publisher.publishEvent(event);
+		}
 
 		return CakeMapper.supplyCakeImageListResponse(cakeImages);
 	}

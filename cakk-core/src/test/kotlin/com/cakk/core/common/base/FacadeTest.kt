@@ -48,21 +48,14 @@ abstract class FacadeTest {
 
 	protected fun getUserFixture(role: Role): User {
 		return getConstructorMonkey().giveMeBuilder(User::class.java)
-			.instantiate(
-				User::class.java,
-				Instantiator.constructor<Any>()
-					.parameter(Long::class.java)
-					.parameter(Provider::class.java)
-					.parameter(String::class.java)
-					.parameter(String::class.java)
-					.parameter(String::class.java)
-					.parameter(String::class.java)
-					.parameter(Gender::class.java)
-					.parameter(LocalDate::class.java)
-					.parameter(String::class.java)
-					.parameter(String::class.java)
-					.parameter(role.javaClass)
-			).sample()
+			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("provider", Arbitraries.of(Provider::class.java))
+			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("birthday", LocalDate.now())
+			.set("role", role)
+			.sample()
 	}
 
 	protected fun getCakeFixture(): Cake {
