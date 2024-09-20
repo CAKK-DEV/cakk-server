@@ -1,39 +1,30 @@
-package com.cakk.api.service.views;
+package com.cakk.core.service.views
 
-import static java.util.Objects.*;
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.cakk.common.exception.CakkException
+import com.cakk.core.facade.cake.CakeReadFacade
+import com.cakk.core.mapper.supplyCakeIncreaseViewsEventBy
 
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.common.exception.CakkException;
-import com.cakk.core.facade.cake.CakeReadFacade;
-import com.cakk.domain.mysql.entity.cake.Cake;
-import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
-
-@RequiredArgsConstructor
 @Service
-public class ViewsService {
-
-	private final CakeReadFacade cakeReadFacade;
-
-	private final ApplicationEventPublisher publisher;
+class ViewsService(
+	private val cakeReadFacade: CakeReadFacade,
+	private val publisher: ApplicationEventPublisher
+) {
 
 	@Transactional(readOnly = true)
-	public void increaseCakeViews(final Long cakeId) {
-		if (isNull(cakeId)) {
-			return;
-		}
+	fun increaseCakeViews(cakeId: Long?) {
+		cakeId?.let {
+			try {
+				val cake = cakeReadFacade.findById(cakeId)
+				val event = supplyCakeIncreaseViewsEventBy(cake.id)
 
-		try {
-			final Cake cake = cakeReadFacade.findById(cakeId);
-			final CakeIncreaseViewsEvent event = cake.getInCreaseViewsEvent();
-
-			publisher.publishEvent(event);
-		} catch (CakkException ignored) {
-			// ignored
+				publisher.publishEvent(event)
+			} catch (ignored: CakkException) {
+				// ignored
+			}
 		}
 	}
 }

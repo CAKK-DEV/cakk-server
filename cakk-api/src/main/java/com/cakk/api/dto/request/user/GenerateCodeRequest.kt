@@ -1,9 +1,8 @@
-package com.cakk.api.dto.request.user;
+package com.cakk.api.dto.request.user
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank
 
-public record GenerateCodeRequest(
-	@NotBlank
-	String email
-) {
-}
+data class GenerateCodeRequest(
+	@field:NotBlank
+    val email: String?
+)

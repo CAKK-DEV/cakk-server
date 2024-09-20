@@ -1,11 +1,10 @@
-package com.cakk.api.dto.request.user;
+package com.cakk.api.dto.request.user
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank
 
-public record VerifyEmailRequest(
-	@NotBlank
-	String email,
-	@NotBlank
-	String code
-) {
-}
+data class VerifyEmailRequest(
+	@field:NotBlank
+	val email: String?,
+	@field:NotBlank
+	val code: String?
+)

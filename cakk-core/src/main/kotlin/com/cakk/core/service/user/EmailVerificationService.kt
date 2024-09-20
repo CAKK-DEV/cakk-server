@@ -1,47 +1,42 @@
-package com.cakk.api.service.user;
+package com.cakk.core.service.user
 
-import static com.cakk.common.utils.RandomUtilsKt.*;
-import static java.util.Objects.*;
+import java.util.*
 
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.stereotype.Service
 
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.api.dto.event.EmailWithVerificationCodeSendEvent;
-import com.cakk.api.dto.request.user.GenerateCodeRequest;
-import com.cakk.api.dto.request.user.VerifyEmailRequest;
-import com.cakk.api.mapper.EventMapper;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
-import com.cakk.domain.redis.repository.EmailVerificationRedisRepository;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.utils.generateRandomStringOnlyNumber
+import com.cakk.core.dto.param.user.GenerateCodeParam
+import com.cakk.core.dto.param.user.VerifyEmailParam
+import com.cakk.core.mapper.supplyEmailWithVerificationCodeSendEventBy
+import com.cakk.domain.redis.repository.EmailVerificationRedisRepository
 
 @Service
-@RequiredArgsConstructor
-public class EmailVerificationService {
+class EmailVerificationService(
+	private val emailVerificationRedisRepository: EmailVerificationRedisRepository,
+	private val applicationEventPublisher: ApplicationEventPublisher
+) {
 
-	private final EmailVerificationRedisRepository emailVerificationRedisRepository;
+    fun sendEmailForVerification(dto: GenerateCodeParam) {
+        val email = dto.email
+        val code = generateRandomStringOnlyNumber(6)
+        emailVerificationRedisRepository.save(email, code)
 
-	private final ApplicationEventPublisher applicationEventPublisher;
+        val emailEvent = supplyEmailWithVerificationCodeSendEventBy(email, code)
+        applicationEventPublisher.publishEvent(emailEvent)
+    }
 
-	public void sendEmailForVerification(final GenerateCodeRequest dto) {
-		final String email = dto.email();
-		final String code = generateRandomStringOnlyNumber(6);
-		emailVerificationRedisRepository.save(email, code);
+    fun checkEmailVerificationCode(dto: VerifyEmailParam) {
+        val email = dto.email
+        val code = dto.code
+        val verificationCode = emailVerificationRedisRepository.findCodeByEmail(email)
 
-		final EmailWithVerificationCodeSendEvent emailEvent = EventMapper.supplyEmailWithVerificationCodeSendEventBy(email, code);
-		applicationEventPublisher.publishEvent(emailEvent);
-	}
+        if (Objects.isNull(verificationCode) || verificationCode != code) {
+            throw CakkException(ReturnCode.WRONG_VERIFICATION_CODE)
+        }
 
-	public void checkEmailVerificationCode(final VerifyEmailRequest dto) {
-		final String email = dto.email();
-		final String code = dto.code();
-		final String verificationCode = emailVerificationRedisRepository.findCodeByEmail(email);
-
-		if (isNull(verificationCode) || !verificationCode.equals(code)) {
-			throw new CakkException(ReturnCode.WRONG_VERIFICATION_CODE);
-		}
-
-		emailVerificationRedisRepository.deleteByEmail(email);
-	}
+        emailVerificationRedisRepository.deleteByEmail(email)
+    }
 }

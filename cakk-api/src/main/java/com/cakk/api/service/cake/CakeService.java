@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
 import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
@@ -18,6 +17,7 @@ import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
 import com.cakk.api.mapper.CakeMapper;
+import com.cakk.core.dto.event.IncreaseSearchCountEvent;
 import com.cakk.core.facade.cake.CakeManageFacade;
 import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;

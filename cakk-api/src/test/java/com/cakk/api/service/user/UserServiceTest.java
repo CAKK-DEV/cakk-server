@@ -36,6 +36,7 @@ class UserServiceTest extends ServiceTest {
 	void findProfile1() {
 		// given
 		final User user = getUser();
+		System.out.println(user.getId());
 
 		doReturn(user).when(userReadFacade).findByUserId(user.getId());
 
