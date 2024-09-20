@@ -1,71 +1,60 @@
-package com.cakk.api.config;
+package com.cakk.core.config
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-
-import net.gpedro.integrations.slack.SlackApi;
-
-import com.cakk.external.extractor.CertificationSlackMessageExtractor;
-import com.cakk.external.extractor.ErrorAlertSlackMessageExtractor;
-import com.cakk.external.extractor.MessageExtractor;
-import com.cakk.external.extractor.VerificationCodeMimeMessageExtractor;
-import com.cakk.external.sender.EmailMessageSender;
-import com.cakk.external.sender.MessageSender;
-import com.cakk.external.sender.SlackMessageSender;
-import com.cakk.external.template.MessageTemplate;
+import com.cakk.external.extractor.CertificationSlackMessageExtractor
+import com.cakk.external.extractor.ErrorAlertSlackMessageExtractor
+import com.cakk.external.extractor.MessageExtractor
+import com.cakk.external.extractor.VerificationCodeMimeMessageExtractor
+import com.cakk.external.sender.EmailMessageSender
+import com.cakk.external.sender.MessageSender
+import com.cakk.external.sender.SlackMessageSender
+import com.cakk.external.template.MessageTemplate
+import com.cakk.external.vo.message.CertificationMessage
+import com.cakk.external.vo.message.ErrorAlertMessage
+import com.cakk.external.vo.message.VerificationMessage
+import jakarta.mail.internet.MimeMessage
+import net.gpedro.integrations.slack.SlackApi
+import net.gpedro.integrations.slack.SlackMessage
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.mail.javamail.JavaMailSender
 
 @Configuration
-public class MessageTemplateConfig {
+class MessageTemplateConfig(
+    private val javaMailSender: JavaMailSender,
+    private val slackApi: SlackApi,
+    @param:Value("\${spring.mail.username}")
+	private val senderEmail: String,
+    @param:Value("\${slack.webhook.is-enable}")
+	private val isEnable: Boolean
+) {
+    @Bean
+    fun certificationTemplate(): MessageTemplate {
+        return MessageTemplate()
+    }
 
-	private final JavaMailSender javaMailSender;
-	private final SlackApi slackApi;
+    @Bean
+    fun certificationMessageExtractor(): MessageExtractor<CertificationMessage, SlackMessage> {
+        return CertificationSlackMessageExtractor()
+    }
 
-	private final String senderEmail;
-	private final Boolean isEnable;
+    @Bean
+    fun errorAlertMessageExtractor(): MessageExtractor<ErrorAlertMessage, SlackMessage> {
+        return ErrorAlertSlackMessageExtractor()
+    }
 
-	public MessageTemplateConfig(
-		JavaMailSender javaMailSender,
-		SlackApi slackApi,
-		@Value("${spring.mail.username}")
-		String senderEmail,
-		@Value("${slack.webhook.is-enable}")
-		Boolean isEnable
-	) {
-		this.javaMailSender = javaMailSender;
-		this.senderEmail = senderEmail;
-		this.isEnable = isEnable;
-		this.slackApi = slackApi;
-	}
+    @Bean
+    fun verificationCodeMimeMessageExtractor(): MessageExtractor<VerificationMessage, MimeMessage> {
+        return VerificationCodeMimeMessageExtractor(javaMailSender, senderEmail)
+    }
 
-	@Bean
-	public MessageTemplate certificationTemplate() {
-		return new MessageTemplate();
-	}
+    @Bean
+    fun emailMessageSender(): MessageSender<MimeMessage> {
+        return EmailMessageSender(javaMailSender)
+    }
 
-	@Bean
-	public MessageExtractor certificationMessageExtractor() {
-		return new CertificationSlackMessageExtractor();
-	}
-
-	@Bean
-	public MessageExtractor errorAlertMessageExtractor() {
-		return new ErrorAlertSlackMessageExtractor();
-	}
-
-	@Bean
-	public MessageExtractor verificationCodeMimeMessageExtractor() {
-		return new VerificationCodeMimeMessageExtractor(javaMailSender, senderEmail);
-	}
-
-	@Bean
-	public MessageSender emailMessageSender() {
-		return new EmailMessageSender(javaMailSender);
-	}
-
-	@Bean
-	public MessageSender slackMessageSender() {
-		return new SlackMessageSender(slackApi, isEnable);
-	}
+    @Bean
+    fun slackMessageSender(): MessageSender<SlackMessage> {
+        return SlackMessageSender(slackApi, isEnable)
+    }
 }

@@ -1,11 +1,11 @@
-package com.cakk.api.listener
+package com.cakk.core.listener
 
 import org.springframework.scheduling.annotation.Async
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
-import com.cakk.api.annotation.ApplicationEventListener
-import com.cakk.api.dto.event.IncreaseSearchCountEvent
+import com.cakk.core.annotation.ApplicationEventListener
+import com.cakk.core.dto.event.IncreaseSearchCountEvent
 import com.cakk.domain.redis.repository.KeywordRedisRepository
 
 @ApplicationEventListener

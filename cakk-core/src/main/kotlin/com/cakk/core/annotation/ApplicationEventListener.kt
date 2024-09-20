@@ -1,4 +1,4 @@
-package com.cakk.api.annotation
+package com.cakk.core.annotation
 
 import org.springframework.core.annotation.AliasFor
 import org.springframework.stereotype.Component

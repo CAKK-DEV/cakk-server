@@ -1,4 +1,4 @@
-package com.cakk.api.dto.event
+package com.cakk.core.dto.event
 
 import jakarta.servlet.http.HttpServletRequest
 

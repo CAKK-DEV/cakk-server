@@ -1,4 +1,4 @@
-package com.cakk.api.dto.event
+package com.cakk.core.dto.event
 
 data class IncreaseSearchCountEvent(
     val keyword: String
