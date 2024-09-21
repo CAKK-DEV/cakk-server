@@ -79,7 +79,7 @@ class CakeShopReadFacade(
                 .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
 
-    fun searchByIdAndOwner(cakeShopId: Long?, owner: User?): CakeShop {
+    fun searchByIdAndOwner(cakeShopId: Long, owner: User): CakeShop {
         return cakeShopQueryRepository.searchWithBusinessInformationAndOwnerById(owner, cakeShopId)
                 .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}

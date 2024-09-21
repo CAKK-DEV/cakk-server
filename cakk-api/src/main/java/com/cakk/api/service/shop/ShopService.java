@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.event.IncreaseSearchCountEvent;
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
@@ -29,9 +28,12 @@ import com.cakk.api.dto.response.shop.CakeShopOwnerResponse;
 import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.BusinessInformationMapper;
+import com.cakk.api.mapper.EventMapper;
 import com.cakk.api.mapper.LinkMapper;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.core.dto.event.CakeShopIncreaseViewsEvent;
+import com.cakk.core.dto.event.IncreaseSearchCountEvent;
 import com.cakk.core.facade.cake.BusinessInformationReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
@@ -54,8 +56,6 @@ import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.event.shop.CertificationEvent;
-import com.cakk.domain.mysql.event.views.CakeShopIncreaseViewsEvent;
-import com.cakk.domain.mysql.mapper.EventMapper;
 import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository;
 
 @Service
@@ -142,7 +142,7 @@ public class ShopService {
 	@Transactional(readOnly = true)
 	public CakeShopDetailResponse searchDetailById(final Long cakeShopId) {
 		final CakeShopDetailParam cakeShop = cakeShopReadFacade.searchDetailById(cakeShopId);
-		final CakeShopIncreaseViewsEvent event = EventMapper.supplyCakeShopIncreaseViewsEvent(cakeShopId);
+		final CakeShopIncreaseViewsEvent event = EventMapper.supplyCakeShopIncreaseViewsEventBy(cakeShopId);
 
 		publisher.publishEvent(event);
 		return ShopMapper.cakeShopDetailResponseFromParam(cakeShop);

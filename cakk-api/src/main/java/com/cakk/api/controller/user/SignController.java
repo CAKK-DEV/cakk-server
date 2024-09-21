@@ -15,9 +15,12 @@ import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
-import com.cakk.api.service.user.EmailVerificationService;
+import com.cakk.api.mapper.UserMapper;
 import com.cakk.api.service.user.SignService;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.core.dto.param.user.GenerateCodeParam;
+import com.cakk.core.dto.param.user.VerifyEmailParam;
+import com.cakk.core.service.user.EmailVerificationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,7 +65,8 @@ public class SignController {
 	public ApiResponse<Void> sendEmailForVerification(
 		@Valid @RequestBody GenerateCodeRequest request
 	) {
-		emailVerificationService.sendEmailForVerification(request);
+		final GenerateCodeParam param = UserMapper.supplyGenerateCodeParamBy(request);
+		emailVerificationService.sendEmailForVerification(param);
 
 		return ApiResponse.success();
 	}
@@ -71,7 +75,8 @@ public class SignController {
 	public ApiResponse<Void> verifyEmail(
 		@Valid @RequestBody VerifyEmailRequest request
 	) {
-		emailVerificationService.checkEmailVerificationCode(request);
+		final VerifyEmailParam param = UserMapper.supplyVerifyEmailParamBy(request);
+		emailVerificationService.checkEmailVerificationCode(param);
 
 		return ApiResponse.success();
 	}

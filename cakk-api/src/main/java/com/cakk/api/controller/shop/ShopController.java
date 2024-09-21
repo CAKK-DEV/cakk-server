@@ -34,8 +34,8 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.service.like.HeartService;
 import com.cakk.api.service.like.LikeService;
 import com.cakk.api.service.shop.ShopService;
-import com.cakk.api.service.views.ViewsService;
 import com.cakk.common.response.ApiResponse;
+import com.cakk.core.service.views.ViewsService;
 import com.cakk.domain.mysql.entity.user.User;
 
 @RestController
