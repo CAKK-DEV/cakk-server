@@ -120,9 +120,7 @@ public class CakeQueryRepository {
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
-			.where(
-				includeCakeIds(cakeIds)
-			)
+			.where(includeCakeIds(cakeIds))
 			.fetch();
 	}
 

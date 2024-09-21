@@ -1,29 +1,35 @@
 package com.cakk.core.common.base
 
-import com.cakk.common.enums.Gender
-import com.cakk.common.enums.Provider
-import com.cakk.common.enums.Role
-import com.cakk.domain.mysql.entity.cake.Cake
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.user.User
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.api.instantiator.Instantiator
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
-import com.navercorp.fixturemonkey.customizer.Values
-import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
-import net.jqwik.api.Arbitraries
+import java.time.LocalDate
+
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.PrecisionModel
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
+
+import net.jqwik.api.Arbitraries
+
+import com.navercorp.fixturemonkey.FixtureMonkey
+import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
+import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
+import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
+import com.navercorp.fixturemonkey.customizer.Values
+import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
+
+import com.cakk.common.enums.Provider
+import com.cakk.common.enums.Role
+import com.cakk.domain.mysql.entity.cake.Cake
+import com.cakk.domain.mysql.entity.shop.CakeShop
+import com.cakk.domain.mysql.entity.user.User
+
+private const val SPATIAL_REFERENCE_IDENTIFIER_NUMBER: Int = 4326
 
 @ExtendWith(MockitoExtension::class)
 abstract class FacadeTest {
+
+	private val geometryFactory: GeometryFactory = GeometryFactory(PrecisionModel(), SPATIAL_REFERENCE_IDENTIFIER_NUMBER)
 
 	protected fun getConstructorMonkey(): FixtureMonkey {
 		return FixtureMonkey.builder()
@@ -80,12 +86,8 @@ abstract class FacadeTest {
 			)
 			.sample()
 	}
+
+	fun supplyPointBy(latitude: Double, longitude: Double): Point {
+		return geometryFactory.createPoint(Coordinate(longitude, latitude))
+	}
 }
-
-private const val SPATIAL_REFERENCE_IDENTIFIER_NUMBER: Int = 4326
-
-fun supplyPointBy(latitude: Double, longitude: Double): Point {
-	return geometryFactory.createPoint(Coordinate(longitude, latitude))
-}
-
-private val geometryFactory: GeometryFactory = GeometryFactory(PrecisionModel(), SPATIAL_REFERENCE_IDENTIFIER_NUMBER)

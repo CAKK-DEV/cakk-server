@@ -698,7 +698,7 @@ internal class CakeIntegrationTest(
 		val request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest::class.java)
 			.set("tagNames", listOf("tag_name1", "new_tag1", "new_tag2"))
 			.sample()
-
+		println(request)
 
 		// when
 		val responseEntity = restTemplate.exchange(

@@ -30,10 +30,8 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
 import com.cakk.domain.mysql.mapper.CakeHeartMapper;
 import com.cakk.domain.mysql.mapper.CakeTagMapper;
-import com.cakk.domain.mysql.mapper.EventMapper;
 
 @ToString
 @Getter
@@ -118,10 +116,6 @@ public class Cake extends AuditEntity {
 
 	public void updateCakeShop(final CakeShop cakeShop) {
 		this.cakeShop = cakeShop;
-	}
-
-	public CakeIncreaseViewsEvent getInCreaseViewsEvent() {
-		return EventMapper.supplyCakeIncreaseViewsEvent(this.id);
 	}
 
 	private void increaseHeartCount() {

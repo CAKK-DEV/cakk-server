@@ -5,10 +5,14 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import com.cakk.api.dto.request.user.GenerateCodeRequest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
+import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Role;
+import com.cakk.core.dto.param.user.GenerateCodeParam;
+import com.cakk.core.dto.param.user.VerifyEmailParam;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.mysql.entity.user.UserWithdrawal;
@@ -59,5 +63,13 @@ public class UserMapper {
 			.role(user.getRole())
 			.withdrawalDate(LocalDateTime.now())
 			.build();
+	}
+
+	public static GenerateCodeParam supplyGenerateCodeParamBy(final GenerateCodeRequest dto) {
+		return new GenerateCodeParam(dto.getEmail());
+	}
+
+	public static VerifyEmailParam supplyVerifyEmailParamBy(final VerifyEmailRequest dto) {
+		return new VerifyEmailParam(dto.getEmail(), dto.getCode());
 	}
 }

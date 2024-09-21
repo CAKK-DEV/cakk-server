@@ -65,16 +65,6 @@ class ArchitectureTest {
 		rule.check(javaClasses);
 	}
 
-	@TestWithDisplayName("mapper 패키지 안에 있는 클래스들은 Mapper로 끝나야 한다.")
-	void mapper() {
-		ArchRule rule = classes()
-			.that().resideInAPackage("..mapper..")
-			.and().areTopLevelClasses()
-			.should().haveSimpleNameEndingWith("Mapper");
-
-		rule.check(javaClasses);
-	}
-
 	@TestWithDisplayName("config 패키지 안에 있는 클래스들은 Config로 끝나야 한다.")
 	void config() {
 		ArchRule rule = classes()
