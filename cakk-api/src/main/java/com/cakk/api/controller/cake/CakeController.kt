@@ -1,133 +1,128 @@
-package com.cakk.api.controller.cake;
+package com.cakk.api.controller.cake
 
-import jakarta.validation.Valid;
+import jakarta.validation.Valid
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*
 
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor
 
-import com.cakk.api.annotation.SignInUser;
-import com.cakk.api.dto.request.cake.CakeCreateRequest;
-import com.cakk.api.dto.request.cake.CakeSearchByCategoryRequest;
-import com.cakk.api.dto.request.cake.CakeSearchByLocationRequest;
-import com.cakk.api.dto.request.cake.CakeSearchByShopRequest;
-import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
-import com.cakk.api.dto.request.cake.CakeUpdateRequest;
-import com.cakk.api.dto.response.cake.CakeDetailResponse;
-import com.cakk.api.dto.response.cake.CakeImageListResponse;
-import com.cakk.api.dto.response.like.HeartResponse;
-import com.cakk.api.service.cake.CakeService;
-import com.cakk.api.service.like.HeartService;
-import com.cakk.common.response.ApiResponse;
-import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.api.annotation.SignInUser
+import com.cakk.api.dto.request.cake.*
+import com.cakk.api.dto.response.cake.CakeDetailResponse
+import com.cakk.api.dto.response.cake.CakeImageListResponse
+import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.api.mapper.CakeMapper
+import com.cakk.api.service.cake.CakeService
+import com.cakk.api.service.like.HeartService
+import com.cakk.common.response.ApiResponse
+import com.cakk.domain.mysql.entity.user.User
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cakes")
-public class CakeController {
-
-	private final CakeService cakeService;
-	private final HeartService heartService;
+class CakeController(
+	private val cakeService: CakeService,
+	private val heartService: HeartService
+) {
 
 	@GetMapping("/search/categories")
-	public ApiResponse<CakeImageListResponse> listByCategory(
-		@Valid @ModelAttribute CakeSearchByCategoryRequest request
-	) {
-		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndCategory(request);
+	fun listByCategory(
+		@ModelAttribute @Valid request: CakeSearchByCategoryRequest
+	): ApiResponse<CakeImageListResponse> {
+		val param = CakeMapper.supplyCakeSearchByCategoryParamBy(request)
+		val response = cakeService.findCakeImagesByCursorAndCategory(param)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@GetMapping("/search/shops")
-	public ApiResponse<CakeImageListResponse> listByShop(
-		@Valid @ModelAttribute CakeSearchByShopRequest request
-	) {
-		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndCakeShopId(request);
+	fun listByShop(
+		@ModelAttribute @Valid request: CakeSearchByShopRequest
+	): ApiResponse<CakeImageListResponse> {
+		val param = CakeMapper.supplyCakeSearchByShopParamBy(request)
+		val response = cakeService.findCakeImagesByCursorAndCakeShopId(param)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@GetMapping("/search/cakes")
-	public ApiResponse<CakeImageListResponse> listByKeywordAndLocation(
-		@Valid @ModelAttribute CakeSearchByLocationRequest request
-	) {
-		final CakeImageListResponse response = cakeService.findCakeImagesByCursorAndSearch(request);
+	fun listByKeywordAndLocation(
+		@ModelAttribute @Valid request: CakeSearchByLocationRequest
+	): ApiResponse<CakeImageListResponse> {
+		val param = CakeMapper.supplyCakeSearchParamBy(request)
+		val response = cakeService.findCakeImagesByCursorAndSearch(param)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@GetMapping("/search/views")
-	public ApiResponse<CakeImageListResponse> listByViews(
-		@Valid @ModelAttribute CakeSearchByViewsRequest request
-	) {
-		final CakeImageListResponse response = cakeService.searchCakeImagesByCursorAndViews(request);
+	fun listByViews(
+		@ModelAttribute @Valid request: CakeSearchByViewsRequest
+	): ApiResponse<CakeImageListResponse> {
+		val param = CakeMapper.supplyCakeSearchByViewsParamBy(request)
+		val response = cakeService.searchCakeImagesByCursorAndViews(param)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@GetMapping("/{cakeId}")
-	public ApiResponse<CakeDetailResponse> details(@PathVariable Long cakeId) {
-		final CakeDetailResponse response = cakeService.findCakeDetailById(cakeId);
+	fun details(@PathVariable cakeId: Long): ApiResponse<CakeDetailResponse> {
+		val response = cakeService.findCakeDetailById(cakeId)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@PostMapping("/{cakeShopId}")
-	public ApiResponse<Void> create(
-		@SignInUser User user,
-		@PathVariable Long cakeShopId,
-		@Valid @RequestBody CakeCreateRequest request
-	) {
-		cakeService.createCake(request.toParam(user, cakeShopId));
+	fun create(
+		@SignInUser user: User,
+		@PathVariable cakeShopId: Long,
+		@RequestBody @Valid request: CakeCreateRequest
+	): ApiResponse<Unit> {
+		val param = CakeMapper.supplyCakeCreateParamBy(request, user, cakeShopId)
+		cakeService.createCake(param)
 
-		return ApiResponse.success();
+		return ApiResponse.success()
 	}
 
 	@GetMapping("/{cakeId}/heart")
-	public ApiResponse<HeartResponse> isHeart(
-		@SignInUser User user,
-		@PathVariable Long cakeId
-	) {
-		final HeartResponse response = heartService.isHeartCake(user, cakeId);
+	fun isHeart(
+		@SignInUser user: User,
+		@PathVariable cakeId: Long
+	): ApiResponse<HeartResponse> {
+		val response = heartService.isHeartCake(user, cakeId)
 
-		return ApiResponse.success(response);
+		return ApiResponse.success(response)
 	}
 
 	@PutMapping("/{cakeId}/heart")
-	public ApiResponse<Void> heart(
-		@SignInUser User user,
-		@PathVariable Long cakeId
-	) {
-		heartService.heartCake(user, cakeId);
+	fun heart(
+		@SignInUser user: User,
+		@PathVariable cakeId: Long
+	): ApiResponse<Unit> {
+		heartService.heartCake(user, cakeId)
 
-		return ApiResponse.success();
+		return ApiResponse.success()
 	}
 
 	@PutMapping("/{cakeId}")
-	public ApiResponse<Void> update(
-		@SignInUser User user,
-		@PathVariable Long cakeId,
-		@Valid @RequestBody CakeUpdateRequest request) {
-		cakeService.updateCake(request.toParam(user, cakeId));
+	fun update(
+		@SignInUser user: User,
+		@PathVariable cakeId: Long,
+		@RequestBody request: @Valid CakeUpdateRequest
+	): ApiResponse<Unit> {
+		val param = CakeMapper.supplyCakeUpdateParamBy(request, user, cakeId)
+		cakeService.updateCake(param)
 
-		return ApiResponse.success();
+		return ApiResponse.success()
 	}
 
 	@DeleteMapping("/{cakeId}")
-	public ApiResponse<Void> delete(
-		@SignInUser User user,
-		@PathVariable Long cakeId
-	) {
-		cakeService.deleteCake(user, cakeId);
+	fun delete(
+		@SignInUser user: User,
+		@PathVariable cakeId: Long
+	): ApiResponse<Unit> {
+		cakeService.deleteCake(user, cakeId)
 
-		return ApiResponse.success();
+		return ApiResponse.success()
 	}
 }

@@ -6,7 +6,7 @@ import com.cakk.common.exception.CakkException
 import com.cakk.core.annotation.DomainFacade
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
-import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam
+import com.cakk.core.dto.param.cake.CakeSearchParam
 import com.cakk.domain.mysql.entity.cake.Cake
 import com.cakk.domain.mysql.entity.cake.CakeCategory
 import com.cakk.domain.mysql.entity.user.User
@@ -59,7 +59,7 @@ class CakeReadFacade(
         )
     }
 
-    fun searchCakeImagesByCakeIds(cakeIds: List<Long?>?): List<CakeImageResponseParam> {
+    fun searchCakeImagesByCakeIds(cakeIds: List<Long>): List<CakeImageResponseParam> {
         return cakeQueryRepository.searchCakeImagesByCakeIds(cakeIds)
     }
 

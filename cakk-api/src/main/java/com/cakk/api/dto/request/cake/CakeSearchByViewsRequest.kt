@@ -1,10 +1,6 @@
-package com.cakk.api.dto.request.cake;
+package com.cakk.api.dto.request.cake
 
-import jakarta.validation.constraints.NotNull;
-
-public record CakeSearchByViewsRequest(
-	Long offset,
-	@NotNull
-	Integer pageSize
-) {
-}
+data class CakeSearchByViewsRequest(
+	 val offset: Long = 0,
+	 val pageSize: Int = 10
+)

@@ -1,27 +1,14 @@
-package com.cakk.api.dto.request.cake;
+package com.cakk.api.dto.request.cake
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 
-import com.cakk.api.mapper.PointMapper;
-import com.cakk.domain.mysql.dto.param.cake.CakeSearchParam;
-
-public record CakeSearchByLocationRequest(
-	Long cakeId,
-	String keyword,
-	@Min(-90) @Max(90)
-	Double latitude,
-	@Min(-180) @Max(180)
-	Double longitude,
-	Integer pageSize
-) {
-
-	public CakeSearchParam toParam() {
-		return new CakeSearchParam(
-			cakeId,
-			keyword,
-			PointMapper.supplyPointBy(latitude, longitude),
-			pageSize == null ? 10 : pageSize
-		);
-	}
-}
+data class CakeSearchByLocationRequest(
+    val cakeId: Long?,
+    val keyword: String?,
+    @field:Min(-90) @field:Max(90)
+    val latitude: Double?,
+    @field:Min(-180) @field:Max(180)
+    val longitude: Double?,
+    val pageSize: Int = 10
+)

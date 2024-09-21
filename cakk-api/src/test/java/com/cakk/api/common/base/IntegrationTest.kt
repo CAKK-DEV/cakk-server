@@ -4,10 +4,7 @@ import com.cakk.api.provider.jwt.JwtProvider
 import com.cakk.api.vo.JsonWebToken
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.domain.mysql.entity.user.User
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.*
 import com.navercorp.fixturemonkey.FixtureMonkey
@@ -21,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -45,10 +41,18 @@ abstract class IntegrationTest {
 
 	@BeforeEach
 	fun globalSetUp() {
-		objectMapper = jsonMapper {
-			addModule(kotlinModule())
-			addModule(JavaTimeModule())
-		}
+//		objectMapper = jsonMapper {
+//			addModule(kotlinModule())
+//			addModule(JavaTimeModule())
+//		}
+		objectMapper = objectMapper.registerModule(KotlinModule.Builder()
+			.withReflectionCacheSize(512)
+			.configure(KotlinFeature.NullToEmptyCollection, false)
+			.configure(KotlinFeature.NullToEmptyMap, false)
+			.configure(KotlinFeature.NullIsSameAsDefault, false)
+			.configure(KotlinFeature.SingletonSupport, false)
+			.configure(KotlinFeature.StrictNullChecks, false)
+			.build())
 	}
 
 	protected fun getConstructorMonkey(): FixtureMonkey {

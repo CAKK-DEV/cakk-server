@@ -1,12 +1,11 @@
-package com.cakk.api.dto.request.cake;
+package com.cakk.api.dto.request.cake
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull
 
-public record CakeSearchByShopRequest(
-	Long cakeId,
-	@NotNull
-	Long cakeShopId,
-	@NotNull
-	Integer pageSize
-) {
-}
+data class CakeSearchByShopRequest(
+    val cakeId: Long? = null,
+    @field:NotNull
+    val cakeShopId: Long?,
+    @field:NotNull
+    val pageSize: Int? = 10
+)
