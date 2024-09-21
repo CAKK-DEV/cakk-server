@@ -8,6 +8,6 @@ data class CertificationMessage(
     val userId: Long,
     val userEmail: String,
     val shopName: String,
-    val latitude: Double?,
-    val longitude: Double?
+    val latitude: Double,
+    val longitude: Double
 )

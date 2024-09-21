@@ -39,8 +39,8 @@ fun supplyCertificationMessageBy(certificationEvent: CertificationEvent): Certif
 		certificationEvent.userId,
 		certificationEvent.userEmail,
 		certificationEvent.shopName,
-		certificationEvent.location?.y,
-		certificationEvent.location?.x
+		certificationEvent.location.y,
+		certificationEvent.location.x
 	)
 }
 
