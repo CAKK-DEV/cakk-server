@@ -10,8 +10,8 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import com.cakk.api.annotation.OperationDay;
-import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.common.enums.Days;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 
 public class OperationValidator implements ConstraintValidator<OperationDay, List<ShopOperationParam>> {
 
@@ -23,10 +23,10 @@ public class OperationValidator implements ConstraintValidator<OperationDay, Lis
 
 		final Map<Days, Boolean> days = new EnumMap<>(Days.class);
 		for (ShopOperationParam operationParam : operationParams) {
-			if (days.containsKey(operationParam.operationDay())) {
+			if (days.containsKey(operationParam.getOperationDay())) {
 				return false;
 			} else {
-				days.put(operationParam.operationDay(), true);
+				days.put(operationParam.getOperationDay(), true);
 			}
 		}
 		return true;

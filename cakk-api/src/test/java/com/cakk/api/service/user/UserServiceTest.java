@@ -11,13 +11,13 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
+import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
@@ -75,12 +75,12 @@ class UserServiceTest extends ServiceTest {
 			.set("provider", Arbitraries.of(Provider.class))
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.sample();
-		final ProfileUpdateRequest request = getConstructorMonkey().giveMeOne(ProfileUpdateRequest.class);
+		final ProfileUpdateParam param = getConstructorMonkey().giveMeOne(ProfileUpdateParam.class);
 
 		doReturn(user).when(userReadFacade).findByUserId(user.getId());
 
 		// when & then
-		Assertions.assertDoesNotThrow(() -> userService.updateInformation(user, request));
+		Assertions.assertDoesNotThrow(() -> userService.updateInformation(param));
 
 		verify(userReadFacade, times(1)).findByUserId(user.getId());
 	}

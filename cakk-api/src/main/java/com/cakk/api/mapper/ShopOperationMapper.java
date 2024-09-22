@@ -20,9 +20,9 @@ public class ShopOperationMapper {
 
 	public static CakeShopOperation supplyCakeShopOperationBy(final ShopOperationParam param) {
 		return CakeShopOperation.builder()
-			.operationDay(param.operationDay())
-			.operationStartTime(param.operationStartTime())
-			.operationEndTime(param.operationEndTime())
+			.operationDay(param.getOperationDay())
+			.operationStartTime(param.getOperationStartTime())
+			.operationEndTime(param.getOperationEndTime())
 			.build();
 	}
 }

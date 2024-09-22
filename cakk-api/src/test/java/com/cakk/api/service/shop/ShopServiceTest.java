@@ -18,9 +18,6 @@ import com.navercorp.fixturemonkey.ArbitraryBuilder;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
-import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
 import com.cakk.api.dto.response.shop.CakeShopDetailResponse;
 import com.cakk.api.dto.response.shop.CakeShopInfoResponse;
@@ -31,6 +28,9 @@ import com.cakk.api.mapper.ShopMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.dto.param.search.CakeShopSearchByViewsParam;
+import com.cakk.core.dto.param.shop.CreateShopParam;
+import com.cakk.core.dto.param.shop.PromotionParam;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
@@ -70,8 +70,8 @@ public class ShopServiceTest extends ServiceTest {
 	@Mock
 	private VerificationPolicy verificationPolicy;
 
-	private CreateShopRequest getCreateShopRequestFixture() {
-		return getConstructorMonkey().giveMeBuilder(CreateShopRequest.class)
+	private CreateShopParam getCreateShopParamFixture() {
+		return getConstructorMonkey().giveMeBuilder(CreateShopParam.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
 			.setNotNull("operationDays")
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
@@ -80,8 +80,8 @@ public class ShopServiceTest extends ServiceTest {
 			.sample();
 	}
 
-	private PromotionRequest getPromotionRequestFixture() {
-		return getConstructorMonkey().giveMeBuilder(PromotionRequest.class)
+	private PromotionParam getPromotionParamFixture() {
+		return getConstructorMonkey().giveMeBuilder(PromotionParam.class)
 			.set("userId", Arbitraries.longs().greaterOrEqual(0))
 			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(0))
 			.sample();
@@ -202,13 +202,13 @@ public class ShopServiceTest extends ServiceTest {
 	@TestWithDisplayName("Admin에 의해 케이크 샵을 생성하는데 성공한다")
 	void createCakeShop() {
 		//given
-		CreateShopRequest request = getCreateShopRequestFixture();
+		CreateShopParam param = getCreateShopParamFixture();
 		CakeShop cakeShop = getCakeShopFixture();
 		when(cakeShopManageFacade.create(any(CakeShop.class), anyList(), any(BusinessInformation.class), anyList()))
 			.thenReturn(cakeShop);
 
 		//when
-		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(request);
+		final CakeShopCreateResponse response = shopService.createCakeShopByCertification(param);
 
 		//verify
 		assertEquals(response.cakeShopId(), cakeShop.getId());
@@ -219,18 +219,18 @@ public class ShopServiceTest extends ServiceTest {
 	@TestWithDisplayName("userId와 cakeShopId가 존재한다면, 해당 userId의 사용자는 Owner로 승격된다")
 	void promoteUser() {
 		//given
-		PromotionRequest request = getPromotionRequestFixture();
+		PromotionParam param = getPromotionParamFixture();
 		BusinessInformation businessInformation = getBusinessInformationFixture();
 
-		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReadFacade).findByUserId(request.userId());
-		doReturn(businessInformation).when(cakeShopReadFacade).findBusinessInformationWithShop(request.cakeShopId());
+		doReturn(getConstructorMonkey().giveMeOne(User.class)).when(userReadFacade).findByUserId(param.getUserId());
+		doReturn(businessInformation).when(cakeShopReadFacade).findBusinessInformationWithShop(param.getCakeShopId());
 
 		//when,then
-		shopService.promoteUserToBusinessOwner(request);
+		shopService.promoteUserToBusinessOwner(param);
 
 		//verify
-		verify(userReadFacade, times(1)).findByUserId(request.userId());
-		verify(cakeShopReadFacade, times(1)).findBusinessInformationWithShop(request.cakeShopId());
+		verify(userReadFacade, times(1)).findByUserId(param.getUserId());
+		verify(cakeShopReadFacade, times(1)).findBusinessInformationWithShop(param.getCakeShopId());
 	}
 
 	@TestWithDisplayName("cakeShopId가 존재한다면, 정보를 찾아서 이벤트를 발행한다")
@@ -297,7 +297,7 @@ public class ShopServiceTest extends ServiceTest {
 		// given
 		final long offset = 0L;
 		final int pageSize = 3;
-		final CakeShopSearchByViewsRequest dto = new CakeShopSearchByViewsRequest(offset, pageSize);
+		final CakeShopSearchByViewsParam param = new CakeShopSearchByViewsParam(offset, pageSize);
 		final List<Long> cakeShopIds = List.of(1L, 2L, 3L);
 		final List<CakeShop> cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop.class)
 			.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
@@ -310,7 +310,7 @@ public class ShopServiceTest extends ServiceTest {
 		doReturn(cakeShops).when(cakeShopReadFacade).searchShopsByShopIds(cakeShopIds);
 
 		// when
-		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(dto);
+		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(param);
 
 		// then
 		assertNotNull(result);
@@ -325,13 +325,13 @@ public class ShopServiceTest extends ServiceTest {
 		// given
 		final long offset = 0L;
 		final int pageSize = 3;
-		final CakeShopSearchByViewsRequest dto = new CakeShopSearchByViewsRequest(offset, pageSize);
+		final CakeShopSearchByViewsParam param = new CakeShopSearchByViewsParam(offset, pageSize);
 		final List<Long> cakeShopIds = List.of();
 
 		doReturn(cakeShopIds).when(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize);
 
 		// when
-		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(dto);
+		final CakeShopSearchResponse result = shopService.searchCakeShopsByCursorAndViews(param);
 
 		// then
 		assertNotNull(result);

@@ -79,10 +79,12 @@ internal class UserManageFacadeTest : FacadeTest() {
             .set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
             .set("gender", Arbitraries.of(Gender::class.java))
             .set("birthday", java.time.LocalDate.now())
+			.set("user", user)
             .sample()
 
+
         // when
-		userManageFacade.updateProfile(user, param)
+		userManageFacade.updateProfile(param)
 
         // then
 		user.profileImageUrl shouldBe param.profileImageUrl

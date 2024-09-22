@@ -14,7 +14,7 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
-import com.cakk.api.dto.param.operation.ShopOperationParam;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.common.enums.Days;
 
 public class OperationValidatorTest extends MockitoTest {
