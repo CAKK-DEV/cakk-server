@@ -29,11 +29,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateInformation(final User signInUser, final ProfileUpdateRequest dto) {
-		final User user = userReadFacade.findByUserId(signInUser.getId());
-		final ProfileUpdateParam param = UserMapper.supplyProfileUpdateParamBy(dto);
-
-		userManageFacade.updateProfile(user, param);
+	public void updateInformation(final ProfileUpdateParam param) {
+		userManageFacade.updateProfile(param);
 	}
 
 	@Transactional

@@ -2,6 +2,7 @@ package com.cakk.api.controller.search
 
 import com.cakk.api.dto.request.search.TopSearchedListRequest
 import com.cakk.api.dto.response.search.TopSearchedListResponse
+import com.cakk.api.mapper.SearchMapper
 import com.cakk.api.service.search.KeywordService
 import com.cakk.common.response.ApiResponse
 import jakarta.validation.Valid
@@ -22,7 +23,8 @@ class KeywordController(
     fun topSearched(
             @ModelAttribute @Valid request: TopSearchedListRequest
     ): ApiResponse<TopSearchedListResponse> {
-        val response = keywordService.findTopSearched(request)
+		val param = SearchMapper.supplyTopSearchedListParamBy(request)
+        val response = keywordService.findTopSearched(param)
 
 		return ApiResponse.success(response)
     }

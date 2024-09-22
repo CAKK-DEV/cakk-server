@@ -28,14 +28,16 @@ class SignController(
     fun signUp(
 		@RequestBody @Valid request: UserSignUpRequest
     ): ApiResponse<JwtResponse> {
-        return ApiResponse.success(signService.signUp(request))
+		val param = UserMapper.supplyUserSignUpParamBy(request)
+        return ApiResponse.success(signService.signUp(param))
     }
 
     @PostMapping("/sign-in")
     fun signIn(
 		@RequestBody @Valid request: UserSignInRequest
     ): ApiResponse<JwtResponse> {
-		return ApiResponse.success(signService.signIn(request))
+		val param = UserMapper.supplyUserSignInParamBy(request)
+		return ApiResponse.success(signService.signIn(param))
 	}
 
     @PostMapping("/sign-out")

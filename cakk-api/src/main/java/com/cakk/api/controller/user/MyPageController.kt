@@ -7,6 +7,8 @@ import com.cakk.api.dto.request.user.ProfileUpdateRequest
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse
 import com.cakk.api.dto.response.user.ProfileInformationResponse
+import com.cakk.api.mapper.SearchMapper
+import com.cakk.api.mapper.UserMapper
 import com.cakk.api.service.like.HeartService
 import com.cakk.api.service.user.UserService
 import com.cakk.common.response.ApiResponse
@@ -37,7 +39,8 @@ class MyPageController(
 		@SignInUser user: User,
 		@RequestBody @Valid request: ProfileUpdateRequest
     ): ApiResponse<Void> {
-        userService.updateInformation(user, request)
+		val param = UserMapper.supplyProfileUpdateParamBy(request, user)
+        userService.updateInformation(param)
 
 		return ApiResponse.success()
     }
@@ -56,7 +59,8 @@ class MyPageController(
 		@SignInUser user: User,
 		@ModelAttribute @Valid request: HeartCakeSearchRequest
     ): ApiResponse<HeartCakeImageListResponse> {
-        val response = heartService.searchCakeImagesByCursorAndHeart(request, user)
+		val param = SearchMapper.supplyHeartCakeSearchParamBy(request, user)
+        val response = heartService.searchCakeImagesByCursorAndHeart(param)
 
 		return ApiResponse.success(response)
     }
@@ -66,7 +70,8 @@ class MyPageController(
 		@SignInUser user: User,
 		@ModelAttribute @Valid request: HeartCakeShopSearchRequest
     ): ApiResponse<HeartCakeShopListResponse> {
-        val response = heartService.searchCakeShopByCursorAndHeart(request, user)
+		val param = SearchMapper.supplyHeartCakeShopSearchParamBy(request, user)
+        val response = heartService.searchCakeShopByCursorAndHeart(param)
 
 		return ApiResponse.success(response)
     }

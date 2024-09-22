@@ -14,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
-import com.cakk.api.dto.request.shop.CreateShopRequest;
-import com.cakk.api.dto.request.shop.PromotionRequest;
-import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
@@ -34,6 +31,10 @@ import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.core.dto.event.CakeShopIncreaseViewsEvent;
 import com.cakk.core.dto.event.IncreaseSearchCountEvent;
+import com.cakk.core.dto.param.search.CakeShopSearchByViewsParam;
+import com.cakk.core.dto.param.search.SearchShopByLocationParam;
+import com.cakk.core.dto.param.shop.CreateShopParam;
+import com.cakk.core.dto.param.shop.PromotionParam;
 import com.cakk.core.facade.cake.BusinessInformationReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
@@ -46,6 +47,7 @@ import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam;
@@ -72,11 +74,11 @@ public class ShopService {
 	private final ApplicationEventPublisher publisher;
 
 	@Transactional
-	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopRequest request) {
-		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(request);
-		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(request, cakeShop);
-		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, request.operationDays());
-		final List<CakeShopLink> cakeShopLinks = LinkMapper.supplyCakeShopLinksBy(cakeShop, request.links());
+	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopParam param) {
+		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(param);
+		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(param, cakeShop);
+		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, param.getOperationsDays());
+		final List<CakeShopLink> cakeShopLinks = LinkMapper.supplyCakeShopLinksBy(cakeShop, param.getLinks());
 
 		final CakeShop result = cakeShopManageFacade.create(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks);
 
@@ -84,9 +86,9 @@ public class ShopService {
 	}
 
 	@Transactional
-	public void promoteUserToBusinessOwner(final PromotionRequest request) {
-		final User user = userReadFacade.findByUserId(request.userId());
-		final BusinessInformation businessInformation = cakeShopReadFacade.findBusinessInformationWithShop(request.cakeShopId());
+	public void promoteUserToBusinessOwner(final PromotionParam param) {
+		final User user = userReadFacade.findByUserId(param.getUserId());
+		final BusinessInformation businessInformation = cakeShopReadFacade.findBusinessInformationWithShop(param.getCakeShopId());
 
 		businessInformation.updateBusinessOwner(verificationPolicy, user);
 	}
@@ -156,10 +158,10 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopByMapResponse searchShop(final SearchShopByLocationRequest request) {
-		final Double longitude = request.longitude();
-		final Double latitude = request.latitude();
-		final Double distance = request.distance();
+	public CakeShopByMapResponse searchShop(final SearchShopByLocationParam param) {
+		final Double longitude = param.getLongitude();
+		final Double latitude = param.getLatitude();
+		final Double distance = param.getDistance();
 		final Point point = PointMapper.supplyPointBy(latitude, longitude);
 
 		final List<CakeShopByLocationParam> result = cakeShopReadFacade
@@ -170,15 +172,15 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopSearchResponse searchShopByKeyword(final CakeShopSearchRequest dto) {
-		final int pageSize = dto.pageSize();
-		final List<CakeShop> result = cakeShopReadFacade.searchShopBySearch(dto.toParam());
+	public CakeShopSearchResponse searchShopByKeyword(final CakeShopSearchParam param) {
+		final int pageSize = param.pageSize();
+		final List<CakeShop> result = cakeShopReadFacade.searchShopBySearch(param);
 		final List<CakeShopBySearchParam> cakeShopBySearchParams = ShopMapper.supplyCakeShopBySearchParamListBy(result);
 
 		final CakeShops<CakeShopBySearchParam> cakeShops = new CakeShops<>(cakeShopBySearchParams, 4, pageSize);
 
-		if (nonNull(dto.keyword())) {
-			final IncreaseSearchCountEvent event = com.cakk.api.mapper.EventMapper.supplyIncreaseSearchCountEventBy(dto.keyword());
+		if (nonNull(param.keyword())) {
+			final IncreaseSearchCountEvent event = com.cakk.api.mapper.EventMapper.supplyIncreaseSearchCountEventBy(param.keyword());
 			publisher.publishEvent(event);
 		}
 
@@ -186,9 +188,9 @@ public class ShopService {
 	}
 
 	@Transactional(readOnly = true)
-	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(final CakeShopSearchByViewsRequest dto) {
-		final long offset = isNull(dto.offset()) ? 0 : dto.offset();
-		final int pageSize = dto.pageSize();
+	public CakeShopSearchResponse searchCakeShopsByCursorAndViews(final CakeShopSearchByViewsParam param) {
+		final long offset = isNull(param.getOffset()) ? 0 : param.getOffset();
+		final int pageSize = param.getPageSize();
 		final List<Long> cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize);
 
 		if (isNull(cakeShopIds) || cakeShopIds.isEmpty()) {

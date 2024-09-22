@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import com.cakk.api.annotation.OperationDay;
-import com.cakk.api.dto.param.operation.ShopOperationParam;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.common.enums.Days;
 
 public class OperationValidator implements ConstraintValidator<OperationDay, List<ShopOperationParam>> {

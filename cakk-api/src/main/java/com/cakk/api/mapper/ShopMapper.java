@@ -10,7 +10,14 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.api.dto.param.operation.ShopOperationParam;
+import com.cakk.api.dto.request.link.UpdateLinkRequest;
+import com.cakk.api.dto.request.operation.UpdateShopOperationRequest;
+import com.cakk.api.dto.request.shop.PromotionRequest;
+import com.cakk.api.dto.request.shop.UpdateShopRequest;
+import com.cakk.api.dto.request.user.CertificationRequest;
+import com.cakk.core.dto.param.shop.CreateShopParam;
+import com.cakk.core.dto.param.shop.PromotionParam;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
@@ -24,33 +31,39 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
+import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam;
+import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopDetailParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopInfoParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLocationResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSimpleParam;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam;
+import com.cakk.domain.mysql.dto.param.user.CertificationParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
+import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
 import com.cakk.domain.mysql.entity.user.BusinessInformation;
+import com.cakk.domain.mysql.entity.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ShopMapper {
 
-	public static CakeShop supplyCakeShopBy(final CreateShopRequest request) {
+	public static CakeShop supplyCakeShopBy(final CreateShopParam param) {
 		return CakeShop.builder()
-			.shopName(request.shopName())
-			.shopBio(request.shopBio())
-			.shopDescription(request.shopDescription())
-			.shopAddress(request.shopAddress())
-			.location(PointMapper.supplyPointBy(request.latitude(), request.longitude()))
+			.shopName(param.getShopName())
+			.shopBio(param.getShopBio())
+			.shopDescription(param.getShopDescription())
+			.shopAddress(param.getShopAddress())
+			.location(PointMapper.supplyPointBy(param.getLatitude(), param.getLongitude()))
 			.build();
 	}
 
-	public static BusinessInformation supplyBusinessInformationBy(final CreateShopRequest request, final CakeShop cakeShop) {
+	public static BusinessInformation supplyBusinessInformationBy(final CreateShopParam param, final CakeShop cakeShop) {
 		return BusinessInformation.builder()
-			.businessNumber(request.businessNumber())
+			.businessNumber(param.getBusinessNumber())
 			.cakeShop(cakeShop)
 			.build();
 	}
@@ -63,9 +76,9 @@ public class ShopMapper {
 
 		operationDays.forEach(operationParam -> cakeShopOperations
 			.add(CakeShopOperation.builder()
-				.operationDay(operationParam.operationDay())
-				.operationStartTime(operationParam.operationStartTime())
-				.operationEndTime(operationParam.operationEndTime())
+				.operationDay(operationParam.getOperationDay())
+				.operationStartTime(operationParam.getOperationStartTime())
+				.operationEndTime(operationParam.getOperationEndTime())
 				.cakeShop(cakeShop)
 				.build()));
 
@@ -207,9 +220,96 @@ public class ShopMapper {
 		);
 	}
 
+	public static CreateShopParam supplyCreateShopParamBy(final CreateShopRequest request) {
+		return new CreateShopParam(
+			request.businessNumber(),
+			request.operationDays(),
+			request.shopName(),
+			request.shopBio(),
+			request.shopDescription(),
+			request.shopAddress(),
+			request.latitude(),
+			request.longitude(),
+			request.links()
+		);
+	}
+
+	public static PromotionParam supplyPromotionParamBy(final PromotionRequest request) {
+		return new PromotionParam(
+			request.userId(),
+			request.cakeShopId()
+		);
+	}
+
+	public static CakeShopUpdateParam supplyCakeShopUpdateParamBy(
+		final UpdateShopRequest request,
+		final User user,
+		final Long cakeShopId) {
+		return CakeShopUpdateParam.builder()
+			.user(user)
+			.cakeShopId(cakeShopId)
+			.thumbnailUrl(request.thumbnailUrl())
+			.shopName(request.shopName())
+			.shopBio(request.shopBio())
+			.shopDescription(request.shopDescription())
+			.build();
+	}
+
+	public static CertificationParam supplyCertificationParamBy(final CertificationRequest request, final User user) {
+		return CertificationParam.builder()
+			.businessRegistrationImageUrl(request.businessRegistrationImageUrl())
+			.idCardImageUrl(request.idCardImageUrl())
+			.cakeShopId(request.cakeShopId())
+			.emergencyContact(request.emergencyContact())
+			.message(request.message())
+			.user(user)
+			.build();
+	}
+
+	public static UpdateLinkParam supplyUpdateLinkParamBy(
+		final UpdateLinkRequest request,
+		final User user,
+		final Long cakeShopId) {
+		List<CakeShopLink> cakeShopLinks = new ArrayList<>();
+		CakeShopLink instagramLink = LinkMapper.supplyCakeShopLinkByInstagram(request.instagram());
+		CakeShopLink kakaoLink = LinkMapper.supplyCakeShopLinkByKakao(request.kakao());
+		CakeShopLink webLink = LinkMapper.supplyCakeShopLinkByWeb(request.web());
+
+		addLink(cakeShopLinks, instagramLink);
+		addLink(cakeShopLinks, kakaoLink);
+		addLink(cakeShopLinks, webLink);
+
+		return new UpdateLinkParam(
+			user,
+			cakeShopId,
+			cakeShopLinks
+		);
+	}
+
+	public static UpdateShopOperationParam supplyUpdateShopOperationParamBy(
+		final UpdateShopOperationRequest request,
+		final User user,
+		final Long cakeShopId
+	) {
+		final List<CakeShopOperation> cakeShopOperations = ShopOperationMapper
+			.supplyCakeShopOperationListBy(request.operationDays());
+
+		return new UpdateShopOperationParam(
+			cakeShopOperations,
+			user,
+			cakeShopId
+		);
+	}
+
 	private static boolean isEmptyCakeShopOperation(final CakeShopOperationParam cakeShopOperationParam) {
 		return isNull(cakeShopOperationParam.operationDay())
 			|| isNull(cakeShopOperationParam.operationStartTime())
 			|| isNull(cakeShopOperationParam.operationEndTime());
+	}
+
+	private static void addLink(List<CakeShopLink> cakeShopLinks, CakeShopLink cakeShopLink) {
+		if (nonNull(cakeShopLink)) {
+			cakeShopLinks.add(cakeShopLink);
+		}
 	}
 }

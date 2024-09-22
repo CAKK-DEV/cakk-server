@@ -7,6 +7,8 @@ import com.cakk.api.dto.request.shop.*
 import com.cakk.api.dto.request.user.CertificationRequest
 import com.cakk.api.dto.response.like.HeartResponse
 import com.cakk.api.dto.response.shop.*
+import com.cakk.api.mapper.SearchMapper
+import com.cakk.api.mapper.ShopMapper
 import com.cakk.api.service.like.HeartService
 import com.cakk.api.service.like.LikeService
 import com.cakk.api.service.shop.ShopService
@@ -30,9 +32,10 @@ class ShopController(
     @PostMapping("/certification")
     fun requestCertification(
 		@SignInUser user: User,
-		@RequestBody @Valid certificationRequest: CertificationRequest
+		@RequestBody @Valid request: CertificationRequest
 	): ApiResponse<Void> {
-        shopService.requestCertificationBusinessOwner(certificationRequest.from(user))
+		val param = ShopMapper.supplyCertificationParamBy(request, user)
+        shopService.requestCertificationBusinessOwner(param)
 
 		return ApiResponse.success()
     }
@@ -70,7 +73,8 @@ class ShopController(
     fun listByLocation(
 		@ModelAttribute @Valid request: SearchShopByLocationRequest
     ): ApiResponse<CakeShopByMapResponse> {
-        val response = shopService.searchShop(request)
+		val param = SearchMapper.supplySearchShopByLocationParamBy(request)
+        val response = shopService.searchShop(param)
 
 		return ApiResponse.success(response)
     }
@@ -118,7 +122,8 @@ class ShopController(
     fun listByKeywordAndLocation(
 		@ModelAttribute @Valid request: CakeShopSearchRequest
     ): ApiResponse<CakeShopSearchResponse> {
-        val response = shopService.searchShopByKeyword(request)
+		val param = SearchMapper.supplyCakeShopSearchParamBy(request)
+        val response = shopService.searchShopByKeyword(param)
 
 		return ApiResponse.success(response)
     }
@@ -129,7 +134,8 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopRequest
     ): ApiResponse<Void> {
-        shopService.updateBasicInformation(request.toParam(user, cakeShopId))
+		val param = ShopMapper.supplyCakeShopUpdateParamBy(request, user, cakeShopId)
+        shopService.updateBasicInformation(param)
 
 		return ApiResponse.success()
     }
@@ -140,8 +146,10 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateLinkRequest
     ): ApiResponse<Void> {
-        shopService.updateShopLinks(request.toParam(user, cakeShopId))
-        return ApiResponse.success()
+		val param = ShopMapper.supplyUpdateLinkParamBy(request, user, cakeShopId)
+        shopService.updateShopLinks(param)
+
+		return ApiResponse.success()
     }
 
     @PutMapping("/{cakeShopId}/address")
@@ -161,7 +169,8 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopOperationRequest
     ): ApiResponse<Void> {
-        shopService.updateShopOperationDays(request.toParam(user, cakeShopId))
+		val param = ShopMapper.supplyUpdateShopOperationParamBy(request, user, cakeShopId)
+        shopService.updateShopOperationDays(param)
 
 		return ApiResponse.success()
     }
@@ -180,7 +189,8 @@ class ShopController(
     fun listByViews(
 		@ModelAttribute @Valid request: CakeShopSearchByViewsRequest
     ): ApiResponse<CakeShopSearchResponse> {
-        val response = shopService.searchCakeShopsByCursorAndViews(request)
+		val param = SearchMapper.supplyCakeShopSearchByViewsParam(request)
+        val response = shopService.searchCakeShopsByCursorAndViews(param)
 
 		return ApiResponse.success(response)
     }

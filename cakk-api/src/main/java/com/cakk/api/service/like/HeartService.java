@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.DistributedLock;
-import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
-import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
 import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.core.dto.param.search.HeartCakeSearchParam;
+import com.cakk.core.dto.param.search.HeartCakeShopSearchParam;
 import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.cake.CakeShopUserReadFacade;
@@ -37,13 +37,12 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartCakeImageListResponse searchCakeImagesByCursorAndHeart(
-		final HeartCakeSearchRequest dto,
-		final User signInUser
+		final HeartCakeSearchParam param
 	) {
 		final List<HeartCakeImageResponseParam> cakeImages = cakeShopUserReadFacade.searchCakeImagesByCursorAndHeart(
-			dto.cakeHeartId(),
-			signInUser.getId(),
-			dto.pageSize()
+			param.getCakeHeartId(),
+			param.getUser().getId(),
+			param.getPageSize()
 		);
 
 		return CakeMapper.supplyHeartCakeImageListResponseBy(cakeImages);
@@ -51,13 +50,12 @@ public class HeartService {
 
 	@Transactional(readOnly = true)
 	public HeartCakeShopListResponse searchCakeShopByCursorAndHeart(
-		final HeartCakeShopSearchRequest dto,
-		final User signInUser
+		final HeartCakeShopSearchParam param
 	) {
 		final List<HeartCakeShopResponseParam> cakeShops = cakeShopUserReadFacade.searchAllCakeShopsByCursorAndHeart(
-			dto.cakeShopHeartId(),
-			signInUser.getId(),
-			dto.pageSize()
+			param.getCakeShopHeartId(),
+			param.getUser().getId(),
+			param.getPageSize()
 		);
 
 		return ShopMapper.supplyHeartCakeShopListResponseBy(cakeShops);

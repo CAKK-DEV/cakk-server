@@ -5,6 +5,7 @@ import com.cakk.api.dto.request.shop.PromotionRequest
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.api.mapper.ShopMapper
 import com.cakk.api.service.shop.ShopService
 import com.cakk.common.response.ApiResponse
 import jakarta.validation.Valid
@@ -36,18 +37,20 @@ class AdminController(
 
     @PostMapping("/shops/create")
     fun createByAdmin(
-		@RequestBody @Valid createShopRequest: CreateShopRequest
+		@RequestBody @Valid request: CreateShopRequest
     ): ApiResponse<CakeShopCreateResponse> {
-        val response = shopService.createCakeShopByCertification(createShopRequest)
+		val param = ShopMapper.supplyCreateShopParamBy(request);
+        val response = shopService.createCakeShopByCertification(param)
 
         return ApiResponse.success(response)
     }
 
     @PutMapping("/shops/promote")
     fun promoteUser(
-		@RequestBody @Valid promotionRequest: PromotionRequest
+		@RequestBody @Valid request: PromotionRequest
     ): ApiResponse<Void> {
-        shopService.promoteUserToBusinessOwner(promotionRequest)
+		val param = ShopMapper.supplyPromotionParamBy(request)
+        shopService.promoteUserToBusinessOwner(param)
 
 		return ApiResponse.success()
     }

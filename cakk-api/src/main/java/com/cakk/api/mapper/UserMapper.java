@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 
 import com.cakk.api.dto.request.user.GenerateCodeRequest;
 import com.cakk.api.dto.request.user.ProfileUpdateRequest;
+import com.cakk.api.dto.request.user.UserSignInRequest;
 import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Role;
 import com.cakk.core.dto.param.user.GenerateCodeParam;
+import com.cakk.core.dto.param.user.UserSignInParam;
+import com.cakk.core.dto.param.user.UserSignUpParam;
 import com.cakk.core.dto.param.user.VerifyEmailParam;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
@@ -20,16 +23,16 @@ import com.cakk.domain.mysql.entity.user.UserWithdrawal;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
 
-	public static User supplyUserBy(final UserSignUpRequest dto, final String providerId) {
+	public static User supplyUserBy(final UserSignUpParam param, final String providerId) {
 		return User.builder()
-			.provider(dto.provider())
+			.provider(param.getProvider())
 			.providerId(providerId)
-			.nickname(dto.nickname())
-			.email(dto.email())
-			.gender(dto.gender())
-			.birthday(dto.birthday())
-			.deviceOs(dto.deviceOs())
-			.deviceToken(dto.deviceToken())
+			.nickname(param.getNickname())
+			.email(param.getEmail())
+			.gender(param.getGender())
+			.birthday(param.getBirthday())
+			.deviceOs(param.getDeviceOs())
+			.deviceToken(param.getDeviceToken())
 			.role(Role.USER)
 			.build();
 	}
@@ -45,13 +48,14 @@ public class UserMapper {
 			.build();
 	}
 
-	public static ProfileUpdateParam supplyProfileUpdateParamBy(final ProfileUpdateRequest dto) {
+	public static ProfileUpdateParam supplyProfileUpdateParamBy(final ProfileUpdateRequest request, final User user) {
 		return ProfileUpdateParam.builder()
-			.profileImageUrl(dto.profileImageUrl())
-			.nickname(dto.nickname())
-			.email(dto.email())
-			.gender(dto.gender())
-			.birthday(dto.birthday())
+			.profileImageUrl(request.profileImageUrl())
+			.nickname(request.nickname())
+			.email(request.email())
+			.gender(request.gender())
+			.birthday(request.birthday())
+			.user(user)
 			.build();
 	}
 
@@ -71,5 +75,22 @@ public class UserMapper {
 
 	public static VerifyEmailParam supplyVerifyEmailParamBy(final VerifyEmailRequest dto) {
 		return new VerifyEmailParam(dto.getEmail(), dto.getCode());
+	}
+
+	public static UserSignUpParam supplyUserSignUpParamBy(final UserSignUpRequest request) {
+		return new UserSignUpParam(
+			request.provider(),
+			request.idToken(),
+			request.deviceOs(),
+			request.deviceToken(),
+			request.nickname(),
+			request.email(),
+			request.birthday(),
+			request.gender()
+		);
+	}
+
+	public static UserSignInParam supplyUserSignInParamBy(final UserSignInRequest request) {
+		return new UserSignInParam(request.provider(), request.idToken());
 	}
 }
