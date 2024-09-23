@@ -48,7 +48,7 @@ class AdminController(
     @PutMapping("/shops/promote")
     fun promoteUser(
 		@RequestBody @Valid request: PromotionRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
 		val param = ShopMapper.supplyPromotionParamBy(request)
         shopService.promoteUserToBusinessOwner(param)
 

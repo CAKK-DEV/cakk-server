@@ -33,7 +33,7 @@ class ShopController(
     fun requestCertification(
 		@SignInUser user: User,
 		@RequestBody @Valid request: CertificationRequest
-	): ApiResponse<Void> {
+	): ApiResponse<Unit> {
 		val param = ShopMapper.supplyCertificationParamBy(request, user)
         shopService.requestCertificationBusinessOwner(param)
 
@@ -102,7 +102,7 @@ class ShopController(
     fun heart(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         heartService.heartCakeShop(user, cakeShopId)
 
 		return ApiResponse.success()
@@ -112,7 +112,7 @@ class ShopController(
     fun like(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         likeService.likeCakeShop(user, cakeShopId)
 
 		return ApiResponse.success()
@@ -133,7 +133,7 @@ class ShopController(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
 		val param = ShopMapper.supplyCakeShopUpdateParamBy(request, user, cakeShopId)
         shopService.updateBasicInformation(param)
 
@@ -145,7 +145,7 @@ class ShopController(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateLinkRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
 		val param = ShopMapper.supplyUpdateLinkParamBy(request, user, cakeShopId)
         shopService.updateShopLinks(param)
 
@@ -157,7 +157,7 @@ class ShopController(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopAddressRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         shopService.updateShopAddress(request.toParam(user, cakeShopId))
 
 		return ApiResponse.success()
@@ -168,7 +168,7 @@ class ShopController(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopOperationRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
 		val param = ShopMapper.supplyUpdateShopOperationParamBy(request, user, cakeShopId)
         shopService.updateShopOperationDays(param)
 

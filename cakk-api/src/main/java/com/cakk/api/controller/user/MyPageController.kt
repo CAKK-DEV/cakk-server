@@ -38,7 +38,7 @@ class MyPageController(
     fun modify(
 		@SignInUser user: User,
 		@RequestBody @Valid request: ProfileUpdateRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
 		val param = UserMapper.supplyProfileUpdateParamBy(request, user)
         userService.updateInformation(param)
 
@@ -48,7 +48,7 @@ class MyPageController(
     @DeleteMapping
     fun withdraw(
 		@SignInUser user: User
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         userService.withdraw(user)
 
 		return ApiResponse.success()

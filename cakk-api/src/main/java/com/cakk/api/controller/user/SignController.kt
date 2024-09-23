@@ -44,7 +44,7 @@ class SignController(
     fun signOut(
 		@AccessToken accessToken: String?,
 		@RefreshToken refreshToken: String?
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         signService.signOut(accessToken, refreshToken)
 
 		return ApiResponse.success()
@@ -62,7 +62,7 @@ class SignController(
     @PostMapping("/email/request-code")
     fun sendEmailForVerification(
 		@RequestBody @Valid request: GenerateCodeRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         val param = UserMapper.supplyGenerateCodeParamBy(request)
         emailVerificationService.sendEmailForVerification(param)
 
@@ -72,7 +72,7 @@ class SignController(
     @PostMapping("/email/verify-email")
     fun verifyEmail(
             @RequestBody @Valid request: VerifyEmailRequest
-    ): ApiResponse<Void> {
+    ): ApiResponse<Unit> {
         val param = UserMapper.supplyVerifyEmailParamBy(request)
         emailVerificationService.checkEmailVerificationCode(param)
 
