@@ -14,10 +14,10 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.request.like.HeartCakeSearchRequest;
 import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.dto.param.search.HeartCakeSearchParam;
 import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.cake.CakeShopUserReadFacade;
@@ -48,8 +48,8 @@ class HeartServiceTest extends ServiceTest {
 
 	@TestWithDisplayName("하트 한 케이크 목록을 조회한다.")
 	void findCakeImagesByCursorAndHeart() {
-		final HeartCakeSearchRequest dto = new HeartCakeSearchRequest(null, 5);
 		final User user = getUser();
+		final HeartCakeSearchParam param = new HeartCakeSearchParam(null, 5, user);
 		final List<HeartCakeImageResponseParam> cakeImages =
 			getConstructorMonkey().giveMeBuilder(HeartCakeImageResponseParam.class)
 				.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
@@ -60,23 +60,23 @@ class HeartServiceTest extends ServiceTest {
 
 		doReturn(cakeImages)
 			.when(cakeShopUserReadFacade)
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
 		Assertions.assertEquals(cakeImages, result.cakeImages());
 		Assertions.assertNotNull(result.lastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 	}
 
 	@TestWithDisplayName("하트 한 케이크 목록 n번째 페이지를 조회한다.")
 	void findCakeImagesByCursorAndHeart2() {
-		final HeartCakeSearchRequest dto = new HeartCakeSearchRequest(12L, 5);
 		final User user = getUser();
+		final HeartCakeSearchParam param = new HeartCakeSearchParam(12L, 5, user);
 		final List<HeartCakeImageResponseParam> cakeImages =
 			getConstructorMonkey().giveMeBuilder(HeartCakeImageResponseParam.class)
 				.set("cakeShopId", Arbitraries.longs().greaterOrEqual(1))
@@ -87,37 +87,37 @@ class HeartServiceTest extends ServiceTest {
 
 		doReturn(cakeImages)
 			.when(cakeShopUserReadFacade)
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
 		Assertions.assertEquals(cakeImages, result.cakeImages());
 		Assertions.assertNotNull(result.lastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 	}
 
 	@TestWithDisplayName("하트 한 케이크가 없을 때 목록 조회 시 빈 배열을 반환한다.")
 	void findCakeImagesByCursorAndHeart3() {
-		final HeartCakeSearchRequest dto = new HeartCakeSearchRequest(5L, 5);
 		final User user = getUser();
+		final HeartCakeSearchParam param = new HeartCakeSearchParam(5L, 5, user);
 
 		doReturn(List.of())
 			.when(cakeShopUserReadFacade)
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 
 		// when
-		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(dto, user);
+		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
 		Assertions.assertEquals(0, result.cakeImages().size());
 		Assertions.assertNull(result.lastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
-			.searchCakeImagesByCursorAndHeart(dto.cakeHeartId(), user.getId(), dto.pageSize());
+			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
 	}
 
 	@TestWithDisplayName("케이크에 대하여 하트를 동작한다.")

@@ -9,28 +9,35 @@ import org.springframework.http.MediaType;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockMvcTest;
 import com.cakk.api.dto.request.user.GenerateCodeRequest;
-import com.cakk.api.dto.request.user.UserSignInRequest;
-import com.cakk.api.dto.request.user.UserSignUpRequest;
 import com.cakk.api.dto.request.user.VerifyEmailRequest;
 import com.cakk.api.dto.response.user.JwtResponse;
+import com.cakk.core.dto.param.user.UserSignInParam;
+import com.cakk.core.dto.param.user.UserSignUpParam;
 
 class SignControllerTest extends MockMvcTest {
 
 	@TestWithDisplayName("")
 	void signUp() throws Exception {
 		// given
-		UserSignUpRequest dto = getConstructorMonkey().giveMeOne(UserSignUpRequest.class);
+		UserSignUpParam param = getConstructorMonkey().giveMeBuilder(UserSignUpParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("birthday")
+			.setNotNull("gender")
+			.sample();
 		JwtResponse jwt = getConstructorMonkey().giveMeBuilder(JwtResponse.class)
 			.setNotNull("accessToken")
 			.setNotNull("refreshToken")
 			.setNotNull("grantType")
 			.sample();
 
-		doReturn(jwt).when(signService).signUp(dto);
+		doReturn(jwt).when(signService).signUp(param);
 
 		// when & then
 		mockMvc.perform(post("/sign-up")
-			.content(objectMapper.writeValueAsString(dto))
+			.content(objectMapper.writeValueAsString(param))
 			.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.accessToken").exists())
@@ -40,18 +47,21 @@ class SignControllerTest extends MockMvcTest {
 	@TestWithDisplayName("")
 	void signIn() throws Exception {
 		// given
-		UserSignInRequest dto = getConstructorMonkey().giveMeOne(UserSignInRequest.class);
+		UserSignInParam param = getConstructorMonkey().giveMeBuilder(UserSignInParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.sample();
 		JwtResponse jwt = getConstructorMonkey().giveMeBuilder(JwtResponse.class)
 			.setNotNull("accessToken")
 			.setNotNull("refreshToken")
 			.setNotNull("grantType")
 			.sample();
 
-		doReturn(jwt).when(signService).signIn(dto);
+		doReturn(jwt).when(signService).signIn(param);
 
 		// when & then
 		mockMvc.perform(post("/sign-in")
-				.content(objectMapper.writeValueAsString(dto))
+				.content(objectMapper.writeValueAsString(param))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.accessToken").exists())

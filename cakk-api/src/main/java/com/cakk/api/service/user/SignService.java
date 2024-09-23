@@ -13,6 +13,8 @@ import com.cakk.api.mapper.UserMapper;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.dto.param.user.UserSignInParam;
+import com.cakk.core.dto.param.user.UserSignUpParam;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
@@ -30,16 +32,16 @@ public class SignService {
 	private final TokenRedisRepository tokenRedisRepository;
 
 	@Transactional
-	public JwtResponse signUp(final UserSignUpRequest dto) {
-		final String providerId = oidcProviderFactory.getProviderId(dto.provider(), dto.idToken());
-		final User user = userManageFacade.create(UserMapper.supplyUserBy(dto, providerId));
+	public JwtResponse signUp(final UserSignUpParam param) {
+		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
+		final User user = userManageFacade.create(UserMapper.supplyUserBy(param, providerId));
 
 		return JwtResponse.from(jwtProvider.generateToken(user));
 	}
 
 	@Transactional(readOnly = true)
-	public JwtResponse signIn(final UserSignInRequest dto) {
-		final String providerId = oidcProviderFactory.getProviderId(dto.provider(), dto.idToken());
+	public JwtResponse signIn(final UserSignInParam param) {
+		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
 		final User user = userReadFacade.findByProviderId(providerId);
 
 		return JwtResponse.from(jwtProvider.generateToken(user));

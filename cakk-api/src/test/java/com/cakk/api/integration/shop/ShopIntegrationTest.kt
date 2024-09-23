@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
-import com.cakk.api.dto.param.operation.ShopOperationParam
+import com.cakk.core.dto.param.shop.ShopOperationParam
 import com.cakk.api.dto.request.link.UpdateLinkRequest
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest

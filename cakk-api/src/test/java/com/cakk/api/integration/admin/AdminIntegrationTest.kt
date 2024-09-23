@@ -19,8 +19,14 @@ import com.cakk.api.dto.request.shop.PromotionRequest
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse
 import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.common.enums.Days
+import com.cakk.common.enums.LinkKind
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.param.shop.ShopLinkParam
+import com.cakk.core.dto.param.shop.ShopOperationParam
+import net.jqwik.api.Arbitraries
+import java.time.LocalTime
 
 @SqlGroup(
 	Sql(
@@ -44,7 +50,17 @@ class AdminIntegrationTest(
 			.fromUriString(baseUrl)
 			.path("/shops/create")
 			.build()
+
 		val request = getConstructorMonkey().giveMeBuilder(CreateShopRequest::class.java)
+			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
+			.set("operationDays", listOf(ShopOperationParam(Days.MON, LocalTime.now(), LocalTime.now())))
+			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
+			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
+			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
+			.set("shopAddress", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
+			.set("latitude", Arbitraries.doubles().between(-90.0, 90.0))
+			.set("longitude", Arbitraries.doubles().between(-180.0, 180.0))
+			.set("links", listOf(ShopLinkParam(LinkKind.WEB, "www.cake-shop.com")))
 			.sample()
 
 		// when
