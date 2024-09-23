@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.cakk.api.annotation.OperationDay;
-import com.cakk.api.dto.param.link.ShopLinkParam;
-import com.cakk.api.dto.param.operation.ShopOperationParam;
+import com.cakk.core.dto.param.shop.ShopLinkParam;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 
 
 public record CreateShopRequest(

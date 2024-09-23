@@ -7,8 +7,8 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.api.dto.param.link.ShopLinkParam;
 import com.cakk.common.enums.LinkKind;
+import com.cakk.core.dto.param.shop.ShopLinkParam;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.shop.CakeShopLink;
 
@@ -47,12 +47,12 @@ public class LinkMapper {
 
 	public static List<CakeShopLink> supplyCakeShopLinksBy(final CakeShop cakeShop, final List<ShopLinkParam> links) {
 		return links.stream().map(link -> {
-			if (link.linkKind() == LinkKind.WEB) {
-				return supplyCakeShopLinkByWeb(cakeShop, link.linkPath());
-			} else if (link.linkKind() == LinkKind.INSTAGRAM) {
-				return supplyCakeShopLinkByInstagram(cakeShop, link.linkPath());
+			if (link.getLinkKind() == LinkKind.WEB) {
+				return supplyCakeShopLinkByWeb(cakeShop, link.getLinkPath());
+			} else if (link.getLinkKind() == LinkKind.INSTAGRAM) {
+				return supplyCakeShopLinkByInstagram(cakeShop, link.getLinkPath());
 			} else {
-				return supplyCakeShopLinkByKakao(cakeShop, link.linkPath());
+				return supplyCakeShopLinkByKakao(cakeShop, link.getLinkPath());
 			}
 		}).toList();
 	}

@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.api.mapper.UserMapper;
 import com.cakk.core.facade.user.UserManageFacade;
@@ -29,10 +28,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateInformation(final User signInUser, final ProfileUpdateRequest dto) {
-		final User user = userReadFacade.findByUserId(signInUser.getId());
-		final ProfileUpdateParam param = UserMapper.supplyProfileUpdateParamBy(dto);
-
+	public void updateInformation(final ProfileUpdateParam param) {
+		final User user = userReadFacade.findByUserId(param.userId());
 		userManageFacade.updateProfile(user, param);
 	}
 

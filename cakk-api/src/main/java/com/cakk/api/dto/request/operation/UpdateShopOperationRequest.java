@@ -4,24 +4,10 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
-import com.cakk.api.dto.param.operation.ShopOperationParam;
-import com.cakk.api.mapper.ShopOperationMapper;
-import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam;
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
-import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 
 public record UpdateShopOperationRequest(
 	@NotNull
 	List<ShopOperationParam> operationDays
 ) {
-
-	public UpdateShopOperationParam toParam(User user, Long cakeShopId) {
-		final List<CakeShopOperation> cakeShopOperations = ShopOperationMapper.supplyCakeShopOperationListBy(operationDays);
-
-		return new UpdateShopOperationParam(
-			cakeShopOperations,
-			user,
-			cakeShopId
-		);
-	}
 }

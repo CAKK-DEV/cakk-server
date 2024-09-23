@@ -4,20 +4,22 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.request.user.ProfileUpdateRequest;
 import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
+import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
 import com.cakk.domain.mysql.entity.user.User;
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
@@ -71,18 +73,21 @@ class UserServiceTest extends ServiceTest {
 	void updateInformation() {
 		// given
 		final User user = getConstructorMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", Arbitraries.of(Provider.class))
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.sample();
-		final ProfileUpdateRequest request = getConstructorMonkey().giveMeOne(ProfileUpdateRequest.class);
-
-		doReturn(user).when(userReadFacade).findByUserId(user.getId());
+		ReflectionTestUtils.setField(user, "id", 1L);
+		final ProfileUpdateParam param = getConstructorMonkey().giveMeBuilder(ProfileUpdateParam.class)
+			.setNotNull("profileImageUrl")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("gender")
+			.setNotNull("birthday")
+			.set("user", user)
+			.sample();
 
 		// when & then
-		Assertions.assertDoesNotThrow(() -> userService.updateInformation(user, request));
-
-		verify(userReadFacade, times(1)).findByUserId(user.getId());
+		Assertions.assertDoesNotThrow(() -> userService.updateInformation(param));
 	}
 
 	@TestWithDisplayName("유저를 탈퇴한다.")
