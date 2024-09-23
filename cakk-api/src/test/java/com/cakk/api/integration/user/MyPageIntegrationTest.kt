@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
 import com.cakk.api.dto.request.user.ProfileUpdateRequest
-import com.cakk.api.dto.response.user.ProfileInformationResponse
+import com.cakk.core.dto.response.user.ProfileInformationResponse
 import com.cakk.common.enums.Gender
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException

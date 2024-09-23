@@ -10,9 +10,9 @@ import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockMvcTest;
 import com.cakk.api.dto.request.user.GenerateCodeRequest;
 import com.cakk.api.dto.request.user.VerifyEmailRequest;
-import com.cakk.api.dto.response.user.JwtResponse;
 import com.cakk.core.dto.param.user.UserSignInParam;
 import com.cakk.core.dto.param.user.UserSignUpParam;
+import com.cakk.core.dto.response.user.JwtResponse;
 
 class SignControllerTest extends MockMvcTest {
 

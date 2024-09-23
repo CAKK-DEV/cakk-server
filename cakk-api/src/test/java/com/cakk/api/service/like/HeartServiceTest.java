@@ -14,10 +14,10 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.dto.param.search.HeartCakeSearchParam;
+import com.cakk.core.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.cake.CakeShopUserReadFacade;
@@ -66,8 +66,8 @@ class HeartServiceTest extends ServiceTest {
 		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
-		Assertions.assertEquals(cakeImages, result.cakeImages());
-		Assertions.assertNotNull(result.lastCakeHeartId());
+		Assertions.assertEquals(cakeImages, result.getCakeImages());
+		Assertions.assertNotNull(result.getLastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
@@ -93,8 +93,8 @@ class HeartServiceTest extends ServiceTest {
 		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
-		Assertions.assertEquals(cakeImages, result.cakeImages());
-		Assertions.assertNotNull(result.lastCakeHeartId());
+		Assertions.assertEquals(cakeImages, result.getCakeImages());
+		Assertions.assertNotNull(result.getLastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());
@@ -113,8 +113,8 @@ class HeartServiceTest extends ServiceTest {
 		final HeartCakeImageListResponse result = heartService.searchCakeImagesByCursorAndHeart(param);
 
 		// then
-		Assertions.assertEquals(0, result.cakeImages().size());
-		Assertions.assertNull(result.lastCakeHeartId());
+		Assertions.assertEquals(0, result.getCakeImages().size());
+		Assertions.assertNull(result.getLastCakeHeartId());
 
 		verify(cakeShopUserReadFacade, times(1))
 			.searchCakeImagesByCursorAndHeart(param.getCakeHeartId(), user.getId(), param.getPageSize());

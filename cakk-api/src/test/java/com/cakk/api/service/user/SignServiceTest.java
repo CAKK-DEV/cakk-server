@@ -13,7 +13,6 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.response.user.JwtResponse;
 import com.cakk.api.factory.OidcProviderFactory;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.api.vo.JsonWebToken;
@@ -21,6 +20,7 @@ import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.dto.param.user.UserSignInParam;
 import com.cakk.core.dto.param.user.UserSignUpParam;
+import com.cakk.core.dto.response.user.JwtResponse;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
@@ -77,9 +77,9 @@ class SignServiceTest extends ServiceTest {
 		JwtResponse result = signService.signUp(param);
 
 		// then
-		Assertions.assertNotNull(result.accessToken());
-		Assertions.assertNotNull(result.refreshToken());
-		Assertions.assertNotNull(result.grantType());
+		Assertions.assertNotNull(result.getAccessToken());
+		Assertions.assertNotNull(result.getRefreshToken());
+		Assertions.assertNotNull(result.getGrantType());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(param.getProvider(), param.getIdToken());
 		verify(userManagerFacade, times(1)).create(any(User.class));
@@ -144,9 +144,9 @@ class SignServiceTest extends ServiceTest {
 		JwtResponse result = signService.signIn(param);
 
 		// then
-		Assertions.assertNotNull(result.accessToken());
-		Assertions.assertNotNull(result.refreshToken());
-		Assertions.assertNotNull(result.grantType());
+		Assertions.assertNotNull(result.getAccessToken());
+		Assertions.assertNotNull(result.getRefreshToken());
+		Assertions.assertNotNull(result.getGrantType());
 
 		verify(oidcProviderFactory, times(1)).getProviderId(param.getProvider(), param.getIdToken());
 		verify(userReadFacade, times(1)).findByProviderId(providerId);
@@ -206,9 +206,9 @@ class SignServiceTest extends ServiceTest {
 		JwtResponse result = signService.recreateToken(refreshToken);
 
 		// then
-		Assertions.assertNotNull(result.accessToken());
-		Assertions.assertNotNull(result.refreshToken());
-		Assertions.assertNotNull(result.grantType());
+		Assertions.assertNotNull(result.getAccessToken());
+		Assertions.assertNotNull(result.getRefreshToken());
+		Assertions.assertNotNull(result.getGrantType());
 
 		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken);
 		verify(jwtProvider, times(1)).getUser(refreshToken);

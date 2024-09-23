@@ -111,12 +111,12 @@ abstract class IntegrationTest {
 
 	protected val accessTokenExpiredSecond: Long
 		get() {
-			return jwtProvider.accessTokenExpiredSecond
+			return jwtProvider.getAccessTokenExpiredSecond()
 		}
 
 	protected val refreshTokenExpiredSecond: Long
 		get() {
-			return jwtProvider.refreshTokenExpiredSecond
+			return jwtProvider.getRefreshTokenExpiredSecond()
 		}
 
 	protected fun getRandomAlpha(min: Int, max: Int): String {

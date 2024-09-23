@@ -11,8 +11,8 @@ import org.mockito.Mock;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.response.search.TopSearchedListResponse;
 import com.cakk.core.dto.param.search.TopSearchedListParam;
+import com.cakk.core.dto.response.search.TopSearchedListResponse;
 import com.cakk.domain.redis.repository.KeywordRedisRepository;
 
 @DisplayName("키워드 관련 비즈니스 로직 테스트")
@@ -36,8 +36,8 @@ class KeywordServiceTest extends ServiceTest {
 		final TopSearchedListResponse response = keywordService.findTopSearched(param);
 
 		// then
-		assertEquals(keywordList, response.keywordList());
-		assertEquals(keywordList.size(), response.totalCount());
+		assertEquals(keywordList, response.getKeywordList());
+		assertEquals(keywordList.size(), response.getTotalCount());
 
 		verify(keywordRedisRepository, times(1)).findTopSearchedLimitCount(param.getCount());
 	}
@@ -54,8 +54,8 @@ class KeywordServiceTest extends ServiceTest {
 		final TopSearchedListResponse response = keywordService.findTopSearched(param);
 
 		// then
-		assertEquals(keywordList, response.keywordList());
-		assertEquals(0, response.totalCount());
+		assertEquals(keywordList, response.getKeywordList());
+		assertEquals(0, response.getTotalCount());
 
 		verify(keywordRedisRepository, times(1)).findTopSearchedLimitCount(param.getCount());
 	}

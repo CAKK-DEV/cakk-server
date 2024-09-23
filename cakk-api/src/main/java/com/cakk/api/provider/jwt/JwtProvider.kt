@@ -1,125 +1,89 @@
-package com.cakk.api.provider.jwt;
+package com.cakk.api.provider.jwt
 
-import static com.cakk.common.enums.ReturnCode.*;
-import static java.util.Objects.*;
+import java.security.Key
+import java.security.PublicKey
+import java.util.*
 
-import java.security.Key;
-import java.security.PublicKey;
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Component
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.InvalidKeyException
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.InvalidKeyException;
+import com.cakk.api.vo.JsonWebToken
+import com.cakk.api.vo.OAuthUserDetails
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.domain.mysql.entity.user.User
+import com.cakk.domain.redis.repository.TokenRedisRepository
 
-
-import com.cakk.api.vo.JsonWebToken;
-import com.cakk.api.vo.OAuthUserDetails;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.redis.repository.TokenRedisRepository;
 @Component
-public class JwtProvider {
+class JwtProvider(
+	private val key: Key,
+	private val tokenRedisRepository: TokenRedisRepository,
+	@Value("\${jwt.expiration.access-token}")
+	private val accessTokenExpiredSecond: Long,
+	@Value("\${jwt.expiration.refresh-token}")
+	private val refreshTokenExpiredSecond: Long,
+	@Value("\${jwt.grant-type}")
+	private val grantType: String,
+	@Value("\${jwt.user-key}")
+	private val userKey: String
+) {
 
-	private final Key key;
-	private final TokenRedisRepository tokenRedisRepository;
-
-	private final Long accessTokenExpiredSecond;
-	private final Long refreshTokenExpiredSecond;
-	private final String grantType;
-	private final String userKey;
-
-	public JwtProvider(
-		Key key,
-		TokenRedisRepository tokenRedisRepository,
-		@Value("${jwt.expiration.access-token}")
-		Long accessTokenExpiredSecond,
-		@Value("${jwt.expiration.refresh-token}")
-		Long refreshTokenExpiredSecond,
-		@Value("${jwt.grant-type}")
-		String grantType,
-		@Value("${jwt.user-key}")
-		String userKey
-	) {
-		this.key = key;
-		this.tokenRedisRepository = tokenRedisRepository;
-		this.accessTokenExpiredSecond = accessTokenExpiredSecond;
-		this.refreshTokenExpiredSecond = refreshTokenExpiredSecond;
-		this.grantType = grantType;
-		this.userKey = userKey;
-	}
-
-	public JsonWebToken generateToken(final User user) {
-		if (isNull(user)) {
-			throw new CakkException(EMPTY_USER);
-		}
-
+	fun generateToken(user: User): JsonWebToken {
 		try {
-			final String accessToken = Jwts.builder()
+			val accessToken = Jwts.builder()
 				.claim(userKey, user)
-				.setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredSecond))
+				.setExpiration(Date(System.currentTimeMillis() + accessTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
-				.compact();
-			final String refreshToken = Jwts.builder()
+				.compact()
+			val refreshToken = Jwts.builder()
 				.claim(userKey, user)
-				.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
+				.setExpiration(Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
-				.compact();
+				.compact()
 
-			return JsonWebToken.builder()
-				.grantType(grantType)
-				.accessToken(accessToken)
-				.refreshToken(refreshToken)
-				.build();
-		} catch (InvalidKeyException e) {
-			throw new CakkException(INVALID_KEY);
+			return JsonWebToken(
+				accessToken = accessToken,
+				refreshToken = refreshToken,
+				grantType = grantType
+			)
+		} catch (e: InvalidKeyException) {
+			throw CakkException(ReturnCode.INVALID_KEY)
 		}
 	}
 
-	public Authentication getAuthentication(String token) {
-		final User user = getUser(token);
-		final OAuthUserDetails userDetails = new OAuthUserDetails(user);
+	fun getAuthentication(token: String): Authentication {
+		val user = getUser(token)
+		val userDetails = OAuthUserDetails(user)
 
-		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+		return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
 	}
 
-	public User getUser(String token) {
-		final Claims claims = parseClaims(token);
+	fun getUser(token: String): User {
+		val parseUser = parseClaims(token)[userKey] ?: throw CakkException(ReturnCode.EMPTY_AUTH_JWT)
 
-		if (isNull(claims.get(userKey))) {
-			throw new CakkException(EMPTY_AUTH_JWT);
-		}
-
-		return new ObjectMapper().convertValue(claims.get(userKey), User.class);
+		return ObjectMapper().convertValue(parseUser, User::class.java)
 	}
 
-	public long getTokenExpiredSecond(final String token) {
-		final Claims claims = parseClaims(token);
-		return claims.getExpiration().getTime();
+	fun getTokenExpiredSecond(token: String): Long {
+		val claims = parseClaims(token)
+		return claims.expiration.time
 	}
 
-	public long getAccessTokenExpiredSecond() {
-		return this.accessTokenExpiredSecond;
-	}
-
-	public long getRefreshTokenExpiredSecond() {
-		return this.refreshTokenExpiredSecond;
-	}
-
-	public Claims parseClaims(String token) {
-		final boolean isBlackList = tokenRedisRepository.isBlackListToken(token);
+	fun parseClaims(token: String): Claims {
+		val isBlackList = tokenRedisRepository.isBlackListToken(token)
 
 		if (isBlackList) {
-			throw new CakkException(ReturnCode.BLACK_LIST_TOKEN);
+			throw CakkException(ReturnCode.BLACK_LIST_TOKEN)
 		}
 
 		try {
@@ -127,25 +91,33 @@ public class JwtProvider {
 				.setSigningKey(key)
 				.build()
 				.parseClaimsJws(token)
-				.getBody();
-		} catch (ExpiredJwtException e) {
-			throw new CakkException(EXPIRED_JWT_TOKEN);
-		} catch (RuntimeException e) {
-			throw new CakkException(WRONG_JWT_TOKEN);
+				.body
+		} catch (e: ExpiredJwtException) {
+			throw CakkException(ReturnCode.EXPIRED_JWT_TOKEN)
+		} catch (e: RuntimeException) {
+			throw CakkException(ReturnCode.WRONG_JWT_TOKEN)
 		}
 	}
 
-	public Claims parseClaims(String token, PublicKey publicKey) {
+	fun parseClaims(token: String?, publicKey: PublicKey?): Claims {
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(publicKey)
 				.build()
 				.parseClaimsJws(token)
-				.getBody();
-		} catch (ExpiredJwtException e) {
-			throw new CakkException(EXPIRED_JWT_TOKEN);
-		} catch (RuntimeException e) {
-			throw new CakkException(WRONG_JWT_TOKEN);
+				.body
+		} catch (e: ExpiredJwtException) {
+			throw CakkException(ReturnCode.EXPIRED_JWT_TOKEN)
+		} catch (e: RuntimeException) {
+			throw CakkException(ReturnCode.WRONG_JWT_TOKEN)
 		}
+	}
+
+	fun getAccessTokenExpiredSecond(): Long {
+		return this.accessTokenExpiredSecond
+	}
+
+	fun getRefreshTokenExpiredSecond(): Long {
+		return this.refreshTokenExpiredSecond
 	}
 }

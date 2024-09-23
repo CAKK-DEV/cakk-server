@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.request.search.TopSearchedListRequest;
-import com.cakk.api.dto.response.search.TopSearchedListResponse;
 import com.cakk.api.mapper.SearchMapper;
 import com.cakk.core.dto.param.search.TopSearchedListParam;
+import com.cakk.core.dto.response.search.TopSearchedListResponse;
 import com.cakk.domain.redis.repository.KeywordRedisRepository;
 
 @RequiredArgsConstructor

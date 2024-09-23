@@ -1,7 +1,7 @@
 package com.cakk.api.controller.search
 
 import com.cakk.api.dto.request.search.TopSearchedListRequest
-import com.cakk.api.dto.response.search.TopSearchedListResponse
+import com.cakk.core.dto.response.search.TopSearchedListResponse
 import com.cakk.api.mapper.SearchMapper
 import com.cakk.api.service.search.KeywordService
 import com.cakk.common.response.ApiResponse

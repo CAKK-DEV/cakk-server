@@ -5,7 +5,7 @@ import com.cakk.api.dto.request.link.UpdateLinkRequest
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
 import com.cakk.api.dto.request.shop.*
 import com.cakk.api.dto.request.user.CertificationRequest
-import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.api.dto.response.shop.*
 import com.cakk.api.mapper.SearchMapper
 import com.cakk.api.mapper.ShopMapper

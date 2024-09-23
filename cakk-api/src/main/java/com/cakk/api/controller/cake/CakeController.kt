@@ -10,7 +10,7 @@ import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.cake.*
 import com.cakk.api.dto.response.cake.CakeDetailResponse
 import com.cakk.api.dto.response.cake.CakeImageListResponse
-import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.api.mapper.CakeMapper
 import com.cakk.api.service.cake.CakeService
 import com.cakk.api.service.like.HeartService

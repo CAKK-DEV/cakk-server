@@ -4,11 +4,11 @@ import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest
 import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest
 import com.cakk.api.dto.request.user.ProfileUpdateRequest
-import com.cakk.api.dto.response.like.HeartCakeImageListResponse
-import com.cakk.api.dto.response.like.HeartCakeShopListResponse
-import com.cakk.api.dto.response.user.ProfileInformationResponse
+import com.cakk.core.dto.response.like.HeartCakeImageListResponse
+import com.cakk.core.dto.response.like.HeartCakeShopListResponse
+import com.cakk.core.dto.response.user.ProfileInformationResponse
 import com.cakk.api.mapper.SearchMapper
-import com.cakk.api.mapper.UserMapper
+import com.cakk.api.mapper.supplyProfileUpdateParamBy
 import com.cakk.api.service.like.HeartService
 import com.cakk.api.service.user.UserService
 import com.cakk.common.response.ApiResponse
@@ -39,7 +39,7 @@ class MyPageController(
 		@SignInUser user: User,
 		@RequestBody @Valid request: ProfileUpdateRequest
     ): ApiResponse<Unit> {
-		val param = UserMapper.supplyProfileUpdateParamBy(request, user)
+		val param = supplyProfileUpdateParamBy(request, user)
         userService.updateInformation(param)
 
 		return ApiResponse.success()
