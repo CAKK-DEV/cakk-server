@@ -19,7 +19,14 @@ class SignControllerTest extends MockMvcTest {
 	@TestWithDisplayName("")
 	void signUp() throws Exception {
 		// given
-		UserSignUpParam param = getConstructorMonkey().giveMeOne(UserSignUpParam.class);
+		UserSignUpParam param = getConstructorMonkey().giveMeBuilder(UserSignUpParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("birthday")
+			.setNotNull("gender")
+			.sample();
 		JwtResponse jwt = getConstructorMonkey().giveMeBuilder(JwtResponse.class)
 			.setNotNull("accessToken")
 			.setNotNull("refreshToken")
@@ -40,7 +47,10 @@ class SignControllerTest extends MockMvcTest {
 	@TestWithDisplayName("")
 	void signIn() throws Exception {
 		// given
-		UserSignInParam param = getConstructorMonkey().giveMeOne(UserSignInParam.class);
+		UserSignInParam param = getConstructorMonkey().giveMeBuilder(UserSignInParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.sample();
 		JwtResponse jwt = getConstructorMonkey().giveMeBuilder(JwtResponse.class)
 			.setNotNull("accessToken")
 			.setNotNull("refreshToken")

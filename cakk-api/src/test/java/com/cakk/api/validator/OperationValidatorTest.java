@@ -3,19 +3,16 @@ package com.cakk.api.validator;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import jakarta.validation.ConstraintValidatorContext;
 
 import org.mockito.InjectMocks;
 
-import net.jqwik.api.Arbitraries;
-
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
-import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.common.enums.Days;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 
 public class OperationValidatorTest extends MockitoTest {
 
@@ -26,10 +23,11 @@ public class OperationValidatorTest extends MockitoTest {
 	void isValid1() {
 		// given
 		final List<ShopOperationParam> params = getConstructorMonkey().giveMeBuilder(ShopOperationParam.class)
-			.set("operationDay", Arbitraries.of(Days.class).sample())
-			.set("openTime", Arbitraries.of(LocalTime.class).sample())
-			.set("closeTime", Arbitraries.of(LocalTime.class).sample())
+			.setNotNull("operationDay")
+			.setNotNull("operationStartTime")
+			.setNotNull("operationEndTime")
 			.sampleList(1);
+
 		final ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 
 		// when
@@ -45,8 +43,8 @@ public class OperationValidatorTest extends MockitoTest {
 		// given
 		final List<ShopOperationParam> params = getConstructorMonkey().giveMeBuilder(ShopOperationParam.class)
 			.set("operationDay", Days.MON)
-			.set("openTime", Arbitraries.of(LocalTime.class).sample())
-			.set("closeTime", Arbitraries.of(LocalTime.class).sample())
+			.setNotNull("operationStartTime")
+			.setNotNull("operationEndTime")
 			.sampleList(3);
 		final ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 

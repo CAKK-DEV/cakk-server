@@ -55,7 +55,7 @@ public class UserMapper {
 			.email(request.email())
 			.gender(request.gender())
 			.birthday(request.birthday())
-			.user(user)
+			.userId(user.getId())
 			.build();
 	}
 

@@ -50,7 +50,14 @@ class SignServiceTest extends ServiceTest {
 	@TestWithDisplayName("회원가입에 성공한다")
 	void signUp1() {
 		// given
-		UserSignUpParam param = getConstructorMonkey().giveMeOne(UserSignUpParam.class);
+		UserSignUpParam param = getConstructorMonkey().giveMeBuilder(UserSignUpParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("birthday")
+			.setNotNull("gender")
+			.sample();
 		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", param.getProvider())
@@ -82,14 +89,22 @@ class SignServiceTest extends ServiceTest {
 	@TestWithDisplayName("만료된 id token이라면 회원가입 시 에러를 던진다")
 	void signUp2() {
 		// given
-		UserSignUpParam param = getConstructorMonkey().giveMeOne(UserSignUpParam.class);
+		UserSignUpParam param = getConstructorMonkey().giveMeBuilder(UserSignUpParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("birthday")
+			.setNotNull("gender")
+			.sample();
 		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", param.getProvider())
 			.set("providerId", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.sample();
 
-		doThrow(new CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).when(oidcProviderFactory).getProviderId(param.getProvider(), param.getIdToken());
+		doThrow(new CakkException(ReturnCode.EXPIRED_JWT_TOKEN))
+			.when(oidcProviderFactory).getProviderId(param.getProvider(), param.getIdToken());
 
 		// then
 		Assertions.assertThrows(
@@ -105,7 +120,10 @@ class SignServiceTest extends ServiceTest {
 	@TestWithDisplayName("로그인에 성공한다.")
 	void signIn() {
 		// given
-		UserSignInParam param = getConstructorMonkey().giveMeOne(UserSignInParam.class);
+		UserSignInParam param = getConstructorMonkey().giveMeBuilder(UserSignInParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.sample();
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
 		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
@@ -138,7 +156,10 @@ class SignServiceTest extends ServiceTest {
 	@TestWithDisplayName("제공자 id에 해당하는 유저가 없다면 로그인 시 에러를 던진다")
 	void signIn2() {
 		// given
-		UserSignInParam param = getConstructorMonkey().giveMeOne(UserSignInParam.class);
+		UserSignInParam param = getConstructorMonkey().giveMeBuilder(UserSignInParam.class)
+			.setNotNull("provider")
+			.setNotNull("idToken")
+			.sample();
 		String providerId = Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20).sample();
 		User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))

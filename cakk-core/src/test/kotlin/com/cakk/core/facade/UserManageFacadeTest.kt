@@ -72,22 +72,22 @@ internal class UserManageFacadeTest : FacadeTest() {
     @TestWithDisplayName("유저 정보를 수정한다")
     fun updateProfile() {
         // given
-        val user = getUserFixture(Role.USER)
+		val user = getUserFixture(Role.USER)
         val param = getConstructorMonkey().giveMeBuilder(ProfileUpdateParam::class.java)
             .set("profileImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(100))
             .set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
             .set("email", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
             .set("gender", Arbitraries.of(Gender::class.java))
             .set("birthday", java.time.LocalDate.now())
-			.set("user", user)
+			.set("userId", 1L)
             .sample()
 
 
         // when
-		userManageFacade.updateProfile(param)
+		userManageFacade.updateProfile(user, param)
 
         // then
-		user.profileImageUrl shouldBe param.profileImageUrl
+ 		user.profileImageUrl shouldBe param.profileImageUrl
 		user.nickname shouldBe param.nickname
 		user.email shouldBe param.email
 		user.gender shouldBe param.gender

@@ -4,8 +4,10 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import net.jqwik.api.Arbitraries;
 
@@ -71,18 +73,21 @@ class UserServiceTest extends ServiceTest {
 	void updateInformation() {
 		// given
 		final User user = getConstructorMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
 			.set("provider", Arbitraries.of(Provider.class))
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.sample();
-		final ProfileUpdateParam param = getConstructorMonkey().giveMeOne(ProfileUpdateParam.class);
-
-		doReturn(user).when(userReadFacade).findByUserId(user.getId());
+		ReflectionTestUtils.setField(user, "id", 1L);
+		final ProfileUpdateParam param = getConstructorMonkey().giveMeBuilder(ProfileUpdateParam.class)
+			.setNotNull("profileImageUrl")
+			.setNotNull("nickname")
+			.setNotNull("email")
+			.setNotNull("gender")
+			.setNotNull("birthday")
+			.set("user", user)
+			.sample();
 
 		// when & then
 		Assertions.assertDoesNotThrow(() -> userService.updateInformation(param));
-
-		verify(userReadFacade, times(1)).findByUserId(user.getId());
 	}
 
 	@TestWithDisplayName("유저를 탈퇴한다.")

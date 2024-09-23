@@ -21,8 +21,7 @@ class UserManageFacade(
 		} ?: return userJpaRepository.save(user)
 	}
 
-	fun updateProfile(param: ProfileUpdateParam) {
-		val user = param.user
+	fun updateProfile(user: User, param: ProfileUpdateParam) {
 		user.updateProfile(param)
 	}
 

@@ -15,7 +15,7 @@ class AwsS3Controller(
 	private val s3Service: S3Service
 ) {
 
-	@GetMapping
+	@GetMapping("/img")
 	fun getImageUrl(): ApiResponse<PresignedUrl> {
 		return ApiResponse.success(s3Service.getPresignedUrlWithImagePath())
 	}

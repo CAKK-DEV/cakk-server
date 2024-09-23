@@ -14,6 +14,6 @@ public record ProfileUpdateParam(
 	String email,
 	Gender gender,
 	LocalDate birthday,
-	User user
+	Long userId
 ) {
 }

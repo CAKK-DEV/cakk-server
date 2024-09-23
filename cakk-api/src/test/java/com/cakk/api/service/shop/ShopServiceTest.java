@@ -74,7 +74,11 @@ public class ShopServiceTest extends ServiceTest {
 		return getConstructorMonkey().giveMeBuilder(CreateShopParam.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
 			.setNotNull("operationDays")
-			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(20))
+			.setNotNull("shopName")
+			.setNotNull("shopAddress")
+			.setNotNull("latitude")
+			.setNotNull("longitude")
+			.setNotNull("links")
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.sample();

@@ -213,7 +213,8 @@ public class ShopService {
 
 	@Transactional(readOnly = true)
 	public CakeShopOwnerCandidatesResponse getBusinessOwnerCandidates() {
-		List<BusinessInformation> businessInformations = businessInformationReadFacade.findAllCakeShopBusinessOwnerCandidates();
+		List<BusinessInformation> businessInformations = businessInformationReadFacade
+			.findAllCakeShopBusinessOwnerCandidates();
 
 		businessInformations = businessInformations
 			.stream()
