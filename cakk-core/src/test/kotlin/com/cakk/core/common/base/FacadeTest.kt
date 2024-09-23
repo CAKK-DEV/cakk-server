@@ -67,7 +67,7 @@ abstract class FacadeTest {
 	protected fun getCakeFixture(): Cake {
 		return getConstructorMonkey().giveMeBuilder(Cake::class.java)
 			.set("cakeImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
-			.set("cakeShop", Values.just(getCakeShopFixture()))
+			.set("cakeShop", getCakeShopFixture())
 			.sample()
 	}
 
@@ -76,8 +76,6 @@ abstract class FacadeTest {
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
-			.set("likeCount", 0)
-			.set("heartCount", 0)
 			.set(
 				"location", supplyPointBy(
 					Arbitraries.doubles().between(-90.0, 90.0).sample(),
