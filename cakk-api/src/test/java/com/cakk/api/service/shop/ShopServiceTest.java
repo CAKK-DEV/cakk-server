@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,12 +26,16 @@ import com.cakk.api.dto.response.shop.CakeShopSearchResponse;
 import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.api.mapper.PointMapper;
 import com.cakk.api.mapper.ShopMapper;
+import com.cakk.common.enums.Days;
+import com.cakk.common.enums.LinkKind;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.dto.param.search.CakeShopSearchByViewsParam;
 import com.cakk.core.dto.param.shop.CreateShopParam;
 import com.cakk.core.dto.param.shop.PromotionParam;
+import com.cakk.core.dto.param.shop.ShopLinkParam;
+import com.cakk.core.dto.param.shop.ShopOperationParam;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.shop.CakeShopManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
@@ -73,12 +78,13 @@ public class ShopServiceTest extends ServiceTest {
 	private CreateShopParam getCreateShopParamFixture() {
 		return getConstructorMonkey().giveMeBuilder(CreateShopParam.class)
 			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(7))
-			.setNotNull("operationDays")
+			.set("operationDays", List.of(new ShopOperationParam(Days.MON, LocalTime.now(), LocalTime.now()),
+				new ShopOperationParam(Days.TUE, LocalTime.now(), LocalTime.now())))
 			.setNotNull("shopName")
 			.setNotNull("shopAddress")
 			.setNotNull("latitude")
 			.setNotNull("longitude")
-			.setNotNull("links")
+			.set("links", List.of(new ShopLinkParam(LinkKind.WEB, "cake-shop.com")))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
 			.sample();

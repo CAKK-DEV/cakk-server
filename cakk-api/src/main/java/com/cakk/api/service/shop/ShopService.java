@@ -77,7 +77,7 @@ public class ShopService {
 	public CakeShopCreateResponse createCakeShopByCertification(final CreateShopParam param) {
 		final CakeShop cakeShop = ShopMapper.supplyCakeShopBy(param);
 		final BusinessInformation businessInformation = ShopMapper.supplyBusinessInformationBy(param, cakeShop);
-		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, param.getOperationsDays());
+		final List<CakeShopOperation> cakeShopOperations = ShopMapper.supplyCakeShopOperationsBy(cakeShop, param.getOperationDays());
 		final List<CakeShopLink> cakeShopLinks = LinkMapper.supplyCakeShopLinksBy(cakeShop, param.getLinks());
 
 		final CakeShop result = cakeShopManageFacade.create(cakeShop, cakeShopOperations, businessInformation, cakeShopLinks);

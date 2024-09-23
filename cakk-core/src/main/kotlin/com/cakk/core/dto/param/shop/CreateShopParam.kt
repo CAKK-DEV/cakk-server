@@ -4,7 +4,7 @@ package com.cakk.core.dto.param.shop
 
 data class CreateShopParam(
 	val businessNumber: String?,
-	val operationsDays: List<ShopOperationParam>,
+	val operationDays: List<ShopOperationParam>,
 	val shopName: String,
 	val shopBio: String?,
 	val shopDescription: String?,

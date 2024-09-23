@@ -23,6 +23,7 @@ import com.cakk.common.enums.Role
 import com.cakk.domain.mysql.entity.cake.Cake
 import com.cakk.domain.mysql.entity.shop.CakeShop
 import com.cakk.domain.mysql.entity.user.User
+import org.springframework.test.util.ReflectionTestUtils
 
 private const val SPATIAL_REFERENCE_IDENTIFIER_NUMBER: Int = 4326
 
@@ -72,8 +73,10 @@ abstract class FacadeTest {
 	}
 
 	protected fun getCakeShopFixture(): CakeShop {
-		return getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
+		val cakeShop = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
 			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("thumbnailUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
+			.set("shopAddress", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
 			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
 			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
 			.set(
@@ -83,6 +86,9 @@ abstract class FacadeTest {
 				)
 			)
 			.sample()
+		ReflectionTestUtils.setField(cakeShop, "heartCount", 0)
+		ReflectionTestUtils.setField(cakeShop, "likeCount", 0)
+		return cakeShop
 	}
 
 	fun supplyPointBy(latitude: Double, longitude: Double): Point {
