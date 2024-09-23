@@ -1,96 +1,96 @@
-package com.cakk.api.mapper;
+package com.cakk.api.mapper
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.cakk.api.dto.request.user.*
+import com.cakk.core.dto.response.user.JwtResponse
+import com.cakk.core.dto.response.user.ProfileInformationResponse
+import com.cakk.api.vo.JsonWebToken
+import com.cakk.common.enums.Role
+import com.cakk.core.dto.param.user.GenerateCodeParam
+import com.cakk.core.dto.param.user.UserSignInParam
+import com.cakk.core.dto.param.user.UserSignUpParam
+import com.cakk.core.dto.param.user.VerifyEmailParam
+import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam
+import com.cakk.domain.mysql.entity.user.User
+import com.cakk.domain.mysql.entity.user.UserWithdrawal
 
-import com.cakk.api.dto.request.user.GenerateCodeRequest;
-import com.cakk.api.dto.request.user.ProfileUpdateRequest;
-import com.cakk.api.dto.request.user.UserSignInRequest;
-import com.cakk.api.dto.request.user.UserSignUpRequest;
-import com.cakk.api.dto.request.user.VerifyEmailRequest;
-import com.cakk.api.dto.response.user.ProfileInformationResponse;
-import com.cakk.common.enums.Role;
-import com.cakk.core.dto.param.user.GenerateCodeParam;
-import com.cakk.core.dto.param.user.UserSignInParam;
-import com.cakk.core.dto.param.user.UserSignUpParam;
-import com.cakk.core.dto.param.user.VerifyEmailParam;
-import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.entity.user.UserWithdrawal;
+fun supplyUserBy(param: UserSignUpParam, providerId: String): User {
+    return User.builder()
+        .provider(param.provider)
+        .providerId(providerId)
+        .nickname(param.nickname)
+        .email(param.email)
+        .gender(param.gender)
+        .birthday(param.birthday)
+        .deviceOs(param.deviceOs)
+        .deviceToken(param.deviceToken)
+        .role(Role.USER)
+        .build()
+}
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserMapper {
 
-	public static User supplyUserBy(final UserSignUpParam param, final String providerId) {
-		return User.builder()
-			.provider(param.getProvider())
-			.providerId(providerId)
-			.nickname(param.getNickname())
-			.email(param.getEmail())
-			.gender(param.getGender())
-			.birthday(param.getBirthday())
-			.deviceOs(param.getDeviceOs())
-			.deviceToken(param.getDeviceToken())
-			.role(Role.USER)
-			.build();
-	}
+fun supplyProfileInformationResponseBy(user: User): ProfileInformationResponse {
+    return ProfileInformationResponse(
+        profileImageUrl = user.profileImageUrl,
+        nickname = user.nickname,
+        email = user.email,
+        gender = user.gender,
+        birthday = user.birthday,
+        role = user.role
+    )
+}
 
-	public static ProfileInformationResponse supplyProfileInformationResponseBy(final User user) {
-		return ProfileInformationResponse.builder()
-			.profileImageUrl(user.getProfileImageUrl())
-			.nickname(user.getNickname())
-			.email(user.getEmail())
-			.gender(user.getGender())
-			.birthday(user.getBirthday())
-			.role(user.getRole())
-			.build();
-	}
+fun supplyProfileUpdateParamBy(request: ProfileUpdateRequest, user: User): ProfileUpdateParam {
+    return ProfileUpdateParam.builder()
+        .profileImageUrl(request.profileImageUrl)
+        .nickname(request.nickname)
+        .email(request.email)
+        .gender(request.gender)
+        .birthday(request.birthday)
+        .userId(user.id)
+        .build()
+}
 
-	public static ProfileUpdateParam supplyProfileUpdateParamBy(final ProfileUpdateRequest request, final User user) {
-		return ProfileUpdateParam.builder()
-			.profileImageUrl(request.profileImageUrl())
-			.nickname(request.nickname())
-			.email(request.email())
-			.gender(request.gender())
-			.birthday(request.birthday())
-			.userId(user.getId())
-			.build();
-	}
+fun supplyUserWithdrawalBy(user: User): UserWithdrawal {
+    return UserWithdrawal.builder()
+        .email(user.email)
+        .gender(user.gender)
+        .birthday(user.birthday)
+        .role(user.role)
+        .withdrawalDate(LocalDateTime.now())
+        .build()
+}
 
-	public static UserWithdrawal supplyUserWithdrawalBy(final User user) {
-		return UserWithdrawal.builder()
-			.email(user.getEmail())
-			.gender(user.getGender())
-			.birthday(user.getBirthday())
-			.role(user.getRole())
-			.withdrawalDate(LocalDateTime.now())
-			.build();
-	}
+fun supplyGenerateCodeParamBy(dto: GenerateCodeRequest): GenerateCodeParam {
+    return GenerateCodeParam(dto.email!!)
+}
 
-	public static GenerateCodeParam supplyGenerateCodeParamBy(final GenerateCodeRequest dto) {
-		return new GenerateCodeParam(dto.getEmail());
-	}
+fun supplyVerifyEmailParamBy(dto: VerifyEmailRequest): VerifyEmailParam {
+    return VerifyEmailParam(dto.email!!, dto.code!!)
+}
 
-	public static VerifyEmailParam supplyVerifyEmailParamBy(final VerifyEmailRequest dto) {
-		return new VerifyEmailParam(dto.getEmail(), dto.getCode());
-	}
+fun supplyUserSignUpParamBy(request: UserSignUpRequest): UserSignUpParam {
+    return UserSignUpParam(
+        request.provider,
+        request.idToken,
+        request.deviceOs,
+        request.deviceToken,
+        request.nickname,
+        request.email,
+        request.birthday,
+        request.gender
+    )
+}
 
-	public static UserSignUpParam supplyUserSignUpParamBy(final UserSignUpRequest request) {
-		return new UserSignUpParam(
-			request.provider(),
-			request.idToken(),
-			request.deviceOs(),
-			request.deviceToken(),
-			request.nickname(),
-			request.email(),
-			request.birthday(),
-			request.gender()
-		);
-	}
+fun supplyUserSignInParamBy(request: UserSignInRequest): UserSignInParam {
+    return UserSignInParam(request.provider, request.idToken)
+}
 
-	public static UserSignInParam supplyUserSignInParamBy(final UserSignInRequest request) {
-		return new UserSignInParam(request.provider(), request.idToken());
-	}
+fun supplyJwtResponseBy(dto: JsonWebToken): JwtResponse {
+    return JwtResponse(
+        accessToken = dto.accessToken,
+        refreshToken = dto.refreshToken,
+        grantType = dto.grantType
+    )
 }

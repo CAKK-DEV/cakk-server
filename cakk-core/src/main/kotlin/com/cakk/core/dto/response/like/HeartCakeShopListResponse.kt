@@ -1,16 +1,9 @@
-package com.cakk.api.dto.response.like;
+package com.cakk.core.dto.response.like
 
-import java.util.List;
+import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam
 
-import lombok.Builder;
-
-import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
-
-@Builder
-public record HeartCakeShopListResponse(
-
-	List<HeartCakeShopResponseParam> cakeShops,
-	Long lastCakeShopHeartId,
-	int size
-) {
-}
+data class HeartCakeShopListResponse(
+    val cakeShops: List<HeartCakeShopResponseParam>,
+    val lastCakeShopHeartId: Long?,
+    val size: Int
+)

@@ -1,6 +1,6 @@
-package com.cakk.api.vo
+package com.cakk.core.dto.response.user
 
-data class JsonWebToken(
+data class JwtResponse(
 	val accessToken: String,
 	val refreshToken: String,
 	val grantType: String

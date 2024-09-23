@@ -1,9 +1,6 @@
-package com.cakk.api.dto.response.search;
+package com.cakk.core.dto.response.search
 
-import java.util.List;
-
-public record TopSearchedListResponse(
-	List<String> keywordList,
-	Integer totalCount
-) {
-}
+data class TopSearchedListResponse(
+    val keywordList: List<String>,
+    val totalCount: Int
+)

@@ -1,6 +1,5 @@
-package com.cakk.api.dto.response.like;
+package com.cakk.core.dto.response.like
 
-public record HeartResponse(
-	boolean isHeart
-) {
-}
+data class HeartResponse(
+    val isHeart: Boolean
+)
