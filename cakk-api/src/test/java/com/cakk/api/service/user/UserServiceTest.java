@@ -4,7 +4,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -13,10 +12,10 @@ import net.jqwik.api.Arbitraries;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.ServiceTest;
-import com.cakk.api.dto.response.user.ProfileInformationResponse;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.dto.response.user.ProfileInformationResponse;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;

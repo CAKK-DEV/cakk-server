@@ -15,8 +15,8 @@ import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest
 import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest
-import com.cakk.api.dto.response.like.HeartCakeImageListResponse
-import com.cakk.api.dto.response.like.HeartCakeShopListResponse
+import com.cakk.core.dto.response.like.HeartCakeImageListResponse
+import com.cakk.core.dto.response.like.HeartCakeShopListResponse
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
 

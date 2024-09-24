@@ -16,7 +16,6 @@ import com.cakk.api.dto.request.shop.CreateShopRequest;
 import com.cakk.api.dto.request.shop.PromotionRequest;
 import com.cakk.api.dto.request.shop.UpdateShopRequest;
 import com.cakk.api.dto.request.user.CertificationRequest;
-import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMapResponse;
 import com.cakk.api.dto.response.shop.CakeShopByMineResponse;
 import com.cakk.api.dto.response.shop.CakeShopCreateResponse;
@@ -28,6 +27,7 @@ import com.cakk.api.dto.response.shop.CakeShopSimpleResponse;
 import com.cakk.core.dto.param.shop.CreateShopParam;
 import com.cakk.core.dto.param.shop.PromotionParam;
 import com.cakk.core.dto.param.shop.ShopOperationParam;
+import com.cakk.core.dto.response.like.HeartCakeShopListResponse;
 import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam;
 import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam;
@@ -172,11 +172,11 @@ public class ShopMapper {
 		final int size = cakeShops.size();
 		cakeShops.forEach(it -> keepOnlyNElements(it.cakeImageUrls(), 4));
 
-		return HeartCakeShopListResponse.builder()
-			.cakeShops(cakeShops)
-			.lastCakeShopHeartId(cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId())
-			.size(size)
-			.build();
+		return new HeartCakeShopListResponse(
+			cakeShops,
+			cakeShops.isEmpty() ? null : cakeShops.get(size - 1).cakeShopHeartId(),
+			size
+		);
 	}
 
 	public static List<CakeShopBySearchParam> supplyCakeShopBySearchParamListBy(List<CakeShop> cakeShops) {

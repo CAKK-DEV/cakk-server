@@ -18,13 +18,13 @@ import com.cakk.api.dto.request.cake.CakeSearchByViewsRequest;
 import com.cakk.api.dto.request.cake.CakeUpdateRequest;
 import com.cakk.api.dto.response.cake.CakeDetailResponse;
 import com.cakk.api.dto.response.cake.CakeImageListResponse;
-import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.core.dto.param.cake.CakeCreateParam;
 import com.cakk.core.dto.param.cake.CakeSearchByCategoryParam;
 import com.cakk.core.dto.param.cake.CakeSearchByShopParam;
 import com.cakk.core.dto.param.cake.CakeSearchByViewsParam;
 import com.cakk.core.dto.param.cake.CakeSearchParam;
 import com.cakk.core.dto.param.cake.CakeUpdateParam;
+import com.cakk.core.dto.response.like.HeartCakeImageListResponse;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam;
@@ -68,11 +68,11 @@ public class CakeMapper {
 	public static HeartCakeImageListResponse supplyHeartCakeImageListResponseBy(final List<HeartCakeImageResponseParam> cakeImages) {
 		final int size = cakeImages.size();
 
-		return HeartCakeImageListResponse.builder()
-			.cakeImages(cakeImages)
-			.lastCakeHeartId(cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeHeartId())
-			.size(cakeImages.size())
-			.build();
+		return new HeartCakeImageListResponse(
+			cakeImages,
+			cakeImages.isEmpty() ? null : cakeImages.get(size - 1).cakeHeartId(),
+			cakeImages.size()
+		);
 	}
 
 	public static CakeDetailResponse cakeDetailResponseFromParam(final CakeDetailParam param) {

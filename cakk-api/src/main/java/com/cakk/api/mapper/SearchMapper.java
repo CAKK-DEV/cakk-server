@@ -11,12 +11,12 @@ import com.cakk.api.dto.request.search.TopSearchedListRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchByViewsRequest;
 import com.cakk.api.dto.request.shop.CakeShopSearchRequest;
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest;
-import com.cakk.api.dto.response.search.TopSearchedListResponse;
 import com.cakk.core.dto.param.search.CakeShopSearchByViewsParam;
 import com.cakk.core.dto.param.search.HeartCakeSearchParam;
 import com.cakk.core.dto.param.search.HeartCakeShopSearchParam;
 import com.cakk.core.dto.param.search.SearchShopByLocationParam;
 import com.cakk.core.dto.param.search.TopSearchedListParam;
+import com.cakk.core.dto.response.search.TopSearchedListResponse;
 import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchParam;
 import com.cakk.domain.mysql.entity.user.User;
 
