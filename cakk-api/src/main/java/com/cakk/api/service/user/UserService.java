@@ -1,12 +1,13 @@
 package com.cakk.api.service.user;
 
+import static com.cakk.api.mapper.UserMapperKt.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.response.user.ProfileInformationResponse;
-import com.cakk.api.mapper.UserMapper;
+import com.cakk.core.dto.response.user.ProfileInformationResponse;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam;
@@ -24,7 +25,7 @@ public class UserService {
 	public ProfileInformationResponse findProfile(final User signInUser) {
 		final User user = userReadFacade.findByUserId(signInUser.getId());
 
-		return UserMapper.supplyProfileInformationResponseBy(user);
+		return supplyProfileInformationResponseBy(user);
 	}
 
 	@Transactional
@@ -36,7 +37,7 @@ public class UserService {
 	@Transactional
 	public void withdraw(final User signInUser) {
 		final User user = userReadFacade.findByIdWithAll(signInUser.getId());
-		final UserWithdrawal withdrawal = UserMapper.supplyUserWithdrawalBy(user);
+		final UserWithdrawal withdrawal = supplyUserWithdrawalBy(user);
 
 		userManageFacade.withdraw(user, withdrawal);
 	}

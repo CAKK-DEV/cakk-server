@@ -1,24 +1,27 @@
 package com.cakk.api.controller.user
 
+import jakarta.validation.Valid
+
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
+
 import com.cakk.api.annotation.AccessToken
 import com.cakk.api.annotation.RefreshToken
 import com.cakk.api.dto.request.user.GenerateCodeRequest
 import com.cakk.api.dto.request.user.UserSignInRequest
 import com.cakk.api.dto.request.user.UserSignUpRequest
 import com.cakk.api.dto.request.user.VerifyEmailRequest
-import com.cakk.api.dto.response.user.JwtResponse
-import com.cakk.api.mapper.UserMapper
+import com.cakk.core.dto.response.user.JwtResponse
+import com.cakk.api.mapper.supplyGenerateCodeParamBy
+import com.cakk.api.mapper.supplyUserSignInParamBy
+import com.cakk.api.mapper.supplyUserSignUpParamBy
+import com.cakk.api.mapper.supplyVerifyEmailParamBy
 import com.cakk.api.service.user.SignService
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.service.user.EmailVerificationService
-import jakarta.validation.Valid
-import lombok.RequiredArgsConstructor
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequiredArgsConstructor
 class SignController(
 	private val signService: SignService,
 	private val emailVerificationService: EmailVerificationService
@@ -28,7 +31,7 @@ class SignController(
     fun signUp(
 		@RequestBody @Valid request: UserSignUpRequest
     ): ApiResponse<JwtResponse> {
-		val param = UserMapper.supplyUserSignUpParamBy(request)
+		val param = supplyUserSignUpParamBy(request)
         return ApiResponse.success(signService.signUp(param))
     }
 
@@ -36,7 +39,7 @@ class SignController(
     fun signIn(
 		@RequestBody @Valid request: UserSignInRequest
     ): ApiResponse<JwtResponse> {
-		val param = UserMapper.supplyUserSignInParamBy(request)
+		val param = supplyUserSignInParamBy(request)
 		return ApiResponse.success(signService.signIn(param))
 	}
 
@@ -63,7 +66,7 @@ class SignController(
     fun sendEmailForVerification(
 		@RequestBody @Valid request: GenerateCodeRequest
     ): ApiResponse<Unit> {
-        val param = UserMapper.supplyGenerateCodeParamBy(request)
+        val param = supplyGenerateCodeParamBy(request)
         emailVerificationService.sendEmailForVerification(param)
 
 		return ApiResponse.success()
@@ -73,7 +76,7 @@ class SignController(
     fun verifyEmail(
             @RequestBody @Valid request: VerifyEmailRequest
     ): ApiResponse<Unit> {
-        val param = UserMapper.supplyVerifyEmailParamBy(request)
+        val param = supplyVerifyEmailParamBy(request)
         emailVerificationService.checkEmailVerificationCode(param)
 
 		return ApiResponse.success()

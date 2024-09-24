@@ -1,5 +1,7 @@
 package com.cakk.api.service.like;
 
+import static com.cakk.core.mapper.HeartMapperKt.*;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,14 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.api.annotation.DistributedLock;
-import com.cakk.api.dto.response.like.HeartCakeImageListResponse;
-import com.cakk.api.dto.response.like.HeartCakeShopListResponse;
-import com.cakk.api.dto.response.like.HeartResponse;
 import com.cakk.api.mapper.CakeMapper;
-import com.cakk.api.mapper.HeartMapper;
 import com.cakk.api.mapper.ShopMapper;
 import com.cakk.core.dto.param.search.HeartCakeSearchParam;
 import com.cakk.core.dto.param.search.HeartCakeShopSearchParam;
+import com.cakk.core.dto.response.like.HeartCakeImageListResponse;
+import com.cakk.core.dto.response.like.HeartCakeShopListResponse;
+import com.cakk.core.dto.response.like.HeartResponse;
 import com.cakk.core.facade.cake.CakeReadFacade;
 import com.cakk.core.facade.cake.CakeShopReadFacade;
 import com.cakk.core.facade.cake.CakeShopUserReadFacade;
@@ -66,7 +67,7 @@ public class HeartService {
 		final Cake cake = cakeReadFacade.findByIdWithHeart(cakeId);
 		final boolean isHeart = cake.isHeartedBy(user);
 
-		return HeartMapper.supplyHeartResponseBy(isHeart);
+		return supplyHeartResponseBy(isHeart);
 	}
 
 	@Transactional(readOnly = true)
@@ -74,7 +75,7 @@ public class HeartService {
 		final CakeShop cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId);
 		final boolean isHeart = cakeShop.isHeartedBy(user);
 
-		return HeartMapper.supplyHeartResponseBy(isHeart);
+		return supplyHeartResponseBy(isHeart);
 	}
 
 	@DistributedLock(key = "#cakeId")

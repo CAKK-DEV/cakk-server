@@ -21,7 +21,7 @@ import com.cakk.api.dto.request.cake.CakeCreateRequest
 import com.cakk.api.dto.request.cake.CakeUpdateRequest
 import com.cakk.api.dto.response.cake.CakeDetailResponse
 import com.cakk.api.dto.response.cake.CakeImageListResponse
-import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.common.enums.CakeDesignCategory
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse

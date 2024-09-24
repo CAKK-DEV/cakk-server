@@ -33,11 +33,7 @@ import com.cakk.domain.redis.repository.TokenRedisRepository;
 @DisplayName("Jwt Provider 테스트")
 class JwtProviderTest extends MockitoTest {
 
-	@InjectMocks
 	private JwtProvider jwtProvider;
-
-	@Mock
-	private Key key;
 
 	@Mock
 	private TokenRedisRepository tokenRedisRepository;
@@ -47,11 +43,14 @@ class JwtProviderTest extends MockitoTest {
 
 	@BeforeEach
 	void setup() {
-		ReflectionTestUtils.setField(jwtProvider, "accessTokenExpiredSecond", ACCESS_TOKEN_EXPIRED_SECOND);
-		ReflectionTestUtils.setField(jwtProvider, "refreshTokenExpiredSecond", REFRESH_TOKEN_EXPIRED_SECOND);
-		ReflectionTestUtils.setField(jwtProvider, "grantType", GRANT_TYPE);
-		ReflectionTestUtils.setField(jwtProvider, "userKey", USER_KEY);
-		ReflectionTestUtils.setField(jwtProvider, "key", Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)));
+		jwtProvider = new JwtProvider(
+			Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)),
+			tokenRedisRepository,
+			ACCESS_TOKEN_EXPIRED_SECOND,
+			REFRESH_TOKEN_EXPIRED_SECOND,
+			GRANT_TYPE,
+			USER_KEY
+		);
 	}
 
 	@TestWithDisplayName("토큰 생성에 성공한다.")
@@ -63,21 +62,9 @@ class JwtProviderTest extends MockitoTest {
 		JsonWebToken jwt = jwtProvider.generateToken(user);
 
 		// then
-		Assertions.assertNotNull(jwt.accessToken());
-		Assertions.assertNotNull(jwt.refreshToken());
-		Assertions.assertNotNull(jwt.grantType());
-	}
-
-	@TestWithDisplayName("User가 null인 경우, 토큰 생성에 실패한다.")
-	void generateToken2() {
-		// given
-		User user = null;
-
-		// when & then
-		Assertions.assertThrows(
-			CakkException.class,
-			() -> jwtProvider.generateToken(user),
-			EMPTY_USER.getCode());
+		Assertions.assertNotNull(jwt.getAccessToken());
+		Assertions.assertNotNull(jwt.getRefreshToken());
+		Assertions.assertNotNull(jwt.getGrantType());
 	}
 
 	@TestWithDisplayName("액세스 토큰으로부터 인증 정보를 가져온다.")
@@ -87,7 +74,7 @@ class JwtProviderTest extends MockitoTest {
 		ReflectionTestUtils.setField(user, "id", 1L);
 		ReflectionTestUtils.setField(user, "role", USER);
 
-		String accessToken = jwtProvider.generateToken(user).accessToken();
+		String accessToken = jwtProvider.generateToken(user).getAccessToken();
 
 		// when
 		Authentication authentication = jwtProvider.getAuthentication(accessToken);
@@ -103,7 +90,7 @@ class JwtProviderTest extends MockitoTest {
 		ReflectionTestUtils.setField(user, "id", 1L);
 		ReflectionTestUtils.setField(user, "role", USER);
 
-		String accessToken = jwtProvider.generateToken(user).accessToken();
+		String accessToken = jwtProvider.generateToken(user).getAccessToken();
 
 		// when
 		Claims claims = jwtProvider.parseClaims(accessToken);

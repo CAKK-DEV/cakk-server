@@ -27,7 +27,7 @@ import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
 import com.cakk.api.dto.request.shop.UpdateShopAddressRequest
 import com.cakk.api.dto.request.shop.UpdateShopRequest
 import com.cakk.api.dto.request.user.CertificationRequest
-import com.cakk.api.dto.response.like.HeartResponse
+import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.api.dto.response.shop.*
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse

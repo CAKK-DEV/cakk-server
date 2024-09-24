@@ -9,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
-import com.cakk.api.dto.response.search.TopSearchedListResponse
+import com.cakk.core.dto.response.search.TopSearchedListResponse
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
 import com.cakk.domain.redis.repository.KeywordRedisRepository

@@ -1,20 +1,19 @@
 package com.cakk.api.service.user;
 
+import static com.cakk.api.mapper.UserMapperKt.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.cakk.api.dto.request.user.UserSignInRequest;
-import com.cakk.api.dto.request.user.UserSignUpRequest;
-import com.cakk.api.dto.response.user.JwtResponse;
 import com.cakk.api.factory.OidcProviderFactory;
-import com.cakk.api.mapper.UserMapper;
 import com.cakk.api.provider.jwt.JwtProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.core.dto.param.user.UserSignInParam;
 import com.cakk.core.dto.param.user.UserSignUpParam;
+import com.cakk.core.dto.response.user.JwtResponse;
 import com.cakk.core.facade.user.UserManageFacade;
 import com.cakk.core.facade.user.UserReadFacade;
 import com.cakk.domain.mysql.entity.user.User;
@@ -34,9 +33,9 @@ public class SignService {
 	@Transactional
 	public JwtResponse signUp(final UserSignUpParam param) {
 		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
-		final User user = userManageFacade.create(UserMapper.supplyUserBy(param, providerId));
+		final User user = userManageFacade.create(supplyUserBy(param, providerId));
 
-		return JwtResponse.from(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user));
 	}
 
 	@Transactional(readOnly = true)
@@ -44,7 +43,7 @@ public class SignService {
 		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
 		final User user = userReadFacade.findByProviderId(providerId);
 
-		return JwtResponse.from(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user));
 	}
 
 	public void signOut(final String accessToken, final String refreshToken) {
@@ -68,6 +67,6 @@ public class SignService {
 
 		tokenRedisRepository.registerBlackList(refreshToken, expiredSecond);
 
-		return JwtResponse.from(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user));
 	}
 }
