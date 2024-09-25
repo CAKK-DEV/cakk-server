@@ -14,25 +14,25 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.cakk.api.provider.jwt.JwtProvider;
+import com.cakk.api.provider.jwt.JwtProviderImpl;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtProvider jwtProvider;
+	private final JwtProviderImpl jwtProviderImpl;
 	private final String accessHeader;
 	private final String grantType;
 
 	public JwtAuthenticationFilter(
-		JwtProvider jwtProvider,
+		JwtProviderImpl jwtProviderImpl,
 
 		@Value("${jwt.access-header}") String accessHeader,
 
 		@Value("${jwt.grant-type}") String grantType
 	) {
-		this.jwtProvider = jwtProvider;
+		this.jwtProviderImpl = jwtProviderImpl;
 		this.accessHeader = accessHeader;
 		this.grantType = grantType;
 	}
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		token.ifPresent(it -> {
 			String accessToken = replaceBearerToBlank(it);
 
-			Authentication authentication = jwtProvider.getAuthentication(accessToken);
+			Authentication authentication = jwtProviderImpl.getAuthentication(accessToken);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		});
 

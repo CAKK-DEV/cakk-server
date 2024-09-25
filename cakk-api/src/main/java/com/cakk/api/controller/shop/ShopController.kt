@@ -1,26 +1,25 @@
 package com.cakk.api.controller.shop
 
+import jakarta.validation.Valid
+
+import org.springframework.web.bind.annotation.*
+
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.link.UpdateLinkRequest
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
 import com.cakk.api.dto.request.shop.*
 import com.cakk.api.dto.request.user.CertificationRequest
-import com.cakk.core.dto.response.like.HeartResponse
-import com.cakk.api.dto.response.shop.*
-import com.cakk.api.mapper.SearchMapper
-import com.cakk.api.mapper.ShopMapper
-import com.cakk.api.service.like.HeartService
-import com.cakk.api.service.like.LikeService
-import com.cakk.api.service.shop.ShopService
+import com.cakk.api.mapper.*
+import com.cakk.core.service.like.HeartService
+import com.cakk.core.service.like.LikeService
+import com.cakk.core.service.shop.ShopService
 import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.response.like.HeartResponse
+import com.cakk.core.dto.response.shop.*
 import com.cakk.core.service.views.ViewsService
 import com.cakk.domain.mysql.entity.user.User
-import jakarta.validation.Valid
-import lombok.RequiredArgsConstructor
-import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/shops")
 class ShopController(
 	private val shopService: ShopService,
@@ -34,7 +33,7 @@ class ShopController(
 		@SignInUser user: User,
 		@RequestBody @Valid request: CertificationRequest
 	): ApiResponse<Unit> {
-		val param = ShopMapper.supplyCertificationParamBy(request, user)
+		val param = supplyCertificationParamBy(request, user)
         shopService.requestCertificationBusinessOwner(param)
 
 		return ApiResponse.success()
@@ -73,7 +72,7 @@ class ShopController(
     fun listByLocation(
 		@ModelAttribute @Valid request: SearchShopByLocationRequest
     ): ApiResponse<CakeShopByMapResponse> {
-		val param = SearchMapper.supplySearchShopByLocationParamBy(request)
+		val param = supplySearchShopByLocationParamBy(request)
         val response = shopService.searchShop(param)
 
 		return ApiResponse.success(response)
@@ -122,7 +121,7 @@ class ShopController(
     fun listByKeywordAndLocation(
 		@ModelAttribute @Valid request: CakeShopSearchRequest
     ): ApiResponse<CakeShopSearchResponse> {
-		val param = SearchMapper.supplyCakeShopSearchParamBy(request)
+		val param = supplyCakeShopSearchParamBy(request)
         val response = shopService.searchShopByKeyword(param)
 
 		return ApiResponse.success(response)
@@ -134,7 +133,7 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopRequest
     ): ApiResponse<Unit> {
-		val param = ShopMapper.supplyCakeShopUpdateParamBy(request, user, cakeShopId)
+		val param = supplyCakeShopUpdateParamBy(request, user, cakeShopId)
         shopService.updateBasicInformation(param)
 
 		return ApiResponse.success()
@@ -146,7 +145,7 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateLinkRequest
     ): ApiResponse<Unit> {
-		val param = ShopMapper.supplyUpdateLinkParamBy(request, user, cakeShopId)
+		val param = supplyUpdateLinkParamBy(request, user, cakeShopId)
         shopService.updateShopLinks(param)
 
 		return ApiResponse.success()
@@ -169,7 +168,7 @@ class ShopController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopOperationRequest
     ): ApiResponse<Unit> {
-		val param = ShopMapper.supplyUpdateShopOperationParamBy(request, user, cakeShopId)
+		val param = supplyUpdateShopOperationParamBy(request, user, cakeShopId)
         shopService.updateShopOperationDays(param)
 
 		return ApiResponse.success()
@@ -189,7 +188,7 @@ class ShopController(
     fun listByViews(
 		@ModelAttribute @Valid request: CakeShopSearchByViewsRequest
     ): ApiResponse<CakeShopSearchResponse> {
-		val param = SearchMapper.supplyCakeShopSearchByViewsParam(request)
+		val param = supplyCakeShopSearchByViewsParam(request)
         val response = shopService.searchCakeShopsByCursorAndViews(param)
 
 		return ApiResponse.success(response)

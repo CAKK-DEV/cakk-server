@@ -4,21 +4,18 @@ import jakarta.validation.Valid
 
 import org.springframework.web.bind.annotation.*
 
-import lombok.RequiredArgsConstructor
-
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.cake.*
-import com.cakk.api.dto.response.cake.CakeDetailResponse
-import com.cakk.api.dto.response.cake.CakeImageListResponse
+import com.cakk.api.mapper.*
+import com.cakk.core.dto.response.cake.CakeDetailResponse
+import com.cakk.core.dto.response.cake.CakeImageListResponse
 import com.cakk.core.dto.response.like.HeartResponse
-import com.cakk.api.mapper.CakeMapper
-import com.cakk.api.service.cake.CakeService
-import com.cakk.api.service.like.HeartService
+import com.cakk.core.service.cake.CakeService
+import com.cakk.core.service.like.HeartService
 import com.cakk.common.response.ApiResponse
 import com.cakk.domain.mysql.entity.user.User
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/cakes")
 class CakeController(
 	private val cakeService: CakeService,
@@ -29,7 +26,7 @@ class CakeController(
 	fun listByCategory(
 		@ModelAttribute @Valid request: CakeSearchByCategoryRequest
 	): ApiResponse<CakeImageListResponse> {
-		val param = CakeMapper.supplyCakeSearchByCategoryParamBy(request)
+		val param = supplyCakeSearchByCategoryParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndCategory(param)
 
 		return ApiResponse.success(response)
@@ -39,7 +36,7 @@ class CakeController(
 	fun listByShop(
 		@ModelAttribute @Valid request: CakeSearchByShopRequest
 	): ApiResponse<CakeImageListResponse> {
-		val param = CakeMapper.supplyCakeSearchByShopParamBy(request)
+		val param = supplyCakeSearchByShopParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndCakeShopId(param)
 
 		return ApiResponse.success(response)
@@ -49,7 +46,7 @@ class CakeController(
 	fun listByKeywordAndLocation(
 		@ModelAttribute @Valid request: CakeSearchByLocationRequest
 	): ApiResponse<CakeImageListResponse> {
-		val param = CakeMapper.supplyCakeSearchParamBy(request)
+		val param = supplyCakeSearchParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndSearch(param)
 
 		return ApiResponse.success(response)
@@ -59,7 +56,7 @@ class CakeController(
 	fun listByViews(
 		@ModelAttribute @Valid request: CakeSearchByViewsRequest
 	): ApiResponse<CakeImageListResponse> {
-		val param = CakeMapper.supplyCakeSearchByViewsParamBy(request)
+		val param = supplyCakeSearchByViewsParamBy(request)
 		val response = cakeService.searchCakeImagesByCursorAndViews(param)
 
 		return ApiResponse.success(response)
@@ -78,7 +75,7 @@ class CakeController(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: CakeCreateRequest
 	): ApiResponse<Unit> {
-		val param = CakeMapper.supplyCakeCreateParamBy(request, user, cakeShopId)
+		val param = supplyCakeCreateParamBy(request, user, cakeShopId)
 		cakeService.createCake(param)
 
 		return ApiResponse.success()
@@ -110,7 +107,7 @@ class CakeController(
 		@PathVariable cakeId: Long,
 		@RequestBody request: @Valid CakeUpdateRequest
 	): ApiResponse<Unit> {
-		val param = CakeMapper.supplyCakeUpdateParamBy(request, user, cakeId)
+		val param = supplyCakeUpdateParamBy(request, user, cakeId)
 		cakeService.updateCake(param)
 
 		return ApiResponse.success()

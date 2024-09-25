@@ -1,4 +1,4 @@
-package com.cakk.api.vo
+package com.cakk.core.vo
 
 data class JsonWebToken(
 	val accessToken: String,

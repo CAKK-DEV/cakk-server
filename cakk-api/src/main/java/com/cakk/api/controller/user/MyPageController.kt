@@ -1,28 +1,29 @@
 package com.cakk.api.controller.user
 
+import jakarta.validation.Valid
+
+import org.springframework.web.bind.annotation.*
+
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.like.HeartCakeSearchRequest
 import com.cakk.api.dto.request.like.HeartCakeShopSearchRequest
 import com.cakk.api.dto.request.user.ProfileUpdateRequest
+import com.cakk.api.mapper.supplyHeartCakeSearchParamBy
+import com.cakk.api.mapper.supplyHeartCakeShopSearchParamBy
 import com.cakk.core.dto.response.like.HeartCakeImageListResponse
 import com.cakk.core.dto.response.like.HeartCakeShopListResponse
 import com.cakk.core.dto.response.user.ProfileInformationResponse
-import com.cakk.api.mapper.SearchMapper
 import com.cakk.api.mapper.supplyProfileUpdateParamBy
-import com.cakk.api.service.like.HeartService
-import com.cakk.api.service.user.UserService
+import com.cakk.core.service.like.HeartService
+import com.cakk.core.service.user.UserService
 import com.cakk.common.response.ApiResponse
 import com.cakk.domain.mysql.entity.user.User
-import jakarta.validation.Valid
-import lombok.RequiredArgsConstructor
-import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/me")
 class MyPageController(
-	private val userService: UserService,
-	private val heartService: HeartService
+    private val userService: UserService,
+    private val heartService: HeartService
 ) {
 
     @GetMapping
@@ -59,7 +60,7 @@ class MyPageController(
 		@SignInUser user: User,
 		@ModelAttribute @Valid request: HeartCakeSearchRequest
     ): ApiResponse<HeartCakeImageListResponse> {
-		val param = SearchMapper.supplyHeartCakeSearchParamBy(request, user)
+		val param = supplyHeartCakeSearchParamBy(request, user)
         val response = heartService.searchCakeImagesByCursorAndHeart(param)
 
 		return ApiResponse.success(response)
@@ -70,7 +71,7 @@ class MyPageController(
 		@SignInUser user: User,
 		@ModelAttribute @Valid request: HeartCakeShopSearchRequest
     ): ApiResponse<HeartCakeShopListResponse> {
-		val param = SearchMapper.supplyHeartCakeShopSearchParamBy(request, user)
+		val param = supplyHeartCakeShopSearchParamBy(request, user)
         val response = heartService.searchCakeShopByCursorAndHeart(param)
 
 		return ApiResponse.success(response)

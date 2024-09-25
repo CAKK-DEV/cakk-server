@@ -1,5 +1,6 @@
 package com.cakk.api.controller.advice;
 
+import static com.cakk.core.mapper.EventMapperKt.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -24,7 +25,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.cakk.api.mapper.EventMapper;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.common.response.ApiResponse;
@@ -50,7 +50,7 @@ public class GlobalControllerAdvice {
 		final ReturnCode returnCode = exception.getReturnCode();
 
 		if (returnCode.equals(ReturnCode.INTERNAL_SERVER_ERROR) || returnCode.equals(ReturnCode.EXTERNAL_SERVER_ERROR)) {
-			applicationEventPublisher.publishEvent(EventMapper.supplyErrorAlertEventBy(exception, request, profile));
+			applicationEventPublisher.publishEvent(supplyErrorAlertEventBy(exception, request, profile));
 		}
 
 		log.error(exception.getMessage());
@@ -91,7 +91,7 @@ public class GlobalControllerAdvice {
 		RuntimeException.class
 	})
 	public ResponseEntity<ApiResponse<String>> handleServerException(Exception exception, HttpServletRequest request) {
-		applicationEventPublisher.publishEvent(EventMapper.supplyErrorAlertEventBy(exception, request, profile));
+		applicationEventPublisher.publishEvent(supplyErrorAlertEventBy(exception, request, profile));
 		log.error(exception.getMessage());
 
 		return getResponseEntity(INTERNAL_SERVER_ERROR, ApiResponse.error(ReturnCode.INTERNAL_SERVER_ERROR, exception.getMessage()));

@@ -19,10 +19,10 @@ class CakeManageFacade(
         cakeShop.registerCake(cake)
     }
 
-    fun update(cake: Cake, cakeImageUrl: String?, tags: List<Tag>, cakeCategories: List<CakeCategory>) {
+    fun update(cake: Cake, cakeImageUrl: String, tags: List<Tag>, cakeCategories: List<CakeCategory>) {
         cake.updateCakeImageUrl(cakeImageUrl)
         cake.updateCakeCategories(cakeCategories)
-        cake.updateCakeTags(tags)
+		cake.updateCakeTags(tags)
     }
 
     fun delete(cake: Cake) {
