@@ -75,12 +75,12 @@ class ArchitectureTest {
 		rule.check(javaClasses);
 	}
 
-	@TestWithDisplayName("factory 패키지 안에 있는 클래스들은 Factory 끝나야 한다.")
-	void factory() {
+	@TestWithDisplayName("dispatcher 패키지 안에 있는 클래스들은 Dispatcher 끝나야 한다.")
+	void dispatcher() {
 		ArchRule rule = classes()
-			.that().resideInAPackage("..factory..")
+			.that().resideInAPackage("..dispatcher..")
 			.and().areTopLevelClasses()
-			.should().haveSimpleNameEndingWith("Factory");
+			.should().haveSimpleNameContaining("Dispatcher");
 
 		rule.check(javaClasses);
 	}
@@ -110,7 +110,7 @@ class ArchitectureTest {
 		ArchRule rule = classes()
 			.that().resideInAPackage("..provider..")
 			.and().areTopLevelClasses()
-			.should().haveSimpleNameEndingWith("Provider");
+			.should().haveSimpleNameContaining("Provider");
 
 		rule.check(javaClasses);
 	}
@@ -165,11 +165,12 @@ class ArchitectureTest {
 		rule.check(javaClasses);
 	}
 
-	@TestWithDisplayName("Factory 클래스는 Service 클래스에만 의존해야 한다.")
-	void factoryDependency() {
+	@TestWithDisplayName("Dispatcher 클래스는 Service 클래스에만 의존해야 한다.")
+	void dispatcherDependency() {
 		ArchRule rule = classes()
-			.that().haveNameMatching(".*Factory")
-			.should().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("Service");
+			.that().haveSimpleNameContaining("DispatcherImpl")
+			.should().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("Service")
+			.orShould().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("Dispatcher");
 
 		rule.check(javaClasses);
 	}

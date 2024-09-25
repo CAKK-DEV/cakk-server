@@ -106,7 +106,7 @@ internal class SignIntegrationTest(
 			.build()
 
 		val jsonWebToken = authToken
-		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken, refreshTokenExpiredSecond)
+		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken, 100000000)
 
 		val headers = HttpHeaders()
 		headers["Refresh"] = jsonWebToken.refreshToken
@@ -196,7 +196,7 @@ internal class SignIntegrationTest(
 			.build()
 
 		val jsonWebToken = authToken
-		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken, refreshTokenExpiredSecond)
+		tokenRedisRepository.registerBlackList(jsonWebToken.refreshToken, 100000000)
 
 		val headers = HttpHeaders()
 		headers[HttpHeaders.AUTHORIZATION] = "Bearer " + jsonWebToken.accessToken

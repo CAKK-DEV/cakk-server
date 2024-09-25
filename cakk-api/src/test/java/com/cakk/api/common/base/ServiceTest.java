@@ -10,6 +10,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import net.jqwik.api.Arbitraries;
 
@@ -60,9 +61,7 @@ public abstract class ServiceTest {
 	}
 
 	protected User getUser() {
-		return getConstructorMonkey().giveMeBuilder(User.class)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.setNotNull("id")
+		final User user = getConstructorMonkey().giveMeBuilder(User.class)
 			.set("provider", Arbitraries.of(Provider.class))
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
@@ -70,6 +69,9 @@ public abstract class ServiceTest {
 			.set("birthday", LocalDate.now())
 			.set("role", Arbitraries.of(Role.class))
 			.sample();
+		ReflectionTestUtils.setField(user, "id", 1L);
+
+		return user;
 	}
 
 	public static Point supplyPointBy(Double latitude, Double longitude) {

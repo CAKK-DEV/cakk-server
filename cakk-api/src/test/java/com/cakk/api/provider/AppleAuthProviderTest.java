@@ -15,9 +15,9 @@ import io.jsonwebtoken.impl.DefaultClaims;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
-import com.cakk.api.provider.jwt.JwtProvider;
+import com.cakk.api.provider.jwt.JwtProviderImpl;
+import com.cakk.api.provider.oauth.AppleAuthProvider;
 import com.cakk.api.provider.oauth.PublicKeyProvider;
-import com.cakk.api.provider.oauth.impl.AppleAuthProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.external.client.AppleAuthClient;
@@ -35,7 +35,7 @@ public class AppleAuthProviderTest extends MockitoTest {
 	private PublicKeyProvider publicKeyProvider;
 
 	@Mock
-	private JwtProvider jwtProvider;
+	private JwtProviderImpl jwtProviderImpl;
 
 	private final String idToken = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.payload.signature";
 
@@ -46,13 +46,12 @@ public class AppleAuthProviderTest extends MockitoTest {
 			.set("keys", Arbitraries.of(getOidcPublicKeyFixture()).list().ofMinSize(1).ofMaxSize(10))
 			.sample();
 		PublicKey publicKey = getConstructorMonkey().giveMeOne(PublicKey.class);
-		DefaultClaims claims = getConstructorMonkey().giveMeBuilder(DefaultClaims.class)
-			.set("sub", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample())
-			.sample();
+		DefaultClaims claims = getConstructorMonkey().giveMeBuilder(DefaultClaims.class).sample();
+		claims.setSubject(Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample());
 
 		doReturn(oidcPublicKeyList).when(appleAuthClient).getPublicKeys();
 		doReturn(publicKey).when(publicKeyProvider).generatePublicKey(any(), any());
-		doReturn(claims).when(jwtProvider).parseClaims(idToken, publicKey);
+		doReturn(claims).when(jwtProviderImpl).parseClaims(idToken, publicKey);
 
 		// when
 		String result = appleAuthProvider.getProviderId(idToken);
@@ -62,7 +61,7 @@ public class AppleAuthProviderTest extends MockitoTest {
 
 		verify(appleAuthClient, times(1)).getPublicKeys();
 		verify(publicKeyProvider, times(1)).generatePublicKey(any(), any());
-		verify(jwtProvider, times(1)).parseClaims(idToken, publicKey);
+		verify(jwtProviderImpl, times(1)).parseClaims(idToken, publicKey);
 	}
 
 	@TestWithDisplayName("공개키 목록을 가져오는 과정에서 에러가 발생하면, 서버 외부 에러를 던진다.")
@@ -79,7 +78,7 @@ public class AppleAuthProviderTest extends MockitoTest {
 
 		verify(appleAuthClient, times(1)).getPublicKeys();
 		verify(publicKeyProvider, times(0)).generatePublicKey(any(), any());
-		verify(jwtProvider, times(0)).parseClaims(any(), any());
+		verify(jwtProviderImpl, times(0)).parseClaims(any(), any());
 	}
 
 	@TestWithDisplayName("헤더 파싱 시 에러가 발생하면, 서버 내부 에러를 던진다.")
@@ -96,6 +95,6 @@ public class AppleAuthProviderTest extends MockitoTest {
 
 		verify(appleAuthClient, times(1)).getPublicKeys();
 		verify(publicKeyProvider, times(0)).generatePublicKey(any(), any());
-		verify(jwtProvider, times(0)).parseClaims(any(), any());
+		verify(jwtProviderImpl, times(0)).parseClaims(any(), any());
 	}
 }

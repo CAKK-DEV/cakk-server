@@ -16,9 +16,9 @@ import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
 import com.cakk.api.dto.request.shop.CreateShopRequest
 import com.cakk.api.dto.request.shop.PromotionRequest
-import com.cakk.api.dto.response.shop.CakeShopCreateResponse
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.core.dto.response.shop.CakeShopCreateResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidateResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidatesResponse
 import com.cakk.common.enums.Days
 import com.cakk.common.enums.LinkKind
 import com.cakk.common.enums.ReturnCode
