@@ -1,6 +1,5 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-public record CakeShopOwnerResponse(
-	Boolean isOwned
-) {
-}
+data class CakeShopOwnerResponse(
+    val isOwned: Boolean
+)

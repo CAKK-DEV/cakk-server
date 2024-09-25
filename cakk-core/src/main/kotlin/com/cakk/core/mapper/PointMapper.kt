@@ -1,27 +1,18 @@
-package com.cakk.api.mapper;
+package com.cakk.core.mapper
 
-import static java.util.Objects.*;
+import org.locationtech.jts.geom.Coordinate
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.Point
+import org.locationtech.jts.geom.PrecisionModel
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
+private const val SPATIAL_REFERENCE_IDENTIFIER_NUMBER = 4326
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+private val geometryFactory = GeometryFactory(PrecisionModel(), SPATIAL_REFERENCE_IDENTIFIER_NUMBER)
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PointMapper {
-
-	private static final int SPATIAL_REFERENCE_IDENTIFIER_NUMBER = 4326;
-
-	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SPATIAL_REFERENCE_IDENTIFIER_NUMBER);
-
-	public static Point supplyPointBy(final Double latitude, final Double longitude) {
-		if (isNull(latitude) || isNull(longitude)) {
-			return null;
-		}
-		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+fun supplyPointBy(latitude: Double?, longitude: Double?): Point? {
+	if (latitude == null || longitude == null) {
+		return null
 	}
-}
 
+    return geometryFactory.createPoint(Coordinate(longitude, latitude))
+}

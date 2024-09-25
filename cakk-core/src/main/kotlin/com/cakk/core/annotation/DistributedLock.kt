@@ -1,20 +1,13 @@
-package com.cakk.api.annotation;
+package com.cakk.core.annotation
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeUnit
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DistributedLock {
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class DistributedLock(
 
-	String key() default "";
-
-	TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
-
-	long waitTime() default 5000L;
-
-	long leaseTime() default 3000L;
-}
+    val key: String = "",
+    val timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
+    val waitTime: Long = 5000L,
+    val leaseTime: Long = 3000L
+)

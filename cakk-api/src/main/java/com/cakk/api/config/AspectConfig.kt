@@ -1,9 +1,8 @@
-package com.cakk.api.config;
+package com.cakk.api.config
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @EnableAspectJAutoProxy
 @Configuration
-public class AspectConfig {
-}
+class AspectConfig

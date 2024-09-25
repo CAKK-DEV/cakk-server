@@ -1,43 +1,33 @@
-package com.cakk.api.provider.oauth.impl;
+package com.cakk.api.provider.oauth
 
-import static com.cakk.common.enums.ReturnCode.*;
-import static java.util.Objects.*;
+import java.io.IOException
+import java.security.GeneralSecurityException
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import org.springframework.stereotype.Component
 
-import org.springframework.stereotype.Component;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.api.provider.oauth.OidcProvider;
-import com.cakk.common.exception.CakkException;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.core.provider.oauth.OidcProvider
 
 @Component
-@RequiredArgsConstructor
-public class GoogleAuthProvider implements OidcProvider {
+class GoogleAuthProvider(
+	private val googleIdTokenVerifier: GoogleIdTokenVerifier
+) : OidcProvider {
 
-	private final GoogleIdTokenVerifier googleIdTokenVerifier;
+    override fun getProviderId(idToken: String): String {
+        return getGoogleIdToken(idToken).payload.subject
+    }
 
-	@Override
-	public String getProviderId(final String idToken) {
-		return getGoogleIdToken(idToken).getPayload().getSubject();
-	}
-
-	private GoogleIdToken getGoogleIdToken(final String idToken) {
-		try {
-			final GoogleIdToken googleIdToken = googleIdTokenVerifier.verify(idToken);
-
-			if (isNull(googleIdToken)) {
-				throw new CakkException(EXTERNAL_SERVER_ERROR);
-			}
-
-			return googleIdToken;
-		} catch (GeneralSecurityException | IOException e) {
-			throw new CakkException(EXTERNAL_SERVER_ERROR);
+    private fun getGoogleIdToken(idToken: String): GoogleIdToken {
+		return try {
+			googleIdTokenVerifier.verify(idToken) ?: throw CakkException(ReturnCode.EXTERNAL_SERVER_ERROR)
+		} catch (e: GeneralSecurityException) {
+			throw CakkException(ReturnCode.EXTERNAL_SERVER_ERROR)
+		} catch (e: IOException) {
+			throw CakkException(ReturnCode.EXTERNAL_SERVER_ERROR)
 		}
-	}
+    }
 }

@@ -1,15 +1,11 @@
 package com.cakk.api.provider;
 
 import static com.cakk.api.common.utils.TestUtils.*;
-import static com.cakk.common.enums.ReturnCode.*;
 import static com.cakk.common.enums.Role.*;
-
-import java.security.Key;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
@@ -23,17 +19,16 @@ import io.jsonwebtoken.security.Keys;
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
 import com.cakk.api.config.JwtConfig;
-import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.api.vo.JsonWebToken;
-import com.cakk.common.exception.CakkException;
+import com.cakk.api.provider.jwt.JwtProviderImpl;
+import com.cakk.core.vo.JsonWebToken;
 import com.cakk.domain.mysql.entity.user.User;
 import com.cakk.domain.redis.repository.TokenRedisRepository;
 
 @Import(JwtConfig.class)
 @DisplayName("Jwt Provider 테스트")
-class JwtProviderTest extends MockitoTest {
+class JwtProviderImplTest extends MockitoTest {
 
-	private JwtProvider jwtProvider;
+	private JwtProviderImpl jwtProviderImpl;
 
 	@Mock
 	private TokenRedisRepository tokenRedisRepository;
@@ -43,7 +38,7 @@ class JwtProviderTest extends MockitoTest {
 
 	@BeforeEach
 	void setup() {
-		jwtProvider = new JwtProvider(
+		jwtProviderImpl = new JwtProviderImpl(
 			Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)),
 			tokenRedisRepository,
 			ACCESS_TOKEN_EXPIRED_SECOND,
@@ -59,7 +54,7 @@ class JwtProviderTest extends MockitoTest {
 		User user = getConstructorMonkey().giveMeOne(User.class);
 
 		// when
-		JsonWebToken jwt = jwtProvider.generateToken(user);
+		JsonWebToken jwt = jwtProviderImpl.generateToken(user);
 
 		// then
 		Assertions.assertNotNull(jwt.getAccessToken());
@@ -74,10 +69,10 @@ class JwtProviderTest extends MockitoTest {
 		ReflectionTestUtils.setField(user, "id", 1L);
 		ReflectionTestUtils.setField(user, "role", USER);
 
-		String accessToken = jwtProvider.generateToken(user).getAccessToken();
+		String accessToken = jwtProviderImpl.generateToken(user).getAccessToken();
 
 		// when
-		Authentication authentication = jwtProvider.getAuthentication(accessToken);
+		Authentication authentication = jwtProviderImpl.getAuthentication(accessToken);
 
 		// then
 		Assertions.assertEquals(authentication.getAuthorities().toString(), "[%s]".formatted(USER.getSecurityRole()));
@@ -90,10 +85,10 @@ class JwtProviderTest extends MockitoTest {
 		ReflectionTestUtils.setField(user, "id", 1L);
 		ReflectionTestUtils.setField(user, "role", USER);
 
-		String accessToken = jwtProvider.generateToken(user).getAccessToken();
+		String accessToken = jwtProviderImpl.generateToken(user).getAccessToken();
 
 		// when
-		Claims claims = jwtProvider.parseClaims(accessToken);
+		Claims claims = jwtProviderImpl.parseClaims(accessToken);
 
 		// then
 		Assertions.assertNotNull(claims);

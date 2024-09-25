@@ -1,9 +1,8 @@
-package com.cakk.api.config;
+package com.cakk.api.config
 
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.cache.annotation.EnableCaching
+import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableCaching
-public class CacheConfig {
-}
+class CacheConfig

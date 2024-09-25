@@ -1,16 +1,9 @@
-package com.cakk.api.dto.response.cake;
+package com.cakk.core.dto.response.cake
 
-import java.util.List;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
 
-import lombok.Builder;
-
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
-
-@Builder
-public record CakeImageListResponse(
-
-	List<CakeImageResponseParam> cakeImages,
-	Long lastCakeId,
-	int size
-) {
-}
+data class CakeImageListResponse(
+	val cakeImages: List<CakeImageResponseParam>,
+	val lastCakeId: Long?,
+	val size: Int
+)

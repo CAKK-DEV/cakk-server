@@ -1,41 +1,43 @@
-package com.cakk.api.provider.oauth;
+package com.cakk.api.provider.oauth
 
-import static com.cakk.common.enums.ReturnCode.*;
-import static com.cakk.common.utils.DecodeUtilsKt.*;
+import java.math.BigInteger
+import java.security.KeyFactory
+import java.security.NoSuchAlgorithmException
+import java.security.PublicKey
+import java.security.spec.InvalidKeySpecException
+import java.security.spec.RSAPublicKeySpec
 
-import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Map;
+import org.springframework.stereotype.Component
 
-import org.springframework.stereotype.Component;
-
-import com.cakk.common.exception.CakkException;
-import com.cakk.external.vo.key.OidcPublicKey;
-import com.cakk.external.vo.key.OidcPublicKeyList;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.utils.decodeBase64
+import com.cakk.external.vo.key.OidcPublicKey
+import com.cakk.external.vo.key.OidcPublicKeyList
 
 @Component
-public class PublicKeyProvider {
+class PublicKeyProvider {
 
-	public PublicKey generatePublicKey(final Map<String, String> tokenHeaders, final OidcPublicKeyList publicKeys) {
-		final OidcPublicKey publicKey = publicKeys.getMatchedKey(tokenHeaders.get("kid"), tokenHeaders.get("alg"));
+    fun generatePublicKey(tokenHeaders: Map<String, String>, publicKeys: OidcPublicKeyList): PublicKey {
+		val kid = tokenHeaders["kid"] ?: throw CakkException(ReturnCode.INTERNAL_SERVER_ERROR)
+		val alg = tokenHeaders["kid"] ?: throw CakkException(ReturnCode.INTERNAL_SERVER_ERROR)
+        val publicKey = publicKeys.getMatchedKey(kid, alg)
 
-		return getPublicKey(publicKey);
-	}
+        return getPublicKey(publicKey)
+    }
 
-	private PublicKey getPublicKey(final OidcPublicKey publicKey) {
-		final byte[] nBytes = decodeBase64(publicKey.getN());
-		final byte[] eBytes = decodeBase64(publicKey.getE());
+    private fun getPublicKey(publicKey: OidcPublicKey): PublicKey {
+        val nBytes = decodeBase64(publicKey.n)
+        val eBytes = decodeBase64(publicKey.e)
 
-		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(new BigInteger(1, nBytes), new BigInteger(1, eBytes));
+        val publicKeySpec = RSAPublicKeySpec(BigInteger(1, nBytes), BigInteger(1, eBytes))
 
-		try {
-			return KeyFactory.getInstance(publicKey.getKty()).generatePublic(publicKeySpec);
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			throw new CakkException(EXTERNAL_SERVER_ERROR);
+		return try {
+			KeyFactory.getInstance(publicKey.kty).generatePublic(publicKeySpec)
+		} catch (e: NoSuchAlgorithmException) {
+			throw CakkException(ReturnCode.EXTERNAL_SERVER_ERROR)
+		} catch (e: InvalidKeySpecException) {
+			throw CakkException(ReturnCode.EXTERNAL_SERVER_ERROR)
 		}
-	}
+    }
 }

@@ -1,53 +1,58 @@
-package com.cakk.api.config;
+package com.cakk.api.config
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.*
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.api.filter.JwtAuthenticationFilter;
-import com.cakk.api.filter.JwtExceptionFilter;
+import com.cakk.api.filter.JwtAuthenticationFilter
+import com.cakk.api.filter.JwtExceptionFilter
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfig {
-
-	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final JwtExceptionFilter jwtExceptionFilter;
+class SecurityConfig(
+	private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+	private val jwtExceptionFilter: JwtExceptionFilter
+) {
 
 	@Bean
-	public SecurityFilterChain oauth2SecurityFilterChain(HttpSecurity http) throws Exception {
+	fun oauth2SecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
 		return http
-			.httpBasic(AbstractHttpConfigurer::disable)
-			.csrf(AbstractHttpConfigurer::disable)
-			.formLogin(AbstractHttpConfigurer::disable)
-			.headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+			.httpBasic { it.disable() }
+			.csrf { it.disable() }
+			.formLogin { it.disable() }
+			.headers { it.frameOptions { frameOptions -> frameOptions.disable() } }
 			.sessionManagement(setSessionManagement())
 			.authorizeHttpRequests(setAuthorizePath())
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
-			.build();
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter::class.java)
+			.build()
 	}
 
-	private Customizer<SessionManagementConfigurer<HttpSecurity>> setSessionManagement() {
-		return sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	private fun setSessionManagement(): Customizer<SessionManagementConfigurer<HttpSecurity?>> {
+		return Customizer { sessionManagementConfigurer: SessionManagementConfigurer<HttpSecurity?> ->
+			sessionManagementConfigurer.sessionCreationPolicy(
+				SessionCreationPolicy.STATELESS
+			)
+		}
 	}
 
-	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> setAuthorizePath() {
-		return authorizeHttpRequests -> authorizeHttpRequests
-			.requestMatchers("/me/**", "/sign-out").hasAnyRole("USER", "BUSINESS_OWNER", "ADMIN")
-			.requestMatchers("/**").permitAll()
-			.anyRequest().authenticated();
+	private fun setAuthorizePath(): Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> {
+		return Customizer {
+			it
+				.requestMatchers(
+					"/me/**",
+					"/sign-out"
+				).hasAnyRole("USER", "BUSINESS_OWNER", "ADMIN")
+				.requestMatchers(
+					"/**"
+				).permitAll()
+				.anyRequest().authenticated()
+		}
 	}
 }

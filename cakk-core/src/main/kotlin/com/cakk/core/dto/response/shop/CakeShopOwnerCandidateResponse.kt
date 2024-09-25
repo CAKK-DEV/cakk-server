@@ -1,14 +1,10 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-import lombok.Builder;
-
-@Builder
-public record CakeShopOwnerCandidateResponse(
-	Long userId,
-	Long cakeShopId,
-	String email,
-	String businessRegistrationImageUrl,
-	String idCardImageUrl,
-	String emergencyContact
-) {
-}
+data class CakeShopOwnerCandidateResponse(
+    val userId: Long,
+    val cakeShopId: Long,
+    val email: String,
+    val businessRegistrationImageUrl: String,
+    val idCardImageUrl: String,
+    val emergencyContact: String
+)

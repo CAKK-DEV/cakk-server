@@ -17,15 +17,16 @@ import io.jsonwebtoken.security.InvalidKeyException
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
-import com.cakk.api.vo.JsonWebToken
+import com.cakk.core.vo.JsonWebToken
 import com.cakk.api.vo.OAuthUserDetails
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
+import com.cakk.core.provider.jwt.JwtProvider
 import com.cakk.domain.mysql.entity.user.User
 import com.cakk.domain.redis.repository.TokenRedisRepository
 
 @Component
-class JwtProvider(
+class JwtProviderImpl(
 	private val key: Key,
 	private val tokenRedisRepository: TokenRedisRepository,
 	@Value("\${jwt.expiration.access-token}")
@@ -36,9 +37,9 @@ class JwtProvider(
 	private val grantType: String,
 	@Value("\${jwt.user-key}")
 	private val userKey: String
-) {
+): JwtProvider {
 
-	fun generateToken(user: User): JsonWebToken {
+	override fun generateToken(user: User): JsonWebToken {
 		try {
 			val accessToken = Jwts.builder()
 				.claim(userKey, user)
@@ -68,18 +69,18 @@ class JwtProvider(
 		return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
 	}
 
-	fun getUser(token: String): User {
+	override fun getUser(token: String): User {
 		val parseUser = parseClaims(token)[userKey] ?: throw CakkException(ReturnCode.EMPTY_AUTH_JWT)
 
 		return ObjectMapper().convertValue(parseUser, User::class.java)
 	}
 
-	fun getTokenExpiredSecond(token: String): Long {
+	override fun getTokenExpiredSecond(token: String): Long {
 		val claims = parseClaims(token)
 		return claims.expiration.time
 	}
 
-	fun parseClaims(token: String): Claims {
+	override fun parseClaims(token: String): Claims {
 		val isBlackList = tokenRedisRepository.isBlackListToken(token)
 
 		if (isBlackList) {
@@ -99,7 +100,7 @@ class JwtProvider(
 		}
 	}
 
-	fun parseClaims(token: String?, publicKey: PublicKey?): Claims {
+	override fun parseClaims(token: String, publicKey: PublicKey): Claims {
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(publicKey)
@@ -111,13 +112,5 @@ class JwtProvider(
 		} catch (e: RuntimeException) {
 			throw CakkException(ReturnCode.WRONG_JWT_TOKEN)
 		}
-	}
-
-	fun getAccessTokenExpiredSecond(): Long {
-		return this.accessTokenExpiredSecond
-	}
-
-	fun getRefreshTokenExpiredSecond(): Long {
-		return this.refreshTokenExpiredSecond
 	}
 }

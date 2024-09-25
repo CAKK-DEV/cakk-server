@@ -1,15 +1,9 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-import java.util.List;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam
 
-import lombok.Builder;
-
-import com.cakk.domain.mysql.dto.param.shop.CakeShopSearchResponseParam;
-
-@Builder
-public record CakeShopSearchResponse(
-	List<CakeShopSearchResponseParam> cakeShops,
-	Long lastCakeShopId,
-	int size
-) {
-}
+data class CakeShopSearchResponse(
+    val cakeShops: List<CakeShopSearchResponseParam>,
+    val lastCakeShopId: Long?,
+    val size: Int
+)

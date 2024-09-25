@@ -1,94 +1,69 @@
-package com.cakk.api.vo;
+package com.cakk.api.vo
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.core.oidc.OidcIdToken
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
+import org.springframework.security.oauth2.core.user.OAuth2User
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.cakk.domain.mysql.entity.user.User
 
-import lombok.Getter;
+class OAuthUserDetails(
+	private val user: User,
+	private val attribute: Map<String, Any>
+) : UserDetails, OidcUser, OAuth2User {
 
-import com.cakk.domain.mysql.entity.user.User;
+    constructor(user: User) : this(user, mapOf<String, Any>("id" to user.id))
 
-@Getter
-public class OAuthUserDetails implements UserDetails, OidcUser, OAuth2User {
+	fun getUser(): User = user
 
-	private final User user;
-	private final Map<String, Object> attribute;
+    override fun getName(): String {
+        return user.id.toString()
+    }
 
-	public OAuthUserDetails(User user, Map<String, Object> attribute) {
-		this.user = user;
-		this.attribute = attribute;
-	}
+    override fun getAttributes(): Map<String, Any> {
+        return attribute
+    }
 
-	public OAuthUserDetails(User user) {
-		this.user = user;
-		this.attribute = Map.of("id", user.getId());
-	}
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return listOf(SimpleGrantedAuthority(user.role.securityRole))
+    }
 
-	@Override
-	public String getName() {
-		return user.getId().toString();
-	}
+    override fun getPassword(): String {
+        return "password"
+    }
 
-	@Override
-	public Map<String, Object> getAttributes() {
-		return attribute;
-	}
+    override fun getUsername(): String {
+        return user.id.toString()
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(user.getRole().getSecurityRole()));
-	}
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
 
-	@Override
-	public String getPassword() {
-		return "password";
-	}
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
 
-	@Override
-	public String getUsername() {
-		return user.getId().toString();
-	}
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    override fun isEnabled(): Boolean {
+        return true
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    override fun getClaims(): Map<String, Any>? {
+        return null
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    override fun getUserInfo(): OidcUserInfo? {
+        return null
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public Map<String, Object> getClaims() {
-		return null;
-	}
-
-	@Override
-	public OidcUserInfo getUserInfo() {
-		return null;
-	}
-
-	@Override
-	public OidcIdToken getIdToken() {
-		return null;
-	}
+    override fun getIdToken(): OidcIdToken? {
+        return null
+    }
 }

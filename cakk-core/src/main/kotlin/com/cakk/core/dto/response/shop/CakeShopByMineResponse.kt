@@ -1,7 +1,6 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-public record CakeShopByMineResponse(
-	Boolean isExist,
-	Long cakeShopId
-) {
-}
+data class CakeShopByMineResponse(
+    val isExist: Boolean,
+    val cakeShopId: Long?
+)

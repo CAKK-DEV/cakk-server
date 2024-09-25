@@ -1,6 +1,5 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-public record CakeShopCreateResponse(
-	Long cakeShopId
-) {
-}
+data class CakeShopCreateResponse(
+    val cakeShopId: Long
+)

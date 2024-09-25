@@ -1,11 +1,8 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-import java.util.List;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopLocationResponseParam
 
-import com.cakk.domain.mysql.dto.param.shop.CakeShopLocationResponseParam;
-
-public record CakeShopByMapResponse(
-	List<CakeShopLocationResponseParam> cakeShops
-) {
-}
+data class CakeShopByMapResponse(
+    val cakeShops: List<CakeShopLocationResponseParam>
+)
 

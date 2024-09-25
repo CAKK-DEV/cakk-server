@@ -1,25 +1,21 @@
-package com.cakk.api.config;
+package com.cakk.api.config
 
-import java.security.Key;
+import java.security.Key
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 @Configuration
-public class JwtConfig {
-
-	private final String secretKey;
-
-	public JwtConfig(@Value("${jwt.secret}") String secretKey) {
-		this.secretKey = secretKey;
-	}
+class JwtConfig(
+	@Value("\${jwt.secret}")
+	private val secretKey: String
+) {
 
 	@Bean
-	public Key key() {
-		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+	fun key(): Key {
+		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))
 	}
 }

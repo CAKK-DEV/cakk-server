@@ -1,47 +1,40 @@
-package com.cakk.api.mapper;
+package com.cakk.core.mapper
 
-import java.util.List;
+import com.cakk.core.dto.param.shop.CreateShopParam
+import com.cakk.core.dto.param.user.OwnerCandidateParam
+import com.cakk.core.dto.response.shop.*
+import com.cakk.domain.mysql.entity.shop.CakeShop
+import com.cakk.domain.mysql.entity.user.BusinessInformation
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-import com.cakk.api.dto.param.operation.OwnerCandidateParam;
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse;
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse;
-import com.cakk.domain.mysql.entity.user.BusinessInformation;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BusinessInformationMapper {
-
-	public static CakeShopOwnerCandidatesResponse supplyCakeShopOwnerCandidatesResponseBy(
-		List<BusinessInformation> businessInformations
-	) {
-		List<OwnerCandidateParam> candidates = businessInformations
-			.stream()
-			.map(businessInformation ->
-				OwnerCandidateParam.builder()
-					.userId(businessInformation.getUser().getId())
-					.nickname(businessInformation.getUser().getNickname())
-					.profileImageUrl(businessInformation.getUser().getProfileImageUrl())
-					.email(businessInformation.getUser().getEmail())
-					.timestamp(businessInformation.getUpdatedAt())
-					.build())
-			.toList();
-
-		return new CakeShopOwnerCandidatesResponse(candidates);
+fun supplyCakeShopOwnerCandidatesResponseBy(businessInformationList: List<BusinessInformation>): CakeShopOwnerCandidatesResponse {
+	val candidates = businessInformationList.map {
+		OwnerCandidateParam(
+			userId = it.user.id,
+			nickname = it.user.nickname,
+			profileImageUrl = it.user.profileImageUrl,
+			email = it.user.email,
+			timestamp = it.updatedAt
+		)
 	}
+		.toList()
 
-	public static CakeShopOwnerCandidateResponse supplyCakeShopOwnerCandidateResponseBy(
-		BusinessInformation businessInformation
-	) {
-		return CakeShopOwnerCandidateResponse.builder()
-			.userId(businessInformation.getUser().getId())
-			.cakeShopId(businessInformation.getCakeShop().getId())
-			.email(businessInformation.getUser().getEmail())
-			.businessRegistrationImageUrl(businessInformation.getBusinessRegistrationImageUrl())
-			.idCardImageUrl(businessInformation.getIdCardImageUrl())
-			.emergencyContact(businessInformation.getEmergencyContact())
-			.build();
-	}
+	return CakeShopOwnerCandidatesResponse(candidates)
 }
 
+fun supplyCakeShopOwnerCandidateResponseBy(businessInformation: BusinessInformation): CakeShopOwnerCandidateResponse {
+	return CakeShopOwnerCandidateResponse(
+		userId = businessInformation.user.id,
+		cakeShopId = businessInformation.cakeShop.id,
+		email = businessInformation.user.email,
+		businessRegistrationImageUrl = businessInformation.businessRegistrationImageUrl,
+		idCardImageUrl = businessInformation.idCardImageUrl,
+		emergencyContact = businessInformation.emergencyContact
+	)
+}
+
+fun supplyBusinessInformationBy(param: CreateShopParam, cakeShop: CakeShop): BusinessInformation {
+	return BusinessInformation.builder()
+		.businessNumber(param.businessNumber)
+		.cakeShop(cakeShop)
+		.build()
+}

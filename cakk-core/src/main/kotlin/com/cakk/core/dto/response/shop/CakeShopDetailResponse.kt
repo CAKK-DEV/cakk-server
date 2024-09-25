@@ -1,20 +1,14 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-import java.util.Set;
+import com.cakk.common.enums.Days
+import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam
 
-import lombok.Builder;
-
-import com.cakk.common.enums.Days;
-import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam;
-
-@Builder
-public record CakeShopDetailResponse(
-	Long cakeShopId,
-	String cakeShopName,
-	String thumbnailUrl,
-	String cakeShopBio,
-	String cakeShopDescription,
-	Set<Days> operationDays,
-	Set<CakeShopLinkParam> links
-) {
-}
+data class CakeShopDetailResponse(
+    val cakeShopId: Long,
+    val cakeShopName: String,
+    val thumbnailUrl: String,
+    val cakeShopBio: String,
+    val cakeShopDescription: String,
+    val operationDays: Set<Days>,
+    val links: Set<CakeShopLinkParam>
+)

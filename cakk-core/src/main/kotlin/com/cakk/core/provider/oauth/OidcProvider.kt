@@ -1,26 +1,22 @@
-package com.cakk.api.provider.oauth;
+package com.cakk.core.provider.oauth
 
-import static com.cakk.common.enums.ReturnCode.*;
-import static com.cakk.common.utils.DecodeUtilsKt.*;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.utils.decodeBase64
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.io.IOException
 
-import java.io.IOException;
-import java.util.Map;
+interface OidcProvider {
+    fun getProviderId(idToken: String): String
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+    @Suppress("UNCHECKED_CAST")
+	fun parseHeaders(token: String): Map<String, String> {
+        val header = token.split(".")[0]
 
-import com.cakk.common.exception.CakkException;
-
-public interface OidcProvider {
-
-	String getProviderId(String idToken);
-
-	default Map<String, String> parseHeaders(String token) {
-		String header = token.split("\\.")[0];
-
-		try {
-			return new ObjectMapper().readValue(decodeBase64(header), Map.class);
-		} catch (IOException e) {
-			throw new CakkException(INTERNAL_SERVER_ERROR);
+		return try {
+			ObjectMapper().readValue(decodeBase64(header), MutableMap::class.java) as Map<String, String>
+		} catch (e: IOException) {
+			throw CakkException(ReturnCode.INTERNAL_SERVER_ERROR)
 		}
-	}
+    }
 }

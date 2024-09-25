@@ -1,13 +1,10 @@
-package com.cakk.api.dto.response.shop;
+package com.cakk.core.dto.response.shop
 
-import java.util.List;
+import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam
 
-import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam;
-
-public record CakeShopInfoResponse(
-	String shopAddress,
-	Double latitude,
-	Double longitude,
-	List<CakeShopOperationParam> shopOperationDays
-) {
-}
+data class CakeShopInfoResponse(
+    val shopAddress: String,
+    val latitude: Double,
+    val longitude: Double,
+    val shopOperationDays: List<CakeShopOperationParam>
+)

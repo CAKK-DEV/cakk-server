@@ -1,15 +1,15 @@
-package com.cakk.api.config;
+package com.cakk.api.config
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ComponentScan(basePackages = {
-	"com.cakk.client",
-	"com.cakk.domain",
-	"com.cakk.external",
-	"com.cakk.core",
-	"com.cakk.api"
-})
-public class ComponentScanConfig {
-}
+@ComponentScan(
+	basePackages = [
+		"com.cakk.domain",
+		"com.cakk.external",
+		"com.cakk.core",
+		"com.cakk.api"
+	]
+)
+class ComponentScanConfig

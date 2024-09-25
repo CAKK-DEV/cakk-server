@@ -1,9 +1,6 @@
 package com.cakk.core.mapper
 
-import com.cakk.core.dto.event.CakeIncreaseViewsEvent
-import com.cakk.core.dto.event.CakeShopIncreaseViewsEvent
-import com.cakk.core.dto.event.EmailWithVerificationCodeSendEvent
-import com.cakk.core.dto.event.ErrorAlertEvent
+import com.cakk.core.dto.event.*
 import com.cakk.domain.mysql.event.shop.CertificationEvent
 import com.cakk.external.vo.message.CertificationMessage
 import com.cakk.external.vo.message.ErrorAlertMessage
@@ -63,4 +60,8 @@ fun supplyErrorAlertMessageBy(event: ErrorAlertEvent): ErrorAlertMessage {
 		request.remoteAddr,
 		request.getHeader("User-Agent")
 	)
+}
+
+fun supplyIncreaseSearchCountEventBy(keyword: String): IncreaseSearchCountEvent {
+	return IncreaseSearchCountEvent(keyword)
 }

@@ -1,28 +1,16 @@
-package com.cakk.api.mapper;
+package com.cakk.core.mapper
 
-import java.util.List;
+import com.cakk.core.dto.param.shop.ShopOperationParam
+import com.cakk.domain.mysql.entity.shop.CakeShopOperation
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+fun supplyCakeShopOperationListBy(operationDays: List<ShopOperationParam>): List<CakeShopOperation> {
+	return operationDays.map { supplyCakeShopOperationBy(it) }.toList()
+}
 
-import com.cakk.core.dto.param.shop.ShopOperationParam;
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ShopOperationMapper {
-
-	public static List<CakeShopOperation> supplyCakeShopOperationListBy(final List<ShopOperationParam> operationDays) {
-		return operationDays
-			.stream()
-			.map(ShopOperationMapper::supplyCakeShopOperationBy)
-			.toList();
-	}
-
-	public static CakeShopOperation supplyCakeShopOperationBy(final ShopOperationParam param) {
-		return CakeShopOperation.builder()
-			.operationDay(param.getOperationDay())
-			.operationStartTime(param.getOperationStartTime())
-			.operationEndTime(param.getOperationEndTime())
-			.build();
-	}
+private fun supplyCakeShopOperationBy(param: ShopOperationParam): CakeShopOperation {
+	return CakeShopOperation.builder()
+		.operationDay(param.operationDay)
+		.operationStartTime(param.operationStartTime)
+		.operationEndTime(param.operationEndTime)
+		.build()
 }

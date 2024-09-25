@@ -1,72 +1,70 @@
-package com.cakk.api.service.user;
+package com.cakk.core.service.user
 
-import static com.cakk.api.mapper.UserMapperKt.*;
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
-
-import com.cakk.api.factory.OidcProviderFactory;
-import com.cakk.api.provider.jwt.JwtProvider;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
-import com.cakk.core.dto.param.user.UserSignInParam;
-import com.cakk.core.dto.param.user.UserSignUpParam;
-import com.cakk.core.dto.response.user.JwtResponse;
-import com.cakk.core.facade.user.UserManageFacade;
-import com.cakk.core.facade.user.UserReadFacade;
-import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.redis.repository.TokenRedisRepository;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.utils.currentTimeMillis
+import com.cakk.core.dispatcher.OidcProviderDispatcher
+import com.cakk.core.dto.param.user.UserSignInParam
+import com.cakk.core.dto.param.user.UserSignUpParam
+import com.cakk.core.dto.response.user.JwtResponse
+import com.cakk.core.facade.user.UserManageFacade
+import com.cakk.core.facade.user.UserReadFacade
+import com.cakk.core.mapper.supplyJwtResponseBy
+import com.cakk.core.mapper.supplyUserBy
+import com.cakk.core.provider.jwt.JwtProvider
+import com.cakk.domain.mysql.entity.user.User
+import com.cakk.domain.redis.repository.TokenRedisRepository
 
 @Service
-@RequiredArgsConstructor
-public class SignService {
+class SignService(
+	private val userReadFacade: UserReadFacade,
+	private val userManageFacade: UserManageFacade,
+	private val tokenRedisRepository: TokenRedisRepository,
+	private val oidcProviderDispatcher: OidcProviderDispatcher,
+	private val jwtProvider: JwtProvider
+) {
 
-	private final OidcProviderFactory oidcProviderFactory;
-	private final JwtProvider jwtProvider;
-
-	private final UserReadFacade userReadFacade;
-	private final UserManageFacade userManageFacade;
-	private final TokenRedisRepository tokenRedisRepository;
 
 	@Transactional
-	public JwtResponse signUp(final UserSignUpParam param) {
-		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
-		final User user = userManageFacade.create(supplyUserBy(param, providerId));
+	fun signUp(param: UserSignUpParam): JwtResponse {
+		val providerId = oidcProviderDispatcher.getProviderId(param.provider, param.idToken)
+		val user = userManageFacade.create(supplyUserBy(param, providerId))
 
-		return supplyJwtResponseBy(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user))
 	}
 
 	@Transactional(readOnly = true)
-	public JwtResponse signIn(final UserSignInParam param) {
-		final String providerId = oidcProviderFactory.getProviderId(param.getProvider(), param.getIdToken());
-		final User user = userReadFacade.findByProviderId(providerId);
+	fun signIn(param: UserSignInParam): JwtResponse {
+		val providerId = oidcProviderDispatcher.getProviderId(param.provider, param.idToken)
+		val user = userReadFacade.findByProviderId(providerId)
 
-		return supplyJwtResponseBy(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user))
 	}
 
-	public void signOut(final String accessToken, final String refreshToken) {
-		final long accessTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(accessToken) - System.currentTimeMillis();
-		final long refreshTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - System.currentTimeMillis();
+	fun signOut(accessToken: String, refreshToken: String) {
+		val accessTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(accessToken) - currentTimeMillis()
+		val refreshTokenExpiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - currentTimeMillis()
 
-		tokenRedisRepository.registerBlackList(accessToken, accessTokenExpiredSecond);
-		tokenRedisRepository.registerBlackList(refreshToken, refreshTokenExpiredSecond);
+		tokenRedisRepository.registerBlackList(accessToken, accessTokenExpiredSecond)
+		tokenRedisRepository.registerBlackList(refreshToken, refreshTokenExpiredSecond)
 	}
 
 	@Transactional(readOnly = true)
-	public JwtResponse recreateToken(final String refreshToken) {
-		final boolean isBlackList = tokenRedisRepository.isBlackListToken(refreshToken);
+	fun recreateToken(refreshToken: String): JwtResponse {
+		val isBlackList = tokenRedisRepository.isBlackListToken(refreshToken)
 
 		if (isBlackList) {
-			throw new CakkException(ReturnCode.BLACK_LIST_TOKEN);
+			throw CakkException(ReturnCode.BLACK_LIST_TOKEN)
 		}
 
-		final User user = jwtProvider.getUser(refreshToken);
-		final long expiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - System.currentTimeMillis();
+		val user = jwtProvider.getUser(refreshToken)
+		val expiredSecond = jwtProvider.getTokenExpiredSecond(refreshToken) - currentTimeMillis()
 
-		tokenRedisRepository.registerBlackList(refreshToken, expiredSecond);
+		tokenRedisRepository.registerBlackList(refreshToken, expiredSecond)
 
-		return supplyJwtResponseBy(jwtProvider.generateToken(user));
+		return supplyJwtResponseBy(jwtProvider.generateToken(user))
 	}
 }

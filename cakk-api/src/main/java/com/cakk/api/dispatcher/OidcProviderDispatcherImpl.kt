@@ -1,61 +1,44 @@
-package com.cakk.api.factory;
+package com.cakk.api.dispatcher
 
-import static java.util.Objects.*;
+import java.util.*
 
-import java.util.EnumMap;
-import java.util.Map;
+import org.springframework.stereotype.Component
 
-import org.springframework.stereotype.Component;
-
-import com.cakk.api.provider.oauth.OidcProvider;
-import com.cakk.api.provider.oauth.impl.AppleAuthProvider;
-import com.cakk.api.provider.oauth.impl.GoogleAuthProvider;
-import com.cakk.api.provider.oauth.impl.KakaoAuthProvider;
-import com.cakk.common.enums.Provider;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
+import com.cakk.core.provider.oauth.OidcProvider
+import com.cakk.api.provider.oauth.AppleAuthProvider
+import com.cakk.api.provider.oauth.GoogleAuthProvider
+import com.cakk.api.provider.oauth.KakaoAuthProvider
+import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.core.dispatcher.OidcProviderDispatcher
 
 @Component
-public class OidcProviderFactory {
+class OidcProviderDispatcherImpl(
+	private val appleAuthProvider: AppleAuthProvider,
+	private val kakaoAuthProvider: KakaoAuthProvider,
+	private val googleAuthProvider: GoogleAuthProvider
+): OidcProviderDispatcher {
 
-	private final Map<Provider, OidcProvider> authProviderMap;
-	private final AppleAuthProvider appleAuthProvider;
-	private final KakaoAuthProvider kakaoAuthProvider;
-	private final GoogleAuthProvider googleAuthProvider;
+    private val authProviderMap: MutableMap<Provider, OidcProvider> = EnumMap(Provider::class.java)
 
-	public OidcProviderFactory(
-		AppleAuthProvider appleAuthProvider,
-		KakaoAuthProvider kakaoAuthProvider,
-		GoogleAuthProvider googleAuthProvider
-	) {
-		authProviderMap = new EnumMap<>(Provider.class);
+    init {
+        initialize()
+    }
 
-		this.appleAuthProvider = appleAuthProvider;
-		this.kakaoAuthProvider = kakaoAuthProvider;
-		this.googleAuthProvider = googleAuthProvider;
+    private fun initialize() {
+        authProviderMap[Provider.APPLE] = appleAuthProvider
+        authProviderMap[Provider.KAKAO] = kakaoAuthProvider
+        authProviderMap[Provider.GOOGLE] = googleAuthProvider
+    }
 
-		initialize();
-	}
+    override fun getProviderId(provider: Provider, idToken: String): String {
+        return getProvider(provider).getProviderId(idToken)
+    }
 
-	private void initialize() {
-		authProviderMap.put(Provider.APPLE, appleAuthProvider);
-		authProviderMap.put(Provider.KAKAO, kakaoAuthProvider);
-		authProviderMap.put(Provider.GOOGLE, googleAuthProvider);
-	}
-
-	public String getProviderId(Provider provider, String idToken) {
-		return getProvider(provider).getProviderId(idToken);
-	}
-
-	private OidcProvider getProvider(Provider provider) {
-		OidcProvider oidcProvider = authProviderMap.get(provider);
-
-		if (isNull(oidcProvider)) {
-			throw new CakkException(ReturnCode.WRONG_PROVIDER);
-		}
-
-		return oidcProvider;
-	}
+    private fun getProvider(provider: Provider): OidcProvider {
+        return authProviderMap[provider] ?: throw CakkException(ReturnCode.WRONG_PROVIDER)
+    }
 }
 
 

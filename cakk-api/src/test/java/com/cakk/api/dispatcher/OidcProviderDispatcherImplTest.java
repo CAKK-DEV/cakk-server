@@ -1,24 +1,27 @@
-package com.cakk.api.factory;
+package com.cakk.api.dispatcher;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.EnumMap;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
-import com.cakk.api.provider.oauth.impl.AppleAuthProvider;
-import com.cakk.api.provider.oauth.impl.GoogleAuthProvider;
-import com.cakk.api.provider.oauth.impl.KakaoAuthProvider;
+import com.cakk.api.provider.oauth.AppleAuthProvider;
+import com.cakk.api.provider.oauth.GoogleAuthProvider;
+import com.cakk.api.provider.oauth.KakaoAuthProvider;
 import com.cakk.common.enums.Provider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 
-public class OidcProviderFactoryTest extends MockitoTest {
+public class OidcProviderDispatcherImplTest extends MockitoTest {
 
 	@InjectMocks
-	private OidcProviderFactory oidcProviderFactory;
+	private OidcProviderDispatcherImpl oidcProviderDispatcherImpl;
 
 	@Mock
 	private AppleAuthProvider appleAuthProvider;
@@ -39,7 +42,7 @@ public class OidcProviderFactoryTest extends MockitoTest {
 		doReturn(providerId).when(appleAuthProvider).getProviderId(idToken);
 
 		// when
-		String result = oidcProviderFactory.getProviderId(provider, idToken);
+		String result = oidcProviderDispatcherImpl.getProviderId(provider, idToken);
 
 		// then
 		assertEquals(providerId, result);
@@ -57,7 +60,7 @@ public class OidcProviderFactoryTest extends MockitoTest {
 		doReturn(providerId).when(googleAuthProvider).getProviderId(idToken);
 
 		// when
-		String result = oidcProviderFactory.getProviderId(provider, idToken);
+		String result = oidcProviderDispatcherImpl.getProviderId(provider, idToken);
 
 		// then
 		assertEquals(providerId, result);
@@ -75,7 +78,7 @@ public class OidcProviderFactoryTest extends MockitoTest {
 		doReturn(providerId).when(kakaoAuthProvider).getProviderId(idToken);
 
 		// when
-		String result = oidcProviderFactory.getProviderId(provider, idToken);
+		String result = oidcProviderDispatcherImpl.getProviderId(provider, idToken);
 
 		// then
 		assertEquals(providerId, result);
@@ -83,16 +86,18 @@ public class OidcProviderFactoryTest extends MockitoTest {
 		verify(kakaoAuthProvider, times(1)).getProviderId(idToken);
 	}
 
-	@TestWithDisplayName("제공자가 null 이라면 예외를 던진다")
+	@TestWithDisplayName("제공자에 해당하는 provider가 없으면 에러를 반환한다")
 	void getProviderId4() {
 		// given
-		final Provider provider = null;
+		final Provider provider = Provider.KAKAO;
 		final String idToken = "id";
 
-		// when & then
+		ReflectionTestUtils.setField(oidcProviderDispatcherImpl, "authProviderMap", new EnumMap<>(Provider.class));
+
+		// when
 		assertThrows(
 			CakkException.class,
-			() -> oidcProviderFactory.getProviderId(provider, idToken),
+			() -> oidcProviderDispatcherImpl.getProviderId(provider, idToken),
 			ReturnCode.WRONG_PROVIDER.getMessage()
 		);
 	}

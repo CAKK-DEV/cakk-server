@@ -1,20 +1,13 @@
-package com.cakk.api.dto.response.cake;
+package com.cakk.core.dto.response.cake
 
-import java.util.Set;
+import com.cakk.common.enums.CakeDesignCategory
+import com.cakk.domain.mysql.dto.param.tag.TagParam
 
-import lombok.Builder;
-
-import com.cakk.common.enums.CakeDesignCategory;
-import com.cakk.domain.mysql.dto.param.tag.TagParam;
-
-
-@Builder
-public record CakeDetailResponse(
-	String cakeImageUrl,
-	String cakeShopName,
-	String shopBio,
-	Long cakeShopId,
-	Set<CakeDesignCategory> cakeCategories,
-	Set<TagParam> tags
-) {
-}
+data class CakeDetailResponse(
+    val cakeImageUrl: String,
+    val cakeShopName: String,
+    val shopBio: String,
+    val cakeShopId: Long,
+    val cakeCategories: Set<CakeDesignCategory>,
+    val tags: Set<TagParam>
+)

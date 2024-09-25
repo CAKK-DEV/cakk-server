@@ -1,25 +1,24 @@
-package com.cakk.api.aspect;
+package com.cakk.core.aspect
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.aspectj.lang.ProceedingJoinPoint
+import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
-import com.cakk.common.exception.CakkException;
+import com.cakk.common.exception.CakkException
 
 @Component
-public class AopForTransaction {
+class AopForTransaction {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Object proceed(final ProceedingJoinPoint joinPoint) {
-		try {
-			return joinPoint.proceed();
-		} catch (Throwable e) {
-			if (e instanceof CakkException) {
-				throw (CakkException) e;
+	fun proceed(joinPoint: ProceedingJoinPoint): Any? {
+		return try {
+			joinPoint.proceed()
+		} catch (e: Throwable) {
+			when (e) {
+				is CakkException -> throw e
+				else -> throw RuntimeException(e)
 			}
-
-			throw new RuntimeException(e);
 		}
 	}
 }

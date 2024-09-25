@@ -1,26 +1,14 @@
-package com.cakk.api.mapper;
+package com.cakk.core.mapper
 
-import java.util.List;
+import com.cakk.common.enums.CakeDesignCategory
+import com.cakk.domain.mysql.entity.cake.CakeCategory
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+fun supplyCakeCategoryListBy(cakeDesignCategories: List<CakeDesignCategory>): List<CakeCategory> {
+	return cakeDesignCategories.map { supplyCakeCategoryBy(it) }.toList()
+}
 
-import com.cakk.common.enums.CakeDesignCategory;
-import com.cakk.domain.mysql.entity.cake.CakeCategory;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CakeDesignCategoryMapper {
-
-	public static List<CakeCategory> supplyCakeCategoryListBy(final List<CakeDesignCategory> cakeDesignCategories) {
-		return cakeDesignCategories
-			.stream()
-			.map(CakeDesignCategoryMapper::supplyCakeCategoryBy)
-			.toList();
-	}
-
-	public static CakeCategory supplyCakeCategoryBy(CakeDesignCategory cakeDesignCategory) {
-		return CakeCategory.builder()
-			.cakeDesignCategory(cakeDesignCategory)
-			.build();
-	}
+private fun supplyCakeCategoryBy(cakeDesignCategory: CakeDesignCategory): CakeCategory {
+	return CakeCategory.builder()
+		.cakeDesignCategory(cakeDesignCategory)
+		.build()
 }
