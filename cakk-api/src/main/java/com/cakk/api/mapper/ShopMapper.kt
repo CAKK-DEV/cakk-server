@@ -85,7 +85,7 @@ fun supplyUpdateShopOperationParamBy(
     user: User,
     cakeShopId: Long
 ): UpdateShopOperationParam {
-    val cakeShopOperations = supplyCakeShopOperationListBy(request.operationDays)
+    val cakeShopOperations = supplyCakeShopOperationListBy(request.operationDays!!)
 
     return UpdateShopOperationParam(cakeShopOperations, user, cakeShopId)
 }

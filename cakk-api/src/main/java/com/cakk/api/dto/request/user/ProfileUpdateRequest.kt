@@ -1,23 +1,19 @@
-package com.cakk.api.dto.request.user;
+package com.cakk.api.dto.request.user
 
-import java.time.LocalDate;
+import java.time.LocalDate
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
 
-import lombok.Builder;
+import com.cakk.common.enums.Gender
 
-import com.cakk.common.enums.Gender;
-
-@Builder
-public record ProfileUpdateRequest(
-	String profileImageUrl,
-	@NotEmpty
-	String nickname,
-	@NotEmpty
-	String email,
-	@NotNull
-	Gender gender,
-	LocalDate birthday
-) {
-}
+data class ProfileUpdateRequest(
+    val profileImageUrl: String?,
+	@field:NotEmpty
+    val nickname: String?,
+	@field:NotEmpty
+    val email: String?,
+	@field:NotNull
+    val gender: Gender?,
+    val birthday: LocalDate?
+)

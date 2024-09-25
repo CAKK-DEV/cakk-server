@@ -1,13 +1,12 @@
-package com.cakk.api.dto.request.link;
+package com.cakk.api.dto.request.link
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Size
 
-public record UpdateLinkRequest(
-	@Size(min = 1, max = 200)
-	String instagram,
-	@Size(min = 1, max = 200)
-	String kakao,
-	@Size(min = 1, max = 200)
-	String web
-) {
-}
+data class UpdateLinkRequest(
+	@field:Size(min = 1, max = 200)
+	val instagram: String?,
+	@field:Size(min = 1, max = 200)
+	val kakao: String?,
+	@field:Size(min = 1, max = 200)
+	val web: String?
+)

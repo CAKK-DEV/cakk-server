@@ -1,22 +1,22 @@
-package com.cakk.api;
+package com.cakk.api
 
-import java.util.TimeZone;
+import java.util.*
 
-import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 @SpringBootApplication
-public class Application {
+class Application
 
-	@PostConstruct
-	public static void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	}
-
-	public static void main(String[] args) {
-		started();
-		SpringApplication.run(Application.class, args);
-	}
+@PostConstruct
+fun started() {
+	TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
 }
+
+fun main(args: Array<String>) {
+	started()
+	runApplication<Application>(*args)
+}
+

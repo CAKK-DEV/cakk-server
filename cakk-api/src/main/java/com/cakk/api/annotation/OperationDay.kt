@@ -1,23 +1,18 @@
-package com.cakk.api.annotation;
+package com.cakk.api.annotation
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jakarta.validation.Constraint
+import jakarta.validation.Payload
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
+import kotlin.reflect.KClass
 
-import com.cakk.api.validator.OperationValidator;
+import com.cakk.api.validator.OperationValidator
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-@Constraint(validatedBy = OperationValidator.class)
-public @interface OperationDay {
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FIELD)
+@Constraint(validatedBy = [OperationValidator::class])
+annotation class OperationDay(
 
-	String message() default "영업 일자 형식이 잘못됐습니다.";
-
-	Class<?>[] groups() default { };
-
-	Class<? extends Payload>[] payload() default { };
-}
+    val message: String = "영업 일자 형식이 잘못됐습니다.",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = []
+)

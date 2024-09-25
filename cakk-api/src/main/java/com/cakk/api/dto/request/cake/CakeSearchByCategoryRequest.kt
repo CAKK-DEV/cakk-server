@@ -1,12 +1,13 @@
 package com.cakk.api.dto.request.cake
 
-import com.cakk.common.enums.CakeDesignCategory
 import jakarta.validation.constraints.NotNull
+
+import com.cakk.common.enums.CakeDesignCategory
+import com.cakk.common.utils.DEFAULT_PAGE_SIZE
 
 data class CakeSearchByCategoryRequest(
 	val cakeId: Long?,
 	@field:NotNull
 	val category:  CakeDesignCategory?,
-	@field:NotNull
-	val pageSize: Int = 10
+	val pageSize: Int = DEFAULT_PAGE_SIZE
 )

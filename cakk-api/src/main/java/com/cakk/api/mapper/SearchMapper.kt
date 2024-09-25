@@ -14,7 +14,7 @@ import com.cakk.domain.mysql.entity.user.User
 fun supplyTopSearchedListParamBy(
 	topSearchedListRequest: TopSearchedListRequest
 ): TopSearchedListParam {
-	return TopSearchedListParam(topSearchedListRequest.count)
+	return TopSearchedListParam(topSearchedListRequest.count!!)
 }
 
 fun supplySearchShopByLocationParamBy(request: SearchShopByLocationRequest): SearchShopByLocationParam {
@@ -40,12 +40,12 @@ fun supplyHeartCakeShopSearchParamBy(
 	request: HeartCakeShopSearchRequest,
 	user: User
 ): HeartCakeShopSearchParam {
-	return HeartCakeShopSearchParam(request.cakeShopHeartId, request.pageSize, user)
+	return HeartCakeShopSearchParam(request.cakeShopHeartId, request.pageSize!!, user)
 }
 
 fun supplyHeartCakeSearchParamBy(
 	request: HeartCakeSearchRequest,
 	user: User
 ): HeartCakeSearchParam {
-	return HeartCakeSearchParam(request.cakeHeartId, request.pageSize, user)
+	return HeartCakeSearchParam(request.cakeHeartId, request.pageSize!!, user)
 }

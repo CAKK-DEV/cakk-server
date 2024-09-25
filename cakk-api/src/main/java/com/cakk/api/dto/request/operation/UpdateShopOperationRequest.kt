@@ -1,13 +1,10 @@
-package com.cakk.api.dto.request.operation;
+package com.cakk.api.dto.request.operation
 
-import java.util.List;
+import jakarta.validation.constraints.NotNull
 
-import jakarta.validation.constraints.NotNull;
+import com.cakk.core.dto.param.shop.ShopOperationParam
 
-import com.cakk.core.dto.param.shop.ShopOperationParam;
-
-public record UpdateShopOperationRequest(
-	@NotNull
-	List<ShopOperationParam> operationDays
-) {
-}
+data class UpdateShopOperationRequest(
+	@field:NotNull
+    val operationDays: MutableList<ShopOperationParam>?
+)

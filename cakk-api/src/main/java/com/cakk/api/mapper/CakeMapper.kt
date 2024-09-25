@@ -20,7 +20,7 @@ fun supplyCakeSearchParamBy(dto: CakeSearchByLocationRequest): CakeSearchParam {
         dto.cakeId,
         dto.keyword,
         supplyPointBy(dto.latitude, dto.longitude),
-        dto.pageSize
+        dto.pageSize!!
     )
 }
 
@@ -35,7 +35,7 @@ fun supplyCakeSearchByShopParamBy(dto: CakeSearchByShopRequest): CakeSearchBySho
 fun supplyCakeSearchByViewsParamBy(dto: CakeSearchByViewsRequest): CakeSearchByViewsParam {
     return CakeSearchByViewsParam(
         dto.offset,
-        dto.pageSize
+        dto.pageSize!!
     )
 }
 

@@ -1,50 +1,46 @@
-package com.cakk.api.filter;
+package com.cakk.api.filter
 
-import java.io.IOException;
+import java.io.IOException
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
+import org.springframework.web.filter.OncePerRequestFilter
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper
 
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
-import com.cakk.common.response.ApiResponse;
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+import com.cakk.common.response.ApiResponse
 
 @Component
-public class JwtExceptionFilter extends OncePerRequestFilter {
+class JwtExceptionFilter : OncePerRequestFilter() {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws
-		ServletException,
-		IOException {
-		try {
-			filterChain.doFilter(request, response);
-		} catch (CakkException exception) {
-			setErrorResponse(exception.getReturnCode(), response);
-		}
-	}
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+        try {
+            filterChain.doFilter(request, response)
+        } catch (exception: CakkException) {
+            setErrorResponse(exception.getReturnCode(), response)
+        }
+    }
 
-	private void setErrorResponse(ReturnCode returnCode, HttpServletResponse response) {
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-		response.setContentType("application/json; charset=UTF-8");
-		ApiResponse<String> result = ApiResponse.fail(returnCode);
+    private fun setErrorResponse(returnCode: ReturnCode, response: HttpServletResponse) {
+        response.status = HttpStatus.UNAUTHORIZED.value()
+        response.contentType = "application/json; charset=UTF-8"
 
-		try {
-			response.getWriter().write(toJson(result));
-		} catch (IOException e) {
-			// ignored
-		}
-	}
+        val result = ApiResponse.fail<String>(returnCode)
 
-	private String toJson(Object data) throws JsonProcessingException {
-		return new ObjectMapper().writeValueAsString(data);
-	}
+        try {
+            response.writer.write(toJson(result))
+        } catch (e: IOException) {
+            // ignored
+        }
+    }
+
+    private fun toJson(data: Any): String {
+        return ObjectMapper().writeValueAsString(data)
+    }
 }

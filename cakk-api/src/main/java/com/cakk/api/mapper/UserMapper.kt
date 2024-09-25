@@ -29,17 +29,17 @@ fun supplyVerifyEmailParamBy(dto: VerifyEmailRequest): VerifyEmailParam {
 
 fun supplyUserSignUpParamBy(request: UserSignUpRequest): UserSignUpParam {
     return UserSignUpParam(
-        request.provider,
-        request.idToken,
+        request.provider!!,
+        request.idToken!!,
         request.deviceOs,
         request.deviceToken,
-        request.nickname,
-        request.email,
-        request.birthday,
-        request.gender
+        request.nickname!!,
+        request.email!!,
+        request.birthday!!,
+        request.gender!!
     )
 }
 
 fun supplyUserSignInParamBy(request: UserSignInRequest): UserSignInParam {
-    return UserSignInParam(request.provider, request.idToken)
+    return UserSignInParam(request.provider!!, request.idToken!!)
 }

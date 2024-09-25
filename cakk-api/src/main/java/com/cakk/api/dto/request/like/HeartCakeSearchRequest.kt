@@ -1,10 +1,8 @@
-package com.cakk.api.dto.request.like;
+package com.cakk.api.dto.request.like
 
-import jakarta.validation.constraints.NotNull;
+import com.cakk.common.utils.DEFAULT_PAGE_SIZE
 
-public record HeartCakeSearchRequest(
-	Long cakeHeartId,
-	@NotNull
-	Integer pageSize
-) {
-}
+data class HeartCakeSearchRequest(
+    val cakeHeartId: Long? = null,
+    val pageSize: Int? = DEFAULT_PAGE_SIZE
+)
