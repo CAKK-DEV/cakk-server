@@ -17,6 +17,8 @@ class CakeManageFacade(
         cake.registerTags(tags)
         cake.registerCategories(cakeCategories)
         cakeShop.registerCake(cake)
+
+		cakeJpaRepository.save(cake)
     }
 
     fun update(cake: Cake, cakeImageUrl: String, tags: List<Tag>, cakeCategories: List<CakeCategory>) {
