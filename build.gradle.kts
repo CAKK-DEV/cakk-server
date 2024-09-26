@@ -113,7 +113,7 @@ subprojects {
 
 	tasks.withType<JacocoCoverageVerification> {
 		val excludeList = mutableListOf(
-			"com.cakk.api.Application",
+			"com.cakk.api.ApplicationKt",
 			"com.cakk.api.service.slack.SlackService",
 			"com.cakk.api.provider.oauth.PublicKeyProvider",
 			"com.cakk.api.dto.**",
