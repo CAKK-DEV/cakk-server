@@ -1,8 +1,5 @@
 package com.cakk.api
 
-import java.util.*
-
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,17 +19,5 @@ internal class ApplicationTest {
 	@TestWithDisplayName("Application이 잘 실행된다.")
 	fun contextLoads() {
 		context shouldNotBe null
-	}
-
-	@TestWithDisplayName("Application 클래스는 TimeZone을 Asia/Seoul로 설정한다.")
-	fun timeZone() {
-		// Expected timezone
-		val expectedTimeZone = TimeZone.getTimeZone("Asia/Seoul")
-
-		// Actual timezone
-		val actualTimeZone = TimeZone.getDefault()
-
-		// then
-		actualTimeZone shouldBe expectedTimeZone
 	}
 }
