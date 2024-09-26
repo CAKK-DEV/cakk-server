@@ -44,7 +44,8 @@ subprojects {
 	if (project.name == "cakk-admin" ||
 		project.name == "cakk-external" ||
 		project.name == "cakk-core" ||
-		project.name == "cakk-common"
+		project.name == "cakk-common" ||
+		project.name == "cakk-api"
 	) {
 		apply(plugin = "org.jetbrains.kotlin.jvm")
 		apply(plugin = "org.jetbrains.kotlin.plugin.spring")
