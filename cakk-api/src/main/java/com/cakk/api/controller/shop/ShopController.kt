@@ -28,169 +28,170 @@ class ShopController(
 	private val viewsService: ViewsService
 ) {
 
-    @PostMapping("/certification")
-    fun requestCertification(
+	@PostMapping("/certification")
+	fun requestCertification(
 		@SignInUser user: User,
 		@RequestBody @Valid request: CertificationRequest
 	): ApiResponse<Unit> {
 		val param = supplyCertificationParamBy(request, user)
-        shopService.requestCertificationBusinessOwner(param)
+		shopService.requestCertificationBusinessOwner(param)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @GetMapping("/{cakeShopId}/simple")
-    fun simple(
+	@GetMapping("/{cakeShopId}/simple")
+	fun simple(
 		@PathVariable cakeShopId: Long,
 		@RequestParam(required = false) cakeId: Long?
-    ): ApiResponse<CakeShopSimpleResponse> {
-        val response = shopService.searchSimpleById(cakeShopId)
+	): ApiResponse<CakeShopSimpleResponse> {
+		val response = shopService.searchSimpleById(cakeShopId)
 		viewsService.increaseCakeViews(cakeId)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/{cakeShopId}")
-    fun details(
+	@GetMapping("/{cakeShopId}")
+	fun details(
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<CakeShopDetailResponse> {
-        val response = shopService.searchDetailById(cakeShopId)
+	): ApiResponse<CakeShopDetailResponse> {
+		val response = shopService.searchDetailById(cakeShopId)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/{cakeShopId}/info")
-    fun detailInfo(
+	@GetMapping("/{cakeShopId}/info")
+	fun detailInfo(
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<CakeShopInfoResponse> {
-        val response = shopService.searchInfoById(cakeShopId)
+	): ApiResponse<CakeShopInfoResponse> {
+		val response = shopService.searchInfoById(cakeShopId)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/location-based")
-    fun listByLocation(
+	@GetMapping("/location-based")
+	fun listByLocation(
 		@ModelAttribute @Valid request: SearchShopByLocationRequest
-    ): ApiResponse<CakeShopByMapResponse> {
+	): ApiResponse<CakeShopByMapResponse> {
 		val param = supplySearchShopByLocationParamBy(request)
-        val response = shopService.searchShop(param)
+		val response = shopService.searchShop(param)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/{cakeShopId}/heart")
-    fun isHeart(
+	@GetMapping("/{cakeShopId}/heart")
+	fun isHeart(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<HeartResponse> {
-        val response = heartService.isHeartCakeShop(user, cakeShopId)
+	): ApiResponse<HeartResponse> {
+		val response = heartService.isHeartCakeShop(user, cakeShopId)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/mine")
-    fun getMyBusinessId(
+	@GetMapping("/mine")
+	fun getMyBusinessId(
 		@SignInUser user: User
-    ): ApiResponse<CakeShopByMineResponse> {
-        val response = shopService.getMyBusinessId(user)
+	): ApiResponse<CakeShopByMineResponse> {
+		val response = shopService.getMyBusinessId(user)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @PutMapping("/{cakeShopId}/heart")
-    fun heart(
+	@PutMapping("/{cakeShopId}/heart")
+	fun heart(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<Unit> {
-        heartService.heartCakeShop(user, cakeShopId)
+	): ApiResponse<Unit> {
+		heartService.heartCakeShop(user, cakeShopId)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @PutMapping("/{cakeShopId}/like")
-    fun like(
+	@PutMapping("/{cakeShopId}/like")
+	fun like(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<Unit> {
-        likeService.likeCakeShop(user, cakeShopId)
+	): ApiResponse<Unit> {
+		likeService.likeCakeShop(user, cakeShopId)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @GetMapping("/search/shops")
-    fun listByKeywordAndLocation(
+	@GetMapping("/search/shops")
+	fun listByKeywordAndLocation(
 		@ModelAttribute @Valid request: CakeShopSearchRequest
-    ): ApiResponse<CakeShopSearchResponse> {
+	): ApiResponse<CakeShopSearchResponse> {
 		val param = supplyCakeShopSearchParamBy(request)
-        val response = shopService.searchShopByKeyword(param)
+		val response = shopService.searchShopByKeyword(param)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @PutMapping("/{cakeShopId}")
-    fun updateBasicInformation(
+	@PutMapping("/{cakeShopId}")
+	fun updateBasicInformation(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopRequest
-    ): ApiResponse<Unit> {
+	): ApiResponse<Unit> {
 		val param = supplyCakeShopUpdateParamBy(request, user, cakeShopId)
-        shopService.updateBasicInformation(param)
+		shopService.updateBasicInformation(param)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @PutMapping("/{cakeShopId}/links")
-    fun updateLinks(
+	@PutMapping("/{cakeShopId}/links")
+	fun updateLinks(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateLinkRequest
-    ): ApiResponse<Unit> {
+	): ApiResponse<Unit> {
 		val param = supplyUpdateLinkParamBy(request, user, cakeShopId)
-        shopService.updateShopLinks(param)
+		shopService.updateShopLinks(param)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @PutMapping("/{cakeShopId}/address")
-    fun updateAddress(
+	@PutMapping("/{cakeShopId}/address")
+	fun updateAddress(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopAddressRequest
-    ): ApiResponse<Unit> {
-        shopService.updateShopAddress(request.toParam(user, cakeShopId))
+	): ApiResponse<Unit> {
+		val param = supplyUpdateShopAddressParamBy(request, user, cakeShopId)
+		shopService.updateShopAddress(param)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @PutMapping("/{cakeShopId}/operation-days")
-    fun updateOperationDays(
+	@PutMapping("/{cakeShopId}/operation-days")
+	fun updateOperationDays(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopOperationRequest
-    ): ApiResponse<Unit> {
+	): ApiResponse<Unit> {
 		val param = supplyUpdateShopOperationParamBy(request, user, cakeShopId)
-        shopService.updateShopOperationDays(param)
+		shopService.updateShopOperationDays(param)
 
 		return ApiResponse.success()
-    }
+	}
 
-    @GetMapping("/{cakeShopId}/owner")
-    fun existBusinessInformation(
+	@GetMapping("/{cakeShopId}/owner")
+	fun existBusinessInformation(
 		@SignInUser user: User,
 		@PathVariable cakeShopId: Long
-    ): ApiResponse<CakeShopOwnerResponse> {
-        val response = shopService.isExistBusinessInformation(user, cakeShopId)
+	): ApiResponse<CakeShopOwnerResponse> {
+		val response = shopService.isExistBusinessInformation(user, cakeShopId)
 
 		return ApiResponse.success(response)
-    }
+	}
 
-    @GetMapping("/search/views")
-    fun listByViews(
+	@GetMapping("/search/views")
+	fun listByViews(
 		@ModelAttribute @Valid request: CakeShopSearchByViewsRequest
-    ): ApiResponse<CakeShopSearchResponse> {
+	): ApiResponse<CakeShopSearchResponse> {
 		val param = supplyCakeShopSearchByViewsParam(request)
-        val response = shopService.searchCakeShopsByCursorAndViews(param)
+		val response = shopService.searchCakeShopsByCursorAndViews(param)
 
 		return ApiResponse.success(response)
-    }
+	}
 }

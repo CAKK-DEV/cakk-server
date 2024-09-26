@@ -6,15 +6,18 @@ import com.cakk.api.dto.request.link.UpdateLinkRequest
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
 import com.cakk.api.dto.request.shop.CreateShopRequest
 import com.cakk.api.dto.request.shop.PromotionRequest
+import com.cakk.api.dto.request.shop.UpdateShopAddressRequest
 import com.cakk.api.dto.request.shop.UpdateShopRequest
 import com.cakk.api.dto.request.user.CertificationRequest
 import com.cakk.core.dto.param.shop.CreateShopParam
 import com.cakk.core.dto.param.shop.PromotionParam
 import com.cakk.core.mapper.supplyCakeShopLinkByInstagram
 import com.cakk.core.mapper.supplyCakeShopOperationListBy
+import com.cakk.core.mapper.supplyPointBy
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
+import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
 import com.cakk.domain.mysql.dto.param.user.CertificationParam
 import com.cakk.domain.mysql.entity.shop.CakeShopLink
 import com.cakk.domain.mysql.entity.user.User
@@ -22,21 +25,21 @@ import com.cakk.domain.mysql.entity.user.User
 fun supplyCreateShopParamBy(request: CreateShopRequest): CreateShopParam {
     return CreateShopParam(
         businessNumber = request.businessNumber,
-        operationDays = request.operationDays,
-        shopName = request.shopName,
+        operationDays = request.operationDays!!,
+        shopName = request.shopName!!,
         shopBio = request.shopBio,
         shopDescription = request.shopDescription,
-        shopAddress = request.shopAddress,
-        latitude = request.latitude,
-        longitude = request.longitude,
-        links = request.links
+        shopAddress = request.shopAddress!!,
+        latitude = request.latitude!!,
+        longitude = request.longitude!!,
+        links = request.links!!
     )
 }
 
 fun supplyPromotionParamBy(request: PromotionRequest): PromotionParam {
     return PromotionParam(
-        userId = request.userId,
-        cakeShopId = request.cakeShopId
+        userId = request.userId!!,
+        cakeShopId = request.cakeShopId!!
     )
 }
 
@@ -88,4 +91,13 @@ fun supplyUpdateShopOperationParamBy(
     val cakeShopOperations = supplyCakeShopOperationListBy(request.operationDays!!)
 
     return UpdateShopOperationParam(cakeShopOperations, user, cakeShopId)
+}
+
+fun supplyUpdateShopAddressParamBy(dto: UpdateShopAddressRequest, user: User, cakeShopId: Long): UpdateShopAddressParam {
+	return UpdateShopAddressParam(
+		dto.shopAddress!!,
+		supplyPointBy(dto.latitude!!, dto.longitude!!),
+		user,
+		cakeShopId
+	)
 }

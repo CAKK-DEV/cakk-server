@@ -1,12 +1,10 @@
-package com.cakk.api.dto.request.shop;
+package com.cakk.api.dto.request.shop
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull
 
-public record PromotionRequest(
-
-	@NotNull
-	Long userId,
-
-	@NotNull
-	Long cakeShopId) {
-}
+data class PromotionRequest(
+	@field:NotNull
+	val userId: Long?,
+	@field:NotNull
+	val cakeShopId: Long?
+)

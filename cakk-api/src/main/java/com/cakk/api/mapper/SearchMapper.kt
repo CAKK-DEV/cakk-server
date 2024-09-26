@@ -18,7 +18,7 @@ fun supplyTopSearchedListParamBy(
 }
 
 fun supplySearchShopByLocationParamBy(request: SearchShopByLocationRequest): SearchShopByLocationParam {
-	return SearchShopByLocationParam(request.latitude, request.longitude, request.distance)
+	return SearchShopByLocationParam(request.latitude!!, request.longitude!!, request.distance!!)
 }
 
 fun supplyCakeShopSearchParamBy(request: CakeShopSearchRequest): CakeShopSearchParam {
@@ -33,7 +33,7 @@ fun supplyCakeShopSearchParamBy(request: CakeShopSearchRequest): CakeShopSearchP
 fun supplyCakeShopSearchByViewsParam(
 	request: CakeShopSearchByViewsRequest
 ): CakeShopSearchByViewsParam {
-	return CakeShopSearchByViewsParam(request.offset, request.pageSize)
+	return CakeShopSearchByViewsParam(request.offset, request.pageSize!!)
 }
 
 fun supplyHeartCakeShopSearchParamBy(

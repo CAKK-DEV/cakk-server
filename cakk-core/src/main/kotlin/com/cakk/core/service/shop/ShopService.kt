@@ -134,7 +134,7 @@ class ShopService(
 		val distance = param.distance
 		val point = supplyPointBy(latitude, longitude)
 
-		val result = cakeShopReadFacade.searchShopByLocationBased(point, Objects.requireNonNullElse(distance, 1000.0))
+		val result = cakeShopReadFacade.searchShopByLocationBased(point, distance)
 		val cakeShops = CakeShops(result, 4)
 
 		return supplyCakeShopByMapResponseBy(cakeShops.cakeShops)

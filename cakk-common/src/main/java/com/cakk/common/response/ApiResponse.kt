@@ -1,72 +1,36 @@
-package com.cakk.common.response;
+package com.cakk.common.response
 
-import com.cakk.common.enums.ReturnCode;
+import com.cakk.common.enums.ReturnCode
 
-public class ApiResponse<T> {
+data class ApiResponse<T>(
+	val returnCode: String,
+	val returnMessage: String,
+	val data: T? = null
+) {
 
-	private String returnCode;
-	private String returnMessage;
-	private T data;
+	constructor(returnCode: ReturnCode, data: T? = null) : this(returnCode.code, returnCode.message, data)
 
-	public static <T> ApiResponse<T> success() {
-		ApiResponse<T> response = new ApiResponse<>();
+	companion object {
 
-		response.returnCode = ReturnCode.SUCCESS.getCode();
-		response.returnMessage = ReturnCode.SUCCESS.getMessage();
-		response.data = null;
+		fun <T> success(data: T? = null): ApiResponse<T> {
+			return ApiResponse(
+				returnCode = ReturnCode.SUCCESS,
+				data = data
+			)
+		}
 
-		return response;
-	}
+		fun <T> fail(returnCode: ReturnCode, data: T? = null): ApiResponse<T> {
+			return ApiResponse(
+				returnCode = returnCode,
+				data = data
+			)
+		}
 
-	public static <T> ApiResponse<T> success(T data) {
-		ApiResponse<T> response = new ApiResponse<>();
-
-		response.returnCode = ReturnCode.SUCCESS.getCode();
-		response.returnMessage = ReturnCode.SUCCESS.getMessage();
-		response.data = data;
-
-		return response;
-	}
-
-	public static <T> ApiResponse<T> fail(ReturnCode returnCode) {
-		ApiResponse<T> response = new ApiResponse<>();
-
-		response.returnCode = returnCode.getCode();
-		response.returnMessage = returnCode.getMessage();
-		response.data = null;
-
-		return response;
-	}
-
-	public static <T> ApiResponse<T> fail(ReturnCode returnCode, T data) {
-		ApiResponse<T> response = new ApiResponse<>();
-
-		response.returnCode = returnCode.getCode();
-		response.returnMessage = returnCode.getMessage();
-		response.data = data;
-
-		return response;
-	}
-
-	public static ApiResponse<String> error(ReturnCode returnCode, String errorMessage) {
-		ApiResponse<String> response = new ApiResponse<>();
-
-		response.returnCode = returnCode.getCode();
-		response.returnMessage = returnCode.getMessage();
-		response.data = errorMessage;
-
-		return response;
-	}
-
-	public String getReturnCode() {
-		return returnCode;
-	}
-
-	public String getReturnMessage() {
-		return returnMessage;
-	}
-
-	public T getData() {
-		return data;
+		fun error(returnCode: ReturnCode, errorMessage: String?): ApiResponse<String> {
+			return ApiResponse(
+				returnCode = returnCode,
+				data = errorMessage
+			)
+		}
 	}
 }

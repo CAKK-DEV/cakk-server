@@ -1,10 +1,8 @@
-package com.cakk.api.dto.request.shop;
+package com.cakk.api.dto.request.shop
 
-import jakarta.validation.constraints.NotNull;
+import com.cakk.common.utils.DEFAULT_PAGE_SIZE
 
-public record CakeShopSearchByViewsRequest(
-	Long offset,
-	@NotNull
-	Integer pageSize
-) {
-}
+data class CakeShopSearchByViewsRequest(
+    val offset: Long?,
+    val pageSize: Int? = DEFAULT_PAGE_SIZE
+)

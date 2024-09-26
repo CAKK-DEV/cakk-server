@@ -9,7 +9,7 @@ import com.cakk.api.annotation.OperationDay
 import com.cakk.common.enums.Days
 import com.cakk.core.dto.param.shop.ShopOperationParam
 
-class OperationValidator : ConstraintValidator<OperationDay, List<ShopOperationParam>> {
+class OperationValidator : ConstraintValidator<OperationDay, List<ShopOperationParam>?> {
 	override fun isValid(operationParams: List<ShopOperationParam>?, context: ConstraintValidatorContext): Boolean {
 		operationParams ?: return false
 
