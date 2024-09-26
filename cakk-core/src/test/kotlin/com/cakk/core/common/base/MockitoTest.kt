@@ -1,5 +1,8 @@
 package com.cakk.core.common.base
 
+import com.cakk.common.enums.Provider
+import com.cakk.common.enums.Role
+import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.context.annotation.Import
@@ -14,7 +17,9 @@ import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntr
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
 
 import com.cakk.domain.mysql.config.JpaConfig
+import com.cakk.domain.mysql.entity.user.User
 import com.cakk.external.vo.key.OidcPublicKey
+import java.time.LocalDate
 
 @Import(JpaConfig::class)
 @ActiveProfiles("test")
@@ -28,18 +33,16 @@ abstract class MockitoTest {
 			.build()
 	}
 
-	protected fun getReflectionMonkey(): FixtureMonkey {
-		return FixtureMonkey.builder()
-			.plugin(JakartaValidationPlugin())
-			.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-			.build()
-	}
-
-	protected fun getBuilderMonkey(): FixtureMonkey {
-		return FixtureMonkey.builder()
-			.plugin(JakartaValidationPlugin())
-			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
-			.build()
+	protected fun getUserFixture(role: Role = Role.USER): User {
+		return fixtureMonkey.giveMeBuilder(User::class.java)
+			.set("id", Arbitraries.longs().greaterOrEqual(10))
+			.set("provider", Arbitraries.of(Provider::class.java))
+			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+			.set("birthday", LocalDate.now())
+			.set("role", role)
+			.sample()
 	}
 
     protected fun oidcPublicKeyFixture(): OidcPublicKey {

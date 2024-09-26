@@ -37,19 +37,19 @@ class CakeShopReadFacade(
         return cakeShopQueryRepository.searchByIdWithHeart(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
     }
 
-    fun findByIdWithLike(cakeShopId: Long?): CakeShop {
+    fun findByIdWithLike(cakeShopId: Long): CakeShop {
 		return cakeShopQueryRepository.searchByIdWithLike(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
     }
 
-    fun searchSimpleById(cakeShopId: Long?): CakeShopSimpleParam {
+    fun searchSimpleById(cakeShopId: Long): CakeShopSimpleParam {
 		return cakeShopQueryRepository.searchSimpleById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
     }
 
-	fun searchDetailById(cakeShopId: Long?): CakeShopDetailParam {
+	fun searchDetailById(cakeShopId: Long): CakeShopDetailParam {
 		return cakeShopQueryRepository.searchDetailById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-	fun searchInfoById(cakeShopId: Long?): CakeShopInfoParam {
+	fun searchInfoById(cakeShopId: Long): CakeShopInfoParam {
 		return cakeShopQueryRepository.searchInfoById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 

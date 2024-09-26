@@ -26,11 +26,9 @@ class CakeReadFacade(
         return cakeJpaRepository.findById(cakeId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE) }
 	}
 
-    fun findByIdWithHeart(cakeId: Long?): Cake {
-        val cake: Cake = cakeQueryRepository.searchByIdWithHeart(cakeId)
-        if (Objects.isNull(cake)) {
-            throw CakkException(ReturnCode.NOT_EXIST_CAKE)
-        }
+    fun findByIdWithHeart(cakeId: Long): Cake {
+        val cake: Cake = cakeQueryRepository.searchByIdWithHeart(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE)
+
         return cake
     }
 
@@ -63,7 +61,7 @@ class CakeReadFacade(
         return cakeQueryRepository.searchCakeImagesByCakeIds(cakeIds)
     }
 
-    fun findWithCakeTagsAndCakeCategories(cakeId: Long?, owner: User?): Cake {
+    fun findWithCakeTagsAndCakeCategories(cakeId: Long, owner: User): Cake {
         return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
                 .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}

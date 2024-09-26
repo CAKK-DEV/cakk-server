@@ -3,23 +3,21 @@ package com.cakk.core.common.base
 import java.time.LocalDate
 
 import org.junit.jupiter.api.extension.ExtendWith
-import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
-import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.PrecisionModel
 import org.mockito.junit.jupiter.MockitoExtension
 
-import net.jqwik.api.Arbitraries
-
 import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
-import com.navercorp.fixturemonkey.customizer.Values
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
 
 import com.cakk.common.enums.Provider
 import com.cakk.common.enums.Role
+import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.core.common.fixture.FixtureCommon.getEnumFixture
+import com.cakk.core.common.fixture.FixtureCommon.getLongFixtureGoe
+import com.cakk.core.common.fixture.FixtureCommon.getPointFixture
+import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.domain.mysql.entity.cake.Cake
 import com.cakk.domain.mysql.entity.shop.CakeShop
 import com.cakk.domain.mysql.entity.user.User
@@ -39,59 +37,36 @@ abstract class FacadeTest {
 			.build()
 	}
 
-	protected fun getReflectionMonkey(): FixtureMonkey {
-		return FixtureMonkey.builder()
-			.plugin(JakartaValidationPlugin())
-			.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-			.build()
-	}
-
-	protected fun getBuilderMonkey(): FixtureMonkey {
-		return FixtureMonkey.builder()
-			.plugin(JakartaValidationPlugin())
-			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
-			.build()
-	}
-
-	protected fun getUserFixture(role: Role): User {
-		return getConstructorMonkey().giveMeBuilder(User::class.java)
-			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("provider", Arbitraries.of(Provider::class.java))
-			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
-			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
+	protected fun getUserFixture(role: Role = Role.USER): User {
+		return fixtureMonkey.giveMeBuilder(User::class.java)
+			.set("id", getLongFixtureGoe(10))
+			.set("provider", getEnumFixture(Provider::class.java))
+			.set("providerId", getStringFixtureBw(1, 50))
+			.set("email", getStringFixtureBw(1, 50))
+			.set("nickname", getStringFixtureBw(1, 50))
 			.set("birthday", LocalDate.now())
 			.set("role", role)
 			.sample()
 	}
 
 	protected fun getCakeFixture(): Cake {
-		return getConstructorMonkey().giveMeBuilder(Cake::class.java)
-			.set("cakeImageUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(50))
+		return fixtureMonkey.giveMeBuilder(Cake::class.java)
+			.set("cakeImageUrl", getStringFixtureBw(1, 200))
 			.set("cakeShop", getCakeShopFixture())
 			.sample()
 	}
 
 	protected fun getCakeShopFixture(): CakeShop {
-		val cakeShop = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
-			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
-			.set("thumbnailUrl", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
-			.set("shopAddress", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30))
-			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(40))
-			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(500))
-			.set(
-				"location", supplyPointBy(
-					Arbitraries.doubles().between(-90.0, 90.0).sample(),
-					Arbitraries.doubles().between(-180.0, 180.0).sample()
-				)
-			)
+		val cakeShop = fixtureMonkey.giveMeBuilder(CakeShop::class.java)
+			.set("shopName", getStringFixtureBw(10, 30))
+			.set("thumbnailUrl", getStringFixtureBw(10, 200))
+			.set("shopAddress", getStringFixtureBw(1, 50))
+			.set("shopBio", getStringFixtureBw(1, 40))
+			.set("shopDescription", getStringFixtureBw(100, 500))
+			.set("location", getPointFixture())
 			.sample()
 		ReflectionTestUtils.setField(cakeShop, "heartCount", 0)
 		ReflectionTestUtils.setField(cakeShop, "likeCount", 0)
 		return cakeShop
-	}
-
-	fun supplyPointBy(latitude: Double, longitude: Double): Point {
-		return geometryFactory.createPoint(Coordinate(longitude, latitude))
 	}
 }

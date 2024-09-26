@@ -22,6 +22,6 @@ class CakeShopManageFacade(
 		cakeShop.addShopLinks(cakeShopLinks)
 		cakeShop.registerBusinessInformation(businessInformation)
 
-		return cakeShopJpaRepository.save<CakeShop>(cakeShop)
+		return cakeShopJpaRepository.save(cakeShop)
 	}
 }

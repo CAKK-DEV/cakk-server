@@ -1,19 +1,20 @@
 package com.cakk.api.controller.shop
 
-import com.cakk.api.dto.request.shop.CreateShopRequest
-import com.cakk.api.dto.request.shop.PromotionRequest
-import com.cakk.api.dto.response.shop.CakeShopCreateResponse
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidateResponse
-import com.cakk.api.dto.response.shop.CakeShopOwnerCandidatesResponse
-import com.cakk.api.mapper.ShopMapper
-import com.cakk.api.service.shop.ShopService
-import com.cakk.common.response.ApiResponse
 import jakarta.validation.Valid
-import lombok.RequiredArgsConstructor
+
 import org.springframework.web.bind.annotation.*
 
+import com.cakk.api.dto.request.shop.CreateShopRequest
+import com.cakk.api.dto.request.shop.PromotionRequest
+import com.cakk.core.dto.response.shop.CakeShopCreateResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidateResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.api.mapper.supplyCreateShopParamBy
+import com.cakk.api.mapper.supplyPromotionParamBy
+import com.cakk.core.service.shop.ShopService
+import com.cakk.common.response.ApiResponse
+
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/admin")
 class AdminController(
 	private val shopService: ShopService
@@ -21,7 +22,7 @@ class AdminController(
 
 	@GetMapping("/shops/candidates")
 	fun businessOwnerCandidates(): ApiResponse<CakeShopOwnerCandidatesResponse> {
-		val response = shopService.businessOwnerCandidates
+		val response = shopService.getBusinessOwnerCandidates()
 
 		return ApiResponse.success(response)
 	}
@@ -39,7 +40,7 @@ class AdminController(
     fun createByAdmin(
 		@RequestBody @Valid request: CreateShopRequest
     ): ApiResponse<CakeShopCreateResponse> {
-		val param = ShopMapper.supplyCreateShopParamBy(request);
+		val param = supplyCreateShopParamBy(request);
         val response = shopService.createCakeShopByCertification(param)
 
         return ApiResponse.success(response)
@@ -49,7 +50,7 @@ class AdminController(
     fun promoteUser(
 		@RequestBody @Valid request: PromotionRequest
     ): ApiResponse<Unit> {
-		val param = ShopMapper.supplyPromotionParamBy(request)
+		val param = supplyPromotionParamBy(request)
         shopService.promoteUserToBusinessOwner(param)
 
 		return ApiResponse.success()

@@ -20,6 +20,6 @@ public class WeeklyJobController {
 	public ApiResponse<Void> executeWeeklyJob() throws Exception {
 		jobLauncher.launch();
 
-		return ApiResponse.success();
+		return ApiResponse.Companion.success(null);
 	}
 }

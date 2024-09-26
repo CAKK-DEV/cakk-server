@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.common.exception.CakkException;
+import com.cakk.core.aspect.AopForTransaction;
 
 @ActiveProfiles("test")
 @SpringBootTest(properties = "spring.profiles.active=test")

@@ -28,9 +28,9 @@ import com.cakk.api.dto.request.shop.UpdateShopAddressRequest
 import com.cakk.api.dto.request.shop.UpdateShopRequest
 import com.cakk.api.dto.request.user.CertificationRequest
 import com.cakk.core.dto.response.like.HeartResponse
-import com.cakk.api.dto.response.shop.*
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.response.shop.*
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam
 import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam
