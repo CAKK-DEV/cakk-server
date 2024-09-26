@@ -19,38 +19,38 @@ import com.cakk.domain.mysql.entity.user.User
 
 internal class UserLikeFacadeTest : FacadeTest() {
 
-    @InjectMocks
-    private lateinit var userLikeFacade: UserLikeFacade
+	@InjectMocks
+	private lateinit var userLikeFacade: UserLikeFacade
 
-    @TestWithDisplayName("케이크 샵 기대돼요 동작을 성공한다")
-    fun likeCakeShop() {
-        //given
-        val user: User = getUserFixture(Role.USER)
-        val cakeShop: CakeShop = getCakeShopFixture()
+	@TestWithDisplayName("케이크 샵 기대돼요 동작을 성공한다")
+	fun likeCakeShop() {
+		//given
+		val user: User = getUserFixture(Role.USER)
+		val cakeShop: CakeShop = getCakeShopFixture()
 
-        //when
-        userLikeFacade.likeCakeShop(user, cakeShop)
+		//when
+		userLikeFacade.likeCakeShop(user, cakeShop)
 
-        //then
-        Assertions.assertThat(cakeShop.likeCount).isEqualTo(1)
-        val liked: Boolean = cakeShop.shopLikes.stream().anyMatch { it.user == user }
+		//then
+		Assertions.assertThat(cakeShop.likeCount).isEqualTo(1)
+		val liked: Boolean = cakeShop.shopLikes.stream().anyMatch { it.user == user }
 		liked shouldBe true
-    }
+	}
 
-    @TestWithDisplayName("케이크 샵 기대돼요 동작이 50회 초과로 실패한다")
-    fun heartCakeShop2() {
-        // given
-        val user: User = getUserFixture(Role.USER)
-        val cakeShop: CakeShop = getCakeShopFixture()
+	@TestWithDisplayName("케이크 샵 기대돼요 동작이 50회 초과로 실패한다")
+	fun heartCakeShop2() {
+		// given
+		val user: User = getUserFixture(Role.USER)
+		val cakeShop: CakeShop = getCakeShopFixture()
 
-        IntStream.range(0, 50).forEach { i: Int -> userLikeFacade.likeCakeShop(user, cakeShop) }
+		IntStream.range(0, 50).forEach { userLikeFacade.likeCakeShop(user, cakeShop) }
 
-        // when
+		// when
 		val exception = shouldThrow<CakkException> {
 			userLikeFacade.likeCakeShop(user, cakeShop)
 		}
 
 		// then
 		exception.getReturnCode() shouldBe ReturnCode.MAX_CAKE_SHOP_LIKE
-    }
+	}
 }

@@ -19,8 +19,8 @@ import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
 import com.cakk.api.dto.request.cake.CakeCreateRequest
 import com.cakk.api.dto.request.cake.CakeUpdateRequest
-import com.cakk.api.dto.response.cake.CakeDetailResponse
-import com.cakk.api.dto.response.cake.CakeImageListResponse
+import com.cakk.core.dto.response.cake.CakeDetailResponse
+import com.cakk.core.dto.response.cake.CakeImageListResponse
 import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.common.enums.CakeDesignCategory
 import com.cakk.common.enums.ReturnCode
@@ -333,7 +333,6 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		println(response.data.toString())
 		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
@@ -698,7 +697,6 @@ internal class CakeIntegrationTest(
 		val request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest::class.java)
 			.set("tagNames", listOf("tag_name1", "new_tag1", "new_tag2"))
 			.sample()
-		println(request)
 
 		// when
 		val responseEntity = restTemplate.exchange(

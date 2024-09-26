@@ -10,6 +10,7 @@ import net.jqwik.api.Arbitraries
 
 import com.cakk.core.common.annotation.TestWithDisplayName
 import com.cakk.core.common.base.MockitoTest
+import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.core.dto.event.EmailWithVerificationCodeSendEvent
 import com.cakk.core.mapper.supplyVerificationMessageBy
 import com.cakk.external.extractor.MessageExtractor
@@ -34,7 +35,7 @@ internal class EmailSendEventListenerTest : MockitoTest() {
     private lateinit var messageSender: MessageSender<MimeMessage>
 
     private fun eventFixture(): EmailWithVerificationCodeSendEvent {
-        return getConstructorMonkey().giveMeBuilder(EmailWithVerificationCodeSendEvent::class.java)
+        return fixtureMonkey.giveMeBuilder(EmailWithVerificationCodeSendEvent::class.java)
             .set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10))
             .set("code", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10))
             .sample()
@@ -44,7 +45,6 @@ internal class EmailSendEventListenerTest : MockitoTest() {
     fun sendEmailIncludeVerificationCode() {
         // given
         val event = eventFixture()
-		println(event.toString())
 
         // when
 		shouldNotThrow<Exception> {

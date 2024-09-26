@@ -17,7 +17,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import com.cakk.api.common.annotation.TestWithDisplayName;
 import com.cakk.api.common.base.MockitoTest;
-import com.cakk.api.provider.oauth.impl.GoogleAuthProvider;
+import com.cakk.api.provider.oauth.GoogleAuthProvider;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 

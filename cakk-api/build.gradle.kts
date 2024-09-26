@@ -11,7 +11,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.3.0")
-	implementation("org.springframework:spring-tx")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

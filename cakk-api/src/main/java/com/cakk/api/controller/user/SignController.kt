@@ -17,7 +17,7 @@ import com.cakk.api.mapper.supplyGenerateCodeParamBy
 import com.cakk.api.mapper.supplyUserSignInParamBy
 import com.cakk.api.mapper.supplyUserSignUpParamBy
 import com.cakk.api.mapper.supplyVerifyEmailParamBy
-import com.cakk.api.service.user.SignService
+import com.cakk.core.service.user.SignService
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.service.user.EmailVerificationService
 
@@ -45,8 +45,8 @@ class SignController(
 
     @PostMapping("/sign-out")
     fun signOut(
-		@AccessToken accessToken: String?,
-		@RefreshToken refreshToken: String?
+		@AccessToken accessToken: String,
+		@RefreshToken refreshToken: String
     ): ApiResponse<Unit> {
         signService.signOut(accessToken, refreshToken)
 
@@ -55,7 +55,7 @@ class SignController(
 
     @PostMapping("/recreate-token")
     fun recreate(
-		@RefreshToken refreshToken: String?
+		@RefreshToken refreshToken: String
     ): ApiResponse<JwtResponse> {
         val response = signService.recreateToken(refreshToken)
 

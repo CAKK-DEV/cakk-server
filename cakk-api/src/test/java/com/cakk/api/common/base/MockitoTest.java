@@ -25,6 +25,7 @@ public abstract class MockitoTest {
 		return FixtureMonkey.builder()
 			.plugin(new JakartaValidationPlugin())
 			.objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+			.defaultNotNull(true)
 			.build();
 	}
 
