@@ -9,20 +9,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-import net.jqwik.api.Arbitraries
-
-import com.cakk.api.provider.jwt.JwtProviderImpl
 import com.cakk.core.vo.JsonWebToken
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.provider.jwt.JwtProvider
 import com.cakk.domain.mysql.entity.user.User
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.*
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
-import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
 
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
