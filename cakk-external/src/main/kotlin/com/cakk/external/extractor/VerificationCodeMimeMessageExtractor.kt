@@ -6,13 +6,11 @@ import jakarta.mail.internet.MimeMessage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
-import org.springframework.stereotype.Component
 
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.external.vo.message.VerificationMessage
 
-@Component
 class VerificationCodeMimeMessageExtractor(
 	private val mailSender: JavaMailSender,
 	@Value("\${spring.mail.username}")
