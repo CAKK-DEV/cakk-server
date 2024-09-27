@@ -4,14 +4,14 @@ dependencies {
 	implementation(project(":cakk-common"))
 	implementation(project(":cakk-domain:mysql"))
 	implementation(project(":cakk-domain:redis"))
-	implementation(project(":cakk-client"))
 	implementation(project(":cakk-external"))
+	implementation(project(":cakk-core"))
 
 	// basic
-    implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.3.0")
-	implementation("org.springframework:spring-tx")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	// Security & OAuth
@@ -27,9 +27,12 @@ dependencies {
 
 	// test
 	testImplementation("com.tngtech.archunit:archunit-junit5:1.1.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.23")
+	testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
+	testImplementation("io.mockk:mockk:${property("mockKVersion")}")
 
 	// test container
 	testImplementation("org.testcontainers:junit-jupiter:1.19.7")
@@ -37,12 +40,6 @@ dependencies {
 
 	// Point
 	implementation("org.locationtech.jts:jts-core:1.18.2")
-
-	// Mail
-	implementation("org.springframework.boot:spring-boot-starter-mail")
-
-	// Slack
-	implementation("net.gpedro.integrations.slack:slack-webhook:1.4.0")
 }
 
 tasks.bootJar {

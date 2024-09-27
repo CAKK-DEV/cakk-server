@@ -43,7 +43,9 @@ subprojects {
 
 	if (project.name == "cakk-admin" ||
 		project.name == "cakk-external" ||
-		project.name == "cakk-common"
+		project.name == "cakk-core" ||
+		project.name == "cakk-common" ||
+		project.name == "cakk-api"
 	) {
 		apply(plugin = "org.jetbrains.kotlin.jvm")
 		apply(plugin = "org.jetbrains.kotlin.plugin.spring")
@@ -112,13 +114,14 @@ subprojects {
 
 	tasks.withType<JacocoCoverageVerification> {
 		val excludeList = mutableListOf(
-			"com.cakk.api.Application",
+			"com.cakk.api.ApplicationKt",
 			"com.cakk.api.service.slack.SlackService",
 			"com.cakk.api.provider.oauth.PublicKeyProvider",
 			"com.cakk.api.dto.**",
 			"com.cakk.api.mapper.**",
 			"com.cakk.api.listener.**",
 			"com.cakk.api.vo.**",
+			"com.cakk.core.**",
 			"com.cakk.domain.**"
 		)
 

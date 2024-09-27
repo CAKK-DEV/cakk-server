@@ -58,14 +58,14 @@ public class CakeShopHeartQueryRepository {
 			.orderBy(cakeShopHeartIdDesc())
 			.transform(groupBy(cakeShopHeart.id)
 				.list(Projections.constructor(HeartCakeShopResponseParam.class,
-						cakeShopHeart.id,
-						cakeShop.id,
-						cakeShop.thumbnailUrl,
-						cakeShop.shopName,
-						cakeShop.shopBio,
-						set(cake.cakeImageUrl),
-						set(cakeShopOperation.operationDay)
-					)
+					cakeShopHeart.id,
+					cakeShop.id,
+					cakeShop.thumbnailUrl,
+					cakeShop.shopName,
+					cakeShop.shopBio,
+					set(cake.cakeImageUrl),
+					set(cakeShopOperation.operationDay)
+				)
 				)
 			);
 	}

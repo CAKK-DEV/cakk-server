@@ -5,6 +5,7 @@ dependencies {
 
 	// Basic
 	implementation("org.springframework:spring-context")
+	implementation("org.springframework:spring-web")
 
 	// AWS
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.715")

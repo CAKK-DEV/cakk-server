@@ -120,9 +120,7 @@ public class CakeQueryRepository {
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
-			.where(
-				includeCakeIds(cakeIds)
-			)
+			.where(includeCakeIds(cakeIds))
 			.fetch();
 	}
 
@@ -176,6 +174,14 @@ public class CakeQueryRepository {
 		return queryFactory
 			.selectFrom(cake)
 			.leftJoin(cake.cakeHearts, cakeHeart).fetchJoin()
+			.where(cake.id.eq(cakeId))
+			.fetchOne();
+	}
+
+	public Cake searchByIdWithCategories(final Long cakeId) {
+		return queryFactory
+			.selectFrom(cake)
+			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
 			.where(cake.id.eq(cakeId))
 			.fetchOne();
 	}

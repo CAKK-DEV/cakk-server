@@ -30,10 +30,8 @@ import com.cakk.common.exception.CakkException;
 import com.cakk.domain.mysql.entity.audit.AuditEntity;
 import com.cakk.domain.mysql.entity.shop.CakeShop;
 import com.cakk.domain.mysql.entity.user.User;
-import com.cakk.domain.mysql.event.views.CakeIncreaseViewsEvent;
 import com.cakk.domain.mysql.mapper.CakeHeartMapper;
 import com.cakk.domain.mysql.mapper.CakeTagMapper;
-import com.cakk.domain.mysql.mapper.EventMapper;
 
 @ToString
 @Getter
@@ -97,25 +95,12 @@ public class Cake extends AuditEntity {
 
 	public void updateCakeCategories(final List<CakeCategory> cakeCategories) {
 		this.cakeCategories.clear();
-
-		cakeCategories.forEach(cakeCategory -> {
-			cakeCategory.updateCake(this);
-			this.cakeCategories.add(cakeCategory);
-		});
+		registerCategories(cakeCategories);
 	}
 
 	public void updateCakeTags(final List<Tag> tags) {
 		this.cakeTags.clear();
-
-		tags.forEach(tag -> this.cakeTags.add(CakeTagMapper.supplyCakeTagBy(this, tag)));
-	}
-
-	public void removeCakeCategories() {
-		this.cakeCategories.clear();
-	}
-
-	public void removeCakeTags() {
-		this.cakeTags.clear();
+		registerTags(tags);
 	}
 
 	public void registerTags(final List<Tag> tags) {
@@ -131,10 +116,6 @@ public class Cake extends AuditEntity {
 
 	public void updateCakeShop(final CakeShop cakeShop) {
 		this.cakeShop = cakeShop;
-	}
-
-	public CakeIncreaseViewsEvent getInCreaseViewsEvent() {
-		return EventMapper.supplyCakeIncreaseViewsEvent(this.id);
 	}
 
 	private void increaseHeartCount() {

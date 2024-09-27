@@ -4,7 +4,7 @@ include(
 	"cakk-api",
 	"cakk-admin",
 	"cakk-batch",
-	"cakk-client",
+	"cakk-core",
 	"cakk-domain:mysql",
 	"cakk-domain:redis",
 	"cakk-external",

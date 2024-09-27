@@ -11,6 +11,7 @@ tasks.jar {
 dependencies {
 	implementation(project(":cakk-common"))
 	implementation(project(":cakk-domain:mysql"))
+	implementation(project(":cakk-core"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
