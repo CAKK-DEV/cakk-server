@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.api.dto.request.cake.CakeCreateRequest
 import com.cakk.api.dto.request.cake.CakeUpdateRequest
 import com.cakk.core.dto.response.cake.CakeDetailResponse
@@ -542,7 +543,7 @@ internal class CakeIntegrationTest(
 		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeId)
-		val request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest::class.java)
+		val request = fixtureMonkey.giveMeBuilder(CakeUpdateRequest::class.java)
 			.set("tagNames", listOf("tag_name1", "new_tag"))
 			.sample()
 
@@ -573,7 +574,7 @@ internal class CakeIntegrationTest(
 		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeId)
-		val request = getConstructorMonkey().giveMeBuilder(CakeUpdateRequest::class.java)
+		val request = fixtureMonkey.giveMeBuilder(CakeUpdateRequest::class.java)
 			.set("tagNames", listOf("tag_name1", "new_tag"))
 			.sample()
 
@@ -694,7 +695,7 @@ internal class CakeIntegrationTest(
 		val uriComponents = UriComponentsBuilder
 			.fromUriString(url)
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(CakeCreateRequest::class.java)
+		val request = fixtureMonkey.giveMeBuilder(CakeCreateRequest::class.java)
 			.set("tagNames", listOf("tag_name1", "new_tag1", "new_tag2"))
 			.sample()
 

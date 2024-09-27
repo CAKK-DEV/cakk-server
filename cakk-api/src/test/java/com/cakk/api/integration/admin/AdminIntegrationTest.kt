@@ -14,6 +14,9 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.api.common.fixture.FixtureCommon.getDoubleFixtureBw
+import com.cakk.api.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.api.dto.request.shop.CreateShopRequest
 import com.cakk.api.dto.request.shop.PromotionRequest
 import com.cakk.core.dto.response.shop.CakeShopCreateResponse
@@ -51,15 +54,15 @@ class AdminIntegrationTest(
 			.path("/shops/create")
 			.build()
 
-		val request = getConstructorMonkey().giveMeBuilder(CreateShopRequest::class.java)
-			.set("businessNumber", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(20))
+		val request = fixtureMonkey.giveMeBuilder(CreateShopRequest::class.java)
+			.set("businessNumber", getStringFixtureBw(1, 20))
 			.set("operationDays", listOf(ShopOperationParam(Days.MON, LocalTime.now(), LocalTime.now())))
-			.set("shopName", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
-			.set("shopBio", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
-			.set("shopDescription", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
-			.set("shopAddress", Arbitraries.strings().withCharRange('a', 'z').ofMaxLength(30).ofMinLength(1))
-			.set("latitude", Arbitraries.doubles().between(-90.0, 90.0))
-			.set("longitude", Arbitraries.doubles().between(-180.0, 180.0))
+			.set("shopName", getStringFixtureBw(1, 30))
+			.set("shopBio", getStringFixtureBw(1, 30))
+			.set("shopDescription", getStringFixtureBw(1, 30))
+			.set("shopAddress", getStringFixtureBw(1, 30))
+			.set("latitude", getDoubleFixtureBw(-90.0, 90.0))
+			.set("longitude", getDoubleFixtureBw(-180.0, 180.0))
 			.set("links", listOf(ShopLinkParam(LinkKind.WEB, "www.cake-shop.com")))
 			.sample()
 
@@ -115,9 +118,7 @@ class AdminIntegrationTest(
 			.path("/shops/promote")
 			.build()
 
-		val request = getConstructorMonkey().giveMeBuilder(
-			PromotionRequest::class.java
-		)
+		val request = fixtureMonkey.giveMeBuilder(PromotionRequest::class.java)
 			.set("userId", 1L)
 			.set("cakeShopId", 1L)
 			.sample()

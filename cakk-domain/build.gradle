@@ -1,9 +1,0 @@
-description = "domain module"
-
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-}

@@ -13,6 +13,7 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.mockito:mockito-junit-jupiter")
+	testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // querydsl
