@@ -21,6 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.api.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.core.dto.param.shop.ShopOperationParam
 import com.cakk.api.dto.request.link.UpdateLinkRequest
 import com.cakk.api.dto.request.operation.UpdateShopOperationRequest
@@ -230,12 +232,12 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/certification")
 			.build()
-		val request = getConstructorMonkey().giveMeBuilder(CertificationRequest::class.java)
-			.set("businessRegistrationImageUrl", getRandomAlpha(1, 40))
-			.set("idCardImageUrl", getRandomAlpha(1, 40))
+		val request = fixtureMonkey.giveMeBuilder(CertificationRequest::class.java)
+			.set("businessRegistrationImageUrl", getStringFixtureBw(1, 40))
+			.set("idCardImageUrl", getStringFixtureBw(1, 40))
 			.set("cakeShopId", 11L)
-			.set("emergencyContact", getRandomAlpha(1, 11))
-			.set("message", getRandomAlpha(1, 20))
+			.set("emergencyContact", getStringFixtureBw(1, 11))
+			.set("message", getStringFixtureBw(1, 20))
 			.sample()
 
 		// when
@@ -593,7 +595,7 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateShopRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -618,7 +620,7 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateShopRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -644,7 +646,7 @@ internal class ShopIntegrationTest(
 			.fromUriString(baseUrl)
 			.path("/{cakeShopId}/links")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateLinkRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateLinkRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -669,7 +671,7 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}/links")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateLinkRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateLinkRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -694,7 +696,7 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}/address")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateShopAddressRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopAddressRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -719,7 +721,7 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}/address")
 			.buildAndExpand(cakeShopId)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateShopAddressRequest::class.java).sample()
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopAddressRequest::class.java).sample()
 
 		// when
 		val responseEntity = restTemplate.exchange(
@@ -744,12 +746,12 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}/operation-days")
 			.buildAndExpand(cakeShopId)
-		val shopOperationParams = getConstructorMonkey().giveMeBuilder(ShopOperationParam::class.java)
+		val shopOperationParams = fixtureMonkey.giveMeBuilder(ShopOperationParam::class.java)
 			.setNotNull("operationDay")
 			.setNotNull("operationStartTime")
 			.setNotNull("operationEndTime")
 			.sampleList(6)
-		val request = getConstructorMonkey().giveMeBuilder(UpdateShopOperationRequest::class.java)
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopOperationRequest::class.java)
 			.set("operationDays", shopOperationParams)
 			.sample()
 
@@ -776,15 +778,12 @@ internal class ShopIntegrationTest(
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.path("/{cakeShopId}/operation-days")
 			.buildAndExpand(cakeShopId)
-		val shopOperationParams = getConstructorMonkey().giveMeBuilder(
-			ShopOperationParam::class.java
-		)
+		val shopOperationParams = fixtureMonkey.giveMeBuilder(ShopOperationParam::class.java)
 			.setNotNull("operationDay")
 			.setNotNull("operationStartTime")
-			.setNotNull("operationEndTime").sampleList(6)
-		val request = getConstructorMonkey().giveMeBuilder(
-			UpdateShopOperationRequest::class.java
-		)
+			.setNotNull("operationEndTime")
+			.sampleList(6)
+		val request = fixtureMonkey.giveMeBuilder(UpdateShopOperationRequest::class.java)
 			.set("operationDays", shopOperationParams)
 			.sample()
 

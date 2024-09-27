@@ -16,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder
 
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.IntegrationTest
+import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.api.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.api.dto.request.user.ProfileUpdateRequest
 import com.cakk.core.dto.response.user.ProfileInformationResponse
 import com.cakk.common.enums.Gender
@@ -101,10 +103,10 @@ internal class MyPageIntegrationTest(
 		// given
 		val uriComponents = UriComponentsBuilder.fromUriString(baseUrl)
 			.build()
-		val body = getConstructorMonkey().giveMeBuilder(ProfileUpdateRequest::class.java)
-			.set("nickname", getRandomAlpha(1, 20))
-			.set("profileImageUrl", getRandomAlpha(1, 200))
-			.set("email", getRandomAlpha(1, 50))
+		val body = fixtureMonkey.giveMeBuilder(ProfileUpdateRequest::class.java)
+			.set("nickname", getStringFixtureBw(1, 20))
+			.set("profileImageUrl", getStringFixtureBw(1, 200))
+			.set("email", getStringFixtureBw(1, 50))
 			.set("gender", Arbitraries.of(Gender::class.java))
 			.set("birthday", LocalDate.now())
 			.sample()
