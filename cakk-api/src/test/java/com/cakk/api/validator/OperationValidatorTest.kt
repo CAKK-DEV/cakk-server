@@ -1,69 +1,69 @@
-package com.cakk.api.validator;
+package com.cakk.api.validator
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import jakarta.validation.ConstraintValidatorContext
 
-import java.util.List;
+import io.kotest.matchers.shouldBe
 
-import jakarta.validation.ConstraintValidatorContext;
+import org.mockito.InjectMocks
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
 
-import org.mockito.InjectMocks;
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.MockitoTest
+import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.common.enums.Days
+import com.cakk.core.dto.param.shop.ShopOperationParam
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.MockitoTest;
-import com.cakk.common.enums.Days;
-import com.cakk.core.dto.param.shop.ShopOperationParam;
-
-public class OperationValidatorTest extends MockitoTest {
+internal class OperationValidatorTest : MockitoTest() {
 
 	@InjectMocks
-	private OperationValidator operationValidator;
+	private lateinit var operationValidator: OperationValidator
 
 	@TestWithDisplayName("validation 체크에 통과하면 true를 반환한다.")
-	void isValid1() {
+	fun isValid1() {
 		// given
-		final List<ShopOperationParam> params = getConstructorMonkey().giveMeBuilder(ShopOperationParam.class)
+		val params = fixtureMonkey.giveMeBuilder(ShopOperationParam::class.java)
 			.setNotNull("operationDay")
 			.setNotNull("operationStartTime")
 			.setNotNull("operationEndTime")
-			.sampleList(1);
+			.sampleList(1)
 
-		final ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
+		val context = mock(ConstraintValidatorContext::class.java)
 
 		// when
-		boolean result = operationValidator.isValid(params, context);
+		val result = operationValidator.isValid(params, context)
 
 		// then
-		assertThat(result).isTrue();
+		result shouldBe true
 	}
 
 
 	@TestWithDisplayName("같은 요일이 여러개 담겨있으면 false를 반환한다.")
-	void isValid2() {
+	fun isValid2() {
 		// given
-		final List<ShopOperationParam> params = getConstructorMonkey().giveMeBuilder(ShopOperationParam.class)
+		val params = fixtureMonkey.giveMeBuilder(ShopOperationParam::class.java)
 			.set("operationDay", Days.MON)
 			.setNotNull("operationStartTime")
 			.setNotNull("operationEndTime")
-			.sampleList(3);
-		final ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
+			.sampleList(3)
+		val context = mock(ConstraintValidatorContext::class.java)
 
 		// when
-		boolean result = operationValidator.isValid(params, context);
+		val result = operationValidator.isValid(params, context)
 
 		// then
-		assertThat(result).isFalse();
+		result shouldBe false
 	}
 
 	@TestWithDisplayName("operationParams가 null이면 false를 반환한다.")
-	void isValid3() {
+	fun isValid3() {
 		// given
-		final ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
+		val context = mock(ConstraintValidatorContext::class.java)
 
 		// when
-		boolean result = operationValidator.isValid(null, context);
+		val result = operationValidator.isValid(null, context)
 
 		// then
-		assertThat(result).isFalse();
+		result shouldBe false
 	}
 }

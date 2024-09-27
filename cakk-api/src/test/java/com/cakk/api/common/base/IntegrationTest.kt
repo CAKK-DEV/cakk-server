@@ -42,10 +42,6 @@ abstract class IntegrationTest {
 
 	@BeforeEach
 	fun globalSetUp() {
-//		objectMapper = jsonMapper {
-//			addModule(kotlinModule())
-//			addModule(JavaTimeModule())
-//		}
 		objectMapper = objectMapper.registerModule(KotlinModule.Builder()
 			.withReflectionCacheSize(512)
 			.configure(KotlinFeature.NullToEmptyCollection, false)

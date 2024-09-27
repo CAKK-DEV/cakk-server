@@ -29,6 +29,7 @@ dependencies {
 	testImplementation("com.tngtech.archunit:archunit-junit5:1.1.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.23")
 	testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
 	testImplementation("io.mockk:mockk:${property("mockKVersion")}")

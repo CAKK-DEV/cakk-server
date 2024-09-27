@@ -1,111 +1,86 @@
-package com.cakk.api.common.base;
+package com.cakk.api.common.base
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import org.junit.jupiter.api.BeforeEach
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.filter.CharacterEncodingFilter
 
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import com.fasterxml.jackson.databind.ObjectMapper
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
-import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+import com.cakk.api.controller.advice.GlobalControllerAdvice
+import com.cakk.api.controller.s3.AwsS3Controller
+import com.cakk.api.controller.shop.ShopController
+import com.cakk.api.controller.user.SignController
+import com.cakk.api.filter.JwtAuthenticationFilter
+import com.cakk.core.listener.ErrorAlertEventListener
+import com.cakk.core.service.like.HeartService
+import com.cakk.core.service.like.LikeService
+import com.cakk.core.service.shop.ShopService
+import com.cakk.core.service.user.EmailVerificationService
+import com.cakk.core.service.user.SignService
+import com.cakk.core.service.views.ViewsService
+import com.cakk.external.service.S3Service
 
-import com.cakk.api.controller.advice.GlobalControllerAdvice;
-import com.cakk.api.controller.s3.AwsS3Controller;
-import com.cakk.api.controller.shop.ShopController;
-import com.cakk.api.controller.user.SignController;
-import com.cakk.api.filter.JwtAuthenticationFilter;
-import com.cakk.core.listener.ErrorAlertEventListener;
-import com.cakk.core.service.like.HeartService;
-import com.cakk.core.service.like.LikeService;
-import com.cakk.core.service.shop.ShopService;
-import com.cakk.core.service.user.EmailVerificationService;
-import com.cakk.core.service.user.SignService;
-import com.cakk.core.service.views.ViewsService;
-import com.cakk.external.service.S3Service;
-
-@AutoConfigureMockMvc()
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @WebMvcTest(
-	properties = "spring.profiles.active=test",
-	value = {
-		SignController.class,
-		ShopController.class,
-		AwsS3Controller.class,
-		GlobalControllerAdvice.class
-	}
+    properties = ["spring.profiles.active=test"],
+    value = [
+        SignController::class,
+        ShopController::class,
+        AwsS3Controller::class,
+        GlobalControllerAdvice::class
+    ]
 )
-public abstract class MockMvcTest {
+abstract class MockMvcTest {
 
 	@Autowired
-	protected MockMvc mockMvc;
+    protected lateinit var mockMvc: MockMvc
+
 
 	@Autowired
-	protected ObjectMapper objectMapper;
+    protected lateinit var objectMapper: ObjectMapper
+
+    @MockBean
+    protected lateinit var jwtAuthenticationFilter: JwtAuthenticationFilter
 
 	@MockBean
-	protected JwtAuthenticationFilter jwtAuthenticationFilter;
+    protected lateinit var s3Service: S3Service
 
 	@MockBean
-	protected S3Service s3Service;
+    protected lateinit var signService: SignService
+
+    @MockBean
+    protected lateinit var emailVerificationService: EmailVerificationService
 
 	@MockBean
-	protected SignService signService;
+    protected lateinit var shopService: ShopService
+
+    @MockBean
+    protected lateinit var heartService: HeartService
+
+    @MockBean
+    protected lateinit var likeService: LikeService
+
+    @MockBean
+    protected lateinit var viewsService: ViewsService
 
 	@MockBean
-	protected EmailVerificationService emailVerificationService;
+    protected lateinit var errorAlertEventListener: ErrorAlertEventListener
 
-	@MockBean
-	protected ShopService shopService;
-
-	@MockBean
-	protected HeartService heartService;
-
-	@MockBean
-	protected LikeService likeService;
-
-	@MockBean
-	protected ViewsService viewsService;
-
-	@MockBean
-	protected ErrorAlertEventListener errorAlertEventListener;
-
-	@BeforeEach
-	void setup(WebApplicationContext webApplicationContext) {
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-			.addFilters(new CharacterEncodingFilter("UTF-8", true))
-			.alwaysDo(print())
-			.build();
-	}
-
-	protected final FixtureMonkey getConstructorMonkey() {
-		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
-			.objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
-			.build();
-	}
-
-	protected final FixtureMonkey getReflectionMonkey() {
-		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
-			.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-			.build();
-	}
-
-	protected final FixtureMonkey getBuilderMonkey() {
-		return FixtureMonkey.builder()
-			.plugin(new JakartaValidationPlugin())
-			.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
-			.build();
-	}
+    @BeforeEach
+    fun setup(webApplicationContext: WebApplicationContext) {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+            .addFilters<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
+            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
+            .build()
+    }
 }

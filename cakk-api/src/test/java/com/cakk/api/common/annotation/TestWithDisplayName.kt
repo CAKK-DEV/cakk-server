@@ -1,41 +1,36 @@
-package com.cakk.api.common.annotation;
+package com.cakk.api.common.annotation
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.Method;
+import org.junit.jupiter.api.DisplayNameGeneration
+import org.junit.jupiter.api.DisplayNameGenerator
+import org.junit.jupiter.api.Test
+import java.lang.reflect.Method
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
-
-@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Retention(
+	AnnotationRetention.RUNTIME
+)
+@MustBeDocumented
 @Test
-@DisplayNameGeneration(TestWithDisplayName.TestDisplayNameGenerator.class)
-public @interface TestWithDisplayName {
+@DisplayNameGeneration(
+	TestWithDisplayName.TestDisplayNameGenerator::class
+)
+annotation class TestWithDisplayName(val value: String = "") {
 
-	String value() default "";
+	class TestDisplayNameGenerator : DisplayNameGenerator.Standard() {
+		override fun generateDisplayNameForClass(testClass: Class<*>): String {
+			val testWithDisplayName = testClass.getAnnotation(
+				TestWithDisplayName::class.java
+			)
 
-	class TestDisplayNameGenerator extends DisplayNameGenerator.Standard {
-
-		@Override
-		public String generateDisplayNameForClass(Class<?> testClass) {
-			final TestWithDisplayName testWithDisplayName = testClass.getAnnotation(TestWithDisplayName.class);
-
-			if (testWithDisplayName != null && !testWithDisplayName.value().isEmpty()) {
-				return testWithDisplayName.value();
+			if (testWithDisplayName != null && testWithDisplayName.value.isNotEmpty()) {
+				return testWithDisplayName.value
 			}
 
-			return super.generateDisplayNameForClass(testClass);
+			return super.generateDisplayNameForClass(testClass)
 		}
 
-		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return testMethod.getName();
+		override fun generateDisplayNameForMethod(testClass: Class<*>?, testMethod: Method): String {
+			return testMethod.name
 		}
 	}
 }

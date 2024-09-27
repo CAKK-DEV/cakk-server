@@ -1,92 +1,99 @@
-package com.cakk.api.provider;
+package com.cakk.api.provider
 
-import static com.cakk.api.common.utils.MockGoogleIdToken.*;
-import static org.mockito.Mockito.*;
+import java.io.IOException
+import java.security.GeneralSecurityException
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import org.junit.jupiter.api.Assertions
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
 
-import org.junit.jupiter.api.Assertions;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import net.jqwik.api.Arbitraries
 
-import net.jqwik.api.Arbitraries;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import org.mockito.Mockito.*
 
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.MockitoTest;
-import com.cakk.api.provider.oauth.GoogleAuthProvider;
-import com.cakk.common.enums.ReturnCode;
-import com.cakk.common.exception.CakkException;
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 
-class GoogleAuthProviderTest extends MockitoTest {
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.MockitoTest
+import com.cakk.api.common.fixture.FixtureCommon.getStringFixtureBw
+import com.cakk.api.common.fixture.createMockGoogleIdToken
+import com.cakk.api.provider.oauth.GoogleAuthProvider
+import com.cakk.common.enums.ReturnCode
+import com.cakk.common.exception.CakkException
+
+internal class GoogleAuthProviderTest : MockitoTest() {
 
 	@InjectMocks
-	private GoogleAuthProvider googleAuthProvider;
+	private lateinit var googleAuthProvider: GoogleAuthProvider
 
 	@Mock
-	private GoogleIdTokenVerifier googleIdTokenVerifier;
+	private lateinit var googleIdTokenVerifier: GoogleIdTokenVerifier
 
-	private final String idToken = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.payload.signature";
+	private val idToken = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.payload.signature"
 
 	@TestWithDisplayName("id token으로 제공자 id를 가져온다.")
-	void getProviderId() throws Exception {
+	fun getProviderId() {
 		// given
-		String providerId = Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample();
-		GoogleIdToken mockGoogleIdToken = createMockGoogleIdToken(providerId);
+		val providerId = getStringFixtureBw(5, 10).sample()
+		val mockGoogleIdToken = createMockGoogleIdToken(providerId)
 
-		doReturn(mockGoogleIdToken).when(googleIdTokenVerifier).verify(idToken);
+		doReturn(mockGoogleIdToken).`when`(googleIdTokenVerifier).verify(idToken)
 
 		// when & then
-		String result = googleAuthProvider.getProviderId(idToken);
+		googleAuthProvider.getProviderId(idToken)
 
-		verify(googleIdTokenVerifier, times(1)).verify(idToken);
+		verify(googleIdTokenVerifier, times(1)).verify(idToken)
 	}
 
 	@TestWithDisplayName("google id token이 null이면 서버 외부 에러를 던진다.")
-	void getProviderId2() throws Exception {
+	fun getProviderId2() {
 		// given
-		doReturn(null).when(googleIdTokenVerifier).verify(idToken);
+		doReturn(null).`when`(googleIdTokenVerifier).verify(idToken)
 
-		// when & then
-		Assertions.assertThrows(
-			CakkException.class,
-			() -> googleAuthProvider.getProviderId(idToken),
-			ReturnCode.EXTERNAL_SERVER_ERROR.getMessage()
-		);
+		// when
+		val exception = shouldThrow<CakkException> {
+			googleAuthProvider.getProviderId(idToken)
+		}
 
-		verify(googleIdTokenVerifier, times(1)).verify(idToken);
+		// then
+		exception.getReturnCode() shouldBe ReturnCode.EXTERNAL_SERVER_ERROR
+
+		verify(googleIdTokenVerifier, times(1)).verify(idToken)
 	}
 
 	@TestWithDisplayName("google id token 검증 중 IOException이 발생하면 서버 외부 에러를 던진다.")
-	void getProviderId3() throws Exception {
+	fun getProviderId3() {
 		// given
-		doThrow(new IOException()).when(googleIdTokenVerifier).verify(idToken);
+		doThrow(IOException()).`when`(googleIdTokenVerifier).verify(idToken)
 
-		// when & then
-		Assertions.assertThrows(
-			CakkException.class,
-			() -> googleAuthProvider.getProviderId(idToken),
-			ReturnCode.EXTERNAL_SERVER_ERROR.getMessage()
-		);
+		// when
+		val exception = shouldThrow<CakkException> {
+			googleAuthProvider.getProviderId(idToken)
+		}
 
-		verify(googleIdTokenVerifier, times(1)).verify(idToken);
+		// then
+		exception.getReturnCode() shouldBe ReturnCode.EXTERNAL_SERVER_ERROR
+
+		verify(googleIdTokenVerifier, times(1)).verify(idToken)
 	}
 
 	@TestWithDisplayName("google id token 검증 중 에러가 발생하면 서버 외부 에러를 던진다.")
-	void getProviderId4() throws Exception {
+	fun getProviderId4() {
 		// given
-		doThrow(new GeneralSecurityException()).when(googleIdTokenVerifier).verify(idToken);
+		doThrow(GeneralSecurityException()).`when`(googleIdTokenVerifier).verify(idToken)
 
-		// when & then
-		Assertions.assertThrows(
-			CakkException.class,
-			() -> googleAuthProvider.getProviderId(idToken),
-			ReturnCode.EXTERNAL_SERVER_ERROR.getMessage()
-		);
+		// when
+		val exception = shouldThrow<CakkException> {
+			googleAuthProvider.getProviderId(idToken)
+		}
 
-		verify(googleIdTokenVerifier, times(1)).verify(idToken);
+		// then
+		exception.getReturnCode() shouldBe ReturnCode.EXTERNAL_SERVER_ERROR
+
+		verify(googleIdTokenVerifier, times(1)).verify(idToken)
 	}
 }

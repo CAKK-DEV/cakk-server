@@ -1,48 +1,49 @@
-package com.cakk.api.resolver;
+package com.cakk.api.resolver
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.mockito.InjectMocks
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.mock
+import org.springframework.core.MethodParameter
 
-import org.mockito.InjectMocks;
-import org.springframework.core.MethodParameter;
+import io.kotest.matchers.shouldBe
 
-import com.cakk.api.annotation.SignInUser;
-import com.cakk.api.common.annotation.TestWithDisplayName;
-import com.cakk.api.common.base.MockitoTest;
-import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.api.annotation.SignInUser
+import com.cakk.api.common.annotation.TestWithDisplayName
+import com.cakk.api.common.base.MockitoTest
+import com.cakk.domain.mysql.entity.user.User
 
-class AuthorizedUserResolverTest extends MockitoTest {
+internal class AuthorizedUserResolverTest : MockitoTest() {
 
-	@InjectMocks
-	private AuthorizedUserResolver authorizedUserResolver;
+    @InjectMocks
+    private lateinit var authorizedUserResolver: AuthorizedUserResolver
 
-	@TestWithDisplayName("supportsParameter 메서드는 RefreshToken 어노테이션이 붙은 String 타입의 파라미터를 지원한다.")
-	void supportsParameter() {
-		// given
-		MethodParameter parameter = mock(MethodParameter.class);
+    @TestWithDisplayName("supportsParameter 메서드는 RefreshToken 어노테이션이 붙은 String 타입의 파라미터를 지원한다.")
+    fun supportsParameter() {
+        // given
+        val parameter = mock(MethodParameter::class.java)
 
-		doReturn(true).when(parameter).hasParameterAnnotation(SignInUser.class);
-		doReturn(User.class).when(parameter).getParameterType();
+        doReturn(true).`when`(parameter).hasParameterAnnotation(SignInUser::class.java)
+        doReturn(User::class.java).`when`(parameter).parameterType
 
-		// when
-		boolean result = authorizedUserResolver.supportsParameter(parameter);
+        // when
+        val result = authorizedUserResolver.supportsParameter(parameter)
 
-		// then
-		assertThat(result).isTrue();
-	}
+        // then
+		result shouldBe true
+    }
 
-	@TestWithDisplayName("String 타입이 아닌 경우, false를 반환한다.")
-	void supportsParameter2() {
-		// given
-		MethodParameter parameter = mock(MethodParameter.class);
+    @TestWithDisplayName("String 타입이 아닌 경우, false를 반환한다.")
+    fun supportsParameter2() {
+        // given
+        val parameter = mock(MethodParameter::class.java)
 
-		doReturn(true).when(parameter).hasParameterAnnotation(SignInUser.class);
-		doReturn(Integer.class).when(parameter).getParameterType();
+        doReturn(true).`when`(parameter).hasParameterAnnotation(SignInUser::class.java)
+        doReturn(Int::class.java).`when`(parameter).parameterType
 
-		// when
-		boolean result = authorizedUserResolver.supportsParameter(parameter);
+        // when
+        val result = authorizedUserResolver.supportsParameter(parameter)
 
-		// then
-		assertThat(result).isFalse();
-	}
+        // then
+		result shouldBe false
+    }
 }

@@ -1,33 +1,30 @@
-package com.cakk.api.common.config;
+package com.cakk.api.common.config
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.test.context.support.WithSecurityContextFactory
+import org.springframework.stereotype.Component
 
-import com.cakk.api.common.annotation.MockCustomUser;
-import com.cakk.api.vo.OAuthUserDetails;
-import com.cakk.core.facade.user.UserReadFacade;
-import com.cakk.domain.mysql.entity.user.User;
+import com.cakk.api.common.annotation.MockCustomUser
+import com.cakk.api.vo.OAuthUserDetails
+import com.cakk.core.facade.user.UserReadFacade
 
 @Component
-public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<MockCustomUser> {
+class WithMockCustomUserSecurityContextFactory : WithSecurityContextFactory<MockCustomUser> {
 
-	@Autowired
-	private UserReadFacade userReadFacade;
+    @Autowired
+    private lateinit var userReadFacade: UserReadFacade
 
-	@Override
-	public SecurityContext createSecurityContext(MockCustomUser annotation) {
-		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+    override fun createSecurityContext(annotation: MockCustomUser?): SecurityContext {
+        val securityContext = SecurityContextHolder.createEmptyContext()
 
-		final User user = userReadFacade.findByUserId(1L);
-		final OAuthUserDetails userDetails = new OAuthUserDetails(user);
-		final UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        val user = userReadFacade.findByUserId(1L)
+        val userDetails = OAuthUserDetails(user)
+        val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
 
-		securityContext.setAuthentication(authenticationToken);
-		return securityContext;
-	}
+        securityContext.authentication = authenticationToken
+        return securityContext
+    }
 }
