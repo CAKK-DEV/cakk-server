@@ -15,7 +15,6 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyJwtResponseBy
 import com.cakk.core.mapper.supplyUserBy
 import com.cakk.core.provider.jwt.JwtProvider
-import com.cakk.domain.mysql.entity.user.User
 import com.cakk.domain.redis.repository.TokenRedisRepository
 
 @Service
