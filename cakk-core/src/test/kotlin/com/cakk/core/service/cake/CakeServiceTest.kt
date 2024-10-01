@@ -6,7 +6,6 @@ import io.kotest.matchers.shouldNotBe
 import net.jqwik.api.Arbitraries
 
 import org.junit.jupiter.api.DisplayName
-import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
@@ -27,7 +26,6 @@ import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
 internal class CakeServiceTest : MockitoTest() {
@@ -46,9 +44,6 @@ internal class CakeServiceTest : MockitoTest() {
 
 	@Mock
 	private lateinit var cakeManageFacade: CakeManageFacade
-
-	@Mock
-	private lateinit var cakeViewsRedisRepository: CakeViewsRedisRepository
 
 	@Mock
 	private lateinit var eventPublisher: ApplicationEventPublisher
@@ -146,8 +141,7 @@ internal class CakeServiceTest : MockitoTest() {
 			.set("cakeImageUrl", Arbitraries.strings().alpha().ofMinLength(10).ofMaxLength(20))
 			.sampleList(3)
 
-		doReturn(cakeIds).`when`(cakeViewsRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize.toLong())
-		doReturn(cakeImages).`when`(cakeReadFacade).searchCakeImagesByCakeIds(cakeIds)
+		doReturn(Pair(cakeIds, cakeImages)).`when`(cakeReadFacade).searchBestCakeImages(cursor, pageSize)
 
 		// when
 		val result = cakeService.searchCakeImagesByCursorAndViews(dto)
@@ -156,8 +150,7 @@ internal class CakeServiceTest : MockitoTest() {
 		result.cakeImages shouldNotBe null
 		result.lastCakeId shouldBe null
 
-		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize.toLong())
-		verify(cakeReadFacade, times(1)).searchCakeImagesByCakeIds(cakeIds)
+		verify(cakeReadFacade, times(1)).searchBestCakeImages(cursor, pageSize)
 	}
 
 	@TestWithDisplayName("인기 케이크 목록이 없을 시 빈 배열을 조회한다")
@@ -167,7 +160,7 @@ internal class CakeServiceTest : MockitoTest() {
 		val pageSize = 3
 		val dto = CakeSearchByViewsParam(cursor, pageSize)
 
-		doReturn(listOf<Long>()).`when`(cakeViewsRedisRepository).findTopCakeIdsByOffsetAndCount(cursor, pageSize.toLong())
+		doReturn(Pair(listOf<Long>(), listOf<CakeSearchByViewsParam>())).`when`(cakeReadFacade).searchBestCakeImages(cursor, pageSize)
 
 		// when
 		val result = cakeService.searchCakeImagesByCursorAndViews(dto)
@@ -176,7 +169,6 @@ internal class CakeServiceTest : MockitoTest() {
 		result.cakeImages.size shouldBe 0
 		result.lastCakeId shouldBe null
 
-		verify(cakeViewsRedisRepository, times(1)).findTopCakeIdsByOffsetAndCount(cursor, pageSize.toLong())
-		verify(cakeReadFacade, never()).searchCakeImagesByCakeIds(ArgumentMatchers.anyList<Long>())
+		verify(cakeReadFacade, times(1)).searchBestCakeImages(cursor, pageSize)
 	}
 }
