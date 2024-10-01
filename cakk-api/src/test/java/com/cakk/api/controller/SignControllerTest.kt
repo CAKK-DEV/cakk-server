@@ -9,24 +9,30 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.MockMvcTest
 import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
+import com.cakk.api.common.fixture.FixtureCommon.getDateFixture
+import com.cakk.api.common.fixture.FixtureCommon.getEnumFixture
+import com.cakk.api.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.api.dto.request.user.GenerateCodeRequest
+import com.cakk.api.dto.request.user.UserSignUpRequest
 import com.cakk.api.dto.request.user.VerifyEmailRequest
+import com.cakk.common.enums.Gender
+import com.cakk.common.enums.Provider
 import com.cakk.core.dto.param.user.UserSignInParam
-import com.cakk.core.dto.param.user.UserSignUpParam
 import com.cakk.core.dto.response.user.JwtResponse
+import org.mockito.kotlin.any
 
 internal class SignControllerTest : MockMvcTest() {
 
 	@TestWithDisplayName("")
 	fun signUp() {
 		// given
-		val param = fixtureMonkey.giveMeBuilder(UserSignUpParam::class.java)
-			.setNotNull("provider")
-			.setNotNull("idToken")
-			.setNotNull("nickname")
-			.setNotNull("email")
-			.setNotNull("birthday")
-			.setNotNull("gender")
+		val dto = fixtureMonkey.giveMeBuilder(UserSignUpRequest::class.java)
+			.set("provider", getEnumFixture(Provider::class.java))
+			.set("idToken", getStringFixtureBw(100, 200))
+			.set("nickname", getStringFixtureBw(2, 10))
+			.set("email", getStringFixtureBw(5, 20))
+			.set("birthday", getDateFixture())
+			.set("gender", getEnumFixture(Gender::class.java))
 			.sample()
 		val jwt = fixtureMonkey.giveMeBuilder(JwtResponse::class.java)
 			.setNotNull("accessToken")
@@ -34,12 +40,12 @@ internal class SignControllerTest : MockMvcTest() {
 			.setNotNull("grantType")
 			.sample()
 
-		doReturn(jwt).`when`(signService).signUp(param)
+		doReturn(jwt).`when`(signService).signUp(any())
 
 		// when & then
 		mockMvc.perform(
 			post("/sign-up")
-				.content(objectMapper.writeValueAsString(param))
+				.content(objectMapper.writeValueAsString(dto))
 				.contentType(MediaType.APPLICATION_JSON)
 		)
 			.andExpect(status().isOk())

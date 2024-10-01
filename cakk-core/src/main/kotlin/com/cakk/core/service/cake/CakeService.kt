@@ -15,7 +15,6 @@ import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.core.mapper.cakeDetailResponseFromParam
 import com.cakk.core.mapper.supplyCakeImageListResponse
 import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
 
 @Transactional(readOnly = true)
 @Service
@@ -24,10 +23,8 @@ class CakeService(
 	private val tagReadFacade: TagReadFacade,
 	private val cakeShopReadFacade: CakeShopReadFacade,
 	private val cakeManageFacade: CakeManageFacade,
-	private val cakeViewsRedisRepository: CakeViewsRedisRepository,
 	private val eventPublisher: ApplicationEventPublisher
 ) {
-
 
     fun findCakeImagesByCursorAndCategory(dto: CakeSearchByCategoryParam): CakeImageListResponse {
         val cakeImages = cakeReadFacade.searchCakeImagesByCursorAndCategory(dto.cakeId, dto.category, dto.pageSize)
@@ -55,18 +52,9 @@ class CakeService(
     fun searchCakeImagesByCursorAndViews(dto: CakeSearchByViewsParam): CakeImageListResponse {
         val offset = dto.offset
         val pageSize = dto.pageSize
-        val cakeIds: List<Long> = cakeViewsRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize.toLong())
+		val (cakeIds, cakeImages) = cakeReadFacade.searchBestCakeImages(offset, pageSize)
 
-		return when {
-			cakeIds.isEmpty() -> {
-				supplyCakeImageListResponse(listOf(), cakeIds)
-			}
-
-			else -> {
-				val cakeImages = cakeReadFacade.searchCakeImagesByCakeIds(cakeIds)
-				supplyCakeImageListResponse(cakeImages, cakeIds)
-			}
-		}
+		return supplyCakeImageListResponse(cakeImages, cakeIds)
 	}
 
     fun findCakeDetailById(cakeId: Long): CakeDetailResponse {
