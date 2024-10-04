@@ -1,38 +1,44 @@
 package com.cakk.admin.controller
 
-import com.cakk.admin.dto.request.PromotionRequest
-import com.cakk.admin.dto.response.CakeShopOwnerCandidateResponse
-import com.cakk.admin.dto.response.CakeShopOwnerCandidatesResponse
-import com.cakk.admin.service.BusinessInformationService
-import com.cakk.common.response.ApiResponse
 import jakarta.validation.Valid
+
 import org.springframework.web.bind.annotation.*
+
+import com.cakk.admin.dto.request.PromotionRequest
+import com.cakk.admin.mapper.supplyPromotionParamBy
+import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidateResponse
+import com.cakk.core.dto.response.shop.CakeShopOwnerCandidatesResponse
+import com.cakk.core.service.shop.ShopService
 
 @RestController
 @RequestMapping("/business-information")
 class BusinessInformationController(
-    private val businessInformationService: BusinessInformationService
+	private val shopService: ShopService
 ) {
 
-    @GetMapping("/candidates")
-    fun getBusinessOwnerCandidates(): ApiResponse<CakeShopOwnerCandidatesResponse> {
-        val response = businessInformationService.getBusinessOwnerCandidates()
-        return ApiResponse.success(response)
-    }
+	@GetMapping("/candidates")
+	fun getBusinessOwnerCandidates(): ApiResponse<CakeShopOwnerCandidatesResponse> {
+		val response = shopService.getBusinessOwnerCandidates()
+		return ApiResponse.success(response)
+	}
 
-    @GetMapping("/candidates/{userId}")
-    fun getCandidateSpecificationInformation(
-        @PathVariable userId: Long
-    ): ApiResponse<CakeShopOwnerCandidateResponse> {
-        val response = businessInformationService.getCandidateInformation(userId)
-        return ApiResponse.success(response)
-    }
+	@GetMapping("/candidates/{userId}")
+	fun getCandidateSpecificationInformation(
+		@PathVariable userId: Long
+	): ApiResponse<CakeShopOwnerCandidateResponse> {
+		val response = shopService.getCandidateInformation(userId)
 
-    @PutMapping("/promote")
-    fun promoteUser(
-        @RequestBody @Valid promotionRequest: PromotionRequest
-    ): ApiResponse<Unit> {
-        businessInformationService.promoteUserToBusinessOwner(promotionRequest)
-        return ApiResponse.success()
-    }
+		return ApiResponse.success(response)
+	}
+
+	@PutMapping("/promote")
+	fun promoteUser(
+		@RequestBody @Valid promotionRequest: PromotionRequest
+	): ApiResponse<Unit> {
+		val param = supplyPromotionParamBy(promotionRequest)
+		shopService.promoteUserToBusinessOwner(param)
+
+		return ApiResponse.success()
+	}
 }

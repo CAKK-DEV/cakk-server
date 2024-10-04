@@ -1,41 +1,87 @@
 package com.cakk.admin.mapper
 
-import com.cakk.admin.dto.request.CakeShopCreateByAdminRequest
-import com.cakk.admin.dto.response.CakeShopCreateResponse
-import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation
+import java.util.ArrayList
 
-fun supplyCakeShopBy(dto: CakeShopCreateByAdminRequest): CakeShop {
-    return CakeShop.builder()
-        .shopName(dto.shopName)
-        .shopBio(dto.shopBio)
-        .shopDescription(dto.shopDescription)
-        .shopAddress(dto.shopAddress)
-        .location(supplyPointBy(dto.latitude, dto.longitude))
-        .build()
+import com.cakk.admin.dto.request.*
+import com.cakk.core.dto.param.shop.CreateShopParam
+import com.cakk.core.dto.param.shop.PromotionParam
+import com.cakk.core.mapper.supplyPointBy
+import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam
+import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
+import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
+import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
+import com.cakk.domain.mysql.entity.shop.CakeShopLink
+import com.cakk.domain.mysql.entity.user.User
+
+fun supplyCreateShopParamBy(request: CakeShopCreateByAdminRequest): CreateShopParam {
+	return CreateShopParam(
+		businessNumber = request.businessNumber,
+		operationDays = request.operationDays!!,
+		shopName = request.shopName!!,
+		shopBio = request.shopBio,
+		shopDescription = request.shopDescription,
+		shopAddress = request.shopAddress!!,
+		latitude = request.latitude!!,
+		longitude = request.longitude!!,
+		links = request.links!!
+	)
 }
 
-fun supplyCakeShopOperationsBy(
-    cakeShop: CakeShop?,
-    operationDays: List<ShopOperationParam>
-): List<CakeShopOperation> {
-    val cakeShopOperations = mutableListOf<CakeShopOperation>()
-
-    operationDays.forEach {
-        cakeShopOperations.add(
-            CakeShopOperation.builder()
-                .operationDay(it.operationDay)
-                .operationStartTime(it.operationStartTime)
-                .operationEndTime(it.operationEndTime)
-                .cakeShop(cakeShop)
-                .build()
-        )
-    }
-
-    return cakeShopOperations
+fun supplyCakeShopUpdateParamBy(
+	request: CakeShopUpdateByAdminRequest,
+	user: User,
+	cakeShopId: Long
+): CakeShopUpdateParam {
+	return CakeShopUpdateParam.builder()
+		.user(user)
+		.cakeShopId(cakeShopId)
+		.thumbnailUrl(request.thumbnailUrl)
+		.shopName(request.shopName)
+		.shopBio(request.shopBio)
+		.shopDescription(request.shopDescription)
+		.build()
 }
 
-fun supplyCakeShopCreateResponseBy(cakeShop: CakeShop): CakeShopCreateResponse {
-    return CakeShopCreateResponse(cakeShop.id)
+fun supplyUpdateLinkParamBy(
+	dto: LinkUpdateByAdminRequest,
+	user: User,
+	cakeShopId: Long
+): UpdateLinkParam {
+	val cakeShopLinks: MutableList<CakeShopLink> = ArrayList()
+
+	dto.instagram?.let { cakeShopLinks.add(supplyCakeShopLinkByInstagram(dto.instagram)) }
+	dto.kakao?.let { cakeShopLinks.add(supplyCakeShopLinkByKakao(dto.kakao)) }
+	dto.web?.let { cakeShopLinks.add(supplyCakeShopLinkByWeb(dto.web)) }
+
+	return UpdateLinkParam(user, cakeShopId, cakeShopLinks)
+}
+
+fun supplyUpdateShopOperationParamBy(
+	request: ShopOperationUpdateByAdminRequest,
+	user: User,
+	cakeShopId: Long
+): UpdateShopOperationParam {
+	val cakeShopOperations = supplyCakeShopOperationListBy(request.operationDays!!)
+
+	return UpdateShopOperationParam(cakeShopOperations, user, cakeShopId)
+}
+
+fun supplyUpdateShopAddressParamBy(
+	dto: AddressUpdateByAdminRequest,
+	user: User,
+	cakeShopId: Long
+): UpdateShopAddressParam {
+	return UpdateShopAddressParam(
+		dto.shopAddress!!,
+		supplyPointBy(dto.latitude!!, dto.longitude!!),
+		user,
+		cakeShopId
+	)
+}
+
+fun supplyPromotionParamBy(request: PromotionRequest): PromotionParam {
+	return PromotionParam(
+		userId = request.userId!!,
+		cakeShopId = request.cakeShopId!!
+	)
 }

@@ -11,9 +11,7 @@ import com.cakk.api.dto.request.shop.UpdateShopRequest
 import com.cakk.api.dto.request.user.CertificationRequest
 import com.cakk.core.dto.param.shop.CreateShopParam
 import com.cakk.core.dto.param.shop.PromotionParam
-import com.cakk.core.mapper.supplyCakeShopLinkByInstagram
-import com.cakk.core.mapper.supplyCakeShopOperationListBy
-import com.cakk.core.mapper.supplyPointBy
+import com.cakk.core.mapper.*
 import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam
 import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
 import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
@@ -77,8 +75,8 @@ fun supplyUpdateLinkParamBy(
     val cakeShopLinks: MutableList<CakeShopLink> = ArrayList()
 
     dto.instagram?.let { cakeShopLinks.add(supplyCakeShopLinkByInstagram(dto.instagram)) }
-    dto.kakao?.let { cakeShopLinks.add(supplyCakeShopLinkByInstagram(dto.kakao)) }
-    dto.web?.let { cakeShopLinks.add(supplyCakeShopLinkByInstagram(dto.web)) }
+    dto.kakao?.let { cakeShopLinks.add(supplyCakeShopLinkByKakao(dto.kakao)) }
+    dto.web?.let { cakeShopLinks.add(supplyCakeShopLinkByWeb(dto.web)) }
 
     return UpdateLinkParam(user, cakeShopId, cakeShopLinks)
 }
