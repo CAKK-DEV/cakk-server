@@ -26,6 +26,7 @@ import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
+import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
 internal class CakeServiceTest : MockitoTest() {
@@ -52,10 +53,12 @@ internal class CakeServiceTest : MockitoTest() {
 	fun findCakeImagesByCursorAndCategory1() {
 		// given
 		val dto = CakeSearchByCategoryParam(null, CakeDesignCategory.FLOWER, 3)
-		val cakeImages = fixtureMonkey.giveMeBuilder(CakeImageResponseParam::class.java)
+		val cakeImages = fixtureMonkey.giveMeBuilder(CakeImageWithShopInfoResponseParam::class.java)
 			.set("cakeId", getLongFixtureGoe(1))
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("cakeImageUrl", getStringFixtureBw(10, 20))
+			.set("thumbnailUrl", getStringFixtureBw(5, 10))
+			.set("shopName", getStringFixtureBw(5, 10))
 			.sampleList(3)
 
 		doReturn(cakeImages).`when`(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId, dto.category, dto.pageSize)
