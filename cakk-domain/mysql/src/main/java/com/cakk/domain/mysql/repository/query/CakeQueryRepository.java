@@ -32,6 +32,7 @@ import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam;
 import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.User;
@@ -42,16 +43,18 @@ public class CakeQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(
+	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCursorAndCategory(
 		final Long cakeId,
 		final CakeDesignCategory category,
 		final int pageSize
 	) {
 		return queryFactory
-			.select(constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageWithShopInfoResponseParam.class,
 				cakeShop.id,
 				cake.id,
-				cake.cakeImageUrl))
+				cake.cakeImageUrl,
+				cake.cakeShop.thumbnailUrl,
+				cake.cakeShop.shopName))
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
