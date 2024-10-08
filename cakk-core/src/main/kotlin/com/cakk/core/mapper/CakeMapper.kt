@@ -4,9 +4,11 @@ import java.util.*
 
 import com.cakk.core.dto.response.cake.CakeDetailResponse
 import com.cakk.core.dto.response.cake.CakeImageListResponse
+import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.dto.response.like.HeartCakeImageListResponse
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
 import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
+import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam
 import com.cakk.domain.mysql.dto.param.tag.TagParam
 import com.cakk.domain.mysql.entity.cake.Cake
@@ -17,6 +19,18 @@ fun supplyCakeImageListResponse(cakeImages: List<CakeImageResponseParam>): CakeI
 	return CakeImageListResponse(
 		cakeImages,
 		if (cakeImages.isEmpty()) null else cakeImages[size - 1].cakeId,
+		cakeImages.size
+	)
+}
+
+fun supplyCakeImageWithShopInfoListResponse(
+	cakeImages: List<CakeImageWithShopInfoResponseParam>
+): CakeImageWithShopInfoListResponse {
+	val size = cakeImages.size
+
+	return CakeImageWithShopInfoListResponse(
+		cakeImages,
+		if(cakeImages.isEmpty()) null else cakeImages[size - 1].cakeId,
 		cakeImages.size
 	)
 }

@@ -13,6 +13,7 @@ import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.core.service.cake.CakeService
 import com.cakk.core.service.like.HeartService
 import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.domain.mysql.entity.user.User
 
 @RestController
@@ -25,7 +26,7 @@ class CakeController(
 	@GetMapping("/search/categories")
 	fun listByCategory(
 		@ModelAttribute @Valid request: CakeSearchByCategoryRequest
-	): ApiResponse<CakeImageListResponse> {
+	): ApiResponse<CakeImageWithShopInfoListResponse> {
 		val param = supplyCakeSearchByCategoryParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndCategory(param)
 
