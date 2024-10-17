@@ -7,7 +7,6 @@ import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.annotation.DomainFacade
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
 import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
 import com.cakk.core.dto.param.cake.CakeSearchParam
 import com.cakk.domain.mysql.entity.cake.Cake
@@ -48,11 +47,11 @@ class CakeReadFacade(
 		cakeId: Long?,
 		cakeShopId: Long?,
 		pageSize: Int
-	): List<CakeImageResponseParam> {
+	): List<CakeImageWithShopInfoResponseParam> {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize)
 	}
 
-	fun searchCakeImagesByCursorAndSearchKeyword(param: CakeSearchParam): List<CakeImageResponseParam> {
+	fun searchCakeImagesByCursorAndSearchKeyword(param: CakeSearchParam): List<CakeImageWithShopInfoResponseParam> {
 		return cakeQueryRepository.searchCakeImagesByCursorAndSearchKeyword(
 			param.cakeId,
 			param.keyword,
@@ -64,7 +63,7 @@ class CakeReadFacade(
 	fun searchBestCakeImages(
 		offset: Long,
 		pageSize: Int
-	): Pair<List<Long>, List<CakeImageResponseParam>> {
+	): Pair<List<Long>, List<CakeImageWithShopInfoResponseParam>> {
 		val cakeIds: List<Long> = cakeViewsRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize.toLong())
 
 		return when {

@@ -7,14 +7,12 @@ import org.springframework.transaction.annotation.Transactional
 import com.cakk.core.dto.event.IncreaseSearchCountEvent
 import com.cakk.core.dto.param.cake.*
 import com.cakk.core.dto.response.cake.CakeDetailResponse
-import com.cakk.core.dto.response.cake.CakeImageListResponse
 import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.facade.cake.CakeManageFacade
 import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.core.mapper.cakeDetailResponseFromParam
-import com.cakk.core.mapper.supplyCakeImageListResponse
 import com.cakk.core.mapper.supplyCakeImageWithShopInfoListResponse
 import com.cakk.domain.mysql.entity.user.User
 
@@ -34,13 +32,13 @@ class CakeService(
         return supplyCakeImageWithShopInfoListResponse(cakeImages)
     }
 
-    fun findCakeImagesByCursorAndCakeShopId(dto: CakeSearchByShopParam): CakeImageListResponse {
+    fun findCakeImagesByCursorAndCakeShopId(dto: CakeSearchByShopParam): CakeImageWithShopInfoListResponse {
         val cakeImages = cakeReadFacade.searchCakeImagesByCursorAndCakeShopId(dto.cakeId, dto.shopId, dto.pageSize)
 
-        return supplyCakeImageListResponse(cakeImages)
+        return supplyCakeImageWithShopInfoListResponse(cakeImages)
     }
 
-    fun findCakeImagesByCursorAndSearch(dto: CakeSearchParam): CakeImageListResponse {
+    fun findCakeImagesByCursorAndSearch(dto: CakeSearchParam): CakeImageWithShopInfoListResponse {
         val cakeImages = cakeReadFacade.searchCakeImagesByCursorAndSearchKeyword(dto)
 
 		dto.keyword?.run {
@@ -48,15 +46,15 @@ class CakeService(
 			eventPublisher.publishEvent(event)
 		}
 
-        return supplyCakeImageListResponse(cakeImages)
+        return supplyCakeImageWithShopInfoListResponse(cakeImages)
     }
 
-    fun searchCakeImagesByCursorAndViews(dto: CakeSearchByViewsParam): CakeImageListResponse {
+    fun searchCakeImagesByCursorAndViews(dto: CakeSearchByViewsParam): CakeImageWithShopInfoListResponse {
         val offset = dto.offset
         val pageSize = dto.pageSize
 		val (cakeIds, cakeImages) = cakeReadFacade.searchBestCakeImages(offset, pageSize)
 
-		return supplyCakeImageListResponse(cakeImages, cakeIds)
+		return supplyCakeImageWithShopInfoListResponse(cakeImages, cakeIds)
 	}
 
     fun findCakeDetailById(cakeId: Long): CakeDetailResponse {
