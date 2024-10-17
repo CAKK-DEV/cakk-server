@@ -31,7 +31,7 @@ import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam;
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam;
+import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam;
 import com.cakk.domain.mysql.dto.param.tag.TagParam;
 import com.cakk.domain.mysql.entity.cake.Cake;
 import com.cakk.domain.mysql.entity.user.User;
@@ -42,16 +42,18 @@ public class CakeQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCategory(
+	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCursorAndCategory(
 		final Long cakeId,
 		final CakeDesignCategory category,
 		final int pageSize
 	) {
 		return queryFactory
-			.select(constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageWithShopInfoResponseParam.class,
 				cakeShop.id,
 				cake.id,
-				cake.cakeImageUrl))
+				cake.cakeImageUrl,
+				cake.cakeShop.thumbnailUrl,
+				cake.cakeShop.shopName))
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
@@ -65,16 +67,18 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndCakeShopId(
+	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCursorAndCakeShopId(
 		final Long cakeId,
 		final Long cakeShopId,
 		final int pageSize
 	) {
 		return queryFactory
-			.select(constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageWithShopInfoResponseParam.class,
 				cakeShop.id,
 				cake.id,
-				cake.cakeImageUrl))
+				cake.cakeImageUrl,
+				cake.cakeShop.thumbnailUrl,
+				cake.cakeShop.shopName))
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))
@@ -86,7 +90,7 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCursorAndSearchKeyword(
+	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCursorAndSearchKeyword(
 		final Long cakeId,
 		final String keyword,
 		final Point location,
@@ -94,10 +98,12 @@ public class CakeQueryRepository {
 	) {
 		return queryFactory
 			.select(
-				constructor(CakeImageResponseParam.class,
+				constructor(CakeImageWithShopInfoResponseParam.class,
 					cake.cakeShop.id,
 					cake.id,
-					cake.cakeImageUrl)).distinct()
+					cake.cakeImageUrl,
+					cake.cakeShop.thumbnailUrl,
+					cake.cakeShop.shopName)).distinct()
 			.from(cake)
 			.innerJoin(cake.cakeShop, cakeShop)
 			.leftJoin(cake.cakeCategories, cakeCategory)
@@ -111,12 +117,14 @@ public class CakeQueryRepository {
 			.fetch();
 	}
 
-	public List<CakeImageResponseParam> searchCakeImagesByCakeIds(final List<Long> cakeIds) {
+	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCakeIds(final List<Long> cakeIds) {
 		return queryFactory
-			.select(constructor(CakeImageResponseParam.class,
+			.select(constructor(CakeImageWithShopInfoResponseParam.class,
 				cakeShop.id,
 				cake.id,
-				cake.cakeImageUrl))
+				cake.cakeImageUrl,
+				cake.cakeShop.thumbnailUrl,
+				cake.cakeShop.shopName))
 			.from(cake)
 			.innerJoin(cakeShop)
 			.on(cake.cakeShop.eq(cakeShop))

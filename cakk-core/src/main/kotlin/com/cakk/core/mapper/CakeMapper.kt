@@ -3,41 +3,44 @@ package com.cakk.core.mapper
 import java.util.*
 
 import com.cakk.core.dto.response.cake.CakeDetailResponse
-import com.cakk.core.dto.response.cake.CakeImageListResponse
+import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.dto.response.like.HeartCakeImageListResponse
 import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
-import com.cakk.domain.mysql.dto.param.cake.CakeImageResponseParam
+import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
 import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam
 import com.cakk.domain.mysql.dto.param.tag.TagParam
 import com.cakk.domain.mysql.entity.cake.Cake
 
-fun supplyCakeImageListResponse(cakeImages: List<CakeImageResponseParam>): CakeImageListResponse {
+
+fun supplyCakeImageWithShopInfoListResponse(
+	cakeImages: List<CakeImageWithShopInfoResponseParam>
+): CakeImageWithShopInfoListResponse {
 	val size = cakeImages.size
 
-	return CakeImageListResponse(
+	return CakeImageWithShopInfoListResponse(
 		cakeImages,
-		if (cakeImages.isEmpty()) null else cakeImages[size - 1].cakeId,
+		if(cakeImages.isEmpty()) null else cakeImages[size - 1].cakeId,
 		cakeImages.size
 	)
 }
 
-fun supplyCakeImageListResponse(
-	cakeImages: List<CakeImageResponseParam>,
+fun supplyCakeImageWithShopInfoListResponse(
+	cakeImages: List<CakeImageWithShopInfoResponseParam>,
 	cakeIds: List<Long>
-): CakeImageListResponse {
-	val sortedCakeImages: MutableList<CakeImageResponseParam> = ArrayList()
+): CakeImageWithShopInfoListResponse {
+	val sortedCakeImages: MutableList<CakeImageWithShopInfoResponseParam> = ArrayList()
 
 	for (cakeId in cakeIds) {
 		cakeImages.stream()
-			.filter { cakeImage: CakeImageResponseParam -> cakeImage.cakeId == cakeId }
+			.filter { cakeImage: CakeImageWithShopInfoResponseParam -> cakeImage.cakeId == cakeId }
 			.findFirst()
-			.ifPresent { e: CakeImageResponseParam -> sortedCakeImages.add(e) }
+			.ifPresent { e: CakeImageWithShopInfoResponseParam -> sortedCakeImages.add(e) }
 	}
 
-	return CakeImageListResponse(
+	return CakeImageWithShopInfoListResponse(
 		sortedCakeImages,
 		null,
-		sortedCakeImages.size
+		cakeImages.size
 	)
 }
 
