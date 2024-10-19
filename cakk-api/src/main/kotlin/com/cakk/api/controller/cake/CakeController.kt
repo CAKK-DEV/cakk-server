@@ -8,11 +8,11 @@ import com.cakk.api.annotation.SignInUser
 import com.cakk.api.dto.request.cake.*
 import com.cakk.api.mapper.*
 import com.cakk.core.dto.response.cake.CakeDetailResponse
-import com.cakk.core.dto.response.cake.CakeImageListResponse
 import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.core.service.cake.CakeService
 import com.cakk.core.service.like.HeartService
 import com.cakk.common.response.ApiResponse
+import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.domain.mysql.entity.user.User
 
 @RestController
@@ -25,7 +25,7 @@ class CakeController(
 	@GetMapping("/search/categories")
 	fun listByCategory(
 		@ModelAttribute @Valid request: CakeSearchByCategoryRequest
-	): ApiResponse<CakeImageListResponse> {
+	): ApiResponse<CakeImageWithShopInfoListResponse> {
 		val param = supplyCakeSearchByCategoryParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndCategory(param)
 
@@ -35,7 +35,7 @@ class CakeController(
 	@GetMapping("/search/shops")
 	fun listByShop(
 		@ModelAttribute @Valid request: CakeSearchByShopRequest
-	): ApiResponse<CakeImageListResponse> {
+	): ApiResponse<CakeImageWithShopInfoListResponse> {
 		val param = supplyCakeSearchByShopParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndCakeShopId(param)
 
@@ -45,7 +45,7 @@ class CakeController(
 	@GetMapping("/search/cakes")
 	fun listByKeywordAndLocation(
 		@ModelAttribute @Valid request: CakeSearchByLocationRequest
-	): ApiResponse<CakeImageListResponse> {
+	): ApiResponse<CakeImageWithShopInfoListResponse> {
 		val param = supplyCakeSearchParamBy(request)
 		val response = cakeService.findCakeImagesByCursorAndSearch(param)
 
@@ -55,7 +55,7 @@ class CakeController(
 	@GetMapping("/search/views")
 	fun listByViews(
 		@ModelAttribute @Valid request: CakeSearchByViewsRequest
-	): ApiResponse<CakeImageListResponse> {
+	): ApiResponse<CakeImageWithShopInfoListResponse> {
 		val param = supplyCakeSearchByViewsParamBy(request)
 		val response = cakeService.searchCakeImagesByCursorAndViews(param)
 

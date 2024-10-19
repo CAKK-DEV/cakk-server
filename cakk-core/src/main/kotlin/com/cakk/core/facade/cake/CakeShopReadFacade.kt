@@ -18,6 +18,7 @@ import com.cakk.domain.mysql.repository.jpa.CakeShopJpaRepository
 import com.cakk.domain.mysql.repository.jpa.CakeShopLinkJpaRepository
 import com.cakk.domain.mysql.repository.jpa.CakeShopOperationJpaRepository
 import com.cakk.domain.mysql.repository.query.CakeShopQueryRepository
+import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository
 import org.locationtech.jts.geom.Point
 
 @DomainFacade
@@ -26,24 +27,25 @@ class CakeShopReadFacade(
 	private val cakeShopQueryRepository: CakeShopQueryRepository,
 	private val cakeShopOperationJpaRepository: CakeShopOperationJpaRepository,
 	private val cakeShopLinkJpaRepository: CakeShopLinkJpaRepository,
-	private val businessInformationJpaRepository: BusinessInformationJpaRepository
+	private val businessInformationJpaRepository: BusinessInformationJpaRepository,
+	private val cakeShopViewsRedisRepository: CakeShopViewsRedisRepository
 ) {
 
-    fun findById(cakeShopId: Long): CakeShop {
-        return cakeShopJpaRepository.findById(cakeShopId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP) }
+	fun findById(cakeShopId: Long): CakeShop {
+		return cakeShopJpaRepository.findById(cakeShopId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP) }
 	}
 
-    fun findByIdWithHeart(cakeShopId: Long): CakeShop {
-        return cakeShopQueryRepository.searchByIdWithHeart(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
-    }
+	fun findByIdWithHeart(cakeShopId: Long): CakeShop {
+		return cakeShopQueryRepository.searchByIdWithHeart(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
+	}
 
-    fun findByIdWithLike(cakeShopId: Long): CakeShop {
+	fun findByIdWithLike(cakeShopId: Long): CakeShop {
 		return cakeShopQueryRepository.searchByIdWithLike(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
-    }
+	}
 
-    fun searchSimpleById(cakeShopId: Long): CakeShopSimpleParam {
+	fun searchSimpleById(cakeShopId: Long): CakeShopSimpleParam {
 		return cakeShopQueryRepository.searchSimpleById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
-    }
+	}
 
 	fun searchDetailById(cakeShopId: Long): CakeShopDetailParam {
 		return cakeShopQueryRepository.searchDetailById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
@@ -53,45 +55,55 @@ class CakeShopReadFacade(
 		return cakeShopQueryRepository.searchInfoById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-    fun findBusinessInformationWithShop(cakeShopId: Long): BusinessInformation {
-        return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
-    }
-
-    fun findBusinessInformationByCakeShopId(cakeShopId: Long): BusinessInformation {
-        return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
-    }
-
-    fun searchShopByLocationBased(point: Point?, distance: Double?): List<CakeShopByLocationParam> {
-        return cakeShopQueryRepository.findShopsByLocationBased(point, distance)
-    }
-
-    fun searchShopBySearch(param: CakeShopSearchParam): List<CakeShop> {
-        return cakeShopQueryRepository.searchByKeywordWithLocation(
-                param.cakeShopId,
-                param.keyword,
-                param.location,
-                param.pageSize
-        )
-    }
-
-    fun searchWithShopLinks(owner: User?, cakeShopId: Long?): CakeShop {
-        return cakeShopQueryRepository.searchWithShopLinks(owner, cakeShopId)
-                .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	fun findBusinessInformationWithShop(cakeShopId: Long): BusinessInformation {
+		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
+			?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-    fun searchByIdAndOwner(cakeShopId: Long, owner: User): CakeShop {
-        return cakeShopQueryRepository.searchWithBusinessInformationAndOwnerById(owner, cakeShopId)
-                .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	fun findBusinessInformationByCakeShopId(cakeShopId: Long): BusinessInformation {
+		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
+			?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-    fun searchWithOperations(owner: User?, cakeShopId: Long?): CakeShop {
-        return cakeShopQueryRepository.searchWithOperations(owner, cakeShopId)
-                .orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	fun searchShopByLocationBased(point: Point?, distance: Double?): List<CakeShopByLocationParam> {
+		return cakeShopQueryRepository.findShopsByLocationBased(point, distance)
 	}
 
-    fun searchShopsByShopIds(shopIds: List<Long>?): List<CakeShop> {
-        return cakeShopQueryRepository.searchByShopIds(shopIds)
-    }
+	fun searchShopBySearch(param: CakeShopSearchParam): List<CakeShop> {
+		return cakeShopQueryRepository.searchByKeywordWithLocation(
+			param.cakeShopId,
+			param.keyword,
+			param.location,
+			param.pageSize
+		)
+	}
+
+	fun searchWithShopLinks(owner: User?, cakeShopId: Long?): CakeShop {
+		return cakeShopQueryRepository.searchWithShopLinks(owner, cakeShopId)
+			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	}
+
+	fun searchByIdAndOwner(cakeShopId: Long, owner: User): CakeShop {
+		return cakeShopQueryRepository.searchWithBusinessInformationAndOwnerById(owner, cakeShopId)
+			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	}
+
+	fun searchWithOperations(owner: User?, cakeShopId: Long?): CakeShop {
+		return cakeShopQueryRepository.searchWithOperations(owner, cakeShopId)
+			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
+	}
+
+	fun searchBestShops(
+		offset: Long,
+		pageSize: Int
+	): List<CakeShop> {
+		val cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
+
+		return when {
+			cakeShopIds.isEmpty() -> listOf()
+			else -> cakeShopQueryRepository.searchByShopIds(cakeShopIds)
+		}
+	}
 
 	fun findCakeShopOperationsByCakeShopId(cakeShopId: Long): List<CakeShopOperation> {
 		return cakeShopOperationJpaRepository.findAllByCakeShopId(cakeShopId)

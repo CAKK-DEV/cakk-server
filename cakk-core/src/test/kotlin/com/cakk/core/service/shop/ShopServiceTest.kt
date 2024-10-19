@@ -67,9 +67,6 @@ internal class ShopServiceTest : MockitoTest() {
 	private lateinit var cakeShopManageFacade: CakeShopManageFacade
 
 	@Mock
-	private lateinit var cakeShopViewsRedisRepository: CakeShopViewsRedisRepository
-
-	@Mock
 	private lateinit var publisher: ApplicationEventPublisher
 
 	@Mock
@@ -308,7 +305,6 @@ internal class ShopServiceTest : MockitoTest() {
 		val offset: Long = 0L
 		val pageSize: Int = 3
 		val param = CakeShopSearchByViewsParam(offset, pageSize)
-		val cakeShopIds = listOf(1L, 2L, 3L)
 		val cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
@@ -316,8 +312,7 @@ internal class ShopServiceTest : MockitoTest() {
 			.set("cakeShopBio", getStringFixtureBw(1, 40))
 			.sampleList(3)
 
-		doReturn(cakeShopIds).`when`(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
-		doReturn(cakeShops).`when`(cakeShopReadFacade).searchShopsByShopIds(cakeShopIds)
+		doReturn(cakeShops).`when`(cakeShopReadFacade).searchBestShops(offset, pageSize)
 
 		// when
 		val result = shopService.searchCakeShopsByCursorAndViews(param)
@@ -326,8 +321,7 @@ internal class ShopServiceTest : MockitoTest() {
 		result shouldNotBe null
 		result.size shouldBe cakeShops.size
 
-		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
-		verify(cakeShopReadFacade, times(1)).searchShopsByShopIds(cakeShopIds)
+		verify(cakeShopReadFacade, times(1)).searchBestShops(offset, pageSize)
 	}
 
 	@TestWithDisplayName("인기 케이크 샵 목록이 없는 경우, 빈 배열을 조회한다.")
@@ -338,7 +332,7 @@ internal class ShopServiceTest : MockitoTest() {
 		val param = CakeShopSearchByViewsParam(offset, pageSize)
 		val cakeShopIds: List<Long> = listOf()
 
-		doReturn(cakeShopIds).`when`(cakeShopViewsRedisRepository).findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
+		doReturn(cakeShopIds).`when`(cakeShopReadFacade).searchBestShops(offset, pageSize)
 
 		// when
 		val result = shopService.searchCakeShopsByCursorAndViews(param)
@@ -347,8 +341,7 @@ internal class ShopServiceTest : MockitoTest() {
 		result shouldNotBe null
 		result.cakeShops shouldHaveSize 0
 
-		verify(cakeShopViewsRedisRepository, times(1)).findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
-		verify(cakeShopReadFacade, never()).searchShopsByShopIds(cakeShopIds)
+		verify(cakeShopReadFacade, times(1)).searchBestShops(offset, pageSize)
 	}
 
 	@TestWithDisplayName("케이크샵 기본 정보 수정을 한다")

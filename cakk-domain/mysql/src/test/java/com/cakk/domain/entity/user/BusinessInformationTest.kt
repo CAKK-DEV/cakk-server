@@ -48,7 +48,7 @@ internal class BusinessInformationTest : DomainTest() {
 		//given
 		val businessInformation = getBusinessInformationFixtureWithCakeShop(VerificationStatus.PENDING)
 		val verificationPolicy = verificationPolicy
-		val user = getUserFixture(Role.USER)
+		val user = getUserFixture()
 
 		//when
 		businessInformation.updateBusinessOwner(verificationPolicy, user)

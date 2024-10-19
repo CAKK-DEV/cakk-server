@@ -21,7 +21,7 @@ import com.cakk.api.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.api.dto.request.cake.CakeCreateRequest
 import com.cakk.api.dto.request.cake.CakeUpdateRequest
 import com.cakk.core.dto.response.cake.CakeDetailResponse
-import com.cakk.core.dto.response.cake.CakeImageListResponse
+import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.common.enums.CakeDesignCategory
 import com.cakk.common.enums.ReturnCode
@@ -94,7 +94,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -105,6 +105,8 @@ internal class CakeIntegrationTest(
 		data.cakeImages.forEach {
 			val cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(it.cakeId)
 			cakeCategory.cakeDesignCategory shouldBe CakeDesignCategory.FLOWER
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
 		}
 	}
 
@@ -127,7 +129,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -138,6 +140,8 @@ internal class CakeIntegrationTest(
 		data.cakeImages.forEach {
 			val cakeCategory = cakeReadFacade.findCakeCategoryByCakeId(it.cakeId)
 			cakeCategory.cakeDesignCategory shouldBe CakeDesignCategory.FLOWER
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
 		}
 	}
 
@@ -160,7 +164,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -189,7 +193,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -197,7 +201,11 @@ internal class CakeIntegrationTest(
 
 		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
 		data.size shouldBe 3
-		data.cakeImages.forEach { it.cakeShopId shouldBe 1 }
+		data.cakeImages.forEach {
+			it.cakeShopId shouldBe 1
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
+		}
 	}
 
 	@TestWithDisplayName("케이크 샵으로 첫 페이지가 아닌 케이크 이미지 조회에 성공한다")
@@ -219,7 +227,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -227,7 +235,11 @@ internal class CakeIntegrationTest(
 
 		data.lastCakeId shouldBe data.cakeImages.minOfOrNull { it.cakeId }
 		data.size shouldBe 3
-		data.cakeImages.forEach { it.cakeShopId shouldBe 1 }
+		data.cakeImages.forEach {
+			it.cakeShopId shouldBe 1
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
+		}
 	}
 
 	@TestWithDisplayName("케이크 샵으로 케이크 이미지 조회 시 데이터가 없으면 빈 배열을 반환한다")
@@ -249,7 +261,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -279,7 +291,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -307,7 +319,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -334,7 +346,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
@@ -361,13 +373,17 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
 		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
 		data.cakeImages shouldHaveSize 4
+		data.cakeImages.forEach {
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
+		}
 	}
 
 	@TestWithDisplayName("조회수로 케이크 이미지 조회에 성공한다")
@@ -390,13 +406,17 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code
 		response.returnMessage shouldBe ReturnCode.SUCCESS.message
 
 		data.cakeImages shouldHaveSize 4
+		data.cakeImages.forEach {
+			it.shopName shouldBe "케이크 맛집" + it.cakeShopId
+			it.thumbnailUrl shouldBe "thumbnail_url" + it.cakeShopId
+		}
 	}
 
 	@TestWithDisplayName("조회한 케이크가 없을 시, 인기 케이크 이미지 조회에 빈 배열을 리턴한다")
@@ -416,7 +436,7 @@ internal class CakeIntegrationTest(
 
 		// then
 		val response = objectMapper.convertValue(responseEntity.body, ApiResponse::class.java)
-		val data = objectMapper.convertValue(response.data, CakeImageListResponse::class.java)
+		val data = objectMapper.convertValue(response.data, CakeImageWithShopInfoListResponse::class.java)
 
 		responseEntity.statusCode shouldBe HttpStatusCode.valueOf(200)
 		response.returnCode shouldBe ReturnCode.SUCCESS.code

@@ -1,7 +1,5 @@
 package com.cakk.core.service.shop
 
-import java.util.*
-
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,7 +23,6 @@ import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
 import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
 import com.cakk.domain.mysql.dto.param.user.CertificationParam
 import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository
 
 @Service
 class ShopService(
@@ -33,7 +30,6 @@ class ShopService(
 	private val cakeShopReadFacade: CakeShopReadFacade,
 	private val businessInformationReadFacade: BusinessInformationReadFacade,
 	private val cakeShopManageFacade: CakeShopManageFacade,
-	private val cakeShopViewsRedisRepository: CakeShopViewsRedisRepository,
 	private val verificationPolicy: VerificationPolicy,
 	private val eventPublisher: ApplicationEventPublisher
 ) {
@@ -160,17 +156,19 @@ class ShopService(
 	fun searchCakeShopsByCursorAndViews(param: CakeShopSearchByViewsParam): CakeShopSearchResponse {
 		val offset = param.offset ?: 0
 		val pageSize = param.pageSize
-		val cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
+		val result = cakeShopReadFacade.searchBestShops(offset, pageSize)
 
-		if (Objects.isNull(cakeShopIds) || cakeShopIds.isEmpty()) {
-			return supplyCakeShopSearchResponseBy(listOf())
+		return when {
+			result.isEmpty() -> {
+				supplyCakeShopSearchResponseBy(listOf())
+			}
+			else -> {
+				val cakeShopBySearchParams = supplyCakeShopBySearchParamListBy(result)
+				val cakeShops = CakeShops(cakeShopBySearchParams, 6, pageSize)
+
+				supplyCakeShopSearchResponseBy(cakeShops.cakeShops)
+			}
 		}
-
-		val result = cakeShopReadFacade.searchShopsByShopIds(cakeShopIds)
-		val cakeShopBySearchParams = supplyCakeShopBySearchParamListBy(result)
-		val cakeShops = CakeShops(cakeShopBySearchParams, 6, pageSize)
-
-		return supplyCakeShopSearchResponseBy(cakeShops.cakeShops)
 	}
 
 	@Transactional(readOnly = true)
