@@ -10,7 +10,7 @@ data class SearchShopByLocationRequest(
     val latitude: Double?,
 	@field:NotNull @field:Min(-180) @field:Max(180)
     val longitude: Double?,
-	@field:Min(0) @field:Max(1000)
+	@field:Min(0) @field:Max(3000)
     val distance: Double? = 1000.0
 )
 
