@@ -1,39 +1,39 @@
 description = "mysql module"
 
 dependencies {
-	implementation(project(":cakk-common"))
+	implementation(projects.common)
 
     // jpa
-    api("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.7.4")
+    api(libs.spring.boot.starter.data.jpa)
 
-	// test
-	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.23")
-	testImplementation("org.assertj:assertj-core")
-	testImplementation("org.junit.jupiter:junit-jupiter")
-	testImplementation("org.mockito:mockito-core")
-	testImplementation("org.mockito:mockito-junit-jupiter")
-	testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	// hibernate
+	implementation(libs.hibernate.core)
+	implementation(libs.hibernate.spatial)
 
     // querydsl
-    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
-    annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
-    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
-    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
-	implementation("org.hibernate.orm:hibernate-spatial:6.4.4.Final")
+	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
 	implementation("com.querydsl:querydsl-spatial")
+	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
+	annotationProcessor(libs.jakarta.annotation.api)
+	annotationProcessor(libs.jakarta.persistence.api)
 
     // database
-    runtimeOnly("com.mysql:mysql-connector-j:8.2.0")
-    runtimeOnly("com.h2database:h2")
+    runtimeOnly(libs.mysql.connector.java)
 
 	//serialize
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation(libs.jackson.datatype.jsr310)
+	implementation(libs.jackson.databind)
 
 	// log
-	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+	implementation(libs.h6spy)
+
+	// test
+	testImplementation(libs.assertj.core)
+	testImplementation(libs.junit.jupiter)
+	testImplementation(libs.mockito.core)
+	testImplementation(libs.mockito.junit.jupiter)
+	testImplementation(libs.kotest.junit)
+	testImplementation(libs.fixture.monkey.starter)
 }
 
 tasks.bootJar {

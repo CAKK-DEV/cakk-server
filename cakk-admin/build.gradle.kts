@@ -9,17 +9,17 @@ tasks.jar {
 }
 
 dependencies {
-	implementation(project(":cakk-common"))
-	implementation(project(":cakk-domain:mysql"))
-	implementation(project(":cakk-core"))
+	implementation(projects.common)
+	implementation(projects.persistenceMysql)
+	implementation(projects.application)
 
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation(libs.spring.boot.starter.web)
+	implementation(libs.spring.boot.starter.validation)
+	implementation(libs.spring.boot.starter.security)
+	implementation(libs.spring.boot.starter.oauth)
 
-	implementation("org.springframework:spring-tx")
+	implementation(libs.spring.tx)
 
 	// Point
-	implementation("org.locationtech.jts:jts-core:1.18.2")
+	implementation(libs.jts.core)
 }

@@ -2,13 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm")
-	kotlin("plugin.spring") apply false
-	kotlin("plugin.jpa") apply false
-
-	id("java")
-	id("org.springframework.boot") apply false
-	id("io.spring.dependency-management")
+	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.kotlin.spring) apply false
+	alias(libs.plugins.kotlin.jpa) apply false
+	alias(libs.plugins.spring.boot) apply false
+	alias(libs.plugins.spring.dependency.management)
 
 	checkstyle
 	jacoco
@@ -52,9 +50,8 @@ subprojects {
 		apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 
 		dependencies {
-			implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-			implementation("org.jetbrains.kotlin:kotlin-reflect")
+			implementation(libs.kotlin.stdlib.jdk8)
+			implementation(libs.kotlin.reflect)
 		}
 
 		tasks.withType<KotlinCompile> {
