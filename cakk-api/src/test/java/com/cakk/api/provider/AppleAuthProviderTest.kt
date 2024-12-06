@@ -49,7 +49,7 @@ class AppleAuthProviderTest : MockitoTest() {
 		val oidcPublicKeyList = fixtureMonkey.giveMeBuilder(OidcPublicKeyList::class.java)
 			.set("keys", Arbitraries.of(oidcPublicKeyFixture).list().ofMinSize(1).ofMaxSize(10))
 			.sample()
-		val publicKey = fixtureMonkey.giveMeOne(PublicKey::class.java)
+		val publicKey = mock(PublicKey::class.java)
 		val claims = fixtureMonkey.giveMeBuilder(DefaultClaims::class.java).sample()
 		claims.setSubject(Arbitraries.strings().withCharRange('a', 'z').ofMinLength(5).ofMaxLength(10).sample())
 
