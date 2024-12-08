@@ -1,32 +1,46 @@
 rootProject.name = "cakk"
 
-include(
-	"cakk-api",
-	"cakk-admin",
-	"cakk-batch",
-	"cakk-core",
-	"cakk-domain:mysql",
-	"cakk-domain:redis",
-	"cakk-external",
-	"cakk-common"
-)
-
 pluginManagement {
-	val kotlinVersion: String by settings
-	val springBootVersion: String by settings
-	val springDependencyManagementVersion: String by settings
-	val ktlintVersion: String by settings
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
 
-	resolutionStrategy {
-		eachPlugin {
-			when (requested.id.id) {
-				"org.jetbrains.kotlin.jvm" -> useVersion(kotlinVersion)
-				"org.jetbrains.kotlin.kapt" -> useVersion(kotlinVersion)
-				"org.jetbrains.kotlin.plugin.jpa" -> useVersion(kotlinVersion)
-				"org.jetbrains.kotlin.plugin.spring" -> useVersion(kotlinVersion)
-				"org.springframework.boot" -> useVersion(springBootVersion)
-				"io.spring.dependency-management" -> useVersion(springDependencyManagementVersion)
-			}
+plugins {
+	id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
+}
+
+// presentation
+module(name=":app-api", "cakk-api")
+module(name=":admin-api", "cakk-admin")
+module(name=":batch", "cakk-batch")
+
+// external
+module(name=":external", "cakk-external")
+
+// application
+module(name=":application", "cakk-core")
+
+// domain & persistence
+module(name=":persistence", "cakk-domain")
+module(name=":persistence-mysql", "cakk-domain/mysql")
+module(name=":persistence-redis", "cakk-domain/redis")
+
+// common
+module(name=":common", "cakk-common")
+
+dependencyResolutionManagement {
+	versionCatalogs {
+		create("libs") {
+			from(files("libs.versions.toml"))
 		}
 	}
+}
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+fun module(name: String, path: String) {
+	include(name)
+	project(name).projectDir = file(path)
 }
