@@ -1,35 +1,33 @@
 description = "batch module"
 
 dependencies {
-	implementation project(':cakk-common')
-	implementation project(':cakk-domain:mysql')
-	implementation project(':cakk-domain:redis')
+	implementation(projects.common)
+	implementation(projects.persistenceMysql)
+	implementation(projects.persistenceRedis)
 
 	// basic
-	implementation('org.springframework.boot:spring-boot-starter-web') {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	implementation(libs.spring.boot.starter.web) {
+		exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
 	}
-	implementation('org.springframework.boot:spring-boot-starter-batch')
-	implementation('org.springframework.boot:spring-boot-starter-validation')
-	implementation('org.springframework:spring-tx')
-	annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+	implementation(libs.spring.boot.starter.batch)
+	implementation(libs.spring.boot.starter.validation)
+	annotationProcessor(libs.spring.boot.configuration.processor)
 
 	// test
-	testImplementation('com.tngtech.archunit:archunit-junit5:1.1.0')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
-	testImplementation('org.springframework.batch:spring-batch-test')
+	testImplementation(libs.archunit)
+	testImplementation(libs.spring.boot.starter.test)
 
 	// test container
-	testImplementation('org.testcontainers:junit-jupiter:1.19.7')
+	testImplementation(libs.testcontainers.junit)
 
 	// slack 설정
-	implementation('net.gpedro.integrations.slack:slack-webhook:1.4.0')
+	implementation(libs.slack.webhook)
 
 	// Point
-	implementation 'org.locationtech.jts:jts-core:1.18.2'
+	implementation(libs.jts.core)
 
 	// aws lambda
-	implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.1'
+	implementation(libs.aws.serverless)
 }
 
 tasks.register('buildZip', Zip) {
