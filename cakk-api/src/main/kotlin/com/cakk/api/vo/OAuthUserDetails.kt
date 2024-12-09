@@ -8,16 +8,16 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.oauth2.core.user.OAuth2User
 
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 class OAuthUserDetails(
-	private val user: User,
-	private val attribute: Map<String, Any>
+    private val user: com.cakk.infrastructure.persistence.entity.user.User,
+    private val attribute: Map<String, Any>
 ) : UserDetails, OidcUser, OAuth2User {
 
-    constructor(user: User) : this(user, mapOf<String, Any>("id" to user.id))
+    constructor(user: com.cakk.infrastructure.persistence.entity.user.User) : this(user, mapOf<String, Any>("id" to user.id))
 
-	fun getUser(): User = user
+	fun getUser(): com.cakk.infrastructure.persistence.entity.user.User = user
 
     override fun getName(): String {
         return user.id.toString()

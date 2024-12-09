@@ -6,12 +6,12 @@ import com.cakk.admin.dto.request.*
 import com.cakk.core.dto.param.shop.CreateShopParam
 import com.cakk.core.dto.param.shop.PromotionParam
 import com.cakk.core.mapper.supplyPointBy
-import com.cakk.domain.mysql.dto.param.link.UpdateLinkParam
-import com.cakk.domain.mysql.dto.param.operation.UpdateShopOperationParam
-import com.cakk.domain.mysql.dto.param.shop.CakeShopUpdateParam
-import com.cakk.domain.mysql.dto.param.shop.UpdateShopAddressParam
-import com.cakk.domain.mysql.entity.shop.CakeShopLink
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.param.link.UpdateLinkParam
+import com.cakk.infrastructure.persistence.param.operation.UpdateShopOperationParam
+import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam
+import com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink
+import com.cakk.infrastructure.persistence.entity.user.User
 
 fun supplyCreateShopParamBy(request: CakeShopCreateByAdminRequest): CreateShopParam {
 	return CreateShopParam(
@@ -29,10 +29,10 @@ fun supplyCreateShopParamBy(request: CakeShopCreateByAdminRequest): CreateShopPa
 
 fun supplyCakeShopUpdateParamBy(
 	request: CakeShopUpdateByAdminRequest,
-	user: User,
+	user: com.cakk.infrastructure.persistence.entity.user.User,
 	cakeShopId: Long
-): CakeShopUpdateParam {
-	return CakeShopUpdateParam.builder()
+): com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam {
+	return com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam.builder()
 		.user(user)
 		.cakeShopId(cakeShopId)
 		.thumbnailUrl(request.thumbnailUrl)
@@ -44,34 +44,34 @@ fun supplyCakeShopUpdateParamBy(
 
 fun supplyUpdateLinkParamBy(
 	dto: LinkUpdateByAdminRequest,
-	user: User,
+	user: com.cakk.infrastructure.persistence.entity.user.User,
 	cakeShopId: Long
-): UpdateLinkParam {
-	val cakeShopLinks: MutableList<CakeShopLink> = ArrayList()
+): com.cakk.infrastructure.persistence.param.link.UpdateLinkParam {
+	val cakeShopLinks: MutableList<com.cakk.infrastructure.persistence.entity.shop.CakeShopLink> = ArrayList()
 
 	dto.instagram?.let { cakeShopLinks.add(supplyCakeShopLinkByInstagram(dto.instagram)) }
 	dto.kakao?.let { cakeShopLinks.add(supplyCakeShopLinkByKakao(dto.kakao)) }
 	dto.web?.let { cakeShopLinks.add(supplyCakeShopLinkByWeb(dto.web)) }
 
-	return UpdateLinkParam(user, cakeShopId, cakeShopLinks)
+	return com.cakk.infrastructure.persistence.param.link.UpdateLinkParam(user, cakeShopId, cakeShopLinks)
 }
 
 fun supplyUpdateShopOperationParamBy(
 	request: ShopOperationUpdateByAdminRequest,
-	user: User,
+	user: com.cakk.infrastructure.persistence.entity.user.User,
 	cakeShopId: Long
-): UpdateShopOperationParam {
+): com.cakk.infrastructure.persistence.param.operation.UpdateShopOperationParam {
 	val cakeShopOperations = supplyCakeShopOperationListBy(request.operationDays!!)
 
-	return UpdateShopOperationParam(cakeShopOperations, user, cakeShopId)
+	return com.cakk.infrastructure.persistence.param.operation.UpdateShopOperationParam(cakeShopOperations, user, cakeShopId)
 }
 
 fun supplyUpdateShopAddressParamBy(
 	dto: AddressUpdateByAdminRequest,
-	user: User,
+	user: com.cakk.infrastructure.persistence.entity.user.User,
 	cakeShopId: Long
-): UpdateShopAddressParam {
-	return UpdateShopAddressParam(
+): com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam {
+	return com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam(
 		dto.shopAddress!!,
 		supplyPointBy(dto.latitude!!, dto.longitude!!),
 		user,

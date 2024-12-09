@@ -5,7 +5,7 @@ import com.cakk.core.dto.param.cake.*
 import com.cakk.core.mapper.supplyCakeBy
 import com.cakk.core.mapper.supplyCakeCategoryListBy
 import com.cakk.core.mapper.supplyPointBy
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 fun supplyCakeSearchByCategoryParamBy(dto: CakeSearchByCategoryRequest): CakeSearchByCategoryParam {
     return CakeSearchByCategoryParam(
@@ -39,7 +39,7 @@ fun supplyCakeSearchByViewsParamBy(dto: CakeSearchByViewsRequest): CakeSearchByV
     )
 }
 
-fun supplyCakeCreateParamBy(dto: CakeCreateRequest, user: User, cakeShopId: Long): CakeCreateParam {
+fun supplyCakeCreateParamBy(dto: CakeCreateRequest, user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long): CakeCreateParam {
     return CakeCreateParam(
         supplyCakeBy(dto.cakeImageUrl!!),
         supplyCakeCategoryListBy(dto.cakeDesignCategories!!),
@@ -49,7 +49,7 @@ fun supplyCakeCreateParamBy(dto: CakeCreateRequest, user: User, cakeShopId: Long
     )
 }
 
-fun supplyCakeUpdateParamBy(dto: CakeUpdateRequest, owner: User, cakeId: Long): CakeUpdateParam {
+fun supplyCakeUpdateParamBy(dto: CakeUpdateRequest, owner: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long): CakeUpdateParam {
     return CakeUpdateParam(
         owner = owner,
         cakeId = cakeId,

@@ -9,12 +9,12 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.vo.OAuthUserDetails
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 class AuthorizedUserResolver : HandlerMethodArgumentResolver {
 	override fun supportsParameter(parameter: MethodParameter): Boolean {
 		return parameter.hasParameterAnnotation(SignInUser::class.java)
-			&& User::class.java.isAssignableFrom(parameter.parameterType)
+			&& com.cakk.infrastructure.persistence.entity.user.User::class.java.isAssignableFrom(parameter.parameterType)
 	}
 
 	override fun resolveArgument(

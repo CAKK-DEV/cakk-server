@@ -2,8 +2,8 @@ description = "core module"
 
 dependencies {
 	implementation(projects.common)
-	implementation(projects.persistenceMysql)
-	implementation(projects.persistenceRedis)
+	implementation(projects.persistence)
+	implementation(projects.cache)
 	implementation(projects.external)
 
 	// basic

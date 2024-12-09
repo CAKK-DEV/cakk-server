@@ -119,7 +119,7 @@ subprojects {
 			"com.cakk.api.listener.**",
 			"com.cakk.api.vo.**",
 			"com.cakk.core.**",
-			"com.cakk.domain.**"
+			"com.cakk.infrastructure.**"
 		)
 
 		for (qPattern in 'A'..'Z') {

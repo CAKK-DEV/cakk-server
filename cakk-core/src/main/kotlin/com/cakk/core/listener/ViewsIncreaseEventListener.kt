@@ -8,13 +8,13 @@ import org.springframework.transaction.event.TransactionalEventListener
 import com.cakk.core.annotation.ApplicationEventListener
 import com.cakk.core.dto.event.CakeIncreaseViewsEvent
 import com.cakk.core.dto.event.CakeShopIncreaseViewsEvent
-import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeShopViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
 
 @ApplicationEventListener
 class ViewsIncreaseEventListener(
-	private val cakeViewsRedisRepository: CakeViewsRedisRepository,
-	private val cakeShopViewsRedisRepository: CakeShopViewsRedisRepository
+    private val cakeViewsRedisRepository: CakeViewsRedisRepository,
+    private val cakeShopViewsRedisRepository: CakeShopViewsRedisRepository
 ) {
 
 	@Async

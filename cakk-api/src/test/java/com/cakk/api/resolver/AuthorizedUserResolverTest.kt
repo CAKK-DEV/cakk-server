@@ -10,7 +10,7 @@ import io.kotest.matchers.shouldBe
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.MockitoTest
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 internal class AuthorizedUserResolverTest : MockitoTest() {
 
@@ -23,7 +23,7 @@ internal class AuthorizedUserResolverTest : MockitoTest() {
         val parameter = mock(MethodParameter::class.java)
 
         doReturn(true).`when`(parameter).hasParameterAnnotation(SignInUser::class.java)
-        doReturn(User::class.java).`when`(parameter).parameterType
+        doReturn(com.cakk.infrastructure.persistence.entity.user.User::class.java).`when`(parameter).parameterType
 
         // when
         val result = authorizedUserResolver.supportsParameter(parameter)

@@ -11,12 +11,12 @@ import com.cakk.common.utils.generateRandomStringOnlyNumber
 import com.cakk.core.dto.param.user.GenerateCodeParam
 import com.cakk.core.dto.param.user.VerifyEmailParam
 import com.cakk.core.mapper.supplyEmailWithVerificationCodeSendEventBy
-import com.cakk.domain.redis.repository.EmailVerificationRedisRepository
+import com.cakk.infrastructure.cache.repository.EmailVerificationRedisRepository
 
 @Service
 class EmailVerificationService(
-	private val emailVerificationRedisRepository: EmailVerificationRedisRepository,
-	private val applicationEventPublisher: ApplicationEventPublisher
+    private val emailVerificationRedisRepository: EmailVerificationRedisRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
     fun sendEmailForVerification(dto: GenerateCodeParam) {

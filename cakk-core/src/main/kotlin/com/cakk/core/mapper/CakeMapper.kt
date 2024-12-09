@@ -5,15 +5,15 @@ import java.util.*
 import com.cakk.core.dto.response.cake.CakeDetailResponse
 import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.dto.response.like.HeartCakeImageListResponse
-import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
-import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
-import com.cakk.domain.mysql.dto.param.like.HeartCakeImageResponseParam
-import com.cakk.domain.mysql.dto.param.tag.TagParam
-import com.cakk.domain.mysql.entity.cake.Cake
+import com.cakk.infrastructure.persistence.param.cake.CakeDetailParam
+import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam
+import com.cakk.infrastructure.persistence.param.like.HeartCakeImageResponseParam
+import com.cakk.infrastructure.persistence.param.tag.TagParam
+import com.cakk.infrastructure.persistence.entity.cake.Cake
 
 
 fun supplyCakeImageWithShopInfoListResponse(
-	cakeImages: List<CakeImageWithShopInfoResponseParam>
+	cakeImages: List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam>
 ): CakeImageWithShopInfoListResponse {
 	val size = cakeImages.size
 
@@ -25,16 +25,16 @@ fun supplyCakeImageWithShopInfoListResponse(
 }
 
 fun supplyCakeImageWithShopInfoListResponse(
-	cakeImages: List<CakeImageWithShopInfoResponseParam>,
+	cakeImages: List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam>,
 	cakeIds: List<Long>
 ): CakeImageWithShopInfoListResponse {
-	val sortedCakeImages: MutableList<CakeImageWithShopInfoResponseParam> = ArrayList()
+	val sortedCakeImages: MutableList<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam> = ArrayList()
 
 	for (cakeId in cakeIds) {
 		cakeImages.stream()
-			.filter { cakeImage: CakeImageWithShopInfoResponseParam -> cakeImage.cakeId == cakeId }
+			.filter { cakeImage: com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam -> cakeImage.cakeId == cakeId }
 			.findFirst()
-			.ifPresent { e: CakeImageWithShopInfoResponseParam -> sortedCakeImages.add(e) }
+			.ifPresent { e: com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam -> sortedCakeImages.add(e) }
 	}
 
 	return CakeImageWithShopInfoListResponse(
@@ -44,7 +44,7 @@ fun supplyCakeImageWithShopInfoListResponse(
 	)
 }
 
-fun supplyHeartCakeImageListResponseBy(cakeImages: List<HeartCakeImageResponseParam>): HeartCakeImageListResponse {
+fun supplyHeartCakeImageListResponseBy(cakeImages: List<com.cakk.infrastructure.persistence.param.like.HeartCakeImageResponseParam>): HeartCakeImageListResponse {
 	val size = cakeImages.size
 
 	return HeartCakeImageListResponse(
@@ -54,7 +54,7 @@ fun supplyHeartCakeImageListResponseBy(cakeImages: List<HeartCakeImageResponsePa
 	)
 }
 
-fun cakeDetailResponseFromParam(param: CakeDetailParam): CakeDetailResponse {
+fun cakeDetailResponseFromParam(param: com.cakk.infrastructure.persistence.param.cake.CakeDetailParam): CakeDetailResponse {
 	var tags = param.tags
 
 	for (tagParam in tags) {
@@ -74,12 +74,12 @@ fun cakeDetailResponseFromParam(param: CakeDetailParam): CakeDetailResponse {
 	)
 }
 
-fun supplyCakeBy(cakeImageUrl: String): Cake {
-	return Cake.builder()
+fun supplyCakeBy(cakeImageUrl: String): com.cakk.infrastructure.persistence.entity.cake.Cake {
+	return com.cakk.infrastructure.persistence.entity.cake.Cake.builder()
 		.cakeImageUrl(cakeImageUrl)
 		.build()
 }
 
-private fun isEmptyTag(tagParam: TagParam): Boolean {
+private fun isEmptyTag(tagParam: com.cakk.infrastructure.persistence.param.tag.TagParam): Boolean {
 	return Objects.isNull(tagParam.tagId) || Objects.isNull(tagParam.tagName)
 }

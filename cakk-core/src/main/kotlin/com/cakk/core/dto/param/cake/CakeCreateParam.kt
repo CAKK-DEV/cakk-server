@@ -1,14 +1,14 @@
 package com.cakk.core.dto.param.cake
 
-import com.cakk.domain.mysql.entity.cake.Cake
-import com.cakk.domain.mysql.entity.cake.CakeCategory
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.cake.Cake
+import com.cakk.infrastructure.persistence.entity.cake.CakeCategory
+import com.cakk.infrastructure.persistence.entity.user.User
 
 
 data class CakeCreateParam(
-    val cake: Cake,
-    val cakeCategories: List<CakeCategory>,
+    val cake: com.cakk.infrastructure.persistence.entity.cake.Cake,
+    val cakeCategories: List<com.cakk.infrastructure.persistence.entity.cake.CakeCategory>,
     val tagNames: List<String>,
-    val owner: User,
+    val owner: com.cakk.infrastructure.persistence.entity.user.User,
     val cakeShopId: Long
 )

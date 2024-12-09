@@ -7,11 +7,11 @@ import jakarta.validation.ConstraintValidatorContext
 
 import com.cakk.admin.annotation.OperationDay
 import com.cakk.common.enums.Days
-import com.cakk.domain.mysql.dto.param.shop.ShopOperationParam
+import com.cakk.infrastructure.persistence.param.shop.ShopOperationParam
 
-class OperationValidator : ConstraintValidator<OperationDay, List<ShopOperationParam>> {
+class OperationValidator : ConstraintValidator<OperationDay, List<com.cakk.infrastructure.persistence.param.shop.ShopOperationParam>> {
 
-	override fun isValid(operationParams: List<ShopOperationParam>?, context: ConstraintValidatorContext): Boolean {
+	override fun isValid(operationParams: List<com.cakk.infrastructure.persistence.param.shop.ShopOperationParam>?, context: ConstraintValidatorContext): Boolean {
 		operationParams ?: return false
 
 		val days: MutableMap<Days, Boolean> = EnumMap(Days::class.java)

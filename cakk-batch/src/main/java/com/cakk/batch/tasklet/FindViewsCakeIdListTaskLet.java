@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 import com.cakk.batch.utils.BatchConstants;
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository;
+import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository;
 
 @StepScope
 @Component

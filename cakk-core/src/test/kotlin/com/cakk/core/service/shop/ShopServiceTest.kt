@@ -39,13 +39,9 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyCakeShopDetailResponseBy
 import com.cakk.core.mapper.supplyCakeShopInfoResponseBy
 import com.cakk.core.mapper.supplyCakeShopSimpleResponseBy
-import com.cakk.domain.mysql.bo.user.VerificationPolicy
-import com.cakk.domain.mysql.dto.param.shop.*
-import com.cakk.domain.mysql.dto.param.user.CertificationParam
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.user.BusinessInformation
-import com.cakk.domain.mysql.event.shop.CertificationEvent
-import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.param.shop.CakeShopInfoParam
+import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam
 import org.springframework.test.util.ReflectionTestUtils
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
@@ -70,7 +66,7 @@ internal class ShopServiceTest : MockitoTest() {
 	private lateinit var publisher: ApplicationEventPublisher
 
 	@Mock
-	private lateinit var verificationPolicy: VerificationPolicy
+	private lateinit var verificationPolicy: com.cakk.infrastructure.persistence.bo.user.VerificationPolicy
 
 	private fun getCreateShopParamFixture(): CreateShopParam {
 		return fixtureMonkey.giveMeBuilder(CreateShopParam::class.java)
@@ -98,8 +94,8 @@ internal class ShopServiceTest : MockitoTest() {
 			.sample()
 	}
 
-	private fun getCertificationParamFixture(isNull: Boolean): CertificationParam {
-		val builder = fixtureMonkey.giveMeBuilder(CertificationParam::class.java).setNotNull("user")
+	private fun getCertificationParamFixture(isNull: Boolean): com.cakk.infrastructure.persistence.param.user.CertificationParam {
+		val builder = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.user.CertificationParam::class.java).setNotNull("user")
 
 		return when {
 			isNull -> builder.setNull("cakeShopId").sample()
@@ -107,8 +103,8 @@ internal class ShopServiceTest : MockitoTest() {
 		}
 	}
 
-	private fun getCakeShopFixture(): CakeShop {
-		val cakeShop = fixtureMonkey.giveMeBuilder(CakeShop::class.java)
+	private fun getCakeShopFixture(): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+		val cakeShop = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.shop.CakeShop::class.java)
 			.set("shopName", getStringFixtureEq(30))
 			.set("shopBio", getStringFixtureEq(40))
 			.set("shopDescription", getStringFixtureEq(500))
@@ -118,23 +114,23 @@ internal class ShopServiceTest : MockitoTest() {
 		return cakeShop
 	}
 
-	private fun getBusinessInformationFixture(): BusinessInformation {
-		return fixtureMonkey.giveMeBuilder(BusinessInformation::class.java)
+	private fun getBusinessInformationFixture(): com.cakk.infrastructure.persistence.entity.user.BusinessInformation {
+		return fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.BusinessInformation::class.java)
 			.set("businessNumber", getStringFixtureEq(20))
 			.set("cakeShop", getCakeShopFixture())
 			.set("verificationStatus", VerificationStatus.UNREQUESTED)
 			.sample()
 	}
 
-	private fun getCertificationEventFixture(): CertificationEvent {
-		return fixtureMonkey.giveMeBuilder(CertificationEvent::class.java).sample()
+	private fun getCertificationEventFixture(): com.cakk.infrastructure.persistence.shop.CertificationEvent {
+		return fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.shop.CertificationEvent::class.java).sample()
 	}
 
 	@TestWithDisplayName("id로 케이크 샵을 간단조회 한다.")
 	fun searchSimpleById1() {
 		// given
 		val cakeShopId = 1L
-		val response = fixtureMonkey.giveMeBuilder(CakeShopSimpleParam::class.java)
+		val response = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.shop.CakeShopSimpleParam::class.java)
 			.set("cakeShopId", getLongFixtureGoe(10))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
 			.set("cakeShopName", getStringFixtureBw(1, 30))
@@ -172,14 +168,19 @@ internal class ShopServiceTest : MockitoTest() {
 	fun searchDetailById1() {
 		// given
 		val cakeShopId = 1L
-		val param = fixtureMonkey.giveMeBuilder(CakeShopDetailParam::class.java)
+		val param = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.shop.CakeShopDetailParam::class.java)
 			.set("cakeShopId", getLongFixtureGoe(10))
 			.set("shopName", getStringFixtureBw(1, 30))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
 			.set("shopBio", getStringFixtureBw(1, 10))
 			.set("shopDescription", getStringFixtureBw(100, 500))
 			.set("operationDays", setOf(getEnumFixture(Days::class.java), getEnumFixture(Days::class.java)))
-			.set("links", setOf(CakeShopLinkParam(LinkKind.WEB, getStringFixtureEq(10).sample())))
+			.set("links", setOf(
+				com.cakk.infrastructure.persistence.param.shop.CakeShopLinkParam(
+					LinkKind.WEB,
+					getStringFixtureEq(10).sample()
+				)
+			))
 			.sample()
 
 		doReturn(param).`when`(cakeShopReadFacade).searchDetailById(cakeShopId)
@@ -265,7 +266,7 @@ internal class ShopServiceTest : MockitoTest() {
 			.set("shopAddress", getStringFixtureBw(1, 30))
 			.set("point", getPointFixture())
 			.set(
-				"operationDays", listOf(
+				"shopOperationDays", listOf(
 					ShopOperationParam(Days.MON, LocalTime.now(), LocalTime.now()),
 					ShopOperationParam(Days.TUE, LocalTime.now(), LocalTime.now())
 				)
@@ -306,10 +307,10 @@ internal class ShopServiceTest : MockitoTest() {
 		val pageSize: Int = 3
 		val param = CakeShopSearchByViewsParam(offset, pageSize)
 		val cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
-			.set("cakeShopId", getLongFixtureGoe(1))
+			.set("id", getLongFixtureGoe(1))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
-			.set("cakeShopName", getStringFixtureBw(1, 30))
-			.set("cakeShopBio", getStringFixtureBw(1, 40))
+			.set("shopName", getStringFixtureBw(1, 30))
+			.set("shopBio", getStringFixtureBw(1, 40))
 			.sampleList(3)
 
 		doReturn(cakeShops).`when`(cakeShopReadFacade).searchBestShops(offset, pageSize)

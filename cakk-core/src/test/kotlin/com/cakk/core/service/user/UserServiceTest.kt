@@ -19,7 +19,7 @@ import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.core.facade.user.UserManageFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyUserWithdrawalBy
-import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam
+import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
 internal class UserServiceTest : MockitoTest() {
@@ -67,7 +67,7 @@ internal class UserServiceTest : MockitoTest() {
 	fun updateInformation() {
 		// given
 		val user = getUserFixture(Role.USER)
-		val param = fixtureMonkey.giveMeBuilder(ProfileUpdateParam::class.java)
+		val param = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam::class.java)
 			.setNotNull("profileImageUrl")
 			.setNotNull("nickname")
 			.setNotNull("email")

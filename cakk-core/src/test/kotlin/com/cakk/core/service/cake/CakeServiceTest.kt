@@ -22,7 +22,7 @@ import com.cakk.core.facade.cake.CakeManageFacade
 import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.tag.TagReadFacade
-import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
+import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
 internal class CakeServiceTest : MockitoTest() {
@@ -49,7 +49,7 @@ internal class CakeServiceTest : MockitoTest() {
 	fun findCakeImagesByCursorAndCategory1() {
 		// given
 		val dto = CakeSearchByCategoryParam(null, CakeDesignCategory.FLOWER, 3)
-		val cakeImages = fixtureMonkey.giveMeBuilder(CakeImageWithShopInfoResponseParam::class.java)
+		val cakeImages = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam::class.java)
 			.set("cakeId", getLongFixtureGoe(1))
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("cakeImageUrl", getStringFixtureBw(10, 20))
@@ -73,7 +73,7 @@ internal class CakeServiceTest : MockitoTest() {
 	fun findCakeImagesByCursorAndCategory2() {
 		// given
 		val dto = CakeSearchByCategoryParam(null, CakeDesignCategory.FLOWER, 3)
-		val cakeImages = fixtureMonkey.giveMe(CakeImageWithShopInfoResponseParam::class.java, 0)
+		val cakeImages = fixtureMonkey.giveMe(com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam::class.java, 0)
 
 		doReturn(cakeImages).`when`(cakeReadFacade).searchCakeImagesByCursorAndCategory(dto.cakeId, dto.category, dto.pageSize)
 
@@ -91,7 +91,7 @@ internal class CakeServiceTest : MockitoTest() {
 	fun findCakeImagesByCursorAndShop1() {
 		// given
 		val dto = CakeSearchByShopParam(null, 1L, 3)
-		val cakeImages = fixtureMonkey.giveMeBuilder(CakeImageWithShopInfoResponseParam::class.java)
+		val cakeImages = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam::class.java)
 			.set("cakeId", getLongFixtureGoe(1))
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("cakeImageUrl", getStringFixtureBw(10, 20))
@@ -115,7 +115,7 @@ internal class CakeServiceTest : MockitoTest() {
 	fun findCakeImagesByCursorAndShop2() {
 		// given
 		val dto = CakeSearchByShopParam(null, 1L, 3)
-		val cakeImages = fixtureMonkey.giveMe(CakeImageWithShopInfoResponseParam::class.java, 0)
+		val cakeImages = fixtureMonkey.giveMe(com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam::class.java, 0)
 
 		doReturn(cakeImages).`when`(cakeReadFacade).searchCakeImagesByCursorAndCakeShopId(dto.cakeId, dto.shopId, dto.pageSize)
 
@@ -136,7 +136,7 @@ internal class CakeServiceTest : MockitoTest() {
 		val pageSize = 3
 		val dto = CakeSearchByViewsParam(cursor, pageSize)
 		val cakeIds = listOf(1L, 2L, 3L)
-		val cakeImages = fixtureMonkey.giveMeBuilder(CakeImageWithShopInfoResponseParam::class.java)
+		val cakeImages = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam::class.java)
 			.set("cakeId", getLongFixtureGoe(1))
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("cakeImageUrl", getStringFixtureBw(10, 20))

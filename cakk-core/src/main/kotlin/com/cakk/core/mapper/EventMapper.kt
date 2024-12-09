@@ -1,7 +1,7 @@
 package com.cakk.core.mapper
 
 import com.cakk.core.dto.event.*
-import com.cakk.domain.mysql.event.shop.CertificationEvent
+import com.cakk.infrastructure.persistence.shop.CertificationEvent
 import com.cakk.external.vo.message.CertificationMessage
 import com.cakk.external.vo.message.ErrorAlertMessage
 import com.cakk.external.vo.message.VerificationMessage
@@ -27,7 +27,7 @@ fun supplyEmailWithVerificationCodeSendEventBy(email: String, code: String): Ema
 	return EmailWithVerificationCodeSendEvent(email, code)
 }
 
-fun supplyCertificationMessageBy(certificationEvent: CertificationEvent): CertificationMessage {
+fun supplyCertificationMessageBy(certificationEvent: com.cakk.infrastructure.persistence.shop.CertificationEvent): CertificationMessage {
 	return CertificationMessage(
 		certificationEvent.businessRegistrationImageUrl,
 		certificationEvent.idCardImageUrl,

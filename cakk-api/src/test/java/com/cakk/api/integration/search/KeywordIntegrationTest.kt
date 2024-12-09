@@ -12,7 +12,7 @@ import com.cakk.api.common.base.IntegrationTest
 import com.cakk.core.dto.response.search.TopSearchedListResponse
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
-import com.cakk.domain.redis.repository.KeywordRedisRepository
+import com.cakk.infrastructure.cache.repository.KeywordRedisRepository
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.web.server.LocalServerPort

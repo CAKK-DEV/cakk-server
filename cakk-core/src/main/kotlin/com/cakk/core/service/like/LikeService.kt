@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import com.cakk.core.annotation.DistributedLock
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserLikeFacade
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @Service
 class LikeService(
@@ -14,7 +14,7 @@ class LikeService(
 ) {
 
 	@DistributedLock(key = "#cakeShopId")
-	fun likeCakeShop(user: User, cakeShopId: Long) {
+	fun likeCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long) {
 		val cakeShop = cakeShopReadFacade.findByIdWithLike(cakeShopId)
 
 		userLikeFacade.likeCakeShop(user, cakeShop)

@@ -1,9 +1,9 @@
 package com.cakk.core.dto.param.search
 
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 data class HeartCakeSearchParam(
 	val cakeHeartId: Long?,
 	val pageSize: Int,
-	val user: User
+	val user: com.cakk.infrastructure.persistence.entity.user.User
 )

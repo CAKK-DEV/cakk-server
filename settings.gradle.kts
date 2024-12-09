@@ -22,10 +22,13 @@ module(name=":external", "cakk-external")
 // application
 module(name=":application", "cakk-core")
 
-// domain & persistence
-module(name=":persistence", "cakk-domain")
-module(name=":persistence-mysql", "cakk-domain/mysql")
-module(name=":persistence-redis", "cakk-domain/redis")
+// domain
+module(name=":domain", "cakk-domain")
+
+// persistence
+module(name=":infrastructure", "cakk-infrastructure")
+module(name=":persistence", "cakk-infrastructure/persistence-mysql")
+module(name=":cache", "cakk-infrastructure/cache-redis")
 
 // common
 module(name=":common", "cakk-common")

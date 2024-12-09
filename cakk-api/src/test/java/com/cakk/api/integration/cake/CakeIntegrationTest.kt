@@ -27,7 +27,7 @@ import com.cakk.common.enums.CakeDesignCategory
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.facade.cake.CakeReadFacade
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
 
 @SqlGroup(
 	Sql(

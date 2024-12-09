@@ -15,15 +15,15 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyJwtResponseBy
 import com.cakk.core.mapper.supplyUserBy
 import com.cakk.core.provider.jwt.JwtProvider
-import com.cakk.domain.redis.repository.TokenRedisRepository
+import com.cakk.infrastructure.cache.repository.TokenRedisRepository
 
 @Service
 class SignService(
-	private val userReadFacade: UserReadFacade,
-	private val userManageFacade: UserManageFacade,
-	private val tokenRedisRepository: TokenRedisRepository,
-	private val oidcProviderDispatcher: OidcProviderDispatcher,
-	private val jwtProvider: JwtProvider
+    private val userReadFacade: UserReadFacade,
+    private val userManageFacade: UserManageFacade,
+    private val tokenRedisRepository: TokenRedisRepository,
+    private val oidcProviderDispatcher: OidcProviderDispatcher,
+    private val jwtProvider: JwtProvider
 ) {
 
 

@@ -17,7 +17,7 @@ import com.cakk.api.common.base.IntegrationTest
 import com.cakk.core.dto.response.user.JwtResponse
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
-import com.cakk.domain.redis.repository.TokenRedisRepository
+import com.cakk.infrastructure.cache.repository.TokenRedisRepository
 
 @SqlGroup(
 	Sql(

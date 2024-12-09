@@ -17,7 +17,7 @@ import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.service.like.HeartService
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @SpringBootTest(properties = ["spring.profiles.active=test"])
 @SqlGroup(
@@ -39,7 +39,7 @@ internal class HeartConcurrencyTest {
 	@Autowired
 	private lateinit var userReadFacade: UserReadFacade
 
-	private lateinit var userList: List<User>
+	private lateinit var userList: List<com.cakk.infrastructure.persistence.entity.user.User>
 
 	@BeforeEach
 	fun initUserList() {

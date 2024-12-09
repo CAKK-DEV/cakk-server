@@ -19,8 +19,7 @@ import com.cakk.api.common.utils.*
 import com.cakk.api.provider.jwt.JwtProviderImpl
 import com.cakk.common.enums.Role
 import com.cakk.core.vo.JsonWebToken
-import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.redis.repository.TokenRedisRepository
+import com.cakk.infrastructure.cache.repository.TokenRedisRepository
 
 @DisplayName("Jwt Provider 테스트")
 internal class JwtProviderImplTest : MockitoTest() {
@@ -48,7 +47,7 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("토큰 생성에 성공한다.")
 	fun generateToken1() {
 		// given
-		val user = fixtureMonkey.giveMeOne(User::class.java)
+		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 
 		// when
 		val jwt: JsonWebToken = jwtProviderImpl.generateToken(user)
@@ -62,7 +61,7 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("액세스 토큰으로부터 인증 정보를 가져온다.")
 	fun getAuthentication() {
 		// given
-		val user = fixtureMonkey.giveMeOne(User::class.java)
+		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 		ReflectionTestUtils.setField(user, "id", 1L)
 		ReflectionTestUtils.setField(user, "role", Role.USER)
 
@@ -78,7 +77,7 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("토큰으로부터 Claim 정보를 가져온다.")
 	fun parseClaims() {
 		// given
-		val user = fixtureMonkey.giveMeOne(User::class.java)
+		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 		ReflectionTestUtils.setField(user, "id", 1L)
 		ReflectionTestUtils.setField(user, "role", Role.USER)
 

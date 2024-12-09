@@ -10,7 +10,7 @@ tasks.jar {
 
 dependencies {
 	implementation(projects.common)
-	implementation(projects.persistenceMysql)
+	implementation(projects.persistence)
 	implementation(projects.application)
 
 	implementation(libs.spring.boot.starter.web)

@@ -20,10 +20,10 @@ import com.cakk.core.common.fixture.FixtureCommon.getDateTimeFixture
 import com.cakk.core.common.fixture.FixtureCommon.getEnumFixture
 import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.core.facade.user.UserManageFacade
-import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam
-import com.cakk.domain.mysql.entity.user.UserWithdrawal
-import com.cakk.domain.mysql.repository.jpa.UserJpaRepository
-import com.cakk.domain.mysql.repository.jpa.UserWithdrawalJpaRepository
+import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
+import com.cakk.infrastructure.persistence.entity.user.UserWithdrawal
+import com.cakk.infrastructure.persistence.repository.jpa.UserJpaRepository
+import com.cakk.infrastructure.persistence.repository.jpa.UserWithdrawalJpaRepository
 
 internal class UserManageFacadeTest : FacadeTest() {
 

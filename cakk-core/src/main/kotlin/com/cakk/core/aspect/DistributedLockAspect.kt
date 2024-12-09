@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component
 import com.cakk.common.enums.RedisKey.Companion.getLockByMethodName
 import com.cakk.core.annotation.DistributedLock
 import com.cakk.core.utils.CustomSpringExpressionLanguageParser
-import com.cakk.domain.redis.dto.param.ExecuteWithLockParam
-import com.cakk.domain.redis.repository.LockRedisRepository
+import com.cakk.infrastructure.cache.dto.param.ExecuteWithLockParam
+import com.cakk.infrastructure.cache.repository.LockRedisRepository
 
 @Aspect
 @Component
 class DistributedLockAspect(
-	private val lockRedisRepository: LockRedisRepository,
-	private val aopForTransaction: AopForTransaction
+    private val lockRedisRepository: LockRedisRepository,
+    private val aopForTransaction: AopForTransaction
 ) {
 
 	@Around("@annotation(com.cakk.core.annotation.DistributedLock)")

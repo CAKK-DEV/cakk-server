@@ -17,7 +17,7 @@ import com.cakk.common.response.ApiResponse
 import com.cakk.core.dto.response.like.HeartResponse
 import com.cakk.core.dto.response.shop.*
 import com.cakk.core.service.views.ViewsService
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @RestController
 @RequestMapping("/shops")
@@ -30,7 +30,7 @@ class ShopController(
 
 	@PostMapping("/certification")
 	fun requestCertification(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@RequestBody @Valid request: CertificationRequest
 	): ApiResponse<Unit> {
 		val param = supplyCertificationParamBy(request, user)
@@ -80,7 +80,7 @@ class ShopController(
 
 	@GetMapping("/{cakeShopId}/heart")
 	fun isHeart(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long
 	): ApiResponse<HeartResponse> {
 		val response = heartService.isHeartCakeShop(user, cakeShopId)
@@ -90,7 +90,7 @@ class ShopController(
 
 	@GetMapping("/mine")
 	fun getMyBusinessId(
-		@SignInUser user: User
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User
 	): ApiResponse<CakeShopByMineResponse> {
 		val response = shopService.getMyBusinessId(user)
 
@@ -99,7 +99,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}/heart")
 	fun heart(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long
 	): ApiResponse<Unit> {
 		heartService.heartCakeShop(user, cakeShopId)
@@ -109,7 +109,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}/like")
 	fun like(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long
 	): ApiResponse<Unit> {
 		likeService.likeCakeShop(user, cakeShopId)
@@ -129,7 +129,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}")
 	fun updateBasicInformation(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopRequest
 	): ApiResponse<Unit> {
@@ -141,7 +141,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}/links")
 	fun updateLinks(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateLinkRequest
 	): ApiResponse<Unit> {
@@ -153,7 +153,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}/address")
 	fun updateAddress(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopAddressRequest
 	): ApiResponse<Unit> {
@@ -165,7 +165,7 @@ class ShopController(
 
 	@PutMapping("/{cakeShopId}/operation-days")
 	fun updateOperationDays(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: UpdateShopOperationRequest
 	): ApiResponse<Unit> {
@@ -177,7 +177,7 @@ class ShopController(
 
 	@GetMapping("/{cakeShopId}/owner")
 	fun existBusinessInformation(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long
 	): ApiResponse<CakeShopOwnerResponse> {
 		val response = shopService.isExistBusinessInformation(user, cakeShopId)

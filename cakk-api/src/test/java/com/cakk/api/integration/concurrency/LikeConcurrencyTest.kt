@@ -16,7 +16,7 @@ import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.service.like.LikeService
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @SpringBootTest(properties = ["spring.profiles.active=test"])
 @SqlGroup(
@@ -35,7 +35,7 @@ class LikeConcurrencyTest {
 	@Autowired
 	private lateinit var userReadFacade: UserReadFacade
 
-	private lateinit var user: User
+	private lateinit var user: com.cakk.infrastructure.persistence.entity.user.User
 
 	@BeforeEach
 	fun initUser() {

@@ -5,8 +5,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 
-import com.cakk.domain.mysql.config.JpaConfig
-
+import com.cakk.infrastructure.persistence.config.JpaConfig
 
 @Import(JpaConfig::class)
 @ActiveProfiles("test")
