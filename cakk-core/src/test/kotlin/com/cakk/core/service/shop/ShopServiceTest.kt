@@ -39,6 +39,9 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyCakeShopDetailResponseBy
 import com.cakk.core.mapper.supplyCakeShopInfoResponseBy
 import com.cakk.core.mapper.supplyCakeShopSimpleResponseBy
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.param.shop.CakeShopInfoParam
+import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam
 import org.springframework.test.util.ReflectionTestUtils
 
 @DisplayName("케이크 샵 조회 관련 비즈니스 로직 테스트")
@@ -259,11 +262,11 @@ internal class ShopServiceTest : MockitoTest() {
 	fun searchInfoById1() {
 		// given
 		val cakeShopId = 1L
-		val param = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.shop.CakeShopInfoParam::class.java)
+		val param = fixtureMonkey.giveMeBuilder(CakeShopInfoParam::class.java)
 			.set("shopAddress", getStringFixtureBw(1, 30))
 			.set("point", getPointFixture())
 			.set(
-				"operationDays", listOf(
+				"shopOperationDays", listOf(
 					ShopOperationParam(Days.MON, LocalTime.now(), LocalTime.now()),
 					ShopOperationParam(Days.TUE, LocalTime.now(), LocalTime.now())
 				)
@@ -303,11 +306,11 @@ internal class ShopServiceTest : MockitoTest() {
 		val offset: Long = 0L
 		val pageSize: Int = 3
 		val param = CakeShopSearchByViewsParam(offset, pageSize)
-		val cakeShops = getConstructorMonkey().giveMeBuilder(com.cakk.infrastructure.persistence.entity.shop.CakeShop::class.java)
-			.set("cakeShopId", getLongFixtureGoe(1))
+		val cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
+			.set("id", getLongFixtureGoe(1))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
-			.set("cakeShopName", getStringFixtureBw(1, 30))
-			.set("cakeShopBio", getStringFixtureBw(1, 40))
+			.set("shopName", getStringFixtureBw(1, 30))
+			.set("shopBio", getStringFixtureBw(1, 40))
 			.sampleList(3)
 
 		doReturn(cakeShops).`when`(cakeShopReadFacade).searchBestShops(offset, pageSize)
@@ -345,7 +348,7 @@ internal class ShopServiceTest : MockitoTest() {
 	@TestWithDisplayName("케이크샵 기본 정보 수정을 한다")
 	fun updateCakeShopBasicInformation() {
 		//given
-		val cakeShopUpdateParam = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam::class.java)
+		val cakeShopUpdateParam = fixtureMonkey.giveMeBuilder(CakeShopUpdateParam::class.java)
 			.set("cakeShopId", getLongFixtureGoe(1))
 			.set("user", getUserFixture())
 			.sample()
