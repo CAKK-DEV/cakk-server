@@ -1,11 +1,11 @@
 package com.cakk.core.facade.shop
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.shop.CakeShopLink
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation
-import com.cakk.domain.mysql.entity.user.BusinessInformation
-import com.cakk.domain.mysql.repository.jpa.CakeShopJpaRepository
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperation
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.repository.jpa.CakeShopJpaRepository
 
 @DomainFacade
 class CakeShopManageFacade(

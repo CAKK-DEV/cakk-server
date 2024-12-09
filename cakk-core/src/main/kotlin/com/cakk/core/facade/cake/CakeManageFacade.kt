@@ -1,11 +1,11 @@
 package com.cakk.core.facade.cake
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.domain.mysql.entity.cake.Cake
-import com.cakk.domain.mysql.entity.cake.CakeCategory
-import com.cakk.domain.mysql.entity.cake.Tag
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository
+import com.cakk.infrastructure.persistence.entity.cake.Cake
+import com.cakk.infrastructure.persistence.entity.cake.CakeCategory
+import com.cakk.infrastructure.persistence.entity.cake.Tag
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.repository.jpa.CakeJpaRepository
 
 @DomainFacade
 class CakeManageFacade(

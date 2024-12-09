@@ -31,8 +31,7 @@ import com.cakk.core.facade.user.UserManageFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.provider.jwt.JwtProvider
 import com.cakk.core.vo.JsonWebToken
-import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.redis.repository.TokenRedisRepository
+import com.cakk.infrastructure.cache.repository.TokenRedisRepository
 
 @DisplayName("Sign 관련 비즈니스 로직 테스트")
 internal class SignServiceTest : MockitoTest() {
@@ -68,7 +67,7 @@ internal class SignServiceTest : MockitoTest() {
 			.setNull("deviceOs")
 			.setNull("deviceToken")
 			.sample()
-		val user = fixtureMonkey.giveMeBuilder(User::class.java)
+		val user = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("provider", param.provider)
 			.set("providerId", getStringFixtureBw(10, 20))
@@ -107,7 +106,7 @@ internal class SignServiceTest : MockitoTest() {
 			.setNotNull("birthday")
 			.setNotNull("gender")
 			.sample()
-		val user: User = fixtureMonkey.giveMeBuilder(User::class.java)
+		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("provider", param.provider)
 			.set("providerId", getStringFixtureBw(10, 20))
@@ -136,7 +135,7 @@ internal class SignServiceTest : MockitoTest() {
 			.setNotNull("idToken")
 			.sample()
 		val providerId: String = getStringFixtureEq(10).sample()
-		val user: User = getConstructorMonkey().giveMeBuilder(User::class.java)
+		val user: com.cakk.infrastructure.persistence.entity.user.User = getConstructorMonkey().giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("provider", param.provider)
 			.set("providerId", providerId)
@@ -172,7 +171,7 @@ internal class SignServiceTest : MockitoTest() {
 			.setNotNull("idToken")
 			.sample()
 		val providerId = getStringFixtureBw(10, 20).sample()
-		val user: User = fixtureMonkey.giveMeBuilder(User::class.java)
+		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("provider", param.provider)
 			.set("providerId", providerId)
@@ -198,7 +197,7 @@ internal class SignServiceTest : MockitoTest() {
 	fun recreateToken() {
 		// given
 		val refreshToken = "refresh token"
-		val user: User = fixtureMonkey.giveMeBuilder(User::class.java)
+		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("providerId", getStringFixtureBw(10, 20))
 			.set("createdAt", getDateTimeFixture())

@@ -11,7 +11,7 @@ import net.jqwik.api.Arbitraries
 import com.cakk.core.common.annotation.TestWithDisplayName
 import com.cakk.core.common.base.MockitoTest
 import com.cakk.core.dto.event.IncreaseSearchCountEvent
-import com.cakk.domain.redis.repository.KeywordRedisRepository
+import com.cakk.infrastructure.cache.repository.KeywordRedisRepository
 
 internal class SearchEventListenerTest : MockitoTest() {
 

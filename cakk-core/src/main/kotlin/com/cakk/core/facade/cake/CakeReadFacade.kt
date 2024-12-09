@@ -6,16 +6,12 @@ import com.cakk.common.enums.CakeDesignCategory
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.domain.mysql.dto.param.cake.CakeDetailParam
-import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
 import com.cakk.core.dto.param.cake.CakeSearchParam
-import com.cakk.domain.mysql.entity.cake.Cake
-import com.cakk.domain.mysql.entity.cake.CakeCategory
-import com.cakk.domain.mysql.entity.user.User
-import com.cakk.domain.mysql.repository.jpa.CakeCategoryJpaRepository
-import com.cakk.domain.mysql.repository.jpa.CakeJpaRepository
-import com.cakk.domain.mysql.repository.query.CakeQueryRepository
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
+import com.cakk.infrastructure.persistence.entity.cake.Cake
+import com.cakk.infrastructure.persistence.repository.jpa.CakeCategoryJpaRepository
+import com.cakk.infrastructure.persistence.repository.jpa.CakeJpaRepository
+import com.cakk.infrastructure.persistence.repository.query.CakeQueryRepository
 
 @DomainFacade
 class CakeReadFacade(
@@ -39,7 +35,7 @@ class CakeReadFacade(
 		cakeId: Long?,
 		category: CakeDesignCategory,
 		pageSize: Int
-	): List<CakeImageWithShopInfoResponseParam> {
+	): List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam> {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCategory(cakeId, category, pageSize)
 	}
 
@@ -47,11 +43,11 @@ class CakeReadFacade(
 		cakeId: Long?,
 		cakeShopId: Long?,
 		pageSize: Int
-	): List<CakeImageWithShopInfoResponseParam> {
+	): List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam> {
 		return cakeQueryRepository.searchCakeImagesByCursorAndCakeShopId(cakeId, cakeShopId, pageSize)
 	}
 
-	fun searchCakeImagesByCursorAndSearchKeyword(param: CakeSearchParam): List<CakeImageWithShopInfoResponseParam> {
+	fun searchCakeImagesByCursorAndSearchKeyword(param: CakeSearchParam): List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam> {
 		return cakeQueryRepository.searchCakeImagesByCursorAndSearchKeyword(
 			param.cakeId,
 			param.keyword,
@@ -63,7 +59,7 @@ class CakeReadFacade(
 	fun searchBestCakeImages(
 		offset: Long,
 		pageSize: Int
-	): Pair<List<Long>, List<CakeImageWithShopInfoResponseParam>> {
+	): Pair<List<Long>, List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam>> {
 		val cakeIds: List<Long> = cakeViewsRedisRepository.findTopCakeIdsByOffsetAndCount(offset, pageSize.toLong())
 
 		return when {
@@ -72,20 +68,20 @@ class CakeReadFacade(
 		}
 	}
 
-	fun findWithCakeTagsAndCakeCategories(cakeId: Long, owner: User): Cake {
+	fun findWithCakeTagsAndCakeCategories(cakeId: Long, owner: com.cakk.infrastructure.persistence.entity.user.User): com.cakk.infrastructure.persistence.entity.cake.Cake {
 		return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
 			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
 
-	fun searchCakeDetailById(cakeId: Long?): CakeDetailParam {
-		val param: CakeDetailParam = cakeQueryRepository.searchCakeDetailById(cakeId)
+	fun searchCakeDetailById(cakeId: Long?): com.cakk.infrastructure.persistence.param.cake.CakeDetailParam {
+		val param: com.cakk.infrastructure.persistence.param.cake.CakeDetailParam = cakeQueryRepository.searchCakeDetailById(cakeId)
 		if (Objects.isNull(param)) {
 			throw CakkException(ReturnCode.NOT_EXIST_CAKE)
 		}
 		return param
 	}
 
-	fun findCakeCategoryByCakeId(cakeId: Long?): CakeCategory {
+	fun findCakeCategoryByCakeId(cakeId: Long?): com.cakk.infrastructure.persistence.entity.cake.CakeCategory {
 		return cakeCategoryJpaRepository.findByCakeId(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY)
 	}
 }

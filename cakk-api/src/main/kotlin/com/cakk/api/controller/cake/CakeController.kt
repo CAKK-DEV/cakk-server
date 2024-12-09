@@ -13,7 +13,7 @@ import com.cakk.core.service.cake.CakeService
 import com.cakk.core.service.like.HeartService
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @RestController
 @RequestMapping("/cakes")
@@ -71,7 +71,7 @@ class CakeController(
 
 	@PostMapping("/{cakeShopId}")
 	fun create(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: CakeCreateRequest
 	): ApiResponse<Unit> {
@@ -83,7 +83,7 @@ class CakeController(
 
 	@GetMapping("/{cakeId}/heart")
 	fun isHeart(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeId: Long
 	): ApiResponse<HeartResponse> {
 		val response = heartService.isHeartCake(user, cakeId)
@@ -93,7 +93,7 @@ class CakeController(
 
 	@PutMapping("/{cakeId}/heart")
 	fun heart(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeId: Long
 	): ApiResponse<Unit> {
 		heartService.heartCake(user, cakeId)
@@ -103,7 +103,7 @@ class CakeController(
 
 	@PutMapping("/{cakeId}")
 	fun update(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeId: Long,
 		@RequestBody request: @Valid CakeUpdateRequest
 	): ApiResponse<Unit> {
@@ -115,7 +115,7 @@ class CakeController(
 
 	@DeleteMapping("/{cakeId}")
 	fun delete(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@PathVariable cakeId: Long
 	): ApiResponse<Unit> {
 		cakeService.deleteCake(user, cakeId)

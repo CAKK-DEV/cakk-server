@@ -5,11 +5,11 @@ import com.cakk.core.dto.param.user.GenerateCodeParam
 import com.cakk.core.dto.param.user.UserSignInParam
 import com.cakk.core.dto.param.user.UserSignUpParam
 import com.cakk.core.dto.param.user.VerifyEmailParam
-import com.cakk.domain.mysql.dto.param.user.ProfileUpdateParam
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
+import com.cakk.infrastructure.persistence.entity.user.User
 
-fun supplyProfileUpdateParamBy(request: ProfileUpdateRequest, user: User): ProfileUpdateParam {
-    return ProfileUpdateParam.builder()
+fun supplyProfileUpdateParamBy(request: ProfileUpdateRequest, user: com.cakk.infrastructure.persistence.entity.user.User): com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam {
+    return com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam.builder()
         .profileImageUrl(request.profileImageUrl)
         .nickname(request.nickname)
         .email(request.email)

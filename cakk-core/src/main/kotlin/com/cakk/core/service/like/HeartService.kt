@@ -16,7 +16,7 @@ import com.cakk.core.facade.user.UserHeartFacade
 import com.cakk.core.mapper.supplyHeartCakeImageListResponseBy
 import com.cakk.core.mapper.supplyHeartCakeShopListResponseBy
 import com.cakk.core.mapper.supplyHeartResponseBy
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @Service
 class HeartService(
@@ -49,7 +49,7 @@ class HeartService(
 	}
 
 	@Transactional(readOnly = true)
-	fun isHeartCake(user: User, cakeId: Long): HeartResponse {
+	fun isHeartCake(user: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long): HeartResponse {
 		val cake = cakeReadFacade.findByIdWithHeart(cakeId)
 		val isHeart = cake.isHeartedBy(user)
 
@@ -57,7 +57,7 @@ class HeartService(
 	}
 
 	@Transactional(readOnly = true)
-	fun isHeartCakeShop(user: User, cakeShopId: Long): HeartResponse {
+	fun isHeartCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long): HeartResponse {
 		val cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId)
 		val isHeart = cakeShop.isHeartedBy(user)
 
@@ -65,14 +65,14 @@ class HeartService(
 	}
 
 	@DistributedLock(key = "#cakeId")
-	fun heartCake(user: User, cakeId: Long) {
+	fun heartCake(user: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long) {
 		val cake = cakeReadFacade.findByIdWithHeart(cakeId)
 
 		userHeartFacade.heartCake(user, cake)
 	}
 
 	@DistributedLock(key = "#cakeShopId")
-	fun heartCakeShop(user: User, cakeShopId: Long) {
+	fun heartCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long) {
 		val cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId)
 
 		userHeartFacade.heartCakeShop(user, cakeShop)

@@ -1,7 +1,7 @@
 package com.cakk.core.dto.response.shop
 
 import com.cakk.common.enums.Days
-import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam
+import com.cakk.infrastructure.persistence.param.shop.CakeShopLinkParam
 
 data class CakeShopDetailResponse(
     val cakeShopId: Long,
@@ -10,5 +10,5 @@ data class CakeShopDetailResponse(
     val cakeShopBio: String,
     val cakeShopDescription: String,
     val operationDays: Set<Days>,
-    val links: Set<CakeShopLinkParam>
+    val links: Set<com.cakk.infrastructure.persistence.param.shop.CakeShopLinkParam>
 )

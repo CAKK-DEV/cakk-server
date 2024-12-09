@@ -17,7 +17,7 @@ import com.cakk.api.mapper.supplyProfileUpdateParamBy
 import com.cakk.core.service.like.HeartService
 import com.cakk.core.service.user.UserService
 import com.cakk.common.response.ApiResponse
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 
 @RestController
 @RequestMapping("/me")
@@ -28,7 +28,7 @@ class MyPageController(
 
     @GetMapping
     fun profile(
-		@SignInUser user: User
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User
     ): ApiResponse<ProfileInformationResponse> {
         val response = userService.findProfile(user)
 
@@ -37,7 +37,7 @@ class MyPageController(
 
     @PutMapping
     fun modify(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@RequestBody @Valid request: ProfileUpdateRequest
     ): ApiResponse<Unit> {
 		val param = supplyProfileUpdateParamBy(request, user)
@@ -48,7 +48,7 @@ class MyPageController(
 
     @DeleteMapping
     fun withdraw(
-		@SignInUser user: User
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User
     ): ApiResponse<Unit> {
         userService.withdraw(user)
 
@@ -57,7 +57,7 @@ class MyPageController(
 
     @GetMapping("/heart-cakes")
     fun heartCakeList(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@ModelAttribute @Valid request: HeartCakeSearchRequest
     ): ApiResponse<HeartCakeImageListResponse> {
 		val param = supplyHeartCakeSearchParamBy(request, user)
@@ -68,7 +68,7 @@ class MyPageController(
 
     @GetMapping("/heart-shops")
     fun heartCakeList(
-		@SignInUser user: User,
+		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
 		@ModelAttribute @Valid request: HeartCakeShopSearchRequest
     ): ApiResponse<HeartCakeShopListResponse> {
 		val param = supplyHeartCakeShopSearchParamBy(request, user)

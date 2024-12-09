@@ -12,7 +12,7 @@ import com.cakk.core.common.base.MockitoTest
 import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.core.dto.param.search.TopSearchedListParam
 import com.cakk.core.dto.response.search.TopSearchedListResponse
-import com.cakk.domain.redis.repository.KeywordRedisRepository
+import com.cakk.infrastructure.cache.repository.KeywordRedisRepository
 
 @DisplayName("키워드 관련 비즈니스 로직 테스트")
 internal class KeywordServiceTest : MockitoTest() {

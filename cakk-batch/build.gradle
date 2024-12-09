@@ -2,8 +2,8 @@ description = "batch module"
 
 dependencies {
 	implementation(projects.common)
-	implementation(projects.persistenceMysql)
-	implementation(projects.persistenceRedis)
+	implementation(projects.persistence)
+	implementation(projects.cache)
 
 	// basic
 	implementation(libs.spring.boot.starter.web) {

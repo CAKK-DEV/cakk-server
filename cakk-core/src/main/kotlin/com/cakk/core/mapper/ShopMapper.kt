@@ -7,14 +7,14 @@ import com.cakk.core.dto.param.shop.CreateShopParam
 import com.cakk.core.dto.param.shop.ShopOperationParam
 import com.cakk.core.dto.response.like.HeartCakeShopListResponse
 import com.cakk.core.dto.response.shop.*
-import com.cakk.domain.mysql.bo.shop.CakeShopByLocationParam
-import com.cakk.domain.mysql.bo.shop.CakeShopBySearchParam
-import com.cakk.domain.mysql.dto.param.like.HeartCakeShopResponseParam
-import com.cakk.domain.mysql.dto.param.shop.*
-import com.cakk.domain.mysql.entity.shop.CakeShop
-import com.cakk.domain.mysql.entity.shop.CakeShopLink
-import com.cakk.domain.mysql.entity.shop.CakeShopOperation
-import com.cakk.domain.mysql.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.bo.shop.CakeShopByLocationParam
+import com.cakk.infrastructure.persistence.bo.shop.CakeShopBySearchParam
+import com.cakk.infrastructure.persistence.param.like.HeartCakeShopResponseParam
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperation
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.param.shop.*
 
 fun supplyCakeShopBy(param: CreateShopParam): CakeShop {
 	return CakeShop.builder()

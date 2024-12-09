@@ -1,10 +1,10 @@
 package com.cakk.core.dto.response.cake
 
-import com.cakk.domain.mysql.dto.param.cake.CakeImageWithShopInfoResponseParam
+import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam
 
 data class CakeImageWithShopInfoListResponse(
-	val cakeImages: List<CakeImageWithShopInfoResponseParam>,
-	val lastCakeId: Long?,
-	val size: Int
+    val cakeImages: List<com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam>,
+    val lastCakeId: Long?,
+    val size: Int
 )
 

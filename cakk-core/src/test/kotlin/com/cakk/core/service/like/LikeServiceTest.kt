@@ -16,7 +16,7 @@ import com.cakk.core.common.fixture.FixtureCommon.getPointFixture
 import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserLikeFacade
-import com.cakk.domain.mysql.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.entity.shop.CakeShop
 
 @DisplayName("좋아요 기능 관련 비즈니스 로직 테스트")
 internal class LikeServiceTest : MockitoTest() {
@@ -35,7 +35,7 @@ internal class LikeServiceTest : MockitoTest() {
 		// given
 		val user = getUserFixture()
 		val cakeShopId: Long = getLongFixtureGoe(1).sample()
-		val cakeShop = fixtureMonkey.giveMeBuilder(CakeShop::class.java)
+		val cakeShop = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.shop.CakeShop::class.java)
 			.set("shopName", getStringFixtureBw(10, 30))
 			.set("shopBio", getStringFixtureBw(10, 40))
 			.set("shopDescription", getStringFixtureBw(100, 500))

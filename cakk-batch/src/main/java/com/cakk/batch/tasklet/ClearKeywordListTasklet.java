@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.cakk.batch.utils.BatchConstants;
 import com.cakk.batch.utils.BatchUtils;
-import com.cakk.domain.redis.repository.KeywordRedisRepository;
+import com.cakk.infrastructure.cache.repository.KeywordRedisRepository;
 
 @StepScope
 @Component

@@ -34,10 +34,8 @@ import com.cakk.common.enums.ReturnCode
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.dto.response.shop.*
 import com.cakk.core.facade.cake.CakeShopReadFacade
-import com.cakk.domain.mysql.dto.param.shop.CakeShopLinkParam
-import com.cakk.domain.mysql.dto.param.shop.CakeShopOperationParam
-import com.cakk.domain.redis.repository.CakeShopViewsRedisRepository
-import com.cakk.domain.redis.repository.CakeViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeShopViewsRedisRepository
+import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
 
 @SqlGroup(
 	Sql(
@@ -198,7 +196,7 @@ internal class ShopIntegrationTest(
 		data.operationDays shouldBe cakeShopOperations
 
 		val cakeShopLinks = cakeShopReadFacade.findCakeShopLinksByCakeShopId(cakeShopId)
-			.map { CakeShopLinkParam(it.linkKind, it.linkPath) }
+			.map { com.cakk.infrastructure.persistence.param.shop.CakeShopLinkParam(it.linkKind, it.linkPath) }
 			.toSet()
 		data.links shouldBe cakeShopLinks
 	}
@@ -283,7 +281,13 @@ internal class ShopIntegrationTest(
 		data.longitude shouldBe longitude
 
 		val cakeShopOperations = cakeShopReadFacade.findCakeShopOperationsByCakeShopId(cakeShopId)
-			.map { CakeShopOperationParam(it.operationDay, it.operationStartTime, it.operationEndTime) }
+			.map {
+				com.cakk.infrastructure.persistence.param.shop.CakeShopOperationParam(
+					it.operationDay,
+					it.operationStartTime,
+					it.operationEndTime
+				)
+            }
 			.toList()
 		data.shopOperationDays shouldBe cakeShopOperations
 	}

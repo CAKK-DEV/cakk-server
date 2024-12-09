@@ -1,9 +1,9 @@
 package com.cakk.core.facade.tag
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.domain.mysql.entity.cake.Tag
-import com.cakk.domain.mysql.mapper.TagMapper
-import com.cakk.domain.mysql.repository.jpa.TagJpaRepository
+import com.cakk.infrastructure.persistence.entity.cake.Tag
+import com.cakk.infrastructure.persistence.mapper.TagMapper
+import com.cakk.infrastructure.persistence.repository.jpa.TagJpaRepository
 
 @DomainFacade
 class TagReadFacade(

@@ -11,14 +11,12 @@ import org.springframework.test.context.ActiveProfiles
 import net.jqwik.api.Arbitraries
 
 import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
 
-import com.cakk.domain.mysql.config.JpaConfig
-import com.cakk.domain.mysql.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.User
 import com.cakk.external.vo.key.OidcPublicKey
+import com.cakk.infrastructure.persistence.config.JpaConfig
 import java.time.LocalDate
 
 @Import(JpaConfig::class)

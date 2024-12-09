@@ -8,7 +8,7 @@ import net.gpedro.integrations.slack.SlackMessage
 
 import com.cakk.core.annotation.ApplicationEventListener
 import com.cakk.core.mapper.supplyCertificationMessageBy
-import com.cakk.domain.mysql.event.shop.CertificationEvent
+import com.cakk.infrastructure.persistence.shop.CertificationEvent
 import com.cakk.external.extractor.MessageExtractor
 import com.cakk.external.sender.MessageSender
 import com.cakk.external.template.MessageTemplate
@@ -23,7 +23,7 @@ class CertificationEventListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun sendMessageToSlack(certificationEvent: CertificationEvent) {
+    fun sendMessageToSlack(certificationEvent: com.cakk.infrastructure.persistence.shop.CertificationEvent) {
         val certificationMessage = supplyCertificationMessageBy(certificationEvent)
         messageTemplate.sendMessage(certificationMessage, messageExtractor, messageSender)
     }

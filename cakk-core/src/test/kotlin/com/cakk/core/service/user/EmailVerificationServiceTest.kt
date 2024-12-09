@@ -18,7 +18,7 @@ import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureEq
 import com.cakk.core.dto.param.user.GenerateCodeParam
 import com.cakk.core.dto.param.user.VerifyEmailParam
-import com.cakk.domain.redis.repository.EmailVerificationRedisRepository
+import com.cakk.infrastructure.cache.repository.EmailVerificationRedisRepository
 
 class EmailVerificationServiceTest : MockitoTest() {
 
