@@ -22,10 +22,10 @@ abstract class ValueObject<T : ValueObject<T>> {
 		return getEqualityFields().contentEquals(other.getEqualityFields())
 	}
 
-	private fun getEqualityFields(): Array<Any> {
+	protected open fun getEqualityFields(): Array<Any> {
 		return javaClass.declaredFields.map {
 			it.isAccessible = true
-			it.get(this)
+			it[this]
 		}.toTypedArray()
 	}
 }
