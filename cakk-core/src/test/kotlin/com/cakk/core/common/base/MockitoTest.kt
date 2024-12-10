@@ -1,6 +1,6 @@
 package com.cakk.core.common.base
 
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 import com.cakk.common.enums.Role
 import com.cakk.core.common.fixture.FixtureCommon.fixtureMonkey
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,7 +14,7 @@ import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin
 
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 import com.cakk.external.vo.key.OidcPublicKey
 import com.cakk.infrastructure.persistence.config.JpaConfig
 import java.time.LocalDate
@@ -31,10 +31,10 @@ abstract class MockitoTest {
 			.build()
 	}
 
-	protected fun getUserFixture(role: Role = Role.USER): User {
-		return fixtureMonkey.giveMeBuilder(User::class.java)
+	protected fun getUserFixture(role: Role = Role.USER): UserEntity {
+		return fixtureMonkey.giveMeBuilder(UserEntity::class.java)
 			.set("id", Arbitraries.longs().greaterOrEqual(10))
-			.set("provider", Arbitraries.of(Provider::class.java))
+			.set("providerType", Arbitraries.of(ProviderType::class.java))
 			.set("providerId", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.set("email", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))
 			.set("nickname", Arbitraries.strings().withCharRange('a', 'z').ofMinLength(1).ofMaxLength(50))

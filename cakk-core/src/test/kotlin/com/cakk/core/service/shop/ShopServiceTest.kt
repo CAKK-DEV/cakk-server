@@ -39,7 +39,8 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyCakeShopDetailResponseBy
 import com.cakk.core.mapper.supplyCakeShopInfoResponseBy
 import com.cakk.core.mapper.supplyCakeShopSimpleResponseBy
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity
 import com.cakk.infrastructure.persistence.param.shop.CakeShopInfoParam
 import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam
 import org.springframework.test.util.ReflectionTestUtils
@@ -103,8 +104,8 @@ internal class ShopServiceTest : MockitoTest() {
 		}
 	}
 
-	private fun getCakeShopFixture(): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
-		val cakeShop = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.shop.CakeShop::class.java)
+	private fun getCakeShopFixture(): CakeShopEntity {
+		val cakeShop = fixtureMonkey.giveMeBuilder(CakeShopEntity::class.java)
 			.set("shopName", getStringFixtureEq(30))
 			.set("shopBio", getStringFixtureEq(40))
 			.set("shopDescription", getStringFixtureEq(500))
@@ -114,8 +115,8 @@ internal class ShopServiceTest : MockitoTest() {
 		return cakeShop
 	}
 
-	private fun getBusinessInformationFixture(): com.cakk.infrastructure.persistence.entity.user.BusinessInformation {
-		return fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.BusinessInformation::class.java)
+	private fun getBusinessInformationFixture(): BusinessInformationEntity {
+		return fixtureMonkey.giveMeBuilder(BusinessInformationEntity::class.java)
 			.set("businessNumber", getStringFixtureEq(20))
 			.set("cakeShop", getCakeShopFixture())
 			.set("verificationStatus", VerificationStatus.UNREQUESTED)
@@ -306,7 +307,7 @@ internal class ShopServiceTest : MockitoTest() {
 		val offset: Long = 0L
 		val pageSize: Int = 3
 		val param = CakeShopSearchByViewsParam(offset, pageSize)
-		val cakeShops = getConstructorMonkey().giveMeBuilder(CakeShop::class.java)
+		val cakeShops = getConstructorMonkey().giveMeBuilder(CakeShopEntity::class.java)
 			.set("id", getLongFixtureGoe(1))
 			.set("thumbnailUrl", getStringFixtureBw(100, 200))
 			.set("shopName", getStringFixtureBw(1, 30))

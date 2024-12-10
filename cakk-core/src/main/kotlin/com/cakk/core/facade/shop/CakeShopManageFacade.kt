@@ -1,10 +1,10 @@
 package com.cakk.core.facade.shop
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperation
-import com.cakk.infrastructure.persistence.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLinkEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperationEntity
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity
 import com.cakk.infrastructure.persistence.repository.jpa.CakeShopJpaRepository
 
 @DomainFacade
@@ -13,14 +13,14 @@ class CakeShopManageFacade(
 ) {
 
 	fun create(
-		cakeShop: CakeShop,
-		cakeShopOperations: List<CakeShopOperation>,
-		businessInformation: BusinessInformation,
-		cakeShopLinks: List<CakeShopLink>
-	): CakeShop {
+		cakeShop: CakeShopEntity,
+		cakeShopOperations: List<CakeShopOperationEntity>,
+		businessInformationEntity: BusinessInformationEntity,
+		cakeShopLinks: List<CakeShopLinkEntity>
+	): CakeShopEntity {
 		cakeShop.addShopOperationDays(cakeShopOperations)
 		cakeShop.addShopLinks(cakeShopLinks)
-		cakeShop.registerBusinessInformation(businessInformation)
+		cakeShop.registerBusinessInformation(businessInformationEntity)
 
 		return cakeShopJpaRepository.save(cakeShop)
 	}

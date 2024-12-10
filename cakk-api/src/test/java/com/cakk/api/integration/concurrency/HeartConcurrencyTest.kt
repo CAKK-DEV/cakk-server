@@ -17,7 +17,7 @@ import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.service.like.HeartService
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @SpringBootTest(properties = ["spring.profiles.active=test"])
 @SqlGroup(
@@ -39,11 +39,11 @@ internal class HeartConcurrencyTest {
 	@Autowired
 	private lateinit var userReadFacade: UserReadFacade
 
-	private lateinit var userList: List<com.cakk.infrastructure.persistence.entity.user.User>
+	private lateinit var userEntityList: List<UserEntity>
 
 	@BeforeEach
 	fun initUserList() {
-		userList = userReadFacade.findAll()
+		userEntityList = userReadFacade.findAll()
 	}
 
 	@TestWithDisplayName("케이크 하트 동작 시, 동시성 문제가 발생하지 않는다.")
@@ -59,7 +59,7 @@ internal class HeartConcurrencyTest {
 		for (i in 0 until threadCount) {
 			executorService.submit {
 				try {
-					heartService.heartCake(userList[i], cakeId)
+					heartService.heartCake(userEntityList[i], cakeId)
 				} finally {
 					latch.countDown()
 				}
@@ -86,7 +86,7 @@ internal class HeartConcurrencyTest {
 		for (i in 0 until threadCount) {
 			executorService.submit {
 				try {
-					heartService.heartCakeShop(userList[i], cakeShopId)
+					heartService.heartCakeShop(userEntityList[i], cakeShopId)
 				} finally {
 					latch.countDown()
 				}

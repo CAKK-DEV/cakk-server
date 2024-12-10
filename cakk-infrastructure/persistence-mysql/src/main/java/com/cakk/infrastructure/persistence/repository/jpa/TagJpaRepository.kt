@@ -1,14 +1,13 @@
 package com.cakk.infrastructure.persistence.repository.jpa
 
-import com.cakk.infrastructure.persistence.entity.cake.Tag
+import com.cakk.infrastructure.persistence.entity.cake.TagEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
-interface TagJpaRepository : JpaRepository<com.cakk.infrastructure.persistence.entity.cake.Tag, Long> {
+interface TagJpaRepository : JpaRepository<TagEntity, Long> {
 
-	fun findTagByTagName(tagName: String?): com.cakk.infrastructure.persistence.entity.cake.Tag?
-    fun findTagsByTagNameIsIn(tagNames: List<String>): List<com.cakk.infrastructure.persistence.entity.cake.Tag>
+	fun findTagByTagName(tagName: String?): TagEntity?
+    fun findTagsByTagNameIsIn(tagNames: List<String>): List<TagEntity>
 }
 

@@ -11,7 +11,7 @@ import com.cakk.admin.mapper.supplyCakeCreateParamBy
 import com.cakk.admin.mapper.supplyCakeUpdateParamBy
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.service.cake.CakeService
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @RestController
 @RequestMapping("/shops/{cakeShopId}/cakes")
@@ -23,7 +23,7 @@ class CakeController(
 	fun create(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid dto: CakeCreateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyCakeCreateParamBy(dto, admin, cakeShopId)
 		cakeService.createCake(param)
@@ -36,7 +36,7 @@ class CakeController(
 		@PathVariable cakeShopId: Long,
 		@PathVariable cakeId: Long,
 		@RequestBody @Valid dto: CakeUpdateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyCakeUpdateParamBy(dto, admin, cakeShopId)
 		cakeService.updateCake(param)
@@ -48,7 +48,7 @@ class CakeController(
 	fun delete(
 		@PathVariable cakeShopId: Long,
 		@PathVariable cakeId: Long,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		cakeService.deleteCake(admin, cakeId)
 

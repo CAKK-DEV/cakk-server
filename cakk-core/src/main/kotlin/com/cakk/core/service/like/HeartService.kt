@@ -16,7 +16,7 @@ import com.cakk.core.facade.user.UserHeartFacade
 import com.cakk.core.mapper.supplyHeartCakeImageListResponseBy
 import com.cakk.core.mapper.supplyHeartCakeShopListResponseBy
 import com.cakk.core.mapper.supplyHeartResponseBy
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @Service
 class HeartService(
@@ -30,7 +30,7 @@ class HeartService(
 	fun searchCakeImagesByCursorAndHeart(param: HeartCakeSearchParam): HeartCakeImageListResponse {
 		val cakeImages = cakeShopUserReadFacade.searchCakeImagesByCursorAndHeart(
 			cakeHeartId = param.cakeHeartId,
-			userId = param.user.id,
+			userId = param.userEntity.id,
 			pageSize = param.pageSize
 		)
 
@@ -41,7 +41,7 @@ class HeartService(
 	fun searchCakeShopByCursorAndHeart(param: HeartCakeShopSearchParam): HeartCakeShopListResponse {
 		val cakeShops = cakeShopUserReadFacade.searchAllCakeShopsByCursorAndHeart(
 			cakeShopHeartId = param.cakeShopHeartId,
-			userId = param.user.id,
+			userId = param.userEntity.id,
 			pageSize = param.pageSize
 		)
 
@@ -49,32 +49,32 @@ class HeartService(
 	}
 
 	@Transactional(readOnly = true)
-	fun isHeartCake(user: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long): HeartResponse {
+	fun isHeartCake(userEntity: UserEntity, cakeId: Long): HeartResponse {
 		val cake = cakeReadFacade.findByIdWithHeart(cakeId)
-		val isHeart = cake.isHeartedBy(user)
+		val isHeart = cake.isHeartedBy(userEntity)
 
 		return supplyHeartResponseBy(isHeart)
 	}
 
 	@Transactional(readOnly = true)
-	fun isHeartCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long): HeartResponse {
+	fun isHeartCakeShop(userEntity: UserEntity, cakeShopId: Long): HeartResponse {
 		val cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId)
-		val isHeart = cakeShop.isHeartedBy(user)
+		val isHeart = cakeShop.isHeartedBy(userEntity)
 
 		return supplyHeartResponseBy(isHeart)
 	}
 
 	@DistributedLock(key = "#cakeId")
-	fun heartCake(user: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long) {
+	fun heartCake(userEntity: UserEntity, cakeId: Long) {
 		val cake = cakeReadFacade.findByIdWithHeart(cakeId)
 
-		userHeartFacade.heartCake(user, cake)
+		userHeartFacade.heartCake(userEntity, cake)
 	}
 
 	@DistributedLock(key = "#cakeShopId")
-	fun heartCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long) {
+	fun heartCakeShop(userEntity: UserEntity, cakeShopId: Long) {
 		val cakeShop = cakeShopReadFacade.findByIdWithHeart(cakeShopId)
 
-		userHeartFacade.heartCakeShop(user, cakeShop)
+		userHeartFacade.heartCakeShop(userEntity, cakeShop)
 	}
 }

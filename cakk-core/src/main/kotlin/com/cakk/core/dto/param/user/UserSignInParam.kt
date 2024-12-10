@@ -1,9 +1,9 @@
 package com.cakk.core.dto.param.user
 
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 
 data class UserSignInParam(
-	val provider: Provider,
-	val idToken: String
+    val providerType: ProviderType,
+    val idToken: String
 )
 

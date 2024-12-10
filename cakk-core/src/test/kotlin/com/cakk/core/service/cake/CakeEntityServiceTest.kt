@@ -25,7 +25,7 @@ import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam
 
 @DisplayName("케이크 조회 관련 비즈니스 로직 테스트")
-internal class CakeServiceTest : MockitoTest() {
+internal class CakeEntityServiceTest : MockitoTest() {
 
 	@InjectMocks
 	private lateinit var cakeService: CakeService

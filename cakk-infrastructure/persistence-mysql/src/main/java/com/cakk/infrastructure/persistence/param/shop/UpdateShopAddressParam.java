@@ -4,13 +4,13 @@ import org.locationtech.jts.geom.Point;
 
 import lombok.Builder;
 
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 
 @Builder
 public record UpdateShopAddressParam(
 	String shopAddress,
 	Point location,
-	User user,
+	UserEntity userEntity,
 	Long cakeShopId
 ) {
 }

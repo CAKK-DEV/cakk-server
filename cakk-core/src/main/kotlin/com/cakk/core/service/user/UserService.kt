@@ -8,8 +8,7 @@ import com.cakk.core.facade.user.UserManageFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.supplyProfileInformationResponseBy
 import com.cakk.core.mapper.supplyUserWithdrawalBy
-import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @Service
 class UserService(
@@ -19,8 +18,8 @@ class UserService(
 
 
 	@Transactional(readOnly = true)
-	fun findProfile(signInUser: com.cakk.infrastructure.persistence.entity.user.User): ProfileInformationResponse {
-		val user = userReadFacade.findByUserId(signInUser.id)
+	fun findProfile(signInUserEntity: UserEntity): ProfileInformationResponse {
+		val user = userReadFacade.findByUserId(signInUserEntity.id)
 
 		return supplyProfileInformationResponseBy(user)
 	}
@@ -32,8 +31,8 @@ class UserService(
 	}
 
 	@Transactional
-	fun withdraw(signInUser: com.cakk.infrastructure.persistence.entity.user.User) {
-		val user = userReadFacade.findByIdWithAll(signInUser.id)
+	fun withdraw(signInUserEntity: UserEntity) {
+		val user = userReadFacade.findByIdWithAll(signInUserEntity.id)
 		val withdrawal = supplyUserWithdrawalBy(user)
 
 		userManageFacade.withdraw(user, withdrawal)

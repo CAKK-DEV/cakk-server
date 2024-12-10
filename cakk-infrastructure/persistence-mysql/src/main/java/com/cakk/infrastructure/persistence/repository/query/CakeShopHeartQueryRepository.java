@@ -1,10 +1,10 @@
 package com.cakk.infrastructure.persistence.repository.query;
 
-import static com.cakk.infrastructure.persistence.entity.cake.QCake.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShop.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopHeart.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopOperation.*;
-import static com.cakk.infrastructure.persistence.entity.user.QUser.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopHeartEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopOperationEntity.*;
+import static com.cakk.infrastructure.persistence.entity.user.QUserEntity.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
@@ -33,8 +33,8 @@ public class CakeShopHeartQueryRepository {
 		final int pageSize
 	) {
 		return queryFactory
-			.select(cakeShopHeart.id)
-			.from(cakeShopHeart)
+			.select(cakeShopHeartEntity.id)
+			.from(cakeShopHeartEntity)
 			.where(
 				ltCakeShopHeartId(cakeShopHeartId),
 				isHeart(userId)
@@ -45,26 +45,26 @@ public class CakeShopHeartQueryRepository {
 
 	public List<HeartCakeShopResponseParam> searchAllByCursorAndHeart(final List<Long> cakeShopHeartIds) {
 		return queryFactory
-			.selectFrom(cakeShopHeart)
-			.innerJoin(cakeShop)
-			.on(cakeShopHeart.cakeShop.eq(cakeShop))
-			.innerJoin(user)
-			.on(cakeShopHeart.user.eq(user))
-			.innerJoin(cakeShopOperation)
-			.on(cakeShop.eq(cakeShopOperation.cakeShop))
-			.innerJoin(cake)
-			.on(cakeShop.eq(cake.cakeShop))
+			.selectFrom(cakeShopHeartEntity)
+			.innerJoin(cakeShopEntity)
+			.on(cakeShopHeartEntity.cakeShop.eq(cakeShopEntity))
+			.innerJoin(userEntity)
+			.on(cakeShopHeartEntity.user.eq(userEntity))
+			.innerJoin(cakeShopOperationEntity)
+			.on(cakeShopEntity.eq(cakeShopOperationEntity.cakeShop))
+			.innerJoin(cakeEntity)
+			.on(cakeShopEntity.eq(cakeEntity.cakeShop))
 			.where(inCakeShopHeartIds(cakeShopHeartIds))
 			.orderBy(cakeShopHeartIdDesc())
-			.transform(groupBy(cakeShopHeart.id)
+			.transform(groupBy(cakeShopHeartEntity.id)
 				.list(Projections.constructor(HeartCakeShopResponseParam.class,
-					cakeShopHeart.id,
-					cakeShop.id,
-					cakeShop.thumbnailUrl,
-					cakeShop.shopName,
-					cakeShop.shopBio,
-					set(cake.cakeImageUrl),
-					set(cakeShopOperation.operationDay)
+					cakeShopHeartEntity.id,
+					cakeShopEntity.id,
+					cakeShopEntity.thumbnailUrl,
+					cakeShopEntity.shopName,
+					cakeShopEntity.shopBio,
+					set(cakeEntity.cakeImageUrl),
+					set(cakeShopOperationEntity.operationDay)
 				)
 				)
 			);
@@ -75,22 +75,22 @@ public class CakeShopHeartQueryRepository {
 			return null;
 		}
 
-		return cakeShopHeart.id.lt(cakeShopHeartId);
+		return cakeShopHeartEntity.id.lt(cakeShopHeartId);
 	}
 
 	private BooleanExpression inCakeShopHeartIds(List<Long> cakeShopHeartIds) {
 		if (isNull(cakeShopHeartIds) || cakeShopHeartIds.isEmpty()) {
-			return cakeShopHeart.id.in(List.of());
+			return cakeShopHeartEntity.id.in(List.of());
 		}
 
-		return cakeShopHeart.id.in(cakeShopHeartIds);
+		return cakeShopHeartEntity.id.in(cakeShopHeartIds);
 	}
 
 	private BooleanExpression isHeart(Long userId) {
-		return cakeShopHeart.user.id.eq(userId);
+		return cakeShopHeartEntity.user.id.eq(userId);
 	}
 
 	private OrderSpecifier<Long> cakeShopHeartIdDesc() {
-		return cakeShopHeart.id.desc();
+		return cakeShopHeartEntity.id.desc();
 	}
 }

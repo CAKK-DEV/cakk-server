@@ -38,7 +38,7 @@ import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
 		executionPhase = ExecutionPhase.AFTER_TEST_METHOD
 	)
 )
-internal class CakeIntegrationTest(
+internal class CakeEntityIntegrationTest(
 	@LocalServerPort private val port: Int
 ) : IntegrationTest() {
 

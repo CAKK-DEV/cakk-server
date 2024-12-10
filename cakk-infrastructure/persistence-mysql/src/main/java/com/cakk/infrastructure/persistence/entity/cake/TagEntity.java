@@ -18,7 +18,7 @@ import com.cakk.infrastructure.persistence.entity.audit.AuditCreatedEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "tag")
-public class Tag extends AuditCreatedEntity {
+public class TagEntity extends AuditCreatedEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Tag extends AuditCreatedEntity {
 	private String tagName;
 
 	@Builder
-	public Tag(String tagName) {
+	public TagEntity(String tagName) {
 		this.tagName = tagName;
 	}
 }

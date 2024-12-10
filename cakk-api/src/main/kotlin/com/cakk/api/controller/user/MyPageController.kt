@@ -17,7 +17,7 @@ import com.cakk.api.mapper.supplyProfileUpdateParamBy
 import com.cakk.core.service.like.HeartService
 import com.cakk.core.service.user.UserService
 import com.cakk.common.response.ApiResponse
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @RestController
 @RequestMapping("/me")
@@ -28,19 +28,19 @@ class MyPageController(
 
     @GetMapping
     fun profile(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User
+		@SignInUser userEntity: UserEntity
     ): ApiResponse<ProfileInformationResponse> {
-        val response = userService.findProfile(user)
+        val response = userService.findProfile(userEntity)
 
 		return ApiResponse.success(response)
     }
 
     @PutMapping
     fun modify(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@RequestBody @Valid request: ProfileUpdateRequest
     ): ApiResponse<Unit> {
-		val param = supplyProfileUpdateParamBy(request, user)
+		val param = supplyProfileUpdateParamBy(request, userEntity)
         userService.updateInformation(param)
 
 		return ApiResponse.success()
@@ -48,19 +48,19 @@ class MyPageController(
 
     @DeleteMapping
     fun withdraw(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User
+		@SignInUser userEntity: UserEntity
     ): ApiResponse<Unit> {
-        userService.withdraw(user)
+        userService.withdraw(userEntity)
 
 		return ApiResponse.success()
     }
 
     @GetMapping("/heart-cakes")
     fun heartCakeList(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@ModelAttribute @Valid request: HeartCakeSearchRequest
     ): ApiResponse<HeartCakeImageListResponse> {
-		val param = supplyHeartCakeSearchParamBy(request, user)
+		val param = supplyHeartCakeSearchParamBy(request, userEntity)
         val response = heartService.searchCakeImagesByCursorAndHeart(param)
 
 		return ApiResponse.success(response)
@@ -68,10 +68,10 @@ class MyPageController(
 
     @GetMapping("/heart-shops")
     fun heartCakeList(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@ModelAttribute @Valid request: HeartCakeShopSearchRequest
     ): ApiResponse<HeartCakeShopListResponse> {
-		val param = supplyHeartCakeShopSearchParamBy(request, user)
+		val param = supplyHeartCakeShopSearchParamBy(request, userEntity)
         val response = heartService.searchCakeShopByCursorAndHeart(param)
 
 		return ApiResponse.success(response)

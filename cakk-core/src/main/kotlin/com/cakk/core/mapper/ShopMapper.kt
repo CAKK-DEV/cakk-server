@@ -10,14 +10,14 @@ import com.cakk.core.dto.response.shop.*
 import com.cakk.infrastructure.persistence.bo.shop.CakeShopByLocationParam
 import com.cakk.infrastructure.persistence.bo.shop.CakeShopBySearchParam
 import com.cakk.infrastructure.persistence.param.like.HeartCakeShopResponseParam
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperation
-import com.cakk.infrastructure.persistence.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLinkEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperationEntity
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity
 import com.cakk.infrastructure.persistence.param.shop.*
 
-fun supplyCakeShopBy(param: CreateShopParam): CakeShop {
-	return CakeShop.builder()
+fun supplyCakeShopBy(param: CreateShopParam): CakeShopEntity {
+	return CakeShopEntity.builder()
 		.shopName(param.shopName)
 		.shopBio(param.shopBio)
 		.shopDescription(param.shopDescription)
@@ -26,12 +26,12 @@ fun supplyCakeShopBy(param: CreateShopParam): CakeShop {
 		.build()
 }
 
-fun supplyCakeShopOperationsBy(cakeShop: CakeShop, operationDays: List<ShopOperationParam>): List<CakeShopOperation> {
+fun supplyCakeShopOperationsBy(cakeShop: CakeShopEntity, operationDays: List<ShopOperationParam>): List<CakeShopOperationEntity> {
 	return operationDays.map { supplyCakeShopOperationBy(it, cakeShop) }.toList()
 }
 
-fun supplyCakeShopOperationBy(operationDay: ShopOperationParam, cakeShop: CakeShop): CakeShopOperation {
-	return CakeShopOperation.builder()
+fun supplyCakeShopOperationBy(operationDay: ShopOperationParam, cakeShop: CakeShopEntity): CakeShopOperationEntity {
+	return CakeShopOperationEntity.builder()
 		.operationDay(operationDay.operationDay)
 		.operationStartTime(operationDay.operationStartTime)
 		.operationEndTime(operationDay.operationEndTime)
@@ -95,7 +95,7 @@ fun supplyHeartCakeShopListResponseBy(cakeShops: List<HeartCakeShopResponseParam
 	)
 }
 
-fun supplyCakeShopBySearchParamListBy(cakeShops: List<CakeShop>): List<CakeShopBySearchParam> {
+fun supplyCakeShopBySearchParamListBy(cakeShops: List<CakeShopEntity>): List<CakeShopBySearchParam> {
 	return cakeShops.map { supplyCakeShopBySearchParamBy(it) }.toList()
 }
 
@@ -103,11 +103,11 @@ fun supplyCakeShopOwnerResponseBy(isOwned: Boolean): CakeShopOwnerResponse {
 	return CakeShopOwnerResponse(isOwned)
 }
 
-fun supplyCakeShopCreateResponseBy(cakeShop: CakeShop): CakeShopCreateResponse {
+fun supplyCakeShopCreateResponseBy(cakeShop: CakeShopEntity): CakeShopCreateResponse {
 	return CakeShopCreateResponse(cakeShop.id)
 }
 
-fun supplyCakeShopByMineResponseBy(result: List<BusinessInformation>): CakeShopByMineResponse {
+fun supplyCakeShopByMineResponseBy(result: List<BusinessInformationEntity>): CakeShopByMineResponse {
 	if (result.isEmpty()) {
 		return CakeShopByMineResponse(false, null)
 	}
@@ -137,7 +137,7 @@ private fun supplyCakeShopSearchResponseParamListBy(param: CakeShopBySearchParam
 	)
 }
 
-private fun supplyCakeShopBySearchParamBy(cakeShop: CakeShop): CakeShopBySearchParam {
+private fun supplyCakeShopBySearchParamBy(cakeShop: CakeShopEntity): CakeShopBySearchParam {
 	return CakeShopBySearchParam.builder()
 		.cakeShopId(cakeShop.id)
 		.thumbnailUrl(cakeShop.thumbnailUrl)
@@ -148,7 +148,7 @@ private fun supplyCakeShopBySearchParamBy(cakeShop: CakeShop): CakeShopBySearchP
 		.build()
 }
 
-private fun supplyCakeShopOperationParamBy(cakeShopOperation: CakeShopOperation): CakeShopOperationParam {
+private fun supplyCakeShopOperationParamBy(cakeShopOperation: CakeShopOperationEntity): CakeShopOperationParam {
 	return CakeShopOperationParam(
 		cakeShopOperation.operationDay,
 		cakeShopOperation.operationStartTime,
@@ -156,7 +156,7 @@ private fun supplyCakeShopOperationParamBy(cakeShopOperation: CakeShopOperation)
 	)
 }
 
-private fun addLink(cakeShopLinks: MutableList<CakeShopLink>, cakeShopLink: CakeShopLink) {
+private fun addLink(cakeShopLinks: MutableList<CakeShopLinkEntity>, cakeShopLink: CakeShopLinkEntity) {
 	if (Objects.nonNull(cakeShopLink)) {
 		cakeShopLinks.add(cakeShopLink)
 	}

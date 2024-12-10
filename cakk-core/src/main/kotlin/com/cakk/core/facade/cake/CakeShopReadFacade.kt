@@ -4,6 +4,11 @@ import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.annotation.DomainFacade
 import com.cakk.infrastructure.cache.repository.CakeShopViewsRedisRepository
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLinkEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopOperationEntity
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 import com.cakk.infrastructure.persistence.repository.jpa.BusinessInformationJpaRepository
 import com.cakk.infrastructure.persistence.repository.jpa.CakeShopJpaRepository
 import com.cakk.infrastructure.persistence.repository.jpa.CakeShopLinkJpaRepository
@@ -21,15 +26,15 @@ class CakeShopReadFacade(
 	private val cakeShopViewsRedisRepository: CakeShopViewsRedisRepository
 ) {
 
-	fun findById(cakeShopId: Long): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun findById(cakeShopId: Long): CakeShopEntity {
 		return cakeShopJpaRepository.findById(cakeShopId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP) }
 	}
 
-	fun findByIdWithHeart(cakeShopId: Long): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun findByIdWithHeart(cakeShopId: Long): CakeShopEntity {
 		return cakeShopQueryRepository.searchByIdWithHeart(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-	fun findByIdWithLike(cakeShopId: Long): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun findByIdWithLike(cakeShopId: Long): CakeShopEntity {
 		return cakeShopQueryRepository.searchByIdWithLike(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
@@ -45,12 +50,12 @@ class CakeShopReadFacade(
 		return cakeShopQueryRepository.searchInfoById(cakeShopId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-	fun findBusinessInformationWithShop(cakeShopId: Long): com.cakk.infrastructure.persistence.entity.user.BusinessInformation {
+	fun findBusinessInformationWithShop(cakeShopId: Long): BusinessInformationEntity {
 		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
 			?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
 
-	fun findBusinessInformationByCakeShopId(cakeShopId: Long): com.cakk.infrastructure.persistence.entity.user.BusinessInformation {
+	fun findBusinessInformationByCakeShopId(cakeShopId: Long): BusinessInformationEntity {
 		return businessInformationJpaRepository.findBusinessInformationWithCakeShop(cakeShopId)
 			?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_SHOP)
 	}
@@ -59,7 +64,7 @@ class CakeShopReadFacade(
 		return cakeShopQueryRepository.findShopsByLocationBased(point, distance)
 	}
 
-	fun searchShopBySearch(param: com.cakk.infrastructure.persistence.param.shop.CakeShopSearchParam): List<com.cakk.infrastructure.persistence.entity.shop.CakeShop> {
+	fun searchShopBySearch(param: com.cakk.infrastructure.persistence.param.shop.CakeShopSearchParam): List<CakeShopEntity> {
 		return cakeShopQueryRepository.searchByKeywordWithLocation(
 			param.cakeShopId,
 			param.keyword,
@@ -68,17 +73,17 @@ class CakeShopReadFacade(
 		)
 	}
 
-	fun searchWithShopLinks(owner: com.cakk.infrastructure.persistence.entity.user.User?, cakeShopId: Long?): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun searchWithShopLinks(owner: UserEntity?, cakeShopId: Long?): CakeShopEntity {
 		return cakeShopQueryRepository.searchWithShopLinks(owner, cakeShopId)
 			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
 
-	fun searchByIdAndOwner(cakeShopId: Long, owner: com.cakk.infrastructure.persistence.entity.user.User): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun searchByIdAndOwner(cakeShopId: Long, owner: UserEntity): CakeShopEntity {
 		return cakeShopQueryRepository.searchWithBusinessInformationAndOwnerById(owner, cakeShopId)
 			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
 
-	fun searchWithOperations(owner: com.cakk.infrastructure.persistence.entity.user.User?, cakeShopId: Long?): com.cakk.infrastructure.persistence.entity.shop.CakeShop {
+	fun searchWithOperations(owner: UserEntity?, cakeShopId: Long?): CakeShopEntity {
 		return cakeShopQueryRepository.searchWithOperations(owner, cakeShopId)
 			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
@@ -86,7 +91,7 @@ class CakeShopReadFacade(
 	fun searchBestShops(
 		offset: Long,
 		pageSize: Int
-	): List<com.cakk.infrastructure.persistence.entity.shop.CakeShop> {
+	): List<CakeShopEntity> {
 		val cakeShopIds = cakeShopViewsRedisRepository.findTopShopIdsByOffsetAndCount(offset, pageSize.toLong())
 
 		return when {
@@ -95,11 +100,11 @@ class CakeShopReadFacade(
 		}
 	}
 
-	fun findCakeShopOperationsByCakeShopId(cakeShopId: Long): List<com.cakk.infrastructure.persistence.entity.shop.CakeShopOperation> {
+	fun findCakeShopOperationsByCakeShopId(cakeShopId: Long): List<CakeShopOperationEntity> {
 		return cakeShopOperationJpaRepository.findAllByCakeShopId(cakeShopId)
 	}
 
-	fun findCakeShopLinksByCakeShopId(cakeShopId: Long): List<com.cakk.infrastructure.persistence.entity.shop.CakeShopLink> {
+	fun findCakeShopLinksByCakeShopId(cakeShopId: Long): List<CakeShopLinkEntity> {
 		return cakeShopLinkJpaRepository.findAllByCakeShopId(cakeShopId)
 	}
 }

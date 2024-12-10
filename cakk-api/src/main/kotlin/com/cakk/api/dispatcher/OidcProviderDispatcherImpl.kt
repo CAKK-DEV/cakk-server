@@ -8,7 +8,7 @@ import com.cakk.core.provider.oauth.OidcProvider
 import com.cakk.api.provider.oauth.AppleAuthProvider
 import com.cakk.api.provider.oauth.GoogleAuthProvider
 import com.cakk.api.provider.oauth.KakaoAuthProvider
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.dispatcher.OidcProviderDispatcher
@@ -20,24 +20,24 @@ class OidcProviderDispatcherImpl(
 	private val googleAuthProvider: GoogleAuthProvider
 ): OidcProviderDispatcher {
 
-    private val authProviderMap: MutableMap<Provider, OidcProvider> = EnumMap(Provider::class.java)
+    private val authProviderTypeMap: MutableMap<ProviderType, OidcProvider> = EnumMap(ProviderType::class.java)
 
     init {
         initialize()
     }
 
     private fun initialize() {
-        authProviderMap[Provider.APPLE] = appleAuthProvider
-        authProviderMap[Provider.KAKAO] = kakaoAuthProvider
-        authProviderMap[Provider.GOOGLE] = googleAuthProvider
+        authProviderTypeMap[ProviderType.APPLE] = appleAuthProvider
+        authProviderTypeMap[ProviderType.KAKAO] = kakaoAuthProvider
+        authProviderTypeMap[ProviderType.GOOGLE] = googleAuthProvider
     }
 
-    override fun getProviderId(provider: Provider, idToken: String): String {
-        return getProvider(provider).getProviderId(idToken)
+    override fun getProviderId(providerType: ProviderType, idToken: String): String {
+        return getProvider(providerType).getProviderId(idToken)
     }
 
-    private fun getProvider(provider: Provider): OidcProvider {
-        return authProviderMap[provider] ?: throw CakkException(ReturnCode.WRONG_PROVIDER)
+    private fun getProvider(providerType: ProviderType): OidcProvider {
+        return authProviderTypeMap[providerType] ?: throw CakkException(ReturnCode.WRONG_PROVIDER)
     }
 }
 

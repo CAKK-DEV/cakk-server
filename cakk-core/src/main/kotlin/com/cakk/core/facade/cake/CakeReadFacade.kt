@@ -8,7 +8,9 @@ import com.cakk.common.exception.CakkException
 import com.cakk.core.annotation.DomainFacade
 import com.cakk.core.dto.param.cake.CakeSearchParam
 import com.cakk.infrastructure.cache.repository.CakeViewsRedisRepository
-import com.cakk.infrastructure.persistence.entity.cake.Cake
+import com.cakk.infrastructure.persistence.entity.cake.CakeCategoryEntity
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 import com.cakk.infrastructure.persistence.repository.jpa.CakeCategoryJpaRepository
 import com.cakk.infrastructure.persistence.repository.jpa.CakeJpaRepository
 import com.cakk.infrastructure.persistence.repository.query.CakeQueryRepository
@@ -21,12 +23,12 @@ class CakeReadFacade(
 	private val cakeViewsRedisRepository: CakeViewsRedisRepository,
 ) {
 
-	fun findById(cakeId: Long): Cake {
+	fun findById(cakeId: Long): CakeEntity {
 		return cakeJpaRepository.findById(cakeId).orElseThrow { CakkException(ReturnCode.NOT_EXIST_CAKE) }
 	}
 
-	fun findByIdWithHeart(cakeId: Long): Cake {
-		val cake: Cake = cakeQueryRepository.searchByIdWithHeart(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE)
+	fun findByIdWithHeart(cakeId: Long): CakeEntity {
+		val cake: CakeEntity = cakeQueryRepository.searchByIdWithHeart(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE)
 
 		return cake
 	}
@@ -68,7 +70,7 @@ class CakeReadFacade(
 		}
 	}
 
-	fun findWithCakeTagsAndCakeCategories(cakeId: Long, owner: com.cakk.infrastructure.persistence.entity.user.User): com.cakk.infrastructure.persistence.entity.cake.Cake {
+	fun findWithCakeTagsAndCakeCategories(cakeId: Long, owner: UserEntity): CakeEntity {
 		return cakeQueryRepository.searchWithCakeTagsAndCakeCategories(cakeId, owner)
 			.orElseThrow { CakkException(ReturnCode.NOT_CAKE_SHOP_OWNER) }
 	}
@@ -81,7 +83,7 @@ class CakeReadFacade(
 		return param
 	}
 
-	fun findCakeCategoryByCakeId(cakeId: Long?): com.cakk.infrastructure.persistence.entity.cake.CakeCategory {
+	fun findCakeCategoryByCakeId(cakeId: Long?): CakeCategoryEntity {
 		return cakeCategoryJpaRepository.findByCakeId(cakeId) ?: throw CakkException(ReturnCode.NOT_EXIST_CAKE_CATEGORY)
 	}
 }

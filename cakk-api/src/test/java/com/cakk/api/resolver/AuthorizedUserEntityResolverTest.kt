@@ -10,9 +10,9 @@ import io.kotest.matchers.shouldBe
 import com.cakk.api.annotation.SignInUser
 import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.api.common.base.MockitoTest
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
-internal class AuthorizedUserResolverTest : MockitoTest() {
+internal class AuthorizedUserEntityResolverTest : MockitoTest() {
 
     @InjectMocks
     private lateinit var authorizedUserResolver: AuthorizedUserResolver
@@ -23,7 +23,7 @@ internal class AuthorizedUserResolverTest : MockitoTest() {
         val parameter = mock(MethodParameter::class.java)
 
         doReturn(true).`when`(parameter).hasParameterAnnotation(SignInUser::class.java)
-        doReturn(com.cakk.infrastructure.persistence.entity.user.User::class.java).`when`(parameter).parameterType
+        doReturn(UserEntity::class.java).`when`(parameter).parameterType
 
         // when
         val result = authorizedUserResolver.supportsParameter(parameter)

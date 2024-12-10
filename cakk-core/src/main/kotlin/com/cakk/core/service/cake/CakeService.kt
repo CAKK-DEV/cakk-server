@@ -14,7 +14,7 @@ import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.tag.TagReadFacade
 import com.cakk.core.mapper.cakeDetailResponseFromParam
 import com.cakk.core.mapper.supplyCakeImageWithShopInfoListResponse
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @Transactional(readOnly = true)
 @Service
@@ -84,7 +84,7 @@ class CakeService(
     }
 
     @Transactional
-    fun deleteCake(owner: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long) {
+    fun deleteCake(owner: UserEntity, cakeId: Long) {
         val cake = cakeReadFacade.findWithCakeTagsAndCakeCategories(cakeId, owner)
 
         cakeManageFacade.delete(cake)

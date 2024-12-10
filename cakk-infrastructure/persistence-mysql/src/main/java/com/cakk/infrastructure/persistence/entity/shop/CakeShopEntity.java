@@ -27,9 +27,9 @@ import lombok.NoArgsConstructor;
 import com.cakk.common.enums.ReturnCode;
 import com.cakk.common.exception.CakkException;
 import com.cakk.infrastructure.persistence.entity.audit.AuditEntity;
-import com.cakk.infrastructure.persistence.entity.cake.Cake;
-import com.cakk.infrastructure.persistence.entity.user.BusinessInformation;
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity;
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 import com.cakk.infrastructure.persistence.mapper.CakeShopHeartMapper;
 import com.cakk.infrastructure.persistence.mapper.CakeShopLikeMapper;
 import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam;
@@ -39,7 +39,7 @@ import com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "cake_shop")
-public class CakeShop extends AuditEntity {
+public class CakeShopEntity extends AuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,25 +77,25 @@ public class CakeShop extends AuditEntity {
 	private LocalDateTime deletedAt;
 
 	@OneToOne(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
-	private BusinessInformation businessInformation;
+	private BusinessInformationEntity businessInformation;
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private List<CakeShopLink> cakeShopLinks = new ArrayList<>();
+	private List<CakeShopLinkEntity> cakeShopLinks = new ArrayList<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopOperation> cakeShopOperations = new HashSet<>();
+	private Set<CakeShopOperationEntity> cakeShopOperations = new HashSet<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST)
-	private Set<Cake> cakes = new HashSet<>();
+	private Set<CakeEntity> cakes = new HashSet<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopHeart> shopHearts = new HashSet<>();
+	private Set<CakeShopHeartEntity> shopHearts = new HashSet<>();
 
 	@OneToMany(mappedBy = "cakeShop", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopLike> shopLikes = new HashSet<>();
+	private Set<CakeShopLikeEntity> shopLikes = new HashSet<>();
 
 	@Builder
-	public CakeShop(
+	public CakeShopEntity(
 		String shopName,
 		String thumbnailUrl,
 		String shopAddress,
@@ -114,33 +114,33 @@ public class CakeShop extends AuditEntity {
 		this.likeCount = 0;
 	}
 
-	public void like(final User user) {
-		if (isLikedOverMaxBy(user)) {
+	public void like(final UserEntity userEntity) {
+		if (isLikedOverMaxBy(userEntity)) {
 			throw new CakkException(ReturnCode.MAX_CAKE_SHOP_LIKE);
 		}
 
-		shopLikes.add(CakeShopLikeMapper.supplyCakeShopLikeBy(this, user));
+		shopLikes.add(CakeShopLikeMapper.supplyCakeShopLikeBy(this, userEntity));
 		this.increaseLikeCount();
 	}
 
-	public void heart(final User user) {
-		shopHearts.add(CakeShopHeartMapper.supplyCakeShopHeartBy(this, user));
+	public void heart(final UserEntity userEntity) {
+		shopHearts.add(CakeShopHeartMapper.supplyCakeShopHeartBy(this, userEntity));
 		this.increaseHeartCount();
 	}
 
-	public void unHeart(final User user) {
-		shopHearts.removeIf(it -> it.getUser().equals(user));
+	public void unHeart(final UserEntity userEntity) {
+		shopHearts.removeIf(it -> it.getUser().equals(userEntity));
 		this.decreaseHeartCount();
 	}
 
-	public boolean isLikedOverMaxBy(final User user) {
-		long count = shopLikes.stream().map(it -> it.getUser().equals(user)).count();
+	public boolean isLikedOverMaxBy(final UserEntity userEntity) {
+		long count = shopLikes.stream().map(it -> it.getUser().equals(userEntity)).count();
 
 		return count >= 50;
 	}
 
-	public boolean isHeartedBy(final User user) {
-		return shopHearts.stream().anyMatch(it -> it.getUser().equals(user));
+	public boolean isHeartedBy(final UserEntity userEntity) {
+		return shopHearts.stream().anyMatch(it -> it.getUser().equals(userEntity));
 	}
 
 	public void updateBasicInformation(final CakeShopUpdateParam param) {
@@ -150,15 +150,15 @@ public class CakeShop extends AuditEntity {
 		shopDescription = param.shopDescription();
 	}
 
-	public void registerBusinessInformation(final BusinessInformation businessInformation) {
-		this.businessInformation = businessInformation;
+	public void registerBusinessInformation(final BusinessInformationEntity businessInformationEntity) {
+		this.businessInformation = businessInformationEntity;
 	}
 
-	public void addShopLinks(final List<CakeShopLink> cakeShopLinks) {
+	public void addShopLinks(final List<CakeShopLinkEntity> cakeShopLinks) {
 		this.cakeShopLinks.addAll(cakeShopLinks);
 	}
 
-	public void updateShopLinks(final List<CakeShopLink> cakeShopLinks) {
+	public void updateShopLinks(final List<CakeShopLinkEntity> cakeShopLinks) {
 		this.cakeShopLinks.clear();
 
 		cakeShopLinks.forEach(cakeShopLink -> {
@@ -172,11 +172,11 @@ public class CakeShop extends AuditEntity {
 		location = param.location();
 	}
 
-	public void addShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {
+	public void addShopOperationDays(final List<CakeShopOperationEntity> cakeShopOperations) {
 		this.cakeShopOperations.addAll(cakeShopOperations);
 	}
 
-	public void updateShopOperationDays(final List<CakeShopOperation> cakeShopOperations) {
+	public void updateShopOperationDays(final List<CakeShopOperationEntity> cakeShopOperations) {
 		this.cakeShopOperations.clear();
 
 		cakeShopOperations.forEach(cakeShopOperation -> {
@@ -185,7 +185,7 @@ public class CakeShop extends AuditEntity {
 		});
 	}
 
-	public void registerCake(final Cake cake) {
+	public void registerCake(final CakeEntity cake) {
 		cake.updateCakeShop(this);
 		this.cakes.add(cake);
 	}

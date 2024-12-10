@@ -1,8 +1,8 @@
 package com.cakk.infrastructure.persistence.repository.query;
 
-import static com.cakk.infrastructure.persistence.entity.cake.QCake.*;
-import static com.cakk.infrastructure.persistence.entity.cake.QCakeHeart.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShop.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeEntity.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeHeartEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopEntity.*;
 import static java.util.Objects.*;
 
 import java.util.List;
@@ -31,15 +31,15 @@ public class CakeHeartQueryRepository {
 	) {
 		return queryFactory
 			.select(Projections.constructor(HeartCakeImageResponseParam.class,
-				cakeShop.id,
-				cake.id,
-				cakeHeart.id,
-				cake.cakeImageUrl))
-			.from(cakeHeart)
-			.innerJoin(cake)
-			.on(cakeHeart.cake.eq(cake))
-			.innerJoin(cakeShop)
-			.on(cake.cakeShop.eq(cakeShop))
+				cakeShopEntity.id,
+				cakeEntity.id,
+				cakeHeartEntity.id,
+				cakeEntity.cakeImageUrl))
+			.from(cakeHeartEntity)
+			.innerJoin(cakeEntity)
+			.on(cakeHeartEntity.cake.eq(cakeEntity))
+			.innerJoin(cakeShopEntity)
+			.on(cakeEntity.cakeShop.eq(cakeShopEntity))
 			.where(
 				ltCakeHeartId(cakeHeartId),
 				isHeart(userId)
@@ -54,14 +54,14 @@ public class CakeHeartQueryRepository {
 			return null;
 		}
 
-		return cakeHeart.id.lt(cakeHeartId);
+		return cakeHeartEntity.id.lt(cakeHeartId);
 	}
 
 	private BooleanExpression isHeart(final Long userId) {
-		return cakeHeart.user.id.eq(userId);
+		return cakeHeartEntity.user.id.eq(userId);
 	}
 
 	private OrderSpecifier<Long> cakeHeartIdDesc() {
-		return cakeHeart.id.desc();
+		return cakeHeartEntity.id.desc();
 	}
 }

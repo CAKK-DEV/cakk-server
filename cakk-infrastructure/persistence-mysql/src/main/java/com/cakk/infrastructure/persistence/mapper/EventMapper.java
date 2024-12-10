@@ -3,13 +3,13 @@ package com.cakk.infrastructure.persistence.mapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity;
 import com.cakk.infrastructure.persistence.param.user.CertificationParam;
 import com.cakk.infrastructure.persistence.shop.CertificationEvent;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
-	public static CertificationEvent supplyCertificationInfoWithCakeShopInfo(CertificationParam param, CakeShop cakeShop) {
+	public static CertificationEvent supplyCertificationInfoWithCakeShopInfo(CertificationParam param, CakeShopEntity cakeShop) {
 		return CertificationEvent.builder()
 			.idCardImageUrl(param.idCardImageUrl())
 			.businessRegistrationImageUrl(param.businessRegistrationImageUrl())

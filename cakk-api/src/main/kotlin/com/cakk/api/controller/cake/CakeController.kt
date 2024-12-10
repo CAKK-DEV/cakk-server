@@ -13,7 +13,7 @@ import com.cakk.core.service.cake.CakeService
 import com.cakk.core.service.like.HeartService
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @RestController
 @RequestMapping("/cakes")
@@ -71,11 +71,11 @@ class CakeController(
 
 	@PostMapping("/{cakeShopId}")
 	fun create(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: CakeCreateRequest
 	): ApiResponse<Unit> {
-		val param = supplyCakeCreateParamBy(request, user, cakeShopId)
+		val param = supplyCakeCreateParamBy(request, userEntity, cakeShopId)
 		cakeService.createCake(param)
 
 		return ApiResponse.success()
@@ -83,31 +83,31 @@ class CakeController(
 
 	@GetMapping("/{cakeId}/heart")
 	fun isHeart(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@PathVariable cakeId: Long
 	): ApiResponse<HeartResponse> {
-		val response = heartService.isHeartCake(user, cakeId)
+		val response = heartService.isHeartCake(userEntity, cakeId)
 
 		return ApiResponse.success(response)
 	}
 
 	@PutMapping("/{cakeId}/heart")
 	fun heart(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@PathVariable cakeId: Long
 	): ApiResponse<Unit> {
-		heartService.heartCake(user, cakeId)
+		heartService.heartCake(userEntity, cakeId)
 
 		return ApiResponse.success()
 	}
 
 	@PutMapping("/{cakeId}")
 	fun update(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@PathVariable cakeId: Long,
 		@RequestBody request: @Valid CakeUpdateRequest
 	): ApiResponse<Unit> {
-		val param = supplyCakeUpdateParamBy(request, user, cakeId)
+		val param = supplyCakeUpdateParamBy(request, userEntity, cakeId)
 		cakeService.updateCake(param)
 
 		return ApiResponse.success()
@@ -115,10 +115,10 @@ class CakeController(
 
 	@DeleteMapping("/{cakeId}")
 	fun delete(
-		@SignInUser user: com.cakk.infrastructure.persistence.entity.user.User,
+		@SignInUser userEntity: UserEntity,
 		@PathVariable cakeId: Long
 	): ApiResponse<Unit> {
-		cakeService.deleteCake(user, cakeId)
+		cakeService.deleteCake(userEntity, cakeId)
 
 		return ApiResponse.success()
 	}

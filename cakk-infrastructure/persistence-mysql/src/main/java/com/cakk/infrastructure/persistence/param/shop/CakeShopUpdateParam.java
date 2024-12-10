@@ -2,7 +2,7 @@ package com.cakk.infrastructure.persistence.param.shop;
 
 import lombok.Builder;
 
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 
 @Builder
 public record CakeShopUpdateParam(
@@ -10,7 +10,7 @@ public record CakeShopUpdateParam(
 	String shopName,
 	String shopBio,
 	String shopDescription,
-	User user,
+	UserEntity user,
 	Long cakeShopId
 ) {
 }
