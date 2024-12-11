@@ -18,7 +18,6 @@ class CakeShop(
 	val links: Set<CakeShopLink> = emptySet(),
 	val operations: Set<CakeShopOperation> = emptySet(),
 	val likes: Set<CakeShopLike> = emptySet(),
-	val cakes: Set<Cake> = emptySet(),
 ) : AggregateRoot<CakeShop, Long>() {
 
 	var thumbnailUrl: String? = thumbnailUrl
