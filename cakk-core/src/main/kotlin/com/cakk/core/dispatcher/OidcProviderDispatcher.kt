@@ -1,8 +1,8 @@
 package com.cakk.core.dispatcher
 
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 
 fun interface OidcProviderDispatcher {
 
-	fun getProviderId(provider: Provider, idToken: String): String;
+	fun getProviderId(providerType: ProviderType, idToken: String): String;
 }

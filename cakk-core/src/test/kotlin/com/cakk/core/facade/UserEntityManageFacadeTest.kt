@@ -21,11 +21,11 @@ import com.cakk.core.common.fixture.FixtureCommon.getEnumFixture
 import com.cakk.core.common.fixture.FixtureCommon.getStringFixtureBw
 import com.cakk.core.facade.user.UserManageFacade
 import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
-import com.cakk.infrastructure.persistence.entity.user.UserWithdrawal
+import com.cakk.infrastructure.persistence.entity.user.UserWithdrawalEntity
 import com.cakk.infrastructure.persistence.repository.jpa.UserJpaRepository
 import com.cakk.infrastructure.persistence.repository.jpa.UserWithdrawalJpaRepository
 
-internal class UserManageFacadeTest : FacadeTest() {
+internal class UserEntityManageFacadeTest : FacadeTest() {
 
 	@InjectMocks
 	private lateinit var userManageFacade: UserManageFacade
@@ -99,7 +99,7 @@ internal class UserManageFacadeTest : FacadeTest() {
 	fun withdraw() {
 		// given
 		val user = getUserFixture()
-		val withdrawal = fixtureMonkey.giveMeBuilder(UserWithdrawal::class.java)
+		val withdrawal = fixtureMonkey.giveMeBuilder(UserWithdrawalEntity::class.java)
 			.set("email", getStringFixtureBw(10, 50))
 			.set("gender", getEnumFixture(Gender::class.java))
 			.set("birthday", getDateFixture())

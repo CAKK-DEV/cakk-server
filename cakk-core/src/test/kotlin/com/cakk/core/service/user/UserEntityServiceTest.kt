@@ -22,7 +22,7 @@ import com.cakk.core.mapper.supplyUserWithdrawalBy
 import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
 
 @DisplayName("유저 관련 비즈니스 로직 테스트")
-internal class UserServiceTest : MockitoTest() {
+internal class UserEntityServiceTest : MockitoTest() {
 
 	@InjectMocks
 	private lateinit var userService: UserService

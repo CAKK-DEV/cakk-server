@@ -8,8 +8,7 @@ import com.cakk.api.dto.request.shop.CakeShopSearchRequest
 import com.cakk.api.dto.request.shop.SearchShopByLocationRequest
 import com.cakk.core.dto.param.search.*
 import com.cakk.core.mapper.supplyPointBy
-import com.cakk.infrastructure.persistence.param.shop.CakeShopSearchParam
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 fun supplyTopSearchedListParamBy(
 	topSearchedListRequest: TopSearchedListRequest
@@ -38,14 +37,14 @@ fun supplyCakeShopSearchByViewsParam(
 
 fun supplyHeartCakeShopSearchParamBy(
 	request: HeartCakeShopSearchRequest,
-	user: com.cakk.infrastructure.persistence.entity.user.User
+	userEntity: UserEntity
 ): HeartCakeShopSearchParam {
-	return HeartCakeShopSearchParam(request.cakeShopHeartId, request.pageSize!!, user)
+	return HeartCakeShopSearchParam(request.cakeShopHeartId, request.pageSize!!, userEntity)
 }
 
 fun supplyHeartCakeSearchParamBy(
 	request: HeartCakeSearchRequest,
-	user: com.cakk.infrastructure.persistence.entity.user.User
+	userEntity: UserEntity
 ): HeartCakeSearchParam {
-	return HeartCakeSearchParam(request.cakeHeartId, request.pageSize!!, user)
+	return HeartCakeSearchParam(request.cakeHeartId, request.pageSize!!, userEntity)
 }

@@ -15,11 +15,11 @@ import com.cakk.api.common.base.MockitoTest
 import com.cakk.api.provider.oauth.AppleAuthProvider
 import com.cakk.api.provider.oauth.GoogleAuthProvider
 import com.cakk.api.provider.oauth.KakaoAuthProvider
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 
-internal class OidcProviderDispatcherImplTest : MockitoTest() {
+internal class OidcProviderTypeDispatcherImplTest : MockitoTest() {
 
 	@InjectMocks
 	private lateinit var oidcProviderDispatcherImpl: OidcProviderDispatcherImpl
@@ -36,14 +36,14 @@ internal class OidcProviderDispatcherImplTest : MockitoTest() {
 	@TestWithDisplayName("애플 제공자와 idToken을 받아 제공자의 id를 반환한다")
 	fun getProviderId1() {
 		// given
-		val provider = Provider.APPLE
+		val providerType = ProviderType.APPLE
 		val idToken = "id"
 		val providerId = "providerId"
 
 		doReturn(providerId).`when`(appleAuthProvider).getProviderId(idToken)
 
 		// when
-		val result = oidcProviderDispatcherImpl.getProviderId(provider, idToken)
+		val result = oidcProviderDispatcherImpl.getProviderId(providerType, idToken)
 
 		// then
 		result shouldBe providerId
@@ -54,14 +54,14 @@ internal class OidcProviderDispatcherImplTest : MockitoTest() {
 	@TestWithDisplayName("구글 제공자와 idToken을 받아 제공자의 id를 반환한다")
 	fun getProviderId2() {
 		// given
-		val provider = Provider.GOOGLE
+		val providerType = ProviderType.GOOGLE
 		val idToken = "id"
 		val providerId = "providerId"
 
 		doReturn(providerId).`when`(googleAuthProvider).getProviderId(idToken)
 
 		// when
-		val result = oidcProviderDispatcherImpl.getProviderId(provider, idToken)
+		val result = oidcProviderDispatcherImpl.getProviderId(providerType, idToken)
 
 		// then
 		result shouldBe providerId
@@ -72,14 +72,14 @@ internal class OidcProviderDispatcherImplTest : MockitoTest() {
 	@TestWithDisplayName("카카오 제공자와 idToken을 받아 제공자의 id를 반환한다")
 	fun getProviderId3() {
 		// given
-		val provider = Provider.KAKAO
+		val providerType = ProviderType.KAKAO
 		val idToken = "id"
 		val providerId = "providerId"
 
 		doReturn(providerId).`when`(kakaoAuthProvider).getProviderId(idToken)
 
 		// when
-		val result = oidcProviderDispatcherImpl.getProviderId(provider, idToken)
+		val result = oidcProviderDispatcherImpl.getProviderId(providerType, idToken)
 
 		// then
 		result shouldBe providerId
@@ -90,18 +90,18 @@ internal class OidcProviderDispatcherImplTest : MockitoTest() {
 	@TestWithDisplayName("제공자에 해당하는 provider가 없으면 에러를 반환한다")
 	fun getProviderId4() {
 		// given
-		val provider = Provider.KAKAO
+		val providerType = ProviderType.KAKAO
 		val idToken = "id"
 
 		ReflectionTestUtils.setField(
-			oidcProviderDispatcherImpl, "authProviderMap", EnumMap<Provider, Any>(
-				Provider::class.java
+			oidcProviderDispatcherImpl, "authProviderTypeMap", EnumMap<ProviderType, Any>(
+				ProviderType::class.java
 			)
 		)
 
 		// when
 		val exception = shouldThrow<CakkException> {
-			oidcProviderDispatcherImpl.getProviderId(provider, idToken)
+			oidcProviderDispatcherImpl.getProviderId(providerType, idToken)
 		}
 
 		// then

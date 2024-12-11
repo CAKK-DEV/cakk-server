@@ -8,19 +8,19 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.oauth2.core.user.OAuth2User
 
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 class OAuthUserDetails(
-    private val user: com.cakk.infrastructure.persistence.entity.user.User,
-    private val attribute: Map<String, Any>
+	private val userEntity: UserEntity,
+	private val attribute: Map<String, Any>
 ) : UserDetails, OidcUser, OAuth2User {
 
-    constructor(user: com.cakk.infrastructure.persistence.entity.user.User) : this(user, mapOf<String, Any>("id" to user.id))
+    constructor(userEntity: UserEntity) : this(userEntity, mapOf<String, Any>("id" to userEntity.id))
 
-	fun getUser(): com.cakk.infrastructure.persistence.entity.user.User = user
+	fun getUser(): UserEntity = userEntity
 
     override fun getName(): String {
-        return user.id.toString()
+        return userEntity.id.toString()
     }
 
     override fun getAttributes(): Map<String, Any> {
@@ -28,7 +28,7 @@ class OAuthUserDetails(
     }
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf(SimpleGrantedAuthority(user.role.securityRole))
+        return listOf(SimpleGrantedAuthority(userEntity.role.securityRole))
     }
 
     override fun getPassword(): String {
@@ -36,7 +36,7 @@ class OAuthUserDetails(
     }
 
     override fun getUsername(): String {
-        return user.id.toString()
+        return userEntity.id.toString()
     }
 
     override fun isAccountNonExpired(): Boolean {

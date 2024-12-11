@@ -16,13 +16,13 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.mapper.*
 import com.cakk.infrastructure.persistence.bo.shop.CakeShops
 import com.cakk.infrastructure.persistence.bo.user.VerificationPolicy
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 import com.cakk.infrastructure.persistence.param.link.UpdateLinkParam
 import com.cakk.infrastructure.persistence.param.operation.UpdateShopOperationParam
 import com.cakk.infrastructure.persistence.param.shop.CakeShopSearchParam
 import com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam
 import com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam
 import com.cakk.infrastructure.persistence.param.user.CertificationParam
-import com.cakk.infrastructure.persistence.entity.user.User
 
 @Service
 class ShopService(
@@ -30,7 +30,7 @@ class ShopService(
 	private val cakeShopReadFacade: CakeShopReadFacade,
 	private val businessInformationReadFacade: BusinessInformationReadFacade,
 	private val cakeShopManageFacade: CakeShopManageFacade,
-	private val verificationPolicy: com.cakk.infrastructure.persistence.bo.user.VerificationPolicy,
+	private val verificationPolicy: VerificationPolicy,
 	private val eventPublisher: ApplicationEventPublisher
 ) {
 
@@ -45,7 +45,7 @@ class ShopService(
 		val result = cakeShopManageFacade.create(
 			cakeShop = cakeShop,
 			cakeShopOperations = cakeShopOperations,
-			businessInformation = businessInformation,
+			businessInformationEntity = businessInformation,
 			cakeShopLinks = cakeShopLinks
 		)
 
@@ -61,38 +61,38 @@ class ShopService(
 	}
 
 	@Transactional
-	fun updateBasicInformation(param: com.cakk.infrastructure.persistence.param.shop.CakeShopUpdateParam) {
+	fun updateBasicInformation(param: CakeShopUpdateParam) {
 		val cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId, param.user)
 
 		cakeShop.updateBasicInformation(param)
 	}
 
 	@Transactional
-	fun updateShopLinks(param: com.cakk.infrastructure.persistence.param.link.UpdateLinkParam) {
-		val cakeShop = cakeShopReadFacade.searchWithShopLinks(param.user, param.cakeShopId)
+	fun updateShopLinks(param: UpdateLinkParam) {
+		val cakeShop = cakeShopReadFacade.searchWithShopLinks(param.userEntity, param.cakeShopId)
 		cakeShop.updateShopLinks(param.cakeShopLinks)
 	}
 
 	@Transactional
-	fun updateShopAddress(param: com.cakk.infrastructure.persistence.param.shop.UpdateShopAddressParam) {
-		val cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId, param.user)
+	fun updateShopAddress(param: UpdateShopAddressParam) {
+		val cakeShop = cakeShopReadFacade.searchByIdAndOwner(param.cakeShopId, param.userEntity)
 		cakeShop.updateShopAddress(param)
 	}
 
 	@Transactional
-	fun updateShopOperationDays(param: com.cakk.infrastructure.persistence.param.operation.UpdateShopOperationParam) {
-		val cakeShop = cakeShopReadFacade.searchWithOperations(param.user, param.cakeShopId)
+	fun updateShopOperationDays(param: UpdateShopOperationParam) {
+		val cakeShop = cakeShopReadFacade.searchWithOperations(param.userEntity, param.cakeShopId)
 		cakeShop.updateShopOperationDays(param.cakeShopOperations)
 	}
 
 	@Transactional(readOnly = true)
-	fun getMyBusinessId(user: com.cakk.infrastructure.persistence.entity.user.User): CakeShopByMineResponse {
-		val result = businessInformationReadFacade.findAllWithCakeShopByUser(user)
+	fun getMyBusinessId(userEntity: UserEntity): CakeShopByMineResponse {
+		val result = businessInformationReadFacade.findAllWithCakeShopByUser(userEntity)
 		return supplyCakeShopByMineResponseBy(result)
 	}
 
 	@Transactional
-	fun requestCertificationBusinessOwner(param: com.cakk.infrastructure.persistence.param.user.CertificationParam) {
+	fun requestCertificationBusinessOwner(param: CertificationParam) {
 		val businessInformation = cakeShopReadFacade.findBusinessInformationByCakeShopId(param.cakeShopId)
 		val certificationEvent = verificationPolicy.requestCertificationBusinessOwner(businessInformation, param)
 
@@ -131,18 +131,18 @@ class ShopService(
 		val point = supplyPointBy(latitude, longitude)
 
 		val result = cakeShopReadFacade.searchShopByLocationBased(point, distance)
-		val cakeShops = com.cakk.infrastructure.persistence.bo.shop.CakeShops(result, 4)
+		val cakeShops = CakeShops(result, 4)
 
 		return supplyCakeShopByMapResponseBy(cakeShops.cakeShops)
 	}
 
 	@Transactional(readOnly = true)
-	fun searchShopByKeyword(param: com.cakk.infrastructure.persistence.param.shop.CakeShopSearchParam): CakeShopSearchResponse {
+	fun searchShopByKeyword(param: CakeShopSearchParam): CakeShopSearchResponse {
 		val pageSize = param.pageSize
 		val result = cakeShopReadFacade.searchShopBySearch(param)
 		val cakeShopBySearchParams = supplyCakeShopBySearchParamListBy(result)
 
-		val cakeShops = com.cakk.infrastructure.persistence.bo.shop.CakeShops(cakeShopBySearchParams, 4, pageSize)
+		val cakeShops = CakeShops(cakeShopBySearchParams, 4, pageSize)
 
 		param.keyword?.let {
 			val event = supplyIncreaseSearchCountEventBy(param.keyword)
@@ -164,7 +164,7 @@ class ShopService(
 			}
 			else -> {
 				val cakeShopBySearchParams = supplyCakeShopBySearchParamListBy(result)
-				val cakeShops = com.cakk.infrastructure.persistence.bo.shop.CakeShops(cakeShopBySearchParams, 6, pageSize)
+				val cakeShops = CakeShops(cakeShopBySearchParams, 6, pageSize)
 
 				supplyCakeShopSearchResponseBy(cakeShops.cakeShops)
 			}
@@ -172,7 +172,7 @@ class ShopService(
 	}
 
 	@Transactional(readOnly = true)
-	fun isExistBusinessInformation(owner: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long): CakeShopOwnerResponse {
+	fun isExistBusinessInformation(owner: UserEntity, cakeShopId: Long): CakeShopOwnerResponse {
 		val isOwned = businessInformationReadFacade.isExistBusinessInformation(owner, cakeShopId)
 
 		return supplyCakeShopOwnerResponseBy(isOwned)

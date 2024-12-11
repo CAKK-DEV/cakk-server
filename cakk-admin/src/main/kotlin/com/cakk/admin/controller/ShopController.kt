@@ -10,7 +10,7 @@ import com.cakk.admin.mapper.*
 import com.cakk.common.response.ApiResponse
 import com.cakk.core.dto.response.shop.CakeShopCreateResponse
 import com.cakk.core.service.shop.ShopService
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @RestController
 @RequestMapping("/shops")
@@ -32,7 +32,7 @@ class ShopController(
 	fun updateBasicInformation(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: CakeShopUpdateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyCakeShopUpdateParamBy(request, admin, cakeShopId)
 		shopService.updateBasicInformation(param)
@@ -44,7 +44,7 @@ class ShopController(
 	fun updateLinks(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: LinkUpdateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyUpdateLinkParamBy(request, admin, cakeShopId)
 		shopService.updateShopLinks(param)
@@ -56,7 +56,7 @@ class ShopController(
 	fun updateOperationDays(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: ShopOperationUpdateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyUpdateShopOperationParamBy(request, admin, cakeShopId)
 		shopService.updateShopOperationDays(param)
@@ -68,7 +68,7 @@ class ShopController(
 	fun updateAddress(
 		@PathVariable cakeShopId: Long,
 		@RequestBody @Valid request: AddressUpdateByAdminRequest,
-		@AdminUser admin: com.cakk.infrastructure.persistence.entity.user.User
+		@AdminUser admin: UserEntity
 	): ApiResponse<Unit> {
 		val param = supplyUpdateShopAddressParamBy(request, admin, cakeShopId)
 		shopService.updateShopAddress(param)

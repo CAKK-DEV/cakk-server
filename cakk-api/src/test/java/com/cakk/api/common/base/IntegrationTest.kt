@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 import com.cakk.core.vo.JsonWebToken
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.provider.jwt.JwtProvider
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.*
 
@@ -58,15 +59,15 @@ abstract class IntegrationTest {
 
 	protected val authToken: JsonWebToken
 		get() {
-			val user: com.cakk.infrastructure.persistence.entity.user.User = userReadFacade.findByUserId(1L)
+			val userEntity: UserEntity = userReadFacade.findByUserId(1L)
 
-			return jwtProvider.generateToken(user)
+			return jwtProvider.generateToken(userEntity)
 		}
 
 	private fun getAuthTokenById(id: Long): JsonWebToken {
-		val user: com.cakk.infrastructure.persistence.entity.user.User = userReadFacade.findByUserId(id)
+		val userEntity: UserEntity = userReadFacade.findByUserId(id)
 
-		return jwtProvider.generateToken(user)
+		return jwtProvider.generateToken(userEntity)
 	}
 
 	protected val userId: Long

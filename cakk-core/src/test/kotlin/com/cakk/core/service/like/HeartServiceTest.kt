@@ -25,10 +25,9 @@ import com.cakk.core.facade.cake.CakeReadFacade
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.cake.CakeShopUserReadFacade
 import com.cakk.core.facade.user.UserHeartFacade
-import com.cakk.infrastructure.persistence.param.like.HeartCakeImageResponseParam
-import com.cakk.infrastructure.persistence.entity.cake.Cake
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @DisplayName("하트 기능 관련 비즈니스 로직 테스트")
 internal class HeartServiceTest : MockitoTest() {
@@ -97,11 +96,11 @@ internal class HeartServiceTest : MockitoTest() {
 
 	@TestWithDisplayName("하트 한 케이크가 없을 때 목록 조회 시 빈 배열을 반환한다.")
 	fun findCakeImagesByCursorAndHeart3() {
-		val user: com.cakk.infrastructure.persistence.entity.user.User = getUserFixture()
-		val param = HeartCakeSearchParam(5L, 5, user)
+		val userEntity: UserEntity = getUserFixture()
+		val param = HeartCakeSearchParam(5L, 5, userEntity)
 
 		doReturn(listOf<com.cakk.infrastructure.persistence.param.like.HeartCakeImageResponseParam>()).`when`(cakeShopUserReadFacade)
-			.searchCakeImagesByCursorAndHeart(param.cakeHeartId, user.id, param.pageSize)
+			.searchCakeImagesByCursorAndHeart(param.cakeHeartId, userEntity.id, param.pageSize)
 
 		// when
 		val result = heartService.searchCakeImagesByCursorAndHeart(param)
@@ -110,7 +109,7 @@ internal class HeartServiceTest : MockitoTest() {
 		result.cakeImages shouldHaveSize 0
 		result.lastCakeHeartId shouldBe null
 
-		verify(cakeShopUserReadFacade, times(1)).searchCakeImagesByCursorAndHeart(param.cakeHeartId, user.id, param.pageSize)
+		verify(cakeShopUserReadFacade, times(1)).searchCakeImagesByCursorAndHeart(param.cakeHeartId, userEntity.id, param.pageSize)
 	}
 
 	@TestWithDisplayName("케이크에 대하여 하트를 동작한다.")
@@ -118,7 +117,7 @@ internal class HeartServiceTest : MockitoTest() {
 		// given
 		val user = getUserFixture()
 		val cakeId = 1L
-		val cake = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.cake.Cake::class.java)
+		val cake = fixtureMonkey.giveMeOne(CakeEntity::class.java)
 
 		doReturn(cake).`when`(cakeReadFacade).findByIdWithHeart(cakeId)
 		doNothing().`when`(userHeartFacade).heartCake(user, cake)
@@ -135,7 +134,7 @@ internal class HeartServiceTest : MockitoTest() {
 		// given
 		val user = getUserFixture()
 		val cakeId = 1L
-		val cake = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.cake.Cake::class.java)
+		val cake = fixtureMonkey.giveMeOne(CakeEntity::class.java)
 		cake.heart(user)
 
 		doReturn(cake).`when`(cakeReadFacade).findByIdWithHeart(cakeId)
@@ -169,7 +168,7 @@ internal class HeartServiceTest : MockitoTest() {
 		// given
 		val user = getUserFixture()
 		val cakeShopId = 1L
-		val cakeShop = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.shop.CakeShop::class.java)
+		val cakeShop = fixtureMonkey.giveMeBuilder(CakeShopEntity::class.java)
 			.set("shopName", getStringFixtureBw(10, 30))
 			.set("shopBio", getStringFixtureBw(10, 40))
 			.set("shopDescription", getStringFixtureBw(100, 500))

@@ -5,7 +5,7 @@ import com.cakk.core.dto.param.cake.*
 import com.cakk.core.mapper.supplyCakeBy
 import com.cakk.core.mapper.supplyCakeCategoryListBy
 import com.cakk.core.mapper.supplyPointBy
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 fun supplyCakeSearchByCategoryParamBy(dto: CakeSearchByCategoryRequest): CakeSearchByCategoryParam {
     return CakeSearchByCategoryParam(
@@ -39,17 +39,17 @@ fun supplyCakeSearchByViewsParamBy(dto: CakeSearchByViewsRequest): CakeSearchByV
     )
 }
 
-fun supplyCakeCreateParamBy(dto: CakeCreateRequest, user: com.cakk.infrastructure.persistence.entity.user.User, cakeShopId: Long): CakeCreateParam {
+fun supplyCakeCreateParamBy(dto: CakeCreateRequest, userEntity: UserEntity, cakeShopId: Long): CakeCreateParam {
     return CakeCreateParam(
         supplyCakeBy(dto.cakeImageUrl!!),
         supplyCakeCategoryListBy(dto.cakeDesignCategories!!),
         dto.tagNames!!,
-        user,
+        userEntity,
         cakeShopId
     )
 }
 
-fun supplyCakeUpdateParamBy(dto: CakeUpdateRequest, owner: com.cakk.infrastructure.persistence.entity.user.User, cakeId: Long): CakeUpdateParam {
+fun supplyCakeUpdateParamBy(dto: CakeUpdateRequest, owner: UserEntity, cakeId: Long): CakeUpdateParam {
     return CakeUpdateParam(
         owner = owner,
         cakeId = cakeId,

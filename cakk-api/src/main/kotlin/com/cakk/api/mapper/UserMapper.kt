@@ -5,17 +5,16 @@ import com.cakk.core.dto.param.user.GenerateCodeParam
 import com.cakk.core.dto.param.user.UserSignInParam
 import com.cakk.core.dto.param.user.UserSignUpParam
 import com.cakk.core.dto.param.user.VerifyEmailParam
-import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
-fun supplyProfileUpdateParamBy(request: ProfileUpdateRequest, user: com.cakk.infrastructure.persistence.entity.user.User): com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam {
+fun supplyProfileUpdateParamBy(request: ProfileUpdateRequest, userEntity: UserEntity): com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam {
     return com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam.builder()
         .profileImageUrl(request.profileImageUrl)
         .nickname(request.nickname)
         .email(request.email)
         .gender(request.gender)
         .birthday(request.birthday)
-        .userId(user.id)
+        .userId(userEntity.id)
         .build()
 }
 
@@ -29,7 +28,7 @@ fun supplyVerifyEmailParamBy(dto: VerifyEmailRequest): VerifyEmailParam {
 
 fun supplyUserSignUpParamBy(request: UserSignUpRequest): UserSignUpParam {
     return UserSignUpParam(
-        request.provider!!,
+        request.providerType!!,
         request.idToken!!,
         request.deviceOs,
         request.deviceToken,
@@ -41,5 +40,5 @@ fun supplyUserSignUpParamBy(request: UserSignUpRequest): UserSignUpParam {
 }
 
 fun supplyUserSignInParamBy(request: UserSignInRequest): UserSignInParam {
-    return UserSignInParam(request.provider!!, request.idToken!!)
+    return UserSignInParam(request.providerType!!, request.idToken!!)
 }

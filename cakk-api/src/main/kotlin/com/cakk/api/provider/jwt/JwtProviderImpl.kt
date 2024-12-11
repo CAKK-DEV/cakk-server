@@ -23,6 +23,7 @@ import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.provider.jwt.JwtProvider
 import com.cakk.infrastructure.cache.repository.TokenRedisRepository
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @Component
 class JwtProviderImpl(
@@ -38,15 +39,15 @@ class JwtProviderImpl(
 	private val userKey: String
 ): JwtProvider {
 
-	override fun generateToken(user: com.cakk.infrastructure.persistence.entity.user.User): JsonWebToken {
+	override fun generateToken(userEntity: UserEntity): JsonWebToken {
 		try {
 			val accessToken = Jwts.builder()
-				.claim(userKey, user)
+				.claim(userKey, userEntity)
 				.setExpiration(Date(System.currentTimeMillis() + accessTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact()
 			val refreshToken = Jwts.builder()
-				.claim(userKey, user)
+				.claim(userKey, userEntity)
 				.setExpiration(Date(System.currentTimeMillis() + refreshTokenExpiredSecond))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact()
@@ -68,10 +69,10 @@ class JwtProviderImpl(
 		return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
 	}
 
-	override fun getUser(token: String): com.cakk.infrastructure.persistence.entity.user.User {
+	override fun getUser(token: String): UserEntity {
 		val parseUser = parseClaims(token)[userKey] ?: throw CakkException(ReturnCode.EMPTY_AUTH_JWT)
 
-		return ObjectMapper().convertValue(parseUser, com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		return ObjectMapper().convertValue(parseUser, UserEntity::class.java)
 	}
 
 	override fun getTokenExpiredSecond(token: String): Long {

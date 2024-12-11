@@ -1,12 +1,12 @@
 package com.cakk.infrastructure.persistence.repository.query;
 
-import static com.cakk.infrastructure.persistence.entity.cake.QCake.*;
-import static com.cakk.infrastructure.persistence.entity.cake.QCakeCategory.*;
-import static com.cakk.infrastructure.persistence.entity.cake.QCakeHeart.*;
-import static com.cakk.infrastructure.persistence.entity.cake.QCakeTag.*;
-import static com.cakk.infrastructure.persistence.entity.cake.QTag.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShop.*;
-import static com.cakk.infrastructure.persistence.entity.user.QBusinessInformation.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeCategoryEntity.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeEntity.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeHeartEntity.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeTagEntity.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QTagEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopEntity.*;
+import static com.cakk.infrastructure.persistence.entity.user.QBusinessInformationEntity.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static com.querydsl.core.types.Projections.*;
 import static java.util.Objects.*;
@@ -30,8 +30,8 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.common.enums.CakeDesignCategory;
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
-import com.cakk.infrastructure.persistence.entity.cake.Cake;
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 import com.cakk.infrastructure.persistence.param.cake.CakeDetailParam;
 import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam;
 import com.cakk.infrastructure.persistence.param.tag.TagParam;
@@ -49,16 +49,16 @@ public class CakeQueryRepository {
 	) {
 		return queryFactory
 			.select(constructor(CakeImageWithShopInfoResponseParam.class,
-				cakeShop.id,
-				cake.id,
-				cake.cakeImageUrl,
-				cake.cakeShop.thumbnailUrl,
-				cake.cakeShop.shopName))
-			.from(cake)
-			.innerJoin(cakeShop)
-			.on(cake.cakeShop.eq(cakeShop))
-			.innerJoin(cakeCategory)
-			.on(cakeCategory.cake.eq(cake))
+				cakeShopEntity.id,
+				cakeEntity.id,
+				cakeEntity.cakeImageUrl,
+				cakeEntity.cakeShop.thumbnailUrl,
+				cakeEntity.cakeShop.shopName))
+			.from(cakeEntity)
+			.innerJoin(cakeShopEntity)
+			.on(cakeEntity.cakeShop.eq(cakeShopEntity))
+			.innerJoin(cakeCategoryEntity)
+			.on(cakeCategoryEntity.cake.eq(cakeEntity))
 			.where(
 				ltCakeId(cakeId),
 				eqCategory(category))
@@ -74,14 +74,14 @@ public class CakeQueryRepository {
 	) {
 		return queryFactory
 			.select(constructor(CakeImageWithShopInfoResponseParam.class,
-				cakeShop.id,
-				cake.id,
-				cake.cakeImageUrl,
-				cake.cakeShop.thumbnailUrl,
-				cake.cakeShop.shopName))
-			.from(cake)
-			.innerJoin(cakeShop)
-			.on(cake.cakeShop.eq(cakeShop))
+				cakeShopEntity.id,
+				cakeEntity.id,
+				cakeEntity.cakeImageUrl,
+				cakeEntity.cakeShop.thumbnailUrl,
+				cakeEntity.cakeShop.shopName))
+			.from(cakeEntity)
+			.innerJoin(cakeShopEntity)
+			.on(cakeEntity.cakeShop.eq(cakeShopEntity))
 			.where(
 				ltCakeId(cakeId),
 				eqCakeShopId(cakeShopId))
@@ -99,16 +99,16 @@ public class CakeQueryRepository {
 		return queryFactory
 			.select(
 				constructor(CakeImageWithShopInfoResponseParam.class,
-					cake.cakeShop.id,
-					cake.id,
-					cake.cakeImageUrl,
-					cake.cakeShop.thumbnailUrl,
-					cake.cakeShop.shopName)).distinct()
-			.from(cake)
-			.innerJoin(cake.cakeShop, cakeShop)
-			.leftJoin(cake.cakeCategories, cakeCategory)
-			.leftJoin(cake.cakeTags, cakeTag)
-			.leftJoin(cakeTag.tag, tag)
+					cakeEntity.cakeShop.id,
+					cakeEntity.id,
+					cakeEntity.cakeImageUrl,
+					cakeEntity.cakeShop.thumbnailUrl,
+					cakeEntity.cakeShop.shopName)).distinct()
+			.from(cakeEntity)
+			.innerJoin(cakeEntity.cakeShop, cakeShopEntity)
+			.leftJoin(cakeEntity.cakeCategories, cakeCategoryEntity)
+			.leftJoin(cakeEntity.cakeTags, cakeTagEntity)
+			.leftJoin(cakeTagEntity.tag, tagEntity)
 			.where(
 				containKeyword(keyword).and(includeDistance(location)), ltCakeId(cakeId)
 			)
@@ -120,32 +120,32 @@ public class CakeQueryRepository {
 	public List<CakeImageWithShopInfoResponseParam> searchCakeImagesByCakeIds(final List<Long> cakeIds) {
 		return queryFactory
 			.select(constructor(CakeImageWithShopInfoResponseParam.class,
-				cakeShop.id,
-				cake.id,
-				cake.cakeImageUrl,
-				cake.cakeShop.thumbnailUrl,
-				cake.cakeShop.shopName))
-			.from(cake)
-			.innerJoin(cakeShop)
-			.on(cake.cakeShop.eq(cakeShop))
+				cakeShopEntity.id,
+				cakeEntity.id,
+				cakeEntity.cakeImageUrl,
+				cakeEntity.cakeShop.thumbnailUrl,
+				cakeEntity.cakeShop.shopName))
+			.from(cakeEntity)
+			.innerJoin(cakeShopEntity)
+			.on(cakeEntity.cakeShop.eq(cakeShopEntity))
 			.where(includeCakeIds(cakeIds))
 			.fetch();
 	}
 
-	public Optional<Cake> searchWithCakeTagsAndCakeCategories(final Long cakeId, final User owner) {
+	public Optional<CakeEntity> searchWithCakeTagsAndCakeCategories(final Long cakeId, final UserEntity owner) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner)
-				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
+			userCondition = businessInformationEntity.user.eq(owner)
+				.and(businessInformationEntity.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
-		JPQLQuery<Cake> query = queryFactory
-			.selectFrom(cake)
-			.innerJoin(cake.cakeShop, cakeShop)
-			.innerJoin(cakeShop.businessInformation, businessInformation)
-			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
-			.leftJoin(cake.cakeTags, cakeTag).fetchJoin()
+		JPQLQuery<CakeEntity> query = queryFactory
+			.selectFrom(cakeEntity)
+			.innerJoin(cakeEntity.cakeShop, cakeShopEntity)
+			.innerJoin(cakeShopEntity.businessInformation, businessInformationEntity)
+			.leftJoin(cakeEntity.cakeCategories, cakeCategoryEntity).fetchJoin()
+			.leftJoin(cakeEntity.cakeTags, cakeTagEntity).fetchJoin()
 			.where(eqCakeId(cakeId));
 
 		if (nonNull(userCondition)) {
@@ -157,40 +157,40 @@ public class CakeQueryRepository {
 
 	public CakeDetailParam searchCakeDetailById(final Long cakeId) {
 		List<CakeDetailParam> results = queryFactory
-			.selectFrom(cake)
-			.innerJoin(cake.cakeShop, cakeShop)
-			.leftJoin(cake.cakeCategories, cakeCategory)
-			.leftJoin(cake.cakeTags, cakeTag)
-			.leftJoin(cakeTag.tag, tag)
+			.selectFrom(cakeEntity)
+			.innerJoin(cakeEntity.cakeShop, cakeShopEntity)
+			.leftJoin(cakeEntity.cakeCategories, cakeCategoryEntity)
+			.leftJoin(cakeEntity.cakeTags, cakeTagEntity)
+			.leftJoin(cakeTagEntity.tag, tagEntity)
 			.where(eqCakeId(cakeId))
-			.transform(groupBy(cake.id)
+			.transform(groupBy(cakeEntity.id)
 				.list(Projections.constructor(CakeDetailParam.class,
-					cake.cakeImageUrl,
-					cakeShop.shopName,
-					cakeShop.shopBio,
-					cakeShop.id,
-					set(cakeCategory.cakeDesignCategory),
+					cakeEntity.cakeImageUrl,
+					cakeShopEntity.shopName,
+					cakeShopEntity.shopBio,
+					cakeShopEntity.id,
+					set(cakeCategoryEntity.cakeDesignCategory),
 					set(Projections.constructor(TagParam.class,
-						tag.id,
-						tag.tagName)
+						tagEntity.id,
+						tagEntity.tagName)
 					)
 				)));
 		return results.isEmpty() ? null : results.getFirst();
 	}
 
-	public Cake searchByIdWithHeart(final Long cakeId) {
+	public CakeEntity searchByIdWithHeart(final Long cakeId) {
 		return queryFactory
-			.selectFrom(cake)
-			.leftJoin(cake.cakeHearts, cakeHeart).fetchJoin()
-			.where(cake.id.eq(cakeId))
+			.selectFrom(cakeEntity)
+			.leftJoin(cakeEntity.cakeHearts, cakeHeartEntity).fetchJoin()
+			.where(cakeEntity.id.eq(cakeId))
 			.fetchOne();
 	}
 
-	public Cake searchByIdWithCategories(final Long cakeId) {
+	public CakeEntity searchByIdWithCategories(final Long cakeId) {
 		return queryFactory
-			.selectFrom(cake)
-			.leftJoin(cake.cakeCategories, cakeCategory).fetchJoin()
-			.where(cake.id.eq(cakeId))
+			.selectFrom(cakeEntity)
+			.leftJoin(cakeEntity.cakeCategories, cakeCategoryEntity).fetchJoin()
+			.where(cakeEntity.id.eq(cakeId))
 			.fetchOne();
 	}
 
@@ -199,23 +199,23 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return cake.id.lt(cakeId);
+		return cakeEntity.id.lt(cakeId);
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
-		return cakeShop.id.eq(cakeShopId);
+		return cakeShopEntity.id.eq(cakeShopId);
 	}
 
 	private BooleanExpression eqCakeId(Long cakeId) {
-		return cake.id.eq(cakeId);
+		return cakeEntity.id.eq(cakeId);
 	}
 
 	private BooleanExpression eqCategory(CakeDesignCategory category) {
-		return cakeCategory.cakeDesignCategory.eq(category);
+		return cakeCategoryEntity.cakeDesignCategory.eq(category);
 	}
 
 	private BooleanExpression includeCakeIds(List<Long> cakeIds) {
-		return cake.id.in(cakeIds);
+		return cakeEntity.id.in(cakeIds);
 	}
 
 	private BooleanBuilder containKeyword(String keyword) {
@@ -235,7 +235,7 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return cakeShop.shopBio.containsIgnoreCase(keyword);
+		return cakeShopEntity.shopBio.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression containsKeywordInShopDesc(String keyword) {
@@ -243,7 +243,7 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return cakeShop.shopDescription.containsIgnoreCase(keyword);
+		return cakeShopEntity.shopDescription.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression containsKeywordInTagName(String keyword) {
@@ -251,7 +251,7 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return cakeTag.tag.tagName.containsIgnoreCase(keyword);
+		return cakeTagEntity.tag.tagName.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression includeDistance(Point location) {
@@ -259,10 +259,10 @@ public class CakeQueryRepository {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 1000), {1})", location, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 1000), {1})", location, cakeShopEntity.location);
 	}
 
 	private OrderSpecifier<Long> cakeIdDesc() {
-		return cake.id.desc();
+		return cakeEntity.id.desc();
 	}
 }

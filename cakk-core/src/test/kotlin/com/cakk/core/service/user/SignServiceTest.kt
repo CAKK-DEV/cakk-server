@@ -12,7 +12,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 
 import com.cakk.common.enums.Gender
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 import com.cakk.common.enums.ReturnCode
 import com.cakk.common.exception.CakkException
 import com.cakk.core.common.annotation.TestWithDisplayName
@@ -32,6 +32,7 @@ import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.provider.jwt.JwtProvider
 import com.cakk.core.vo.JsonWebToken
 import com.cakk.infrastructure.cache.repository.TokenRedisRepository
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @DisplayName("Sign 관련 비즈니스 로직 테스트")
 internal class SignServiceTest : MockitoTest() {
@@ -58,7 +59,7 @@ internal class SignServiceTest : MockitoTest() {
 	fun signUp1() {
 		// given
 		val param = fixtureMonkey.giveMeBuilder(UserSignUpParam::class.java)
-			.set("provider", getEnumFixture(Provider::class.java))
+			.set("providerType", getEnumFixture(ProviderType::class.java))
 			.set("idToken", getStringFixtureBw(100, 200))
 			.set("nickname", getStringFixtureBw(1, 10))
 			.set("email", getStringFixtureBw(10, 20))
@@ -67,9 +68,9 @@ internal class SignServiceTest : MockitoTest() {
 			.setNull("deviceOs")
 			.setNull("deviceToken")
 			.sample()
-		val user = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity = fixtureMonkey.giveMeBuilder(UserEntity::class.java)
 			.set("id", getLongFixtureGoe(10))
-			.set("provider", param.provider)
+			.set("provider", param.providerType)
 			.set("providerId", getStringFixtureBw(10, 20))
 			.sample()
 		val jwt = fixtureMonkey.giveMeBuilder(JsonWebToken::class.java)
@@ -78,9 +79,9 @@ internal class SignServiceTest : MockitoTest() {
 			.set("grantType", getStringFixtureBw(10, 20))
 			.sample()
 
-		doReturn(user.providerId).`when`(oidcProviderDispatcher).getProviderId(param.provider, param.idToken)
-		doReturn(user).`when`(userManagerFacade).create(any())
-		doReturn(jwt).`when`(jwtProvider).generateToken(user)
+		doReturn(userEntity.providerId).`when`(oidcProviderDispatcher).getProviderId(param.providerType, param.idToken)
+		doReturn(userEntity).`when`(userManagerFacade).create(any())
+		doReturn(jwt).`when`(jwtProvider).generateToken(userEntity)
 
 		// when
 		val result = signService.signUp(param)
@@ -90,29 +91,30 @@ internal class SignServiceTest : MockitoTest() {
 		result.refreshToken shouldNotBe null
 		result.grantType shouldNotBe null
 
-		verify(oidcProviderDispatcher, times(1)).getProviderId(param.provider, param.idToken)
+		verify(oidcProviderDispatcher, times(1)).getProviderId(param.providerType, param.idToken)
 		verify(userManagerFacade, times(1)).create(any())
-		verify(jwtProvider, times(1)).generateToken(user)
+		verify(jwtProvider, times(1)).generateToken(userEntity)
 	}
 
 	@TestWithDisplayName("만료된 id token이라면 회원가입 시 에러를 던진다")
 	fun signUp2() {
 		// given
 		val param: UserSignUpParam = fixtureMonkey.giveMeBuilder(UserSignUpParam::class.java)
-			.setNotNull("provider")
+			.setNotNull("providerType")
 			.setNotNull("idToken")
 			.setNotNull("nickname")
 			.setNotNull("email")
 			.setNotNull("birthday")
 			.setNotNull("gender")
 			.sample()
-		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity: UserEntity = fixtureMonkey.giveMeBuilder(
+			UserEntity::class.java)
 			.set("id", getLongFixtureGoe(10))
-			.set("provider", param.provider)
+			.set("provider", param.providerType)
 			.set("providerId", getStringFixtureBw(10, 20))
 			.sample()
 
-		doThrow(CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).`when`(oidcProviderDispatcher).getProviderId(param.provider, param.idToken)
+		doThrow(CakkException(ReturnCode.EXPIRED_JWT_TOKEN)).`when`(oidcProviderDispatcher).getProviderId(param.providerType, param.idToken)
 
 		// when
 		val exception = shouldThrow<CakkException> {
@@ -122,22 +124,23 @@ internal class SignServiceTest : MockitoTest() {
 		//then
 		exception.getReturnCode() shouldBe ReturnCode.EXPIRED_JWT_TOKEN
 
-		verify(oidcProviderDispatcher, times(1)).getProviderId(param.provider, param.idToken)
+		verify(oidcProviderDispatcher, times(1)).getProviderId(param.providerType, param.idToken)
 		verify(userManagerFacade, times(0)).create(any())
-		verify(jwtProvider, times(0)).generateToken(user)
+		verify(jwtProvider, times(0)).generateToken(userEntity)
 	}
 
 	@TestWithDisplayName("로그인에 성공한다.")
 	fun signIn() {
 		// given
 		val param: UserSignInParam = getConstructorMonkey().giveMeBuilder(UserSignInParam::class.java)
-			.setNotNull("provider")
+			.setNotNull("providerType")
 			.setNotNull("idToken")
 			.sample()
 		val providerId: String = getStringFixtureEq(10).sample()
-		val user: com.cakk.infrastructure.persistence.entity.user.User = getConstructorMonkey().giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity: UserEntity = getConstructorMonkey().giveMeBuilder(
+			UserEntity::class.java)
 			.set("id", getLongFixtureGoe(10))
-			.set("provider", param.provider)
+			.set("provider", param.providerType)
 			.set("providerId", providerId)
 			.sample()
 		val jwt: JsonWebToken = getConstructorMonkey().giveMeBuilder(JsonWebToken::class.java)
@@ -146,9 +149,9 @@ internal class SignServiceTest : MockitoTest() {
 			.setNotNull("grantType")
 			.sample()
 
-		doReturn(providerId).`when`(oidcProviderDispatcher).getProviderId(param.provider, param.idToken)
-		doReturn(user).`when`(userReadFacade).findByProviderId(providerId)
-		doReturn(jwt).`when`(jwtProvider).generateToken(user)
+		doReturn(providerId).`when`(oidcProviderDispatcher).getProviderId(param.providerType, param.idToken)
+		doReturn(userEntity).`when`(userReadFacade).findByProviderId(providerId)
+		doReturn(jwt).`when`(jwtProvider).generateToken(userEntity)
 
 		// when
 		val result = signService.signIn(param)
@@ -158,26 +161,27 @@ internal class SignServiceTest : MockitoTest() {
 		result.refreshToken shouldNotBe null
 		result.grantType shouldNotBe null
 
-		verify(oidcProviderDispatcher, times(1)).getProviderId(param.provider, param.idToken)
+		verify(oidcProviderDispatcher, times(1)).getProviderId(param.providerType, param.idToken)
 		verify(userReadFacade, times(1)).findByProviderId(providerId)
-		verify(jwtProvider, times(1)).generateToken(user)
+		verify(jwtProvider, times(1)).generateToken(userEntity)
 	}
 
 	@TestWithDisplayName("제공자 id에 해당하는 유저가 없다면 로그인 시 에러를 던진다")
 	fun signIn2() {
 		// given
 		val param: UserSignInParam = getConstructorMonkey().giveMeBuilder(UserSignInParam::class.java)
-			.setNotNull("provider")
+			.setNotNull("providerType")
 			.setNotNull("idToken")
 			.sample()
 		val providerId = getStringFixtureBw(10, 20).sample()
-		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity: UserEntity = fixtureMonkey.giveMeBuilder(
+			UserEntity::class.java)
 			.set("id", getLongFixtureGoe(10))
-			.set("provider", param.provider)
+			.set("provider", param.providerType)
 			.set("providerId", providerId)
 			.sample()
 
-		doReturn(providerId).`when`(oidcProviderDispatcher).getProviderId(param.provider, param.idToken)
+		doReturn(providerId).`when`(oidcProviderDispatcher).getProviderId(param.providerType, param.idToken)
 		doThrow(CakkException(ReturnCode.NOT_EXIST_USER)).`when`(userReadFacade).findByProviderId(providerId)
 
 		// when
@@ -188,16 +192,17 @@ internal class SignServiceTest : MockitoTest() {
 		//then
 		exception.getReturnCode() shouldBe ReturnCode.NOT_EXIST_USER
 
-		verify(oidcProviderDispatcher, times(1)).getProviderId(param.provider, param.idToken)
+		verify(oidcProviderDispatcher, times(1)).getProviderId(param.providerType, param.idToken)
 		verify(userReadFacade, times(1)).findByProviderId(providerId)
-		verify(jwtProvider, times(0)).generateToken(user)
+		verify(jwtProvider, times(0)).generateToken(userEntity)
 	}
 
 	@TestWithDisplayName("토큰 재발급에 성공한다")
 	fun recreateToken() {
 		// given
 		val refreshToken = "refresh token"
-		val user: com.cakk.infrastructure.persistence.entity.user.User = fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity: UserEntity = fixtureMonkey.giveMeBuilder(
+			UserEntity::class.java)
 			.set("id", getLongFixtureGoe(10))
 			.set("providerId", getStringFixtureBw(10, 20))
 			.set("createdAt", getDateTimeFixture())
@@ -211,8 +216,8 @@ internal class SignServiceTest : MockitoTest() {
 
 		doReturn(false).`when`(tokenRedisRepository).isBlackListToken(refreshToken)
 		doReturn(11111L).`when`(jwtProvider).getTokenExpiredSecond(refreshToken)
-		doReturn(user).`when`(jwtProvider).getUser(refreshToken)
-		doReturn(jwt).`when`(jwtProvider).generateToken(user)
+		doReturn(userEntity).`when`(jwtProvider).getUser(refreshToken)
+		doReturn(jwt).`when`(jwtProvider).generateToken(userEntity)
 
 		// when
 		val result = signService.recreateToken(refreshToken)
@@ -224,7 +229,7 @@ internal class SignServiceTest : MockitoTest() {
 
 		verify(tokenRedisRepository, times(1)).isBlackListToken(refreshToken)
 		verify(jwtProvider, times(1)).getUser(refreshToken)
-		verify(jwtProvider, times(1)).generateToken(user)
+		verify(jwtProvider, times(1)).generateToken(userEntity)
 	}
 
 	@TestWithDisplayName("리프레시 토큰이 만료된 경우, 토큰 재발급에 실패한다")

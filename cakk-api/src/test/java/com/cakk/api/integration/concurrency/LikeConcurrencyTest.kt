@@ -16,7 +16,7 @@ import com.cakk.api.common.annotation.TestWithDisplayName
 import com.cakk.core.facade.cake.CakeShopReadFacade
 import com.cakk.core.facade.user.UserReadFacade
 import com.cakk.core.service.like.LikeService
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @SpringBootTest(properties = ["spring.profiles.active=test"])
 @SqlGroup(
@@ -35,11 +35,11 @@ class LikeConcurrencyTest {
 	@Autowired
 	private lateinit var userReadFacade: UserReadFacade
 
-	private lateinit var user: com.cakk.infrastructure.persistence.entity.user.User
+	private lateinit var userEntity: UserEntity
 
 	@BeforeEach
 	fun initUser() {
-		user = userReadFacade.findByUserId(1L)
+		userEntity = userReadFacade.findByUserId(1L)
 	}
 
 	@TestWithDisplayName("케이크샵 좋아요 동작 시, 동시성 문제가 발생하지 않는다.")
@@ -55,7 +55,7 @@ class LikeConcurrencyTest {
 		for (i in 0 until threadCount) {
 			executorService.submit {
 				try {
-					likeService.likeCakeShop(user, cakeShopId)
+					likeService.likeCakeShop(userEntity, cakeShopId)
 				} finally {
 					latch.countDown()
 				}

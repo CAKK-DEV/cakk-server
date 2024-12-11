@@ -10,7 +10,7 @@ import com.cakk.core.common.annotation.TestWithDisplayName
 import com.cakk.core.common.base.FacadeTest
 import com.cakk.core.facade.user.UserHeartFacade
 
-internal class UserHeartFacadeTest : FacadeTest() {
+internal class UserEntityHeartFacadeTest : FacadeTest() {
 
 	@InjectMocks
 	private lateinit var userHeartFacade: UserHeartFacade

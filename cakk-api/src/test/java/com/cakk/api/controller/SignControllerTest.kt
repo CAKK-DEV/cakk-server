@@ -16,7 +16,7 @@ import com.cakk.api.dto.request.user.GenerateCodeRequest
 import com.cakk.api.dto.request.user.UserSignUpRequest
 import com.cakk.api.dto.request.user.VerifyEmailRequest
 import com.cakk.common.enums.Gender
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 import com.cakk.core.dto.param.user.UserSignInParam
 import com.cakk.core.dto.response.user.JwtResponse
 import org.mockito.kotlin.any
@@ -27,7 +27,7 @@ internal class SignControllerTest : MockMvcTest() {
 	fun signUp() {
 		// given
 		val dto = fixtureMonkey.giveMeBuilder(UserSignUpRequest::class.java)
-			.set("provider", getEnumFixture(Provider::class.java))
+			.set("providerType", getEnumFixture(ProviderType::class.java))
 			.set("idToken", getStringFixtureBw(100, 200))
 			.set("nickname", getStringFixtureBw(2, 10))
 			.set("email", getStringFixtureBw(5, 20))
@@ -58,7 +58,7 @@ internal class SignControllerTest : MockMvcTest() {
 	fun signIn() {
 		// given
 		val param = fixtureMonkey.giveMeBuilder(UserSignInParam::class.java)
-			.setNotNull("provider")
+			.setNotNull("providerType")
 			.setNotNull("idToken")
 			.sample()
 		val jwt = fixtureMonkey.giveMeBuilder(JwtResponse::class.java)

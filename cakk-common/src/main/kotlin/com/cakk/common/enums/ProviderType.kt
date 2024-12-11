@@ -1,6 +1,6 @@
 package com.cakk.common.enums
 
-enum class Provider {
+enum class ProviderType {
 
 	APPLE,
 	GOOGLE,

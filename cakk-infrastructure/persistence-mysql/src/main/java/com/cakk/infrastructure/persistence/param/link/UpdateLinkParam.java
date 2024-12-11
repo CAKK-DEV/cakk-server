@@ -4,13 +4,13 @@ import java.util.List;
 
 import lombok.Builder;
 
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopLink;
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLinkEntity;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 
 @Builder
 public record UpdateLinkParam(
-	User user,
+	UserEntity userEntity,
 	Long cakeShopId,
-	List<CakeShopLink> cakeShopLinks
+	List<CakeShopLinkEntity> cakeShopLinks
 ) {
 }

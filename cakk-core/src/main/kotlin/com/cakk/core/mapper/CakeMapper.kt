@@ -5,11 +5,7 @@ import java.util.*
 import com.cakk.core.dto.response.cake.CakeDetailResponse
 import com.cakk.core.dto.response.cake.CakeImageWithShopInfoListResponse
 import com.cakk.core.dto.response.like.HeartCakeImageListResponse
-import com.cakk.infrastructure.persistence.param.cake.CakeDetailParam
-import com.cakk.infrastructure.persistence.param.cake.CakeImageWithShopInfoResponseParam
-import com.cakk.infrastructure.persistence.param.like.HeartCakeImageResponseParam
-import com.cakk.infrastructure.persistence.param.tag.TagParam
-import com.cakk.infrastructure.persistence.entity.cake.Cake
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity
 
 
 fun supplyCakeImageWithShopInfoListResponse(
@@ -74,8 +70,8 @@ fun cakeDetailResponseFromParam(param: com.cakk.infrastructure.persistence.param
 	)
 }
 
-fun supplyCakeBy(cakeImageUrl: String): com.cakk.infrastructure.persistence.entity.cake.Cake {
-	return com.cakk.infrastructure.persistence.entity.cake.Cake.builder()
+fun supplyCakeBy(cakeImageUrl: String): CakeEntity {
+	return CakeEntity.builder()
 		.cakeImageUrl(cakeImageUrl)
 		.build()
 }

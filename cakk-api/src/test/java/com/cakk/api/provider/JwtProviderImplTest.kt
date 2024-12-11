@@ -20,6 +20,7 @@ import com.cakk.api.provider.jwt.JwtProviderImpl
 import com.cakk.common.enums.Role
 import com.cakk.core.vo.JsonWebToken
 import com.cakk.infrastructure.cache.repository.TokenRedisRepository
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @DisplayName("Jwt Provider 테스트")
 internal class JwtProviderImplTest : MockitoTest() {
@@ -47,10 +48,10 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("토큰 생성에 성공한다.")
 	fun generateToken1() {
 		// given
-		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
+		val userEntity = fixtureMonkey.giveMeOne(UserEntity::class.java)
 
 		// when
-		val jwt: JsonWebToken = jwtProviderImpl.generateToken(user)
+		val jwt: JsonWebToken = jwtProviderImpl.generateToken(userEntity)
 
 		// then
 		jwt.accessToken shouldNotBe null
@@ -61,11 +62,11 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("액세스 토큰으로부터 인증 정보를 가져온다.")
 	fun getAuthentication() {
 		// given
-		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
-		ReflectionTestUtils.setField(user, "id", 1L)
-		ReflectionTestUtils.setField(user, "role", Role.USER)
+		val userEntity = fixtureMonkey.giveMeOne(UserEntity::class.java)
+		ReflectionTestUtils.setField(userEntity, "id", 1L)
+		ReflectionTestUtils.setField(userEntity, "role", Role.USER)
 
-		val accessToken: String = jwtProviderImpl.generateToken(user).accessToken
+		val accessToken: String = jwtProviderImpl.generateToken(userEntity).accessToken
 
 		// when
 		val authentication: Authentication = jwtProviderImpl.getAuthentication(accessToken)
@@ -77,11 +78,11 @@ internal class JwtProviderImplTest : MockitoTest() {
 	@TestWithDisplayName("토큰으로부터 Claim 정보를 가져온다.")
 	fun parseClaims() {
 		// given
-		val user = fixtureMonkey.giveMeOne(com.cakk.infrastructure.persistence.entity.user.User::class.java)
-		ReflectionTestUtils.setField(user, "id", 1L)
-		ReflectionTestUtils.setField(user, "role", Role.USER)
+		val userEntity = fixtureMonkey.giveMeOne(UserEntity::class.java)
+		ReflectionTestUtils.setField(userEntity, "id", 1L)
+		ReflectionTestUtils.setField(userEntity, "role", Role.USER)
 
-		val accessToken: String = jwtProviderImpl.generateToken(user).accessToken
+		val accessToken: String = jwtProviderImpl.generateToken(userEntity).accessToken
 
 		// when
 		val claims = jwtProviderImpl.parseClaims(accessToken)

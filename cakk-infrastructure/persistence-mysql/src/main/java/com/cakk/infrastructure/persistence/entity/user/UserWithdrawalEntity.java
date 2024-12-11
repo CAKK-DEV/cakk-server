@@ -30,7 +30,7 @@ import com.cakk.infrastructure.persistence.entity.audit.AuditCreatedEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user_withdrawal")
-public class UserWithdrawal extends AuditCreatedEntity {
+public class UserWithdrawalEntity extends AuditCreatedEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +57,7 @@ public class UserWithdrawal extends AuditCreatedEntity {
 	private LocalDateTime withdrawalDate;
 
 	@Builder
-	public UserWithdrawal(
+	public UserWithdrawalEntity(
 		String email,
 		Gender gender,
 		LocalDate birthday,

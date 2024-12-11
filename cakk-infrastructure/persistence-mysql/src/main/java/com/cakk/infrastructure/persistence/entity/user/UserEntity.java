@@ -34,14 +34,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.cakk.common.enums.Gender;
-import com.cakk.common.enums.Provider;
+import com.cakk.common.enums.ProviderType;
 import com.cakk.common.enums.Role;
 import com.cakk.infrastructure.persistence.entity.audit.AuditEntity;
-import com.cakk.infrastructure.persistence.entity.cake.Cake;
-import com.cakk.infrastructure.persistence.entity.cake.CakeHeart;
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop;
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopHeart;
-import com.cakk.infrastructure.persistence.entity.shop.CakeShopLike;
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity;
+import com.cakk.infrastructure.persistence.entity.cake.CakeHeartEntity;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopHeartEntity;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopLikeEntity;
 import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam;
 
 @Getter
@@ -49,7 +49,7 @@ import com.cakk.infrastructure.persistence.param.user.ProfileUpdateParam;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
-public class User extends AuditEntity {
+public class UserEntity extends AuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +58,7 @@ public class User extends AuditEntity {
 
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "provider", length = 10, nullable = false)
-	private Provider provider;
+	private ProviderType providerType;
 
 	@Column(name = "provider_id", length = 50, nullable = false)
 	private String providerId;
@@ -99,23 +99,23 @@ public class User extends AuditEntity {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-	private Set<BusinessInformation> businessInformationSet = new HashSet<>();
+	private Set<BusinessInformationEntity> businessInformationSet = new HashSet<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeHeart> cakeHearts = new HashSet<>();
+	private Set<CakeHeartEntity> cakeHearts = new HashSet<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopHeart> cakeShopHearts = new HashSet<>();
+	private Set<CakeShopHeartEntity> cakeShopHearts = new HashSet<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<CakeShopLike> cakeShopLikes = new HashSet<>();
+	private Set<CakeShopLikeEntity> cakeShopLikes = new HashSet<>();
 
 	@Builder
-	public User(
-		Provider provider,
+	public UserEntity(
+		ProviderType providerType,
 		String providerId,
 		String nickname,
 		String profileImageUrl,
@@ -126,7 +126,7 @@ public class User extends AuditEntity {
 		String deviceToken,
 		Role role
 	) {
-		this.provider = provider;
+		this.providerType = providerType;
 		this.providerId = providerId;
 		this.nickname = nickname;
 		this.profileImageUrl = profileImageUrl;
@@ -146,23 +146,23 @@ public class User extends AuditEntity {
 		this.birthday = param.birthday();
 	}
 
-	public void heartCake(final Cake cake) {
+	public void heartCake(final CakeEntity cake) {
 		cake.heart(this);
 	}
 
-	public void unHeartCake(final Cake cake) {
+	public void unHeartCake(final CakeEntity cake) {
 		cake.unHeart(this);
 	}
 
-	public void likeCakeShop(final CakeShop cakeShop) {
+	public void likeCakeShop(final CakeShopEntity cakeShop) {
 		cakeShop.like(this);
 	}
 
-	public void heartCakeShop(final CakeShop cakeShop) {
+	public void heartCakeShop(final CakeShopEntity cakeShop) {
 		cakeShop.heart(this);
 	}
 
-	public void unHeartCakeShop(final CakeShop cakeShop) {
+	public void unHeartCakeShop(final CakeShopEntity cakeShop) {
 		cakeShop.unHeart(this);
 	}
 
@@ -177,7 +177,7 @@ public class User extends AuditEntity {
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof User that)) {
+		if (!(object instanceof UserEntity that)) {
 			return false;
 		}
 		return this.getId() != null && Objects.equals(this.getId(), that.getId());

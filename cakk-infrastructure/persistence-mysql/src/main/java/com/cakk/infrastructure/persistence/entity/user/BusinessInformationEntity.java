@@ -25,7 +25,7 @@ import com.cakk.common.enums.VerificationStatus;
 import com.cakk.infrastructure.persistence.bo.user.VerificationPolicy;
 import com.cakk.infrastructure.persistence.converter.VerificationStatusConverter;
 import com.cakk.infrastructure.persistence.entity.audit.AuditEntity;
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity;
 import com.cakk.infrastructure.persistence.mapper.EventMapper;
 import com.cakk.infrastructure.persistence.param.user.CertificationParam;
 import com.cakk.infrastructure.persistence.shop.CertificationEvent;
@@ -35,7 +35,7 @@ import com.cakk.infrastructure.persistence.shop.CertificationEvent;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "business_information")
-public class BusinessInformation extends AuditEntity {
+public class BusinessInformationEntity extends AuditEntity {
 
 	@Id
 	@Column(name = "shop_id")
@@ -61,26 +61,26 @@ public class BusinessInformation extends AuditEntity {
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "shop_id")
-	private CakeShop cakeShop;
+	private CakeShopEntity cakeShop;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-	private User user;
+	private UserEntity user;
 
 	@Builder
-	public BusinessInformation(
-		CakeShop cakeShop,
+	public BusinessInformationEntity(
+		CakeShopEntity cakeShop,
 		String businessNumber,
-		User user
+		UserEntity userEntity
 	) {
 		this.id = cakeShop.getId();
 		this.cakeShop = cakeShop;
 		this.businessNumber = businessNumber;
-		this.user = user;
+		this.user = userEntity;
 		this.verificationStatus = VerificationStatus.UNREQUESTED;
 	}
 
-	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final User businessOwner) {
+	public void updateBusinessOwner(final VerificationPolicy verificationPolicy, final UserEntity businessOwner) {
 		user = businessOwner;
 		verificationStatus = verificationPolicy.approveToBusinessOwner(verificationStatus);
 	}

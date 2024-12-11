@@ -1,10 +1,10 @@
 package com.cakk.core.facade.cake
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.infrastructure.persistence.entity.cake.Cake
-import com.cakk.infrastructure.persistence.entity.cake.CakeCategory
-import com.cakk.infrastructure.persistence.entity.cake.Tag
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity
+import com.cakk.infrastructure.persistence.entity.cake.CakeCategoryEntity
+import com.cakk.infrastructure.persistence.entity.cake.TagEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
 import com.cakk.infrastructure.persistence.repository.jpa.CakeJpaRepository
 
 @DomainFacade
@@ -13,7 +13,7 @@ class CakeManageFacade(
 ) {
 
 
-    fun create(cakeShop: CakeShop, cake: Cake, tags: List<Tag>, cakeCategories: List<CakeCategory>) {
+    fun create(cakeShop: CakeShopEntity, cake: CakeEntity, tags: List<TagEntity>, cakeCategories: List<CakeCategoryEntity>) {
         cake.registerTags(tags)
         cake.registerCategories(cakeCategories)
         cakeShop.registerCake(cake)
@@ -21,13 +21,13 @@ class CakeManageFacade(
 		cakeJpaRepository.save(cake)
     }
 
-    fun update(cake: Cake, cakeImageUrl: String, tags: List<Tag>, cakeCategories: List<CakeCategory>) {
+    fun update(cake: CakeEntity, cakeImageUrl: String, tags: List<TagEntity>, cakeCategories: List<CakeCategoryEntity>) {
         cake.updateCakeImageUrl(cakeImageUrl)
         cake.updateCakeCategories(cakeCategories)
 		cake.updateCakeTags(tags)
     }
 
-    fun delete(cake: Cake) {
+    fun delete(cake: CakeEntity) {
         cakeJpaRepository.delete(cake)
     }
 }

@@ -1,26 +1,26 @@
 package com.cakk.core.facade.user
 
 import com.cakk.core.annotation.DomainFacade
-import com.cakk.infrastructure.persistence.entity.cake.Cake
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.cake.CakeEntity
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 @DomainFacade
 class UserHeartFacade {
 
-    fun heartCake(user: com.cakk.infrastructure.persistence.entity.user.User, cake: com.cakk.infrastructure.persistence.entity.cake.Cake) {
-        if (!cake.isHeartedBy(user)) {
-            user.heartCake(cake)
+    fun heartCake(userEntity: UserEntity, cake: CakeEntity) {
+        if (!cake.isHeartedBy(userEntity)) {
+            userEntity.heartCake(cake)
         } else {
-            user.unHeartCake(cake)
+            userEntity.unHeartCake(cake)
         }
     }
 
-    fun heartCakeShop(user: com.cakk.infrastructure.persistence.entity.user.User, cakeShop: com.cakk.infrastructure.persistence.entity.shop.CakeShop) {
-        if (!cakeShop.isHeartedBy(user)) {
-            user.heartCakeShop(cakeShop)
+    fun heartCakeShop(userEntity: UserEntity, cakeShop: CakeShopEntity) {
+        if (!cakeShop.isHeartedBy(userEntity)) {
+            userEntity.heartCakeShop(cakeShop)
         } else {
-            user.unHeartCakeShop(cakeShop)
+            userEntity.unHeartCakeShop(cakeShop)
         }
     }
 }

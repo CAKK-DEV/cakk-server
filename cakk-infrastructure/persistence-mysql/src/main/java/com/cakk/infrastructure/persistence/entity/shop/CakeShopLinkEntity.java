@@ -24,7 +24,7 @@ import com.cakk.infrastructure.persistence.entity.audit.AuditEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "cake_shop_link")
-public class CakeShopLink extends AuditEntity {
+public class CakeShopLinkEntity extends AuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,16 +40,16 @@ public class CakeShopLink extends AuditEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id", nullable = false)
-	private CakeShop cakeShop;
+	private CakeShopEntity cakeShop;
 
 	@Builder
-	public CakeShopLink(LinkKind linkKind, String linkPath, CakeShop cakeShop) {
+	public CakeShopLinkEntity(LinkKind linkKind, String linkPath, CakeShopEntity cakeShop) {
 		this.linkKind = linkKind;
 		this.linkPath = linkPath;
 		this.cakeShop = cakeShop;
 	}
 
-	public void updateCakeShop(final CakeShop cakeShop) {
+	public void updateCakeShop(final CakeShopEntity cakeShop) {
 		this.cakeShop = cakeShop;
 	}
 }

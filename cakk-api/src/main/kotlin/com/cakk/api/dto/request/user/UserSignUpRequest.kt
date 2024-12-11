@@ -6,21 +6,21 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
 import com.cakk.common.enums.Gender
-import com.cakk.common.enums.Provider
+import com.cakk.common.enums.ProviderType
 
 data class UserSignUpRequest(
-	@field:NotNull
-    val provider: Provider?,
-	@field:NotBlank
+    @field:NotNull
+    val providerType: ProviderType?,
+    @field:NotBlank
     val idToken: String?,
     val deviceOs: String?,
     val deviceToken: String?,
-	@field:NotBlank
+    @field:NotBlank
     val nickname: String?,
-	@field:NotBlank
+    @field:NotBlank
     val email: String?,
-	@field:NotNull
+    @field:NotNull
     val birthday: LocalDate?,
-	@field:NotNull
+    @field:NotNull
     val gender: Gender?
 )

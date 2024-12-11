@@ -10,12 +10,12 @@ import org.springframework.web.method.support.ModelAndViewContainer
 import com.cakk.admin.annotation.AdminUser
 import com.cakk.admin.vo.OAuthUserDetails
 
-import com.cakk.infrastructure.persistence.entity.user.User
+import com.cakk.infrastructure.persistence.entity.user.UserEntity
 
 class AdminUserResolver : HandlerMethodArgumentResolver {
 	override fun supportsParameter(parameter: MethodParameter): Boolean {
 		return parameter.hasParameterAnnotation(AdminUser::class.java)
-			&& com.cakk.infrastructure.persistence.entity.user.User::class.java.isAssignableFrom(parameter.parameterType)
+			&& UserEntity::class.java.isAssignableFrom(parameter.parameterType)
 	}
 
 	override fun resolveArgument(

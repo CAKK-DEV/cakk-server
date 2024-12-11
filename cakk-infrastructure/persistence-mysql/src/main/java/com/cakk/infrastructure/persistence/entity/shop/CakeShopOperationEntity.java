@@ -26,7 +26,7 @@ import com.cakk.infrastructure.persistence.entity.audit.AuditEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "cake_shop_operation")
-public class CakeShopOperation extends AuditEntity {
+public class CakeShopOperationEntity extends AuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,17 +45,17 @@ public class CakeShopOperation extends AuditEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
-	private CakeShop cakeShop;
+	private CakeShopEntity cakeShop;
 
 	@Builder
-	public CakeShopOperation(Days operationDay, LocalTime operationStartTime, LocalTime operationEndTime, CakeShop cakeShop) {
+	public CakeShopOperationEntity(Days operationDay, LocalTime operationStartTime, LocalTime operationEndTime, CakeShopEntity cakeShop) {
 		this.operationDay = operationDay;
 		this.operationStartTime = operationStartTime;
 		this.operationEndTime = operationEndTime;
 		this.cakeShop = cakeShop;
 	}
 
-	public void updateCakeShop(final CakeShop cakeShop) {
+	public void updateCakeShop(final CakeShopEntity cakeShop) {
 		this.cakeShop = cakeShop;
 	}
 }

@@ -29,7 +29,7 @@ class SignService(
 
 	@Transactional
 	fun signUp(param: UserSignUpParam): JwtResponse {
-		val providerId = oidcProviderDispatcher.getProviderId(param.provider, param.idToken)
+		val providerId = oidcProviderDispatcher.getProviderId(param.providerType, param.idToken)
 		val user = userManageFacade.create(supplyUserBy(param, providerId))
 
 		return supplyJwtResponseBy(jwtProvider.generateToken(user))
@@ -37,7 +37,7 @@ class SignService(
 
 	@Transactional(readOnly = true)
 	fun signIn(param: UserSignInParam): JwtResponse {
-		val providerId = oidcProviderDispatcher.getProviderId(param.provider, param.idToken)
+		val providerId = oidcProviderDispatcher.getProviderId(param.providerType, param.idToken)
 		val user = userReadFacade.findByProviderId(providerId)
 
 		return supplyJwtResponseBy(jwtProvider.generateToken(user))

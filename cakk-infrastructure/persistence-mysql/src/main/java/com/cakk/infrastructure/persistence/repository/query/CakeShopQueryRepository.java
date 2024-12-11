@@ -1,10 +1,10 @@
 package com.cakk.infrastructure.persistence.repository.query;
 
-import static com.cakk.infrastructure.persistence.entity.cake.QCake.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShop.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopLink.*;
-import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopOperation.*;
-import static com.cakk.infrastructure.persistence.entity.user.QBusinessInformation.*;
+import static com.cakk.infrastructure.persistence.entity.cake.QCakeEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopLinkEntity.*;
+import static com.cakk.infrastructure.persistence.entity.shop.QCakeShopOperationEntity.*;
+import static com.cakk.infrastructure.persistence.entity.user.QBusinessInformationEntity.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static java.util.Objects.*;
 
@@ -27,8 +27,8 @@ import lombok.RequiredArgsConstructor;
 import com.cakk.common.enums.Role;
 import com.cakk.common.enums.VerificationStatus;
 import com.cakk.infrastructure.persistence.bo.shop.CakeShopByLocationParam;
-import com.cakk.infrastructure.persistence.entity.shop.CakeShop;
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.shop.CakeShopEntity;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 import com.cakk.infrastructure.persistence.param.shop.CakeShopDetailParam;
 import com.cakk.infrastructure.persistence.param.shop.CakeShopInfoParam;
 import com.cakk.infrastructure.persistence.param.shop.CakeShopLinkParam;
@@ -43,21 +43,21 @@ public class CakeShopQueryRepository {
 
 	public CakeShopDetailParam searchDetailById(Long cakeShopId) {
 		List<CakeShopDetailParam> results = queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cakeShop.cakeShopOperations, cakeShopOperation)
-			.leftJoin(cakeShop.cakeShopLinks, cakeShopLink)
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeShopEntity.cakeShopOperations, cakeShopOperationEntity)
+			.leftJoin(cakeShopEntity.cakeShopLinks, cakeShopLinkEntity)
 			.where(eqCakeShopId(cakeShopId))
-			.transform(groupBy(cakeShop.id)
+			.transform(groupBy(cakeShopEntity.id)
 				.list(Projections.constructor(CakeShopDetailParam.class,
-					cakeShop.id,
-					cakeShop.shopName,
-					cakeShop.thumbnailUrl,
-					cakeShop.shopBio,
-					cakeShop.shopDescription,
-					set(cakeShopOperation.operationDay),
+					cakeShopEntity.id,
+					cakeShopEntity.shopName,
+					cakeShopEntity.thumbnailUrl,
+					cakeShopEntity.shopBio,
+					cakeShopEntity.shopDescription,
+					set(cakeShopOperationEntity.operationDay),
 					set(Projections.constructor(CakeShopLinkParam.class,
-						cakeShopLink.linkKind,
-						cakeShopLink.linkPath)
+						cakeShopLinkEntity.linkKind,
+						cakeShopLinkEntity.linkPath)
 					)
 				)));
 
@@ -66,44 +66,44 @@ public class CakeShopQueryRepository {
 
 	public CakeShopSimpleParam searchSimpleById(Long cakeShopId) {
 		return queryFactory.select(Projections.constructor(CakeShopSimpleParam.class,
-			cakeShop.id,
-			cakeShop.thumbnailUrl,
-			cakeShop.shopName,
-			cakeShop.shopBio
-		))
-			.from(cakeShop)
+				cakeShopEntity.id,
+				cakeShopEntity.thumbnailUrl,
+				cakeShopEntity.shopName,
+				cakeShopEntity.shopBio
+			))
+			.from(cakeShopEntity)
 			.where(eqCakeShopId(cakeShopId))
 			.fetchOne();
 	}
 
 	public CakeShopInfoParam searchInfoById(Long cakeShopId) {
 		List<CakeShopInfoParam> results = queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cakeShop.cakeShopOperations, cakeShopOperation)
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeShopEntity.cakeShopOperations, cakeShopOperationEntity)
 			.where(eqCakeShopId(cakeShopId))
-			.transform(groupBy(cakeShop.id)
+			.transform(groupBy(cakeShopEntity.id)
 				.list(Projections.constructor(CakeShopInfoParam.class,
-					cakeShop.shopAddress,
-					cakeShop.location,
+					cakeShopEntity.shopAddress,
+					cakeShopEntity.location,
 					list(Projections.constructor(CakeShopOperationParam.class,
-						cakeShopOperation.operationDay,
-						cakeShopOperation.operationStartTime,
-						cakeShopOperation.operationEndTime)
+						cakeShopOperationEntity.operationDay,
+						cakeShopOperationEntity.operationStartTime,
+						cakeShopOperationEntity.operationEndTime)
 					)
 				)));
 
-		return results.isEmpty() ? null : results.get(0);
+		return results.isEmpty() ? null : results.getFirst();
 	}
 
-	public List<CakeShop> searchByKeywordWithLocation(
+	public List<CakeShopEntity> searchByKeywordWithLocation(
 		Long cakeShopId,
 		String keyword,
 		Point location,
 		Integer pageSize
 	) {
 		return queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cakeShop.businessInformation).fetchJoin()
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeShopEntity.businessInformation).fetchJoin()
 			.where(
 				ltCakeShopId(cakeShopId),
 				includeDistance(location),
@@ -114,17 +114,17 @@ public class CakeShopQueryRepository {
 			.fetch();
 	}
 
-	public Optional<CakeShop> searchWithBusinessInformationAndOwnerById(User owner, Long cakeShopId) {
+	public Optional<CakeShopEntity> searchWithBusinessInformationAndOwnerById(UserEntity owner, Long cakeShopId) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner)
-				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
+			userCondition = businessInformationEntity.user.eq(owner)
+				.and(businessInformationEntity.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
-		JPQLQuery<CakeShop> query = queryFactory
-			.selectFrom(cakeShop)
-			.innerJoin(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId));
+		JPQLQuery<CakeShopEntity> query = queryFactory
+			.selectFrom(cakeShopEntity)
+			.innerJoin(cakeShopEntity.businessInformation, businessInformationEntity).fetchJoin()
+			.where(cakeShopEntity.id.eq(cakeShopId));
 
 		if (nonNull(userCondition)) {
 			query.where(userCondition);
@@ -133,19 +133,19 @@ public class CakeShopQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public Optional<CakeShop> searchWithShopLinks(User owner, Long cakeShopId) {
+	public Optional<CakeShopEntity> searchWithShopLinks(UserEntity owner, Long cakeShopId) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner)
-				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
+			userCondition = businessInformationEntity.user.eq(owner)
+				.and(businessInformationEntity.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
-		JPQLQuery<CakeShop> query = queryFactory
-			.selectFrom(cakeShop)
-			.join(cakeShop.cakeShopLinks, cakeShopLink).fetchJoin()
-			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId));
+		JPQLQuery<CakeShopEntity> query = queryFactory
+			.selectFrom(cakeShopEntity)
+			.join(cakeShopEntity.cakeShopLinks, cakeShopLinkEntity).fetchJoin()
+			.join(cakeShopEntity.businessInformation, businessInformationEntity).fetchJoin()
+			.where(cakeShopEntity.id.eq(cakeShopId));
 
 		if (nonNull(userCondition)) {
 			query.where(userCondition);
@@ -154,19 +154,19 @@ public class CakeShopQueryRepository {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
-	public Optional<CakeShop> searchWithOperations(User owner, Long cakeShopId) {
+	public Optional<CakeShopEntity> searchWithOperations(UserEntity owner, Long cakeShopId) {
 		BooleanExpression userCondition = null;
 
 		if (owner.getRole() != Role.ADMIN) {
-			userCondition = businessInformation.user.eq(owner)
-				.and(businessInformation.verificationStatus.eq(VerificationStatus.APPROVED));
+			userCondition = businessInformationEntity.user.eq(owner)
+				.and(businessInformationEntity.verificationStatus.eq(VerificationStatus.APPROVED));
 		}
 
-		JPQLQuery<CakeShop> query = queryFactory
-			.selectFrom(cakeShop)
-			.join(cakeShop.cakeShopOperations, cakeShopOperation).fetchJoin()
-			.join(cakeShop.businessInformation, businessInformation).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId));
+		JPQLQuery<CakeShopEntity> query = queryFactory
+			.selectFrom(cakeShopEntity)
+			.join(cakeShopEntity.cakeShopOperations, cakeShopOperationEntity).fetchJoin()
+			.join(cakeShopEntity.businessInformation, businessInformationEntity).fetchJoin()
+			.where(cakeShopEntity.id.eq(cakeShopId));
 
 		if (nonNull(userCondition)) {
 			query.where(userCondition);
@@ -177,53 +177,53 @@ public class CakeShopQueryRepository {
 
 	public List<CakeShopByLocationParam> findShopsByLocationBased(final Point location, final Double distance) {
 		return queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cake)
-			.on(cakeShop.eq(cake.cakeShop))
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeEntity)
+			.on(cakeShopEntity.eq(cakeEntity.cakeShop))
 			.where(includeDistance(location, distance))
 			.orderBy(cakeShopIdDesc())
-			.transform(groupBy(cakeShop.id)
+			.transform(groupBy(cakeShopEntity.id)
 				.list(Projections.constructor(CakeShopByLocationParam.class,
-					cakeShop.id,
-					cakeShop.thumbnailUrl,
-					cakeShop.shopName,
-					cakeShop.shopBio,
-					set(cake.cakeImageUrl.coalesce("")),
-					cakeShop.location)));
+					cakeShopEntity.id,
+					cakeShopEntity.thumbnailUrl,
+					cakeShopEntity.shopName,
+					cakeShopEntity.shopBio,
+					set(cakeEntity.cakeImageUrl.coalesce("")),
+					cakeShopEntity.location)));
 	}
 
-	public List<CakeShop> searchByShopIds(List<Long> shopIds) {
+	public List<CakeShopEntity> searchByShopIds(List<Long> shopIds) {
 		return queryFactory
-			.selectFrom(cakeShop)
-			.innerJoin(cakeShop.businessInformation).fetchJoin()
-			.leftJoin(cakeShop.cakes).fetchJoin()
-			.leftJoin(cakeShop.cakeShopOperations).fetchJoin()
+			.selectFrom(cakeShopEntity)
+			.innerJoin(cakeShopEntity.businessInformation).fetchJoin()
+			.leftJoin(cakeShopEntity.cakes).fetchJoin()
+			.leftJoin(cakeShopEntity.cakeShopOperations).fetchJoin()
 			.where(includeShopIds(shopIds))
 			.fetch();
 	}
 
-	public CakeShop searchByIdWithHeart(Long cakeShopId) {
+	public CakeShopEntity searchByIdWithHeart(Long cakeShopId) {
 		return queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cakeShop.shopHearts).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId))
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeShopEntity.shopHearts).fetchJoin()
+			.where(cakeShopEntity.id.eq(cakeShopId))
 			.fetchOne();
 	}
 
-	public CakeShop searchByIdWithLike(Long cakeShopId) {
+	public CakeShopEntity searchByIdWithLike(Long cakeShopId) {
 		return queryFactory
-			.selectFrom(cakeShop)
-			.leftJoin(cakeShop.shopLikes).fetchJoin()
-			.where(cakeShop.id.eq(cakeShopId))
+			.selectFrom(cakeShopEntity)
+			.leftJoin(cakeShopEntity.shopLikes).fetchJoin()
+			.where(cakeShopEntity.id.eq(cakeShopId))
 			.fetchOne();
 	}
 
 	private BooleanExpression eqCakeShopId(Long cakeShopId) {
-		return cakeShop.id.eq(cakeShopId);
+		return cakeShopEntity.id.eq(cakeShopId);
 	}
 
 	private BooleanExpression includeShopIds(List<Long> shopIds) {
-		return cakeShop.id.in(shopIds);
+		return cakeShopEntity.id.in(shopIds);
 	}
 
 	private BooleanExpression ltCakeShopId(Long cakeShopId) {
@@ -231,7 +231,7 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return cakeShop.id.lt(cakeShopId);
+		return cakeShopEntity.id.lt(cakeShopId);
 	}
 
 	private BooleanBuilder containKeyword(String keyword) {
@@ -250,7 +250,7 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return cakeShop.shopBio.containsIgnoreCase(keyword);
+		return cakeShopEntity.shopBio.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression containsKeywordInShopDesc(String keyword) {
@@ -258,7 +258,7 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return cakeShop.shopDescription.containsIgnoreCase(keyword);
+		return cakeShopEntity.shopDescription.containsIgnoreCase(keyword);
 	}
 
 	private BooleanExpression includeDistance(Point location, Double distance) {
@@ -266,7 +266,7 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, {1}), {2})", location, distance, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, {1}), {2})", location, distance, cakeShopEntity.location);
 	}
 
 	private BooleanExpression includeDistance(Point location) {
@@ -274,10 +274,10 @@ public class CakeShopQueryRepository {
 			return null;
 		}
 
-		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 1000), {1})", location, cakeShop.location);
+		return Expressions.booleanTemplate("ST_Contains(ST_BUFFER({0}, 1000), {1})", location, cakeShopEntity.location);
 	}
 
 	private OrderSpecifier<Long> cakeShopIdDesc() {
-		return cakeShop.id.desc();
+		return cakeShopEntity.id.desc();
 	}
 }

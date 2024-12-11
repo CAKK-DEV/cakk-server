@@ -1,10 +1,10 @@
 package com.cakk.infrastructure.persistence.repository.jpa
 
 import org.springframework.data.jpa.repository.JpaRepository
-import com.cakk.infrastructure.persistence.entity.cake.CakeCategory
+import com.cakk.infrastructure.persistence.entity.cake.CakeCategoryEntity
 
-interface CakeCategoryJpaRepository : JpaRepository<CakeCategory, Long> {
+interface CakeCategoryJpaRepository : JpaRepository<CakeCategoryEntity, Long> {
 
-	fun findByCakeId(cakeId: Long?): CakeCategory?
+	fun findByCakeId(cakeId: Long?): CakeCategoryEntity?
 }
 

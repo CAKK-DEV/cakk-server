@@ -10,12 +10,12 @@ import com.cakk.domain.annotation.TestWithDisplayName
 import com.cakk.domain.common.base.DomainTest
 import com.cakk.domain.common.fixture.FixtureCommon.fixtureMonkey
 import com.cakk.domain.common.fixture.FixtureCommon.getStringFixtureBw
-import com.cakk.infrastructure.persistence.entity.user.BusinessInformation
+import com.cakk.infrastructure.persistence.entity.user.BusinessInformationEntity
 
-internal class BusinessInformationTest : DomainTest() {
+internal class BusinessInformationEntityTest : DomainTest() {
 
-	private fun getBusinessInformationFixtureWithUser(verificationStatus: VerificationStatus, role: Role): com.cakk.infrastructure.persistence.entity.user.BusinessInformation {
-		return fixtureMonkey.giveMeBuilder(com.cakk.infrastructure.persistence.entity.user.BusinessInformation::class.java)
+	private fun getBusinessInformationFixtureWithUser(verificationStatus: VerificationStatus, role: Role): BusinessInformationEntity {
+		return fixtureMonkey.giveMeBuilder(BusinessInformationEntity::class.java)
 			.setNotNull("businessNumber")
 			.set("businessNumber", getStringFixtureBw(1, 20))
 			.set("cakeShop", cakeShopFixture)

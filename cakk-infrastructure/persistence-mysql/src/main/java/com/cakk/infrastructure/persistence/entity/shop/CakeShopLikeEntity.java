@@ -14,29 +14,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.cakk.infrastructure.persistence.entity.audit.AuditCreatedEntity;
-import com.cakk.infrastructure.persistence.entity.user.User;
+import com.cakk.infrastructure.persistence.entity.user.UserEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "cake_shop_heart")
-public class CakeShopHeart extends AuditCreatedEntity {
+@Table(name = "cake_shop_like")
+public class CakeShopLikeEntity extends AuditCreatedEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "shop_heart_id", nullable = false)
+	@Column(name = "shop_like_id", nullable = false)
 	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id", nullable = false)
-	private CakeShop cakeShop;
+	private CakeShopEntity cakeShop;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-	private User user;
+	private UserEntity user;
 
-	public CakeShopHeart(CakeShop cakeShop, User user) {
+	public CakeShopLikeEntity(CakeShopEntity cakeShop, UserEntity userEntity) {
 		this.cakeShop = cakeShop;
-		this.user = user;
+		this.user = userEntity;
 	}
 }
