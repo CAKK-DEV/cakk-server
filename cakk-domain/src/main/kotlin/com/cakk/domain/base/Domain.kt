@@ -1,6 +1,8 @@
 package com.cakk.domain.base
 
-abstract class Domain<T : Domain<T, TID>, TID> {
+abstract class Domain<T : Domain<T, TID>, TID>(
+	private val id: TID? = null,
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -14,5 +16,7 @@ abstract class Domain<T : Domain<T, TID>, TID> {
         return getId()?.hashCode() ?: 0
     }
 
-    abstract fun getId(): TID
+    fun getId(): TID {
+		return id!!
+	}
 }
