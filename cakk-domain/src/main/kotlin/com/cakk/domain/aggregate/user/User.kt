@@ -3,8 +3,6 @@ package com.cakk.domain.aggregate.user
 import java.time.LocalDate
 import com.cakk.common.enums.Gender
 import com.cakk.common.enums.Role
-import com.cakk.domain.aggregate.heart.CakeHeart
-import com.cakk.domain.aggregate.heart.CakeShopHeart
 import com.cakk.domain.base.AggregateRoot
 import com.cakk.domain.generic.Device
 import com.cakk.domain.generic.Provider
@@ -19,8 +17,6 @@ class User(
 	birthday: LocalDate,
 	device: Device,
 	val role: Role,
-	val cakeShopHearts: Set<CakeShopHeart> = emptySet(),
-	val cakeHearts: Set<CakeHeart> = emptySet()
 ) : AggregateRoot<User, Long>() {
 
 	var nickname: String = nickname
