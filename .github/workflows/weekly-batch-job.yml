@@ -1,29 +1,31 @@
-name: weekly-batch-job
+# disable
 
-on:
- schedule:
-   - cron: '0 0 * * 1'
+# name: weekly-batch-job
 
-jobs:
-  build:
-    name: execute batch job
-    runs-on: ubuntu-latest
-    environment: Cakk-Weekly-Batch
+# on:
+#  schedule:
+#    - cron: '0 0 * * 1'
 
-    steps:
-      - name: Get Current Time
-        uses: 1466587594/get-current-time@v2
-        id: current-time
-        with:
-          format: YYYY-MM-DDTHH:mm:ss
-          timezone: 'Asia/Seoul'
-      - name: Print Current Time
-        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
-        shell: bash
+# jobs:
+#   build:
+#     name: execute batch job
+#     runs-on: ubuntu-latest
+#     environment: Cakk-Weekly-Batch
+
+#     steps:
+#       - name: Get Current Time
+#         uses: 1466587594/get-current-time@v2
+#         id: current-time
+#         with:
+#           format: YYYY-MM-DDTHH:mm:ss
+#           timezone: 'Asia/Seoul'
+#       - name: Print Current Time
+#         run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
+#         shell: bash
   
-      - name: Send GET request to API with Authorization
-        env:
-          # API_TOKEN: ${{ secrets.API_TOKEN }}
-          SERVER_URL: ${{ secrets.PROD_BATCH_LAMBDA }}
-        run: |
-          curl -X GET $SERVER_URL 
+#       - name: Send GET request to API with Authorization
+#         env:
+#           # API_TOKEN: ${{ secrets.API_TOKEN }}
+#           SERVER_URL: ${{ secrets.PROD_BATCH_LAMBDA }}
+#         run: |
+#           curl -X GET $SERVER_URL 
